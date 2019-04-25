@@ -1,8 +1,7 @@
 *.settings
 *.svn
-bin
-lib
-test/bin-test
-test/libs-external
-test/src-test
-test/build.xml
+bin/
+lib/
+tests/*
+!tests/src-test/
+!tests/testfiles/
