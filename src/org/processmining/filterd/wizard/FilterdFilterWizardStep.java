@@ -32,7 +32,12 @@ public class FilterdFilterWizardStep<T extends FilterdParameters> extends ProMLi
 	}
 
 	public boolean canApply(FilterdParameters model, JComponent component) {
-		return !model.getFilter().equals("");
+		if(component instanceof FilterdFilterWizardStep<?>) {
+			// if there is nothing selected in the list canApply == false
+			return !(((FilterdFilterWizardStep<T>) component).getSelectedValuesList().size() == 0);
+		} else {
+			return false;
+		}
 	}
 
 	public JComponent getComponent(FilterdParameters model) {
