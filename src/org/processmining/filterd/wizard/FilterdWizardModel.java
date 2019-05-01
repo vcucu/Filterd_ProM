@@ -1,18 +1,20 @@
 package org.processmining.filterd.wizard;
 
-public class FilterdWizardModel<FilterdParameters> {
+import org.processmining.filterd.parameters.ActionsParameters;
+
+public class FilterdWizardModel<T extends ActionsParameters> {
 	
-	FilterdParameters parameters;
+	T parameters;
 	
-	FilterdWizardModel(FilterdParameters parameters) {
+	FilterdWizardModel(T parameters) {
 		this.parameters = parameters;
 	}
 
-	public FilterdParameters getParameters() {
+	public T getParameters() {
 		return parameters;
 	}
 
-	public void setParameters(FilterdParameters parameters) {
+	public void setParameters(T parameters) {
 		this.parameters = parameters;
 	}
 }

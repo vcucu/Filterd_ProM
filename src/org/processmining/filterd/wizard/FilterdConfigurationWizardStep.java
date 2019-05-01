@@ -2,29 +2,26 @@ package org.processmining.filterd.wizard;
 
 import javax.swing.JComponent;
 
-import org.processmining.filterd.parameters.FilterdParameters;
+import org.processmining.filterd.parameters.ActionsParameters;
 import org.processmining.framework.util.ui.wizard.ProMWizardStep;
 
-public class FilterdConfigurationWizardStep implements ProMWizardStep<FilterdParameters>  {
+public class FilterdConfigurationWizardStep<T extends ActionsParameters> implements ProMWizardStep<T>  {
 
-	public FilterdParameters apply(FilterdParameters model, JComponent component) {
-		// TODO Auto-generated method stub
-		return null;
+	public T apply(T model, JComponent component) {
+		model.getParameters().apply(component);
+		return model;
 	}
 
-	public boolean canApply(FilterdParameters model, JComponent component) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean canApply(T model, JComponent component) {
+		return model.getParameters().canApply(component);
 	}
 
-	public JComponent getComponent(FilterdParameters model) {
-		// TODO Auto-generated method stub
-		return null;
+	public JComponent getComponent(T model) {
+		return model.getParameters().getPropertiesPanel();
 	}
 
 	public String getTitle() {
-		// TODO Auto-generated method stub
-		return null;
+		return "Configure the filter you selected in the previous step";
 	}
 
 }

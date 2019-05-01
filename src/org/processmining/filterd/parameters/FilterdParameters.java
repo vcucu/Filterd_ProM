@@ -1,28 +1,20 @@
 package org.processmining.filterd.parameters;
 
-public class FilterdParameters {
-	
-	String filter;
-	
-	public FilterdParameters() {
-		filter = "";
-	}
-	
-	public String getFilter() {
-		return filter;
-	}
+import javax.swing.JComponent;
 
-	public void setFilter(String filter) {
-		this.filter = filter;
-	}
+import org.processmining.framework.util.ui.widgets.ProMPropertiesPanel;
+
+public abstract class FilterdParameters {
 
 	@Override
-	public boolean equals(Object object) {
-		return false;
-	}
+	public abstract boolean equals(Object object);
 	
 	@Override
-	public int hashCode() {
-		return 0;
-	}
+	public abstract int hashCode();
+	
+	public abstract FilterdParameters apply(JComponent component);
+
+	public abstract boolean canApply(JComponent component);
+
+	public abstract ProMPropertiesPanel getPropertiesPanel();
 }
