@@ -24,15 +24,19 @@ public class FilterdWizard<T extends ActionsParameters> implements ProMWizard<T,
 	}
 
 	public ProMWizardStep<T> getNext(FilterdWizardModel<T> model, ProMWizardStep<T> current) {
-		if(model.getParameters().getFilter().equals("")) {
+//		if(model.getParameters().getFilter().equals("")) {
+		if(step == 0) {
 			// filter not set yet i.e. choose filter step
 			step++;
 			return new FilterdFilterWizardStep<T>();
-		} else {
+		} else if(step == 1) {
 			// filter is set i.e. configuration for a specific filter
 			step++;
 			model.getParameters().setParameters(new ConcreteParameters());
 			return new FilterdConfigurationWizardStep<T>();
+		} else {
+			step++;
+			return null;
 		}
 	}
 
