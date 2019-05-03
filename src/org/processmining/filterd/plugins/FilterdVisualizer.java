@@ -1,16 +1,16 @@
 package org.processmining.filterd.plugins;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 
-import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
+import javax.swing.OverlayLayout;
 
 import org.deckfour.xes.model.XLog;
 import org.processmining.contexts.uitopia.annotations.Visualizer;
@@ -36,39 +36,44 @@ public class FilterdVisualizer {
 	public JComponent visualize(final PluginContext context, final XLog log) {
 		initComponents();
 
-		FilterdConfigurationDialog modal = new FilterdConfigurationDialog("Test modal", new JLabel("Hello world!"));
+		FilterdConfigurationDialog modal = new FilterdConfigurationDialog("Configure some filter via a dialog");
 		
 		return main;
 	}
-	
+
 	private void initComponents() {
-		
 		main = new JLayeredPane();
-		main.setPreferredSize(new Dimension(300, 300)); 
+		main.setLayout(new OverlayLayout(main)); // make panels on all layers as big as possible
 		
-		// filterd panel
+		initDefaultPanel();
+		
+		initModalPanel();
+	}
+	
+	private void initDefaultPanel() {
 		defaultPanel = new JPanel();
-		defaultPanel.setBorder(BorderFactory.createLineBorder(Color.green));
-		defaultPanel.setSize(200, 200);
-		defaultPanel.add(new JLabel("hello world from filterd panel!"));
+		defaultPanel.setBackground(new Color(204, 255, 255));
+		defaultPanel.setAlignmentX(0.5f); // align horizontally 
+		defaultPanel.setAlignmentY(0.5f); // align vertically
+		defaultPanel.add(new JLabel("Hello world from filterd panel!"));
 		toggleButton = new JButton("Toggle modal");
 		toggleButton.addActionListener(e -> toggleActionPerformed(e));
 		defaultPanel.add(toggleButton);
 		main.add(defaultPanel, JLayeredPane.DEFAULT_LAYER);
-		
-		// modal panel
+	}
+	
+	private void initModalPanel() {
 		modalPanel = new JPanel();
-		modalPanel.setBorder(BorderFactory.createLineBorder(Color.red));
-		modalPanel.setSize(200, 200);
-		modalPanel.setLayout(new BorderLayout());
-		configurationModal = new FilterdConfigurationModal("Configure some filter", modalPanel);
-		modalPanel.add(configurationModal, BorderLayout.CENTER);
+		modalPanel.setOpaque(false); // make the modal panel transparent
+		modalPanel.setAlignmentX(0.5f); // align horizontally 
+		modalPanel.setAlignmentY(0.5f); // align vertically
+		modalPanel.setLayout(new GridBagLayout()); 
+		configurationModal = new FilterdConfigurationModal("Configure some filter via a modal", modalPanel);
+		modalPanel.add(configurationModal, new GridBagConstraints()); // place modal in center and pack it (set to correct size)
 		main.add(modalPanel, JLayeredPane.MODAL_LAYER);
 	}
 
 	private void toggleActionPerformed(ActionEvent e) {
-//		filterdPanel.setOpaque(false);
-//		modalPanel.setOpaque(true);
 		configurationModal.toggle();
 	}
 }
