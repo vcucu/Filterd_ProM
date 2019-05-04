@@ -40,7 +40,7 @@ public class AttributesFilterPanel extends ProMPropertiesPanel {
 	public AttributesFilterPanel(PluginContext context, AttributeFilterParameters parameters) {
 		super("Filter on event attributes configuration panel");
 		lists = new HashMap<>();
-		globalAttributes = new HashMap<>();
+		removeList = new HashMap<>();
 		this.parameters = parameters;
 		
 		// build a hash map for storing the sorted attributes values (for each key)
