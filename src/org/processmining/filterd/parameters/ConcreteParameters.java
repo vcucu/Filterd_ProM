@@ -75,5 +75,4 @@ public class ConcreteParameters extends FilterdParameters {
 	public ProMPropertiesPanel getPropertiesPanel() {
 		return new ConcretePropertiesPanel(someInt, someDouble, someBool);
 	}
-
 }

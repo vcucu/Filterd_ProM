@@ -1,5 +1,6 @@
 package org.processmining.filterd.wizard;
 
+import org.deckfour.xes.model.XLog;
 import org.processmining.filterd.parameters.ActionsParameters;
 import org.processmining.filterd.parameters.ConcreteParameters;
 import org.processmining.framework.util.ui.wizard.ProMWizard;
@@ -7,10 +8,12 @@ import org.processmining.framework.util.ui.wizard.ProMWizardStep;
 
 public class FilterdWizard<T extends ActionsParameters> implements ProMWizard<T, FilterdWizardModel<T>> {
 	
+	private XLog log;
 	private int step;
 	
-	public FilterdWizard() {
+	public FilterdWizard(XLog log) {
 		super();
+		this.log = log;
 		step = 0;
 	}
 
@@ -32,7 +35,14 @@ public class FilterdWizard<T extends ActionsParameters> implements ProMWizard<T,
 		} else if(step == 1) {
 			// filter is set i.e. configuration for a specific filter
 			step++;
-			model.getParameters().setParameters(new ConcreteParameters());
+			
+			// create configuration for selected filter
+			switch(model.getParameters().getFilter()) {
+				case "Event Attributes":
+					model.getParameters().setParameters(new ConcreteParameters());
+					break;
+			}
+			
 			return new FilterdConfigurationWizardStep<T>();
 		} else {
 			step++;

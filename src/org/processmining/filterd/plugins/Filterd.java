@@ -30,11 +30,11 @@ public class Filterd {
 	@UITopiaVariant(affiliation = UITopiaVariant.EHV, author = "T. Klimovic & F. Davidovic", email = "t.klimovic@student.tue.nl & f.davidovic@student.tue.nl")
 	@PluginVariant(variantLabel = "Filterd plug-in, setup wizard", requiredParameterLabels = { 0 })
 	public XLog mineDefault(UIPluginContext context, XLog log) {
-		return mineParameters(context, log, populate(context, new ActionsParameters()));
+		return mineParameters(context, log, populate(context, log, new ActionsParameters()));
 	}
 
-	private ActionsParameters populate(UIPluginContext context, ActionsParameters parameters) {
-		FilterdWizard<ActionsParameters> wizard = new FilterdWizard<ActionsParameters>();
+	private ActionsParameters populate(UIPluginContext context, XLog log, ActionsParameters parameters) {
+		FilterdWizard<ActionsParameters> wizard = new FilterdWizard<ActionsParameters>(log);
 		parameters = ProMWizardDisplay.show(context, wizard, parameters);
 		if(parameters == null) {
 			context.getFutureResult(0).cancel(true);
