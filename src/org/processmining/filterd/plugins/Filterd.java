@@ -34,7 +34,7 @@ public class Filterd {
 	}
 
 	private ActionsParameters populate(UIPluginContext context, XLog log, ActionsParameters parameters) {
-		FilterdWizard<ActionsParameters> wizard = new FilterdWizard<ActionsParameters>(log);
+		FilterdWizard<ActionsParameters> wizard = new FilterdWizard<ActionsParameters>(context, log);
 		parameters = ProMWizardDisplay.show(context, wizard, parameters);
 		if(parameters == null) {
 			context.getFutureResult(0).cancel(true);
