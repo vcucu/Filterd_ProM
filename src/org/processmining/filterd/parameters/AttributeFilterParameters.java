@@ -74,14 +74,13 @@ public class AttributeFilterParameters extends FilterdParameters {
 	}
 
 	public FilterdParameters apply(JComponent component) {
-		System.out.println("AttributeFilterParameters apply() method!");
 		AttributesFilterPanel panel = (AttributesFilterPanel) component;
 		
 		Set<String> attributes = new HashSet<>();
 		for (String key : panel.getLists().keySet()) {
 			this.getLogMap().get(key).clear();
 			this.getLogMap().get(key).addAll(panel.getLists().get(key).getSelectedValuesList());
-			if (panel.getGlobalAttributes().get(key).isSelected()) {
+			if (panel.getRemoveList().get(key).isSelected()) {
 				attributes.add(key);
 			}
 		}
@@ -93,7 +92,6 @@ public class AttributeFilterParameters extends FilterdParameters {
 	}
 
 	public boolean canApply(JComponent component) {
-		System.out.println("AttributeFilterParameters canApply() method!");
 		if(component instanceof AttributesFilterPanel) {
 			return true;
 		} else {

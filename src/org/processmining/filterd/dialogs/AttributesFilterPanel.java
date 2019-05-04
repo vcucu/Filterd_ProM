@@ -32,7 +32,7 @@ public class AttributesFilterPanel extends ProMPropertiesPanel {
 	private static final long serialVersionUID = 2212748609374847593L;
 	
 	private HashMap<String, ProMList<String>> lists;
-	private HashMap<String, JCheckBox> globalAttributes;
+	private HashMap<String, JCheckBox> removeList;
 	private ProMTextField removeEmptyTracesLabel;
 	private JCheckBox removeEmptyTracesComponent;
 	AttributeFilterParameters parameters;
@@ -81,13 +81,13 @@ public class AttributesFilterPanel extends ProMPropertiesPanel {
 			
 			JCheckBox checkBox = SlickerFactory.instance().createCheckBox("Remove if no value provided", false);
 			checkBox.setSelected(parameters.getGlobalAttributes().contains(key));
-			globalAttributes.put(key, checkBox);
+			removeList.put(key, checkBox);
 			
 			JPanel panel = new BorderPanel(5, 2);
 			double panelSize[][] = { { TableLayoutConstants.FILL }, { TableLayoutConstants.FILL, 30 } };
 			panel.setLayout(new TableLayout(panelSize));
 			panel.add(lists.get(key), "0, 0");
-			panel.add(globalAttributes.get(key), "0, 1");
+			panel.add(removeList.get(key), "0, 1");
 			
 			tabbedPane.add(key, panel);
 		}
@@ -111,12 +111,12 @@ public class AttributesFilterPanel extends ProMPropertiesPanel {
 		this.lists = lists;
 	}
 
-	public HashMap<String, JCheckBox> getGlobalAttributes() {
-		return globalAttributes;
+	public HashMap<String, JCheckBox> getRemoveList() {
+		return removeList;
 	}
 
-	public void setGlobalAttributes(HashMap<String, JCheckBox> globalAttributes) {
-		this.globalAttributes = globalAttributes;
+	public void setRemoveList(HashMap<String, JCheckBox> globalAttributes) {
+		this.removeList = globalAttributes;
 	}
 
 	public ProMTextField getRemoveEmptyTracesLabel() {
