@@ -31,5 +31,5 @@ public class ConcretePropertiesPanel extends ProMPropertiesPanel {
 	public boolean getSomeBool() {
 		return someBoolCheckBox.isSelected();
 	}
-
+	
 }

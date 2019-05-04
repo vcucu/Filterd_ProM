@@ -4,7 +4,7 @@ import org.deckfour.xes.model.XLog;
 import org.processmining.contexts.uitopia.UIPluginContext;
 import org.processmining.contexts.uitopia.annotations.UITopiaVariant;
 import org.processmining.filterd.parameters.ActionsParameters;
-import org.processmining.filterd.parameters.AttributeFilterParameters;
+import org.processmining.filterd.parameters.FilterdParameters;
 import org.processmining.filterd.wizard.FilterdWizard;
 import org.processmining.framework.plugin.PluginContext;
 import org.processmining.framework.plugin.annotations.Plugin;
@@ -41,7 +41,7 @@ public class Filterd {
 			context.getFutureResult(0).cancel(true);
 			return null;
 		}
-		AttributeFilterParameters tmp = (AttributeFilterParameters) parameters.getParameters();
+		FilterdParameters tmp = parameters.getParameters();
 		return parameters;
 	}
 

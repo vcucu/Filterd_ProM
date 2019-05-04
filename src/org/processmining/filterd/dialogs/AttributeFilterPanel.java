@@ -27,7 +27,7 @@ import com.fluxicon.slickerbox.factory.SlickerFactory;
 import info.clearthought.layout.TableLayout;
 import info.clearthought.layout.TableLayoutConstants;
 
-public class AttributesFilterPanel extends ProMPropertiesPanel {
+public class AttributeFilterPanel extends ProMPropertiesPanel {
 	
 	private static final long serialVersionUID = 2212748609374847593L;
 	
@@ -37,7 +37,7 @@ public class AttributesFilterPanel extends ProMPropertiesPanel {
 	private JCheckBox removeEmptyTracesComponent;
 	AttributeFilterParameters parameters;
 
-	public AttributesFilterPanel(PluginContext context, AttributeFilterParameters parameters) {
+	public AttributeFilterPanel(PluginContext context, AttributeFilterParameters parameters) {
 		super("Filter on event attributes configuration panel");
 		lists = new HashMap<>();
 		removeList = new HashMap<>();

@@ -43,8 +43,8 @@ public class FilterdFilterWizardStep<T extends ActionsParameters> extends ProMLi
 	public JComponent getComponent(T model) {
 		DefaultListModel<String> listModel = new DefaultListModel<>();
 		listModel.addElement("Event Attributes");
-		// listModel.addElement("Filter 2");
-		// listModel.addElement("Filter 3");
+		listModel.addElement("Event Attributes (dropdown)");
+		listModel.addElement("Concrete Filter");
 		return new FilterdFilterWizardStep<T>("Select the filter you would like to use.", listModel);
 	}
 

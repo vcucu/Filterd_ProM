@@ -13,9 +13,10 @@ import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
 import org.processmining.contexts.uitopia.UIPluginContext;
 import org.processmining.filterd.dialogs.AttributeFilterPanel;
+import org.processmining.filterd.dialogs.AttributeFilterPanelDropdown;
 import org.processmining.framework.util.ui.widgets.ProMPropertiesPanel;
 
-public class AttributeFilterParameters extends FilterdParameters {
+public class AttributeFilterParametersDropdown extends FilterdParameters {
 	
 	protected HashMap<String, Set<String>> logMap;
 	protected Set<String> globalAttributes;
@@ -24,14 +25,14 @@ public class AttributeFilterParameters extends FilterdParameters {
 	private XLog log;
 	private UIPluginContext context;
 	
-	public AttributeFilterParameters() {
+	public AttributeFilterParametersDropdown() {
 		logMap = new HashMap<>();
 		globalAttributes = new HashSet<>();
 		name = "";
 		removeEmptyTraces = false;
 	}
 	
-	public AttributeFilterParameters(UIPluginContext context, XLog log) {
+	public AttributeFilterParametersDropdown(UIPluginContext context, XLog log) {
 		this();
 		this.log = log;
 		this.context = context;
@@ -100,7 +101,7 @@ public class AttributeFilterParameters extends FilterdParameters {
 	}
 
 	public ProMPropertiesPanel getPropertiesPanel() {
-		return new AttributeFilterPanel(context, this);
+		return new AttributeFilterPanelDropdown();
 	}
 
 	public HashMap<String, Set<String>> getLogMap() {
