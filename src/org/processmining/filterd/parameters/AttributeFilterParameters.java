@@ -12,6 +12,7 @@ import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
 import org.processmining.contexts.uitopia.UIPluginContext;
+import org.processmining.filterd.dialogs.AttributesFilterPanel;
 import org.processmining.framework.util.ui.widgets.ProMPropertiesPanel;
 
 public class AttributeFilterParameters extends FilterdParameters {
@@ -20,6 +21,8 @@ public class AttributeFilterParameters extends FilterdParameters {
 	protected Set<String> globalAttributes;
 	protected String name;
 	private boolean removeEmptyTraces;
+	private XLog log;
+	private UIPluginContext context;
 	
 	public AttributeFilterParameters() {
 		logMap = new HashMap<>();
@@ -30,8 +33,11 @@ public class AttributeFilterParameters extends FilterdParameters {
 	
 	public AttributeFilterParameters(UIPluginContext context, XLog log) {
 		this();
+		this.log = log;
+		this.context = context;
 		
-		// build the hash map for the given log (by adding all traces to the map)
+		// build the hash map for the given log 
+		// by adding all attribute key-value pairs of the events to the map
 		for (XTrace trace : log) {
 			for (XEvent event : trace) {
 				for (String key : event.getAttributes().keySet()) {
@@ -52,8 +58,14 @@ public class AttributeFilterParameters extends FilterdParameters {
 	}
 	
 	public boolean equals(Object object) {
-		// TODO Auto-generated method stub
-		return false;
+		if(object instanceof AttributeFilterParameters) {
+			AttributeFilterParameters attributeParameters = (AttributeFilterParameters) object;
+			return this.getLogMap().equals(attributeParameters.getLogMap()) && 
+					this.getGlobalAttributes().equals(attributeParameters.getGlobalAttributes()) &&
+					this.getName() == attributeParameters.getName();
+		} else {
+			return false;
+		}
 	}
 
 	public int hashCode() {
@@ -62,18 +74,35 @@ public class AttributeFilterParameters extends FilterdParameters {
 	}
 
 	public FilterdParameters apply(JComponent component) {
-		// TODO Auto-generated method stub
-		return null;
+		System.out.println("AttributeFilterParameters apply() method!");
+		AttributesFilterPanel panel = (AttributesFilterPanel) component;
+		
+		Set<String> attributes = new HashSet<>();
+		for (String key : panel.getLists().keySet()) {
+			this.getLogMap().get(key).clear();
+			this.getLogMap().get(key).addAll(panel.getLists().get(key).getSelectedValuesList());
+			if (panel.getGlobalAttributes().get(key).isSelected()) {
+				attributes.add(key);
+			}
+		}
+		this.setGlobalAttributes(attributes);
+		this.setName(panel.getRemoveEmptyTracesLabel().getText());
+		this.setRemoveEmptyTraces(panel.getRemoveEmptyTracesComponent().isSelected());
+		
+		return this;
 	}
 
 	public boolean canApply(JComponent component) {
-		// TODO Auto-generated method stub
-		return false;
+		System.out.println("AttributeFilterParameters canApply() method!");
+		if(component instanceof AttributesFilterPanel) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	public ProMPropertiesPanel getPropertiesPanel() {
-		// TODO Auto-generated method stub
-		return null;
+		return new AttributesFilterPanel(context, this);
 	}
 
 	public HashMap<String, Set<String>> getLogMap() {

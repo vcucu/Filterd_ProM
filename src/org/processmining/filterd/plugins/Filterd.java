@@ -4,7 +4,6 @@ import org.deckfour.xes.model.XLog;
 import org.processmining.contexts.uitopia.UIPluginContext;
 import org.processmining.contexts.uitopia.annotations.UITopiaVariant;
 import org.processmining.filterd.parameters.ActionsParameters;
-import org.processmining.filterd.parameters.ConcreteParameters;
 import org.processmining.filterd.wizard.FilterdWizard;
 import org.processmining.framework.plugin.PluginContext;
 import org.processmining.framework.plugin.annotations.Plugin;
@@ -34,16 +33,13 @@ public class Filterd {
 	}
 
 	private ActionsParameters populate(UIPluginContext context, XLog log, ActionsParameters parameters) {
+		context.getProgress().setMaximum(3 * log.size());
 		FilterdWizard<ActionsParameters> wizard = new FilterdWizard<ActionsParameters>(context, log);
 		parameters = ProMWizardDisplay.show(context, wizard, parameters);
 		if(parameters == null) {
 			context.getFutureResult(0).cancel(true);
 			return null;
 		}
-		ConcreteParameters act = (ConcreteParameters) parameters.getParameters();
-		System.out.println("some int: " + act.getSomeInt());
-		System.out.println("some double: " + act.getSomeDouble());
-		System.out.println("some bool: " + act.isSomeBool());
 		return parameters;
 	}
 

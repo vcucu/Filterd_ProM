@@ -3,7 +3,7 @@ package org.processmining.filterd.wizard;
 import org.deckfour.xes.model.XLog;
 import org.processmining.contexts.uitopia.UIPluginContext;
 import org.processmining.filterd.parameters.ActionsParameters;
-import org.processmining.filterd.parameters.ConcreteParameters;
+import org.processmining.filterd.parameters.AttributeFilterParameters;
 import org.processmining.framework.util.ui.wizard.ProMWizard;
 import org.processmining.framework.util.ui.wizard.ProMWizardStep;
 
@@ -42,7 +42,7 @@ public class FilterdWizard<T extends ActionsParameters> implements ProMWizard<T,
 			// create configuration for selected filter
 			switch(model.getParameters().getFilter()) {
 				case "Event Attributes":
-					model.getParameters().setParameters(new ConcreteParameters());
+					model.getParameters().setParameters(new AttributeFilterParameters(context, log));
 					break;
 			}
 			
