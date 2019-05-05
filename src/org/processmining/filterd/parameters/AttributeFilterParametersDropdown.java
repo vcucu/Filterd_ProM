@@ -12,7 +12,6 @@ import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
 import org.processmining.contexts.uitopia.UIPluginContext;
-import org.processmining.filterd.dialogs.AttributeFilterPanel;
 import org.processmining.filterd.dialogs.AttributeFilterPanelDropdown;
 import org.processmining.framework.util.ui.widgets.ProMPropertiesPanel;
 
@@ -75,25 +74,30 @@ public class AttributeFilterParametersDropdown extends FilterdParameters {
 	}
 
 	public FilterdParameters apply(JComponent component) {
-		AttributeFilterPanel panel = (AttributeFilterPanel) component;
+		System.out.println("This is the apply() method from dropdown!");
+		AttributeFilterPanelDropdown panel = (AttributeFilterPanelDropdown) component;
 		
 		Set<String> attributes = new HashSet<>();
-		for (String key : panel.getLists().keySet()) {
-			this.getLogMap().get(key).clear();
-			this.getLogMap().get(key).addAll(panel.getLists().get(key).getSelectedValuesList());
-			if (panel.getRemoveList().get(key).isSelected()) {
+		for (String key : panel.getListModels().keySet()) {
+			if (key.equals(panel.getDropdown().getSelectedItem().toString())) {
+				this.getLogMap().get(key).clear();
+				this.getLogMap().get(key).addAll(panel.getList().getSelectedValuesList());
+				System.out.println("Updated log map in parameters class!");
+			}
+			if (panel.getRemoveList().get(key)) {
 				attributes.add(key);
 			}
 		}
 		this.setGlobalAttributes(attributes);
-		this.setName(panel.getRemoveEmptyTracesLabel().getText());
+		this.setName(panel.getNameLabel().getText());
 		this.setRemoveEmptyTraces(panel.getRemoveEmptyTracesComponent().isSelected());
 		
+		System.out.println("Return from dropdown params!");
 		return this;
 	}
 
 	public boolean canApply(JComponent component) {
-		if(component instanceof AttributeFilterPanel) {
+		if(component instanceof AttributeFilterPanelDropdown) {
 			return true;
 		} else {
 			return false;
@@ -101,7 +105,7 @@ public class AttributeFilterParametersDropdown extends FilterdParameters {
 	}
 
 	public ProMPropertiesPanel getPropertiesPanel() {
-		return new AttributeFilterPanelDropdown();
+		return new AttributeFilterPanelDropdown(context, this);
 	}
 
 	public HashMap<String, Set<String>> getLogMap() {

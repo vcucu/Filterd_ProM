@@ -85,7 +85,7 @@ public class AttributeFilterParameters extends FilterdParameters {
 			}
 		}
 		this.setGlobalAttributes(attributes);
-		this.setName(panel.getRemoveEmptyTracesLabel().getText());
+		this.setName(panel.getNameLabel().getText());
 		this.setRemoveEmptyTraces(panel.getRemoveEmptyTracesComponent().isSelected());
 		
 		return this;

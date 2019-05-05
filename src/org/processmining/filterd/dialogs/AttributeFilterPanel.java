@@ -33,7 +33,7 @@ public class AttributeFilterPanel extends ProMPropertiesPanel {
 	
 	private HashMap<String, ProMList<String>> lists;
 	private HashMap<String, JCheckBox> removeList;
-	private ProMTextField removeEmptyTracesLabel;
+	private ProMTextField nameLabel;
 	private JCheckBox removeEmptyTracesComponent;
 	AttributeFilterParameters parameters;
 
@@ -93,10 +93,10 @@ public class AttributeFilterPanel extends ProMPropertiesPanel {
 		}
 		this.add(tabbedPane, "0, 0, 1, 0");
 		
-		removeEmptyTracesLabel = new ProMTextField();
-		removeEmptyTracesLabel.setText(parameters.getName() + " (filter attributes)");
-		add(removeEmptyTracesLabel, "1, 1");
-		removeEmptyTracesLabel.setPreferredSize(new Dimension(100, 25));
+		nameLabel = new ProMTextField();
+		nameLabel.setText(parameters.getName() + " (filter attributes)");
+		add(nameLabel, "1, 1");
+		nameLabel.setPreferredSize(new Dimension(100, 25));
 		add(new JLabel("Log name:"), "0, 1");
 
 		removeEmptyTracesComponent = SlickerFactory.instance().createCheckBox("Remove trace if all events were removed", parameters.isRemoveEmptyTraces()); 
@@ -119,12 +119,12 @@ public class AttributeFilterPanel extends ProMPropertiesPanel {
 		this.removeList = globalAttributes;
 	}
 
-	public ProMTextField getRemoveEmptyTracesLabel() {
-		return removeEmptyTracesLabel;
+	public ProMTextField getNameLabel() {
+		return nameLabel;
 	}
 
-	public void setRemoveEmptyTracesLabel(ProMTextField removeEmptyTracesLabel) {
-		this.removeEmptyTracesLabel = removeEmptyTracesLabel;
+	public void setNameLabel(ProMTextField removeEmptyTracesLabel) {
+		this.nameLabel = removeEmptyTracesLabel;
 	}
 
 	public JCheckBox getRemoveEmptyTracesComponent() {
