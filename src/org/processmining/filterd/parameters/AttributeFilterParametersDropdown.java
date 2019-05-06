@@ -17,8 +17,8 @@ import org.processmining.framework.util.ui.widgets.ProMPropertiesPanel;
 
 public class AttributeFilterParametersDropdown extends FilterdParameters {
 	
-	protected HashMap<String, Set<String>> logMap;
-	protected Set<String> globalAttributes;
+	protected HashMap<String, Set<String>> logMap; // the filter
+	protected Set<String> globalAttributes; // the must haves
 	protected String name;
 	private boolean removeEmptyTraces;
 	private XLog log;
