@@ -14,7 +14,6 @@ import javax.swing.OverlayLayout;
 
 import org.deckfour.xes.model.XLog;
 import org.processmining.contexts.uitopia.annotations.Visualizer;
-import org.processmining.filterd.widgets.FilterdConfigurationDialog;
 import org.processmining.filterd.widgets.FilterdConfigurationModal;
 import org.processmining.framework.plugin.PluginContext;
 import org.processmining.framework.plugin.annotations.Plugin;
@@ -35,8 +34,6 @@ public class FilterdVisualizer {
 	@Visualizer(name = "Filterd Visualizer", pack = "Filterd")
 	public JComponent visualize(final PluginContext context, final XLog log) {
 		initComponents();
-
-		FilterdConfigurationDialog modal = new FilterdConfigurationDialog("Configure some filter via a dialog");
 		
 		return main;
 	}

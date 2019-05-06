@@ -1,5 +1,10 @@
 package org.processmining.filterd.plugins;
 
+import java.util.Collection;
+
+import org.deckfour.xes.info.XAttributeInfo;
+import org.deckfour.xes.info.XLogInfo;
+import org.deckfour.xes.info.XLogInfoFactory;
 import org.deckfour.xes.model.XLog;
 import org.processmining.contexts.uitopia.UIPluginContext;
 import org.processmining.contexts.uitopia.annotations.UITopiaVariant;
@@ -30,6 +35,12 @@ public class Filterd {
 	@UITopiaVariant(affiliation = UITopiaVariant.EHV, author = "Filterd team", email = "t.klimovic@student.tue.nl")
 	@PluginVariant(variantLabel = "Filterd plug-in, setup wizard", requiredParameterLabels = { 0 })
 	public XLog mineDefault(UIPluginContext context, XLog log) {
+		
+		XLogInfo logInfo = XLogInfoFactory.createLogInfo(log);
+		XAttributeInfo attrInfo = logInfo.getEventAttributeInfo();
+		Collection<String> attributes = attrInfo.getAttributeKeys();
+		System.out.println(attributes);
+		
 		return mineParameters(context, log, populate(context, new ActionsParameters()));
 	}
 
@@ -40,10 +51,12 @@ public class Filterd {
 			context.getFutureResult(0).cancel(true);
 			return null;
 		}
+		
 		ConcreteParameters act = (ConcreteParameters) parameters.getParameters();
 		System.out.println("some int: " + act.getSomeInt());
 		System.out.println("some double: " + act.getSomeDouble());
 		System.out.println("some bool: " + act.isSomeBool());
+		
 		return parameters;
 	}
 
