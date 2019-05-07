@@ -6,6 +6,8 @@ import org.processmining.filterd.parameters.ActionsParameters;
 import org.processmining.filterd.parameters.AttributeFilterParameters;
 import org.processmining.filterd.parameters.AttributeFilterParametersDropdown;
 import org.processmining.filterd.parameters.ConcreteParameters;
+import org.processmining.framework.plugin.Progress;
+import org.processmining.framework.plugin.impl.ProgressBarImpl;
 import org.processmining.framework.util.ui.wizard.ProMWizard;
 import org.processmining.framework.util.ui.wizard.ProMWizardStep;
 
@@ -20,6 +22,10 @@ public class FilterdWizard<T extends ActionsParameters> implements ProMWizard<T,
 		step = 0;
 		this.log = log;
 		this.context = context;
+		
+		context.getProgress().setMaximum(3 * log.size());
+		Progress progress = new ProgressBarImpl(context);
+		progress.setMaximum(3 * log.size());
 	}
 
 	public ProMWizardStep<T> getFirst(FilterdWizardModel<T> model) {

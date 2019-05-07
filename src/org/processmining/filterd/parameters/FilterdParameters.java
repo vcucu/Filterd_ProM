@@ -2,8 +2,6 @@ package org.processmining.filterd.parameters;
 
 import javax.swing.JComponent;
 
-import org.processmining.framework.util.ui.widgets.ProMPropertiesPanel;
-
 public abstract class FilterdParameters {
 
 	@Override
@@ -16,5 +14,5 @@ public abstract class FilterdParameters {
 
 	public abstract boolean canApply(JComponent component);
 
-	public abstract ProMPropertiesPanel getPropertiesPanel();
+	public abstract JComponent getPropertiesPanel();
 }
