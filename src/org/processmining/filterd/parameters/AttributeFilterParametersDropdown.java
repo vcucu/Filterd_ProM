@@ -12,13 +12,16 @@ import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
 import org.processmining.contexts.uitopia.UIPluginContext;
+import org.processmining.filterd.algorithms.Filter;
+import org.processmining.filterd.algorithms.FilterLogOnEventAttributes;
 import org.processmining.filterd.dialogs.AttributeFilterPanelDropdown;
 import org.processmining.framework.util.ui.widgets.ProMPropertiesPanel;
 
 public class AttributeFilterParametersDropdown extends FilterdParameters {
 	
-	protected HashMap<String, Set<String>> logMap;
-	protected Set<String> globalAttributes;
+	protected Filter filter;
+	protected HashMap<String, Set<String>> logMap; // the filter
+	protected Set<String> globalAttributes; // the must haves
 	protected String name;
 	private boolean removeEmptyTraces;
 	private XLog log;
@@ -29,6 +32,7 @@ public class AttributeFilterParametersDropdown extends FilterdParameters {
 		globalAttributes = new HashSet<>();
 		name = "";
 		removeEmptyTraces = false;
+		filter = new FilterLogOnEventAttributes();
 	}
 	
 	public AttributeFilterParametersDropdown(UIPluginContext context, XLog log) {
@@ -138,5 +142,8 @@ public class AttributeFilterParametersDropdown extends FilterdParameters {
 
 	public void setRemoveEmptyTraces(boolean removeEmptyTraces) {
 		this.removeEmptyTraces = removeEmptyTraces;
+	}
+	public Filter getFilter() {
+		return this.filter;
 	}
 }

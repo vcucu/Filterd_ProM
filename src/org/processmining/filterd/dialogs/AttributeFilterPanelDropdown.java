@@ -33,6 +33,9 @@ public class AttributeFilterPanelDropdown extends ProMPropertiesPanel {
 	private ProMList<String> list;
 	private HashMap<String, int[]> listSelected = new HashMap<>();
 	private HashMap<String, DefaultListModel<String>> listModels = new HashMap<>();
+	
+	List<String> sortedKeys = new ArrayList<String>();
+	Map<String, List<String>> values = new HashMap<String, List<String>>();
 
 	public AttributeFilterPanelDropdown(PluginContext context, AttributeFilterParametersDropdown parameters) {
 		super("Filter on event attributes configuration panel");
@@ -40,7 +43,7 @@ public class AttributeFilterPanelDropdown extends ProMPropertiesPanel {
 		this.parameters = parameters;
 		
 		// build a hash map for storing the sorted attributes values (for each key)
-		Map<String, List<String>> values = new HashMap<String, List<String>>();
+		//Map<String, List<String>> values = new HashMap<String, List<String>>();
 		for (String key : parameters.getLogMap().keySet()) {
 			values.put(key, new ArrayList<String>());
 			values.get(key).addAll(parameters.getLogMap().get(key));
@@ -49,7 +52,7 @@ public class AttributeFilterPanelDropdown extends ProMPropertiesPanel {
 		}
 		
 		// add attribute keys to the drop down
-		List<String> sortedKeys = new ArrayList<String>();
+		//List<String> sortedKeys = new ArrayList<String>();
 		sortedKeys.addAll(values.keySet());
 		Collections.sort(sortedKeys, new AlphanumComparator());
 		dropdown = addComboBox("Filter by", sortedKeys.toArray(new String[sortedKeys.size()]));
@@ -97,6 +100,18 @@ public class AttributeFilterPanelDropdown extends ProMPropertiesPanel {
 		String newItemKey = dropdown.getSelectedItem().toString();
 		list.getList().setModel(listModels.get(newItemKey));
 		list.setSelectedIndices(listSelected.get(newItemKey));
+		for(String key: sortedKeys) {
+			if(!key.equals(newItemKey)) {
+				int[] selected = new int[values.get(key).size()];
+				int index = 0;
+				for (String value: values.get(key)) {
+					selected[index] = index;
+					index += 1;
+				}
+				listSelected.put(key, selected);
+			}
+		}
+		
 		return null;
 	}
 

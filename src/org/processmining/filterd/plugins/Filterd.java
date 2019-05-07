@@ -6,6 +6,7 @@ import org.deckfour.uitopia.api.event.TaskListener.InteractionResult;
 import org.deckfour.xes.model.XLog;
 import org.processmining.contexts.uitopia.UIPluginContext;
 import org.processmining.contexts.uitopia.annotations.UITopiaVariant;
+import org.processmining.filterd.algorithms.Filter;
 import org.processmining.filterd.parameters.ActionsParameters;
 import org.processmining.filterd.parameters.AttributeFilterParameters;
 import org.processmining.filterd.parameters.AttributeFilterParametersDropdown;
@@ -28,7 +29,7 @@ public class Filterd {
 
 	private ActionsParameters populate(UIPluginContext context, XLog log, ActionsParameters parameters) {
 		InteractionResult res;
-		
+
 		// show step 1 (pick which filter you want to use)
 		FilterdFilterStep step1 = new FilterdFilterStep();
 		res = context.showWizard("Filterd plug-in configuration", true, true, step1);
@@ -37,11 +38,11 @@ public class Filterd {
 			return null;
 		}
 		step1.apply(parameters); // apply changes from the gui
-		
+
 		// resolve filter to filter parameters, and show progress bar if necessary
 		FilterdParameters filterParameters = mapFilterToParameters(parameters, context, log);
 		parameters.setParameters(filterParameters);
-		
+
 		// show step 2 (configuration of a specific filter)
 		JComponent propertiesPanel = filterParameters.getPropertiesPanel();
 		res = context.showWizard("Filterd plug-in configuration", true, true, propertiesPanel);
@@ -50,10 +51,10 @@ public class Filterd {
 			return null;
 		}
 		filterParameters.apply(propertiesPanel); // apply changes from the gui
-		
+
 		return parameters;
 	}
-	
+
 	private FilterdParameters mapFilterToParameters(ActionsParameters parameters, UIPluginContext context, XLog log) {
 		switch(parameters.getFilter()) {
 			case "Event Attributes":
@@ -65,13 +66,15 @@ public class Filterd {
 			case "Event Attributes (dropdown)":
 				context.getProgress().setMaximum(3 * log.size());
 				return new AttributeFilterParametersDropdown(context, log);
-			default: 
+			default:
 				return null;
 		}
 	}
 
 	private XLog mine(PluginContext context, XLog log, ActionsParameters parameters) {
-		return log;
+		AttributeFilterParametersDropdown concreteParameters = (AttributeFilterParametersDropdown) parameters.getParameters();
+		Filter filter = concreteParameters.getFilter();
+		return filter.filter(context, log, concreteParameters);
 	}
 
 }
