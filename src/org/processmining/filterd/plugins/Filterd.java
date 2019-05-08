@@ -17,6 +17,8 @@ import org.processmining.framework.plugin.PluginContext;
 import org.processmining.framework.plugin.annotations.Plugin;
 import org.processmining.framework.plugin.annotations.PluginVariant;
 
+import timeframe.TimeframeParameters;
+
 @Plugin(name = "Filterd plug-in", returnLabels = { "Output log" }, returnTypes = { XLog.class }, parameterLabels = {
 		"Log", "Parameters" }, userAccessible = true)
 public class Filterd {
@@ -33,7 +35,7 @@ public class Filterd {
 		// show step 1 (pick which filter you want to use)
 		FilterdFilterStep step1 = new FilterdFilterStep();
 		res = context.showWizard("Filterd plug-in configuration", true, true, step1);
-		if(res == InteractionResult.CANCEL) {
+		if (res == InteractionResult.CANCEL) {
 			context.getFutureResult(0).cancel(true);
 			return null;
 		}
@@ -66,15 +68,27 @@ public class Filterd {
 			case "Event Attributes (dropdown)":
 				context.getProgress().setMaximum(3 * log.size());
 				return new AttributeFilterParametersDropdown(context, log);
+			case "Timeframe Filter":
+				context.getProgress().setMaximum(3 * log.size());
+				return new TimeframeParameters(context, log);
 			default:
 				return null;
 		}
 	}
 
 	private XLog mine(PluginContext context, XLog log, ActionsParameters parameters) {
-		AttributeFilterParametersDropdown concreteParameters = (AttributeFilterParametersDropdown) parameters.getParameters();
-		Filter filter = concreteParameters.getFilter();
-		return filter.filter(context, log, concreteParameters);
+		switch (parameters.getFilter()) {
+			case "Timeframe Filter":
+				TimeframeParameters concreteParameters2 = (TimeframeParameters) parameters.getParameters();
+				Filter filter = concreteParameters2.getFilter();
+				return filter.filter(context, log, concreteParameters2);
+			default:
+				AttributeFilterParametersDropdown concreteParameters = 
+				(AttributeFilterParametersDropdown) parameters.getParameters();
+				Filter filter2 = concreteParameters.getFilter();
+				return filter2.filter(context, log, concreteParameters);
+		}
+		
 	}
 
 }

@@ -21,9 +21,11 @@ public class FilterdFilterStep extends JPanel {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
 		DefaultListModel<String> listModel = new DefaultListModel<>();
+		/* list of filters displayed after selecting the FilterD plugin */
 		listModel.addElement("Event Attributes");
 		listModel.addElement("Event Attributes (dropdown)");
 		listModel.addElement("Concrete Filter");
+		listModel.addElement("Timeframe Filter");
 		list = new ProMList<>("Select the filter you would like to use.", listModel);
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		add(list);

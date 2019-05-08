@@ -79,6 +79,7 @@ public class FilterdFilterWizardStep<T extends ActionsParameters> implements Pro
 		listModel.addElement("Event Attributes");
 		listModel.addElement("Event Attributes (dropdown)");
 		listModel.addElement("Concrete Filter");
+		listModel.addElement("Timeframe Filter");
 		return new FilterdFilterWizardStep<T>("Select the filter you would like to use.", listModel).getPanel();
 	}
 

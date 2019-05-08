@@ -11,6 +11,8 @@ import org.processmining.framework.plugin.impl.ProgressBarImpl;
 import org.processmining.framework.util.ui.wizard.ProMWizard;
 import org.processmining.framework.util.ui.wizard.ProMWizardStep;
 
+import timeframe.TimeframeParameters;
+
 public class FilterdWizard<T extends ActionsParameters> implements ProMWizard<T, FilterdWizardModel<T>> {
 	
 	private int step;
@@ -58,6 +60,8 @@ public class FilterdWizard<T extends ActionsParameters> implements ProMWizard<T,
 				case "Event Attributes (dropdown)":
 					model.getParameters().setParameters(new AttributeFilterParametersDropdown(context, log));
 					break;
+				case "Timeframe Filter":
+					model.getParameters().setParameters(new TimeframeParameters(context, log));
 			}
 			
 			return new FilterdConfigurationWizardStep<T>();
