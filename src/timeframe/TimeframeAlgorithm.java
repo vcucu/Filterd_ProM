@@ -32,9 +32,6 @@ public class TimeframeAlgorithm extends Filter {
 					for (String key : event.getAttributes().keySet()) {
 						if (key.contains("time:timestamp")) {
 							String time = event.getAttributes().get(key).toString();
-							System.out.println("this is the value " + time);
-							System.out.println("lower " + lower);
-							System.out.println("upper " + upper);
 							if (time.compareTo(lower) >= 0 && time.compareTo(upper) <= 0) {
 								add = true;
 							}
