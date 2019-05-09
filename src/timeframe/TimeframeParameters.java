@@ -6,7 +6,6 @@ import java.util.Collections;
 import javax.swing.JComponent;
 
 import org.deckfour.xes.extension.std.XConceptExtension;
-import org.deckfour.xes.model.XAttribute;
 import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
@@ -25,15 +24,15 @@ public class TimeframeParameters extends FilterdParameters {
 	private String lowerTime;
 	private String upperTime;
 
-	private ArrayList<XAttribute> times; 
+	private ArrayList<String> times; 
 	
 	public TimeframeParameters() {
 		name = "";
 		removeEmptyTraces = false;
 		filter = new TimeframeAlgorithm();
 		times = new ArrayList<>();
-		lowerTime = new String();
-		upperTime = new String();
+		lowerTime = "";
+		upperTime = "";
 	}
 	
 	public TimeframeParameters(UIPluginContext context, XLog log){
@@ -45,7 +44,20 @@ public class TimeframeParameters extends FilterdParameters {
 			for (XEvent event : trace) {
 				for (String key : event.getAttributes().keySet()) {
 					if (key.contains("time:timestamp")) {
-							times.add(event.getAttributes().get(key));
+							/* timestamp format YYYY-MM-DDTHH:MM:SS.ssssGMT with GMT = {Z, + , -} */
+							String time = event.getAttributes().get(key).toString();
+							/* get only yyy-mm-ddThh:mm:ss */
+							if (time.contains(".")) {
+								times.add(time.split("\\.")[0]);
+							} else {
+								if (time.contains("+")) {
+									times.add(time.split("\\+")[0]);
+								} else if (time.contains("Z")) {
+									times.add(time.split("Z")[0]);
+								} else if (time.contains("-")) {
+									times.add(time.split("\\-")[0]);
+								}
+							}
 					}
 				}
 			}
@@ -101,12 +113,12 @@ public class TimeframeParameters extends FilterdParameters {
 	}
 
 	public void setUpper(String upperTime) {
-		this.upperTime = new String(upperTime);
+		this.upperTime = upperTime;
 		
 	}
 
 	public void setLower(String lowerTime) {
-		this.lowerTime = new String(lowerTime);
+		this.lowerTime = lowerTime;
 		
 	}
 	
@@ -130,7 +142,7 @@ public class TimeframeParameters extends FilterdParameters {
 		return removeEmptyTraces;
 	}
 	
-	public ArrayList<XAttribute> getTimes() {
+	public ArrayList<String> getTimes() {
 		return times;
 	}
 	

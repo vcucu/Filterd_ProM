@@ -63,7 +63,7 @@ public class RangeSlider extends JComponent
     protected ChangeEvent changeEvent = null;
     protected ChangeListener lstnr;
  
-    protected Color thumbColor = new Color(150,180,220);
+    protected Color thumbColor = new Color(91,216,126);
     
     // ------------------------------------------------------------------------
 
@@ -419,7 +419,7 @@ public class RangeSlider extends JComponent
                 paint3DRectLighting(g2,max,0,ARROW_SZ-1,height);
             
                 // Draw arrows          
-                g2.setColor(Color.red);
+                g2.setColor(Color.black);
                 paintArrow(g2, min - ARROW_SZ + (ARROW_SZ-ARROW_HEIGHT) / 2.0, (height-ARROW_WIDTH) / 2.0, ARROW_HEIGHT, ARROW_WIDTH, true);
                 paintArrow(g2, max + (ARROW_SZ-ARROW_HEIGHT) / 2.0, (height-ARROW_WIDTH) / 2.0, ARROW_HEIGHT, ARROW_WIDTH, false);
             }
@@ -439,7 +439,7 @@ public class RangeSlider extends JComponent
                 paint3DRectLighting(g2,max-ARROW_SZ,0,ARROW_SZ-1,height); 
             
                 // Draw arrows          
-                g2.setColor(Color.red);
+                g2.setColor(Color.black);
                 paintArrow(g2, min + (ARROW_SZ-ARROW_HEIGHT) / 2.0, (height-ARROW_WIDTH) / 2.0, ARROW_HEIGHT, ARROW_WIDTH, true);
                 paintArrow(g2, max - ARROW_SZ + (ARROW_SZ-ARROW_HEIGHT) / 2.0, (height-ARROW_WIDTH) / 2.0, ARROW_HEIGHT, ARROW_WIDTH, false);                   
             }
