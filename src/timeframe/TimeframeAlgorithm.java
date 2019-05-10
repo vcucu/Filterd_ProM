@@ -31,7 +31,7 @@ public class TimeframeAlgorithm extends Filter {
 					boolean add = false;
 					for (String key : event.getAttributes().keySet()) {
 						if (key.contains("time:timestamp")) {
-							String time = event.getAttributes().get(key).toString();
+							String time = stripGMT(event.getAttributes().get(key).toString());
 							if (time.compareTo(lower) >= 0 && time.compareTo(upper) <= 0) {
 								add = true;
 							}
@@ -53,4 +53,19 @@ public class TimeframeAlgorithm extends Filter {
 			context.getFutureResult(0).setLabel(parameters.getName());
 			return filteredLog;
 		}
+	
+	private String stripGMT(String time) {
+		if (time.contains(".")) {
+			return time.split("\\.")[0];
+		} else {
+			if (time.contains("+")) {
+				return (time.split("\\+")[0]);
+			} else if (time.contains("Z")) {
+				return (time.split("Z")[0]);
+			} else if (time.contains("-")) {
+				return (time.split("\\-")[0]);
+			}
+		}
+		return time;
+	}
 }
