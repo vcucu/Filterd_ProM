@@ -81,7 +81,8 @@ public class FilterdVisualizer {
         text.setX(40);
         text.setY(100);
         text.setFont(new Font(25));
-        text.setText("Welcome JavaFX!");
+        //TESTING CODE BY EWOUD
+        text.setText("Welcome to JavaFX " + System.getProperty("java.version") + ", running on Java " + System.getProperty("javafx.version") + ".");
 
         root.getChildren().add(text);
         
