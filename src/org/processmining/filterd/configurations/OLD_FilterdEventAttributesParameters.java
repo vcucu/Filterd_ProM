@@ -14,7 +14,7 @@ import org.deckfour.xes.model.XTrace;
 import org.processmining.contexts.uitopia.UIPluginContext;
 import org.processmining.filterd.dialogs.FilterdEventAttributesPanel;
 import org.processmining.filterd.filters.Filter;
-import org.processmining.filterd.filters.FilterLogOnEventAttributes;
+import org.processmining.filterd.filters.OLD_FilterLogOnEventAttributes;
 import org.processmining.framework.util.ui.widgets.ProMPropertiesPanel;
 
 
@@ -33,7 +33,7 @@ public class OLD_FilterdEventAttributesParameters extends FilterdAbstractConfig 
 		globalAttributes = new HashSet<>();
 		name = "";
 		removeEmptyTraces = false;
-		filter = new FilterLogOnEventAttributes();
+		filter = new OLD_FilterLogOnEventAttributes();
 	}
 	
 	public OLD_FilterdEventAttributesParameters(UIPluginContext context, XLog log) {

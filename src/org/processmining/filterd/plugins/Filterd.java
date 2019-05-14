@@ -9,7 +9,7 @@ import org.processmining.contexts.uitopia.annotations.UITopiaVariant;
 import org.processmining.filterd.configurations.ActionsParameters;
 import org.processmining.filterd.configurations.FilterdAbstractConfig;
 import org.processmining.filterd.configurations.OLD_FilterdEventAttributesParameters;
-import org.processmining.filterd.filters.Filter;
+import org.processmining.filterd.filters.OLD_FilterLogOnEventAttributes;
 import org.processmining.filterd.wizard.FilterdFilterStep;
 import org.processmining.framework.plugin.PluginContext;
 import org.processmining.framework.plugin.annotations.Plugin;
@@ -65,8 +65,9 @@ public class Filterd {
 
 	private XLog mine(PluginContext context, XLog log, ActionsParameters parameters) {
 		OLD_FilterdEventAttributesParameters concreteParameters = (OLD_FilterdEventAttributesParameters) parameters.getParameters();
-		Filter filter = concreteParameters.getFilter();
+		OLD_FilterLogOnEventAttributes filter =  (OLD_FilterLogOnEventAttributes) concreteParameters.getFilter();
 		return filter.filter(context, log, concreteParameters);
+		
 	}
 
 }
