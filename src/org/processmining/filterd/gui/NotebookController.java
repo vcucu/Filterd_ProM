@@ -81,12 +81,11 @@ public class NotebookController {
     
     @FXML protected void loadVisualizer(ActionEvent event) {	
 		// outputEventLog need not be in the workspace
-		String selectedTypename = (String) cmbVisualizer.getValue();
-		Class<Connection> connectionType = null;//Class<Connection> connectionType = context.getGlobalContext().getConnectionManager();
-		Object outputEventLog = log.clone();
+		String selectedTypename =  (String) cmbVisualizer.getValue();	// "@2 Log Summary";
+		Object outputEventLog = log.clone(); //
 		JComponent component;
 		try {
-			component = context.tryToFindOrConstructFirstNamedObject(JComponent.class, selectedTypename, connectionType, null, outputEventLog);
+			component = context.tryToFindOrConstructFirstNamedObject(JComponent.class, selectedTypename, null, null, outputEventLog);
 			updateVisualizationPanel(component);
 		} catch (Exception e1) {
 			e1.printStackTrace();
