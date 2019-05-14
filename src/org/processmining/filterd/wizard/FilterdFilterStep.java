@@ -22,6 +22,7 @@ public class FilterdFilterStep extends JPanel {
 		
 		DefaultListModel<String> listModel = new DefaultListModel<>();
 		listModel.addElement("Event Attributes (dropdown)");
+		listModel.addElement("Timeframe Filter");
 		list = new ProMList<>("Select the filter you would like to use.", listModel);
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		add(list);

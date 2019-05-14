@@ -68,4 +68,9 @@ public class ActionsParameters extends FilterdAbstractConfig {
 		
 	}
 
+	public JComponent getPropertiesPanel() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

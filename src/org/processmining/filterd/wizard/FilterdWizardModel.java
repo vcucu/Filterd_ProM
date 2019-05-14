@@ -10,11 +10,11 @@ public class FilterdWizardModel<T extends ActionsParameters> {
 		this.parameters = parameters;
 	}
 
-	public T getParameters() {
+	public T getConfiguration() {
 		return parameters;
 	}
 
-	public void setParameters(T parameters) {
+	public void setConfiguration(T parameters) {
 		this.parameters = parameters;
 	}
 }
