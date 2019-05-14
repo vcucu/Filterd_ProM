@@ -10,7 +10,7 @@ import javax.swing.JProgressBar;
 import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
 
-import org.processmining.filterd.parameters.ActionsParameters;
+import org.processmining.filterd.configurations.ActionsParameters;
 import org.processmining.framework.util.ui.widgets.ProMList;
 import org.processmining.framework.util.ui.wizard.ProMWizardStep;
 
@@ -76,9 +76,7 @@ public class FilterdFilterWizardStep<T extends ActionsParameters> implements Pro
 
 	public JComponent getComponent(T model) {
 		DefaultListModel<String> listModel = new DefaultListModel<>();
-		listModel.addElement("Event Attributes");
 		listModel.addElement("Event Attributes (dropdown)");
-		listModel.addElement("Concrete Filter");
 		return new FilterdFilterWizardStep<T>("Select the filter you would like to use.", listModel).getPanel();
 	}
 

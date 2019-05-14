@@ -1,13 +1,17 @@
-package org.processmining.filterd.parameters;
+package org.processmining.filterd.configurations;
 
 import javax.swing.JComponent;
 
+import org.deckfour.xes.model.XLog;
 import org.processmining.framework.util.ui.widgets.ProMPropertiesPanel;
 
-public class ActionsParameters extends FilterdParameters {
+/*
+ * obsolete
+ */
+public class ActionsParameters extends FilterdAbstractConfig {
 	
 	protected String filter;
-	protected FilterdParameters parameters;
+	protected FilterdAbstractConfig parameters;
 
 	public ActionsParameters() {
 		filter = "";
@@ -21,11 +25,11 @@ public class ActionsParameters extends FilterdParameters {
 		this.filter = filter;
 	}
 	
-	public FilterdParameters getParameters() {
+	public FilterdAbstractConfig getConfiguration() {
 		return parameters;
 	}
 
-	public void setParameters(FilterdParameters parameters) {
+	public void setParameters(FilterdAbstractConfig parameters) {
 		this.parameters = parameters;
 	}
 
@@ -42,16 +46,26 @@ public class ActionsParameters extends FilterdParameters {
 		return 0;
 	}
 
-	public FilterdParameters apply(JComponent component) {
+	public FilterdAbstractConfig populate(JComponent component) {
 		return null;
 	}
 
-	public boolean canApply(JComponent component) {
+	public boolean canPopulate(JComponent component) {
 		return false;
 	}
 
-	public ProMPropertiesPanel getPropertiesPanel() {
+	public ProMPropertiesPanel getConfigPanel() {
 		return null;
+	}
+
+	public boolean checkValidity(XLog log) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public void filter() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

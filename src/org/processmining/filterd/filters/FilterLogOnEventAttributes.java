@@ -1,4 +1,4 @@
-package org.processmining.filterd.algorithms;
+package org.processmining.filterd.filters;
 
 import org.deckfour.xes.extension.std.XConceptExtension;
 import org.deckfour.xes.factory.XFactory;
@@ -7,14 +7,14 @@ import org.deckfour.xes.model.XAttributeMap;
 import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
-import org.processmining.filterd.parameters.AttributeFilterParametersDropdown;
-import org.processmining.filterd.parameters.FilterdParameters;
+import org.processmining.filterd.configurations.FilterdAbstractConfig;
+import org.processmining.filterd.configurations.OLD_FilterdEventAttributesParameters;
 import org.processmining.framework.plugin.PluginContext;
 
 public class FilterLogOnEventAttributes extends Filter {
 
-	public XLog filter(PluginContext context, XLog log, FilterdParameters par) {
-		AttributeFilterParametersDropdown parameters = (AttributeFilterParametersDropdown)par;
+	public XLog filter(PluginContext context, XLog log, FilterdAbstractConfig par) {
+		OLD_FilterdEventAttributesParameters parameters = (OLD_FilterdEventAttributesParameters)par;
 		XFactory factory = XFactoryRegistry.instance().currentDefault();
 		XLog filteredLog = factory.createLog((XAttributeMap) log.getAttributes().clone());
 		filteredLog.getClassifiers().addAll(log.getClassifiers());

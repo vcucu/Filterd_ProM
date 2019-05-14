@@ -2,10 +2,8 @@ package org.processmining.filterd.wizard;
 
 import org.deckfour.xes.model.XLog;
 import org.processmining.contexts.uitopia.UIPluginContext;
-import org.processmining.filterd.parameters.ActionsParameters;
-import org.processmining.filterd.parameters.AttributeFilterParameters;
-import org.processmining.filterd.parameters.AttributeFilterParametersDropdown;
-import org.processmining.filterd.parameters.ConcreteParameters;
+import org.processmining.filterd.configurations.ActionsParameters;
+import org.processmining.filterd.configurations.OLD_FilterdEventAttributesParameters;
 import org.processmining.framework.plugin.Progress;
 import org.processmining.framework.plugin.impl.ProgressBarImpl;
 import org.processmining.framework.util.ui.wizard.ProMWizard;
@@ -49,14 +47,8 @@ public class FilterdWizard<T extends ActionsParameters> implements ProMWizard<T,
 			
 			// create configuration for selected filter
 			switch(model.getParameters().getFilter()) {
-				case "Event Attributes":
-					model.getParameters().setParameters(new AttributeFilterParameters(context, log));
-					break;
-				case "Concrete Filter":
-					model.getParameters().setParameters(new ConcreteParameters());
-					break;
 				case "Event Attributes (dropdown)":
-					model.getParameters().setParameters(new AttributeFilterParametersDropdown(context, log));
+					model.getParameters().setParameters(new OLD_FilterdEventAttributesParameters(context, log));
 					break;
 			}
 			

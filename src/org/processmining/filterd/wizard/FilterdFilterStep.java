@@ -7,7 +7,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.JPanel;
 import javax.swing.ListSelectionModel;
 
-import org.processmining.filterd.parameters.ActionsParameters;
+import org.processmining.filterd.configurations.ActionsParameters;
 import org.processmining.framework.util.ui.widgets.ProMList;
 
 public class FilterdFilterStep extends JPanel {
@@ -21,9 +21,7 @@ public class FilterdFilterStep extends JPanel {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
 		DefaultListModel<String> listModel = new DefaultListModel<>();
-		listModel.addElement("Event Attributes");
 		listModel.addElement("Event Attributes (dropdown)");
-		listModel.addElement("Concrete Filter");
 		list = new ProMList<>("Select the filter you would like to use.", listModel);
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		add(list);

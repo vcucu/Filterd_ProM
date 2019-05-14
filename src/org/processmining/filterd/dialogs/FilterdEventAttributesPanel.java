@@ -11,7 +11,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.JCheckBox;
 import javax.swing.ListSelectionModel;
 
-import org.processmining.filterd.parameters.AttributeFilterParametersDropdown;
+import org.processmining.filterd.configurations.OLD_FilterdEventAttributesParameters;
 import org.processmining.framework.plugin.PluginContext;
 import org.processmining.framework.util.collection.AlphanumComparator;
 import org.processmining.framework.util.ui.widgets.ProMComboBox;
@@ -19,7 +19,7 @@ import org.processmining.framework.util.ui.widgets.ProMList;
 import org.processmining.framework.util.ui.widgets.ProMPropertiesPanel;
 import org.processmining.framework.util.ui.widgets.ProMTextField;
 
-public class AttributeFilterPanelDropdown extends ProMPropertiesPanel {
+public class FilterdEventAttributesPanel extends ProMPropertiesPanel {
 
 	private static final long serialVersionUID = -7979473315436318888L;
 	
@@ -27,7 +27,7 @@ public class AttributeFilterPanelDropdown extends ProMPropertiesPanel {
 	private ProMTextField nameLabel;
 	private JCheckBox removeEmptyTracesComponent;
 	private JCheckBox removeEmptyEventsComponent;
-	AttributeFilterParametersDropdown parameters;
+	OLD_FilterdEventAttributesParameters parameters;
 	
 	private ProMComboBox<String> dropdown;
 	private ProMList<String> list;
@@ -37,7 +37,7 @@ public class AttributeFilterPanelDropdown extends ProMPropertiesPanel {
 	List<String> sortedKeys = new ArrayList<String>();
 	Map<String, List<String>> values = new HashMap<String, List<String>>();
 
-	public AttributeFilterPanelDropdown(PluginContext context, AttributeFilterParametersDropdown parameters) {
+	public FilterdEventAttributesPanel(PluginContext context, OLD_FilterdEventAttributesParameters parameters) {
 		super("Filter on event attributes configuration panel");
 		removeList = new HashMap<>();
 		this.parameters = parameters;

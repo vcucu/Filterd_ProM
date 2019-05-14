@@ -1,4 +1,4 @@
-package org.processmining.filterd.parameters;
+package org.processmining.filterd.configurations;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -12,26 +12,31 @@ import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
 import org.processmining.contexts.uitopia.UIPluginContext;
-import org.processmining.filterd.dialogs.AttributeFilterPanel;
+import org.processmining.filterd.dialogs.FilterdEventAttributesPanel;
+import org.processmining.filterd.filters.Filter;
+import org.processmining.filterd.filters.FilterLogOnEventAttributes;
 import org.processmining.framework.util.ui.widgets.ProMPropertiesPanel;
 
-public class AttributeFilterParameters extends FilterdParameters {
+
+public class OLD_FilterdEventAttributesParameters extends FilterdAbstractConfig {
 	
-	protected HashMap<String, Set<String>> logMap;
-	protected Set<String> globalAttributes;
+	protected Filter filter;
+	protected HashMap<String, Set<String>> logMap; // the filter
+	protected Set<String> globalAttributes; // the must haves
 	protected String name;
 	private boolean removeEmptyTraces;
 	private XLog log;
 	private UIPluginContext context;
 	
-	public AttributeFilterParameters() {
+	public OLD_FilterdEventAttributesParameters() {
 		logMap = new HashMap<>();
 		globalAttributes = new HashSet<>();
 		name = "";
 		removeEmptyTraces = false;
+		filter = new FilterLogOnEventAttributes();
 	}
 	
-	public AttributeFilterParameters(UIPluginContext context, XLog log) {
+	public OLD_FilterdEventAttributesParameters(UIPluginContext context, XLog log) {
 		this();
 		this.log = log;
 		this.context = context;
@@ -57,9 +62,10 @@ public class AttributeFilterParameters extends FilterdParameters {
 		name = XConceptExtension.instance().extractName(log);
 	}
 	
+	
 	public boolean equals(Object object) {
-		if(object instanceof AttributeFilterParameters) {
-			AttributeFilterParameters attributeParameters = (AttributeFilterParameters) object;
+		if(object instanceof OLD_FilterdEventAttributesParameters) {
+			OLD_FilterdEventAttributesParameters attributeParameters = (OLD_FilterdEventAttributesParameters) object;
 			return this.getLogMap().equals(attributeParameters.getLogMap()) && 
 					this.getGlobalAttributes().equals(attributeParameters.getGlobalAttributes()) &&
 					this.getName() == attributeParameters.getName();
@@ -73,14 +79,18 @@ public class AttributeFilterParameters extends FilterdParameters {
 		return 0;
 	}
 
-	public FilterdParameters apply(JComponent component) {
-		AttributeFilterPanel panel = (AttributeFilterPanel) component;
+	public FilterdAbstractConfig populate(JComponent component) {
+		System.out.println("This is the apply() method from dropdown!");
+		FilterdEventAttributesPanel panel = (FilterdEventAttributesPanel) component;
 		
 		Set<String> attributes = new HashSet<>();
-		for (String key : panel.getLists().keySet()) {
-			this.getLogMap().get(key).clear();
-			this.getLogMap().get(key).addAll(panel.getLists().get(key).getSelectedValuesList());
-			if (panel.getRemoveList().get(key).isSelected()) {
+		for (String key : panel.getListModels().keySet()) {
+			if (key.equals(panel.getDropdown().getSelectedItem().toString())) {
+				this.getLogMap().get(key).clear();
+				this.getLogMap().get(key).addAll(panel.getList().getSelectedValuesList());
+				System.out.println("Updated log map in parameters class!");
+			}
+			if (panel.getRemoveList().get(key)) {
 				attributes.add(key);
 			}
 		}
@@ -88,11 +98,12 @@ public class AttributeFilterParameters extends FilterdParameters {
 		this.setName(panel.getNameLabel().getText());
 		this.setRemoveEmptyTraces(panel.getRemoveEmptyTracesComponent().isSelected());
 		
+		System.out.println("Return from dropdown params!");
 		return this;
 	}
 
-	public boolean canApply(JComponent component) {
-		if(component instanceof AttributeFilterPanel) {
+	public boolean canPopulate(JComponent component) {
+		if(component instanceof FilterdEventAttributesPanel) {
 			return true;
 		} else {
 			return false;
@@ -100,7 +111,7 @@ public class AttributeFilterParameters extends FilterdParameters {
 	}
 
 	public ProMPropertiesPanel getPropertiesPanel() {
-		return new AttributeFilterPanel(context, this);
+		return new FilterdEventAttributesPanel(context, this);
 	}
 
 	public HashMap<String, Set<String>> getLogMap() {
@@ -133,5 +144,18 @@ public class AttributeFilterParameters extends FilterdParameters {
 
 	public void setRemoveEmptyTraces(boolean removeEmptyTraces) {
 		this.removeEmptyTraces = removeEmptyTraces;
+	}
+	public Filter getFilter() {
+		return this.filter;
+	}
+
+	public boolean checkValidity(XLog log) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public void filter() {
+		// TODO Auto-generated method stub
+		
 	}
 }

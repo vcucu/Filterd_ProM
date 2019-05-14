@@ -1,6 +1,6 @@
 package org.processmining.filterd.wizard;
 
-import org.processmining.filterd.parameters.ActionsParameters;
+import org.processmining.filterd.configurations.ActionsParameters;
 
 public class FilterdWizardModel<T extends ActionsParameters> {
 	

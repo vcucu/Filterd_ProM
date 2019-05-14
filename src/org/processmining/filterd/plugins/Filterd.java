@@ -6,12 +6,10 @@ import org.deckfour.uitopia.api.event.TaskListener.InteractionResult;
 import org.deckfour.xes.model.XLog;
 import org.processmining.contexts.uitopia.UIPluginContext;
 import org.processmining.contexts.uitopia.annotations.UITopiaVariant;
-import org.processmining.filterd.algorithms.Filter;
-import org.processmining.filterd.parameters.ActionsParameters;
-import org.processmining.filterd.parameters.AttributeFilterParameters;
-import org.processmining.filterd.parameters.AttributeFilterParametersDropdown;
-import org.processmining.filterd.parameters.ConcreteParameters;
-import org.processmining.filterd.parameters.FilterdParameters;
+import org.processmining.filterd.configurations.ActionsParameters;
+import org.processmining.filterd.configurations.FilterdAbstractConfig;
+import org.processmining.filterd.configurations.OLD_FilterdEventAttributesParameters;
+import org.processmining.filterd.filters.Filter;
 import org.processmining.filterd.wizard.FilterdFilterStep;
 import org.processmining.framework.plugin.PluginContext;
 import org.processmining.framework.plugin.annotations.Plugin;
@@ -31,16 +29,16 @@ public class Filterd {
 		InteractionResult res;
 
 		// show step 1 (pick which filter you want to use)
-		FilterdFilterStep step1 = new FilterdFilterStep();
-		res = context.showWizard("Filterd plug-in configuration", true, true, step1);
+		FilterdFilterStep step1 = new FilterdFilterStep(); // step1 = Jpanel
+		res = context.showWizard("Filterd plug-in configuration", true, true, step1); //display it 
 		if(res == InteractionResult.CANCEL) {
 			context.getFutureResult(0).cancel(true);
 			return null;
 		}
-		step1.apply(parameters); // apply changes from the gui
+		step1.apply(parameters); // apply changes from the gui/populates the parameters
 
 		// resolve filter to filter parameters, and show progress bar if necessary
-		FilterdParameters filterParameters = mapFilterToParameters(parameters, context, log);
+		FilterdAbstractConfig filterParameters = mapFilterToParameters(parameters, context, log);
 		parameters.setParameters(filterParameters);
 
 		// show step 2 (configuration of a specific filter)
@@ -50,29 +48,23 @@ public class Filterd {
 			context.getFutureResult(0).cancel(true);
 			return null;
 		}
-		filterParameters.apply(propertiesPanel); // apply changes from the gui
+		filterParameters.populate(propertiesPanel); // apply changes from the gui
 
 		return parameters;
 	}
 
-	private FilterdParameters mapFilterToParameters(ActionsParameters parameters, UIPluginContext context, XLog log) {
+	private FilterdAbstractConfig mapFilterToParameters(ActionsParameters parameters, UIPluginContext context, XLog log) {
 		switch(parameters.getFilter()) {
-			case "Event Attributes":
-				context.getProgress().setMaximum(3 * log.size());
-				return new AttributeFilterParameters(context, log);
-			case "Concrete Filter":
-				// no progress needed
-				return new ConcreteParameters();
 			case "Event Attributes (dropdown)":
 				context.getProgress().setMaximum(3 * log.size());
-				return new AttributeFilterParametersDropdown(context, log);
+				return new OLD_FilterdEventAttributesParameters(context, log);
 			default:
 				return null;
 		}
 	}
 
 	private XLog mine(PluginContext context, XLog log, ActionsParameters parameters) {
-		AttributeFilterParametersDropdown concreteParameters = (AttributeFilterParametersDropdown) parameters.getParameters();
+		OLD_FilterdEventAttributesParameters concreteParameters = (OLD_FilterdEventAttributesParameters) parameters.getParameters();
 		Filter filter = concreteParameters.getFilter();
 		return filter.filter(context, log, concreteParameters);
 	}
