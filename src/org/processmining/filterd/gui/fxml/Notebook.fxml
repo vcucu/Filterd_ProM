@@ -13,18 +13,12 @@
    <children>
      
      <Text id="text" fx:id="text" text="Welcome" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="0" />
-     
-     <HBox alignment="bottom_right" spacing="10" GridPane.rowIndex="1">
-        <children>
-            <!--  <Button onAction="#handleSubmitButtonAction" text="Sign In" /> -->
-        </children>
-     </HBox>
-      <ComboBox fx:id="cmbVisualizer" onAction="#loadVisualizer" prefWidth="150.0" GridPane.rowIndex="2" />
-      <SwingNode fx:id="swgVisualizer" GridPane.columnSpan="2147483647" GridPane.rowIndex="3" GridPane.rowSpan="2147483647" />
+      <ComboBox fx:id="cmbVisualizer" onAction="#loadVisualizer" prefWidth="150.0" GridPane.rowIndex="1" />
+      <SwingNode fx:id="swgVisualizer" GridPane.columnSpan="2147483647" GridPane.rowIndex="2" GridPane.rowSpan="2147483647" />
    </children>
   
   <stylesheets>
-    <URL value="@Notebook.css" />
+    <URL value="@../css/Notebook.css" />
   </stylesheets>
    <columnConstraints>
       <ColumnConstraints />
@@ -34,12 +28,6 @@
       <RowConstraints />
       <RowConstraints />
       <RowConstraints />
-      <RowConstraints />
-      <RowConstraints />
-      <RowConstraints />
-      <RowConstraints />
-      <RowConstraints />
-      <RowConstraints minHeight="10.0" prefHeight="30.0" />
    </rowConstraints>
   
 </GridPane>

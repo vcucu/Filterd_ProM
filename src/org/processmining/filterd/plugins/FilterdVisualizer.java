@@ -54,11 +54,10 @@ public class FilterdVisualizer {
             public void run() {
                 // This method is invoked on JavaFX thread
 				try {
-					FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/processmining/filterd/gui/fxml/FilterdNotebook.fxml"));
+					FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/processmining/filterd/gui/fxml/Notebook.fxml"));
 					loader.setController(controller);
 					Parent root = (Parent) loader.load();
 		            Scene scene = new Scene(root);
-		            scene.getStylesheets().add(getClass().getResource("/org/processmining/filterd/gui/css/Notebook.css").toExternalForm());
 		            
 		            fxPanel.setScene(scene);
 				} catch (IOException e) {
