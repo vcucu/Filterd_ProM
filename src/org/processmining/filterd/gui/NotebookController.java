@@ -4,8 +4,9 @@ import org.deckfour.xes.model.XLog;
 import org.processmining.contexts.uitopia.UIPluginContext;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 
 public class NotebookController {
 	
@@ -14,8 +15,14 @@ public class NotebookController {
 	private XLog log;
 	
 	
-	@FXML private Pane pane;
-	@FXML private ScrollPane scrollPane;
+	@FXML private ScrollPane pane;
+	@FXML private VBox layout;
+	@FXML private Button autoButton;
+	@FXML private Button manualButton;
+	@FXML private Button computeButton;
+	@FXML private Button exportButton;
+	@FXML private Button addCellButton;
+	
 	
 	public void initialize() {
     	this.context = model.getContext();
