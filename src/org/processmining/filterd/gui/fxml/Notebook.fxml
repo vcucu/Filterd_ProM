@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="layout" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+<VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="51.0">
          <children>
@@ -36,14 +36,18 @@
       </HBox>
       <ScrollPane fx:id="pane" fitToWidth="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
          <content>
-            <VBox alignment="TOP_CENTER">
+            <VBox fx:id="layout" alignment="TOP_CENTER" spacing="5.0">
                <children>
-                  <Button fx:id="addCellButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" text="+">
+                  <Button fx:id="addCellButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#addCell" text="+">
                      <VBox.margin>
                         <Insets bottom="20.0" top="30.0" />
-                     </VBox.margin></Button>
+                     </VBox.margin>
+                  </Button>
                </children>
             </VBox>
-         </content></ScrollPane>
+         </content>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets></ScrollPane>
    </children>
 </VBox>
