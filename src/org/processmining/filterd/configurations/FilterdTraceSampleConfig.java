@@ -32,9 +32,4 @@ public class FilterdTraceSampleConfig extends FilterdAbstractConfig {
 		return false;
 	}
 
-	public XLog filter() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }
