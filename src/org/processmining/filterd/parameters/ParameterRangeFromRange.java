@@ -8,10 +8,9 @@ public class ParameterRangeFromRange extends Parameter  {
 	private List<Object> chosenPair;
 	private List<Object> optionsPair;
 	
-	public ParameterRangeFromRange(List<Object> defaultPair, List<Object> chosenPair, List<Object> optionsPair) {
-		super();
+	public ParameterRangeFromRange(String name, String nameDisplayed, List<Object> defaultPair, List<Object> optionsPair) {
+		super(name, nameDisplayed);
 		this.defaultPair = defaultPair;
-		this.chosenPair = chosenPair;
 		this.optionsPair = optionsPair;
 	}
 	public List<Object> getDefaultPair() {

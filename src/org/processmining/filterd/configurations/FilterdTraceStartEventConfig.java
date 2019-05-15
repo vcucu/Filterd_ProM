@@ -1,5 +1,6 @@
 package org.processmining.filterd.configurations;
-
+import org.processmining.filterd.parameters.Parameter;
+import java.util.ArrayList;
 import javax.swing.JComponent;
 
 import org.deckfour.xes.model.XLog;
@@ -11,7 +12,7 @@ public class FilterdTraceStartEventConfig extends FilterdAbstractConfig {
 
 	public FilterdTraceStartEventConfig(XLog log, Filter filterType) {
 		super(log, filterType);
-		// TODO Auto-generated constructor stub
+		parameters = new ArrayList<Parameter>();
 	}
 
 	public FilterdAbstractConfig populate(JComponent component) {
