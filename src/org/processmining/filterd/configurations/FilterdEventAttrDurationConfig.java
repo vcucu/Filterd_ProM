@@ -1,6 +1,6 @@
 package org.processmining.filterd.configurations;
-
-import javax.swing.JComponent;
+import org.processmining.filterd.parameters.Parameter;
+import java.util.ArrayList;t javax.swing.JComponent;
 
 import org.deckfour.xes.model.XLog;
 import org.processmining.filterd.filters.Filter;

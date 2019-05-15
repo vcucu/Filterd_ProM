@@ -4,7 +4,8 @@ import javax.swing.JComponent;
 
 import org.deckfour.xes.model.XLog;
 import org.processmining.filterd.filters.Filter;
-
+import org.processmining.filterd.parameters.Parameter;
+import java.util.ArrayList;
 public class FilterdEventAttrConfig extends FilterdAbstractConfig {
 
 	public FilterdEventAttrConfig(XLog log, Filter filterType) {

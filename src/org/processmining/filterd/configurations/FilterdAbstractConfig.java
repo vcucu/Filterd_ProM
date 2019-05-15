@@ -10,11 +10,11 @@ import org.processmining.filterd.parameters.Parameter;
 import org.processmining.framework.plugin.PluginContext;
 public abstract class FilterdAbstractConfig {
 	
-	private Filter filterType;
-	private XLog log;
-	private List<Parameter> parameters;
-	private boolean isValid;
-	private XEventClassifier classifier;
+	protected Filter filterType;
+	protected XLog log;
+	protected List<Parameter> parameters;
+	protected boolean isValid;
+	protected XEventClassifier classifier;
 	
 	public FilterdAbstractConfig(XLog log, Filter filterType ) {
 		this.filterType = filterType;
