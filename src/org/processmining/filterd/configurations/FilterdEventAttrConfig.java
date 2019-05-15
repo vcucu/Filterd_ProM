@@ -10,25 +10,25 @@ public class FilterdEventAttrConfig extends FilterdAbstractConfig {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+	
 	public boolean canPopulate(JComponent component) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
-	public JComponent getPropertiesPanel() {
+	public JComponent getConfigPanel() {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+   
 	public boolean checkValidity(XLog log) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
-	public void filter() {
+	public XLog filter() {
 		// TODO Auto-generated method stub
-		
+		return null;
 	}
 
 }

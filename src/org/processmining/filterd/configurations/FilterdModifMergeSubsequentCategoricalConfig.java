@@ -16,7 +16,7 @@ public class FilterdModifMergeSubsequentCategoricalConfig extends FilterdAbstrac
 		return false;
 	}
 
-	public JComponent getPropertiesPanel() {
+	public JComponent getConfigPanel() {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -26,9 +26,9 @@ public class FilterdModifMergeSubsequentCategoricalConfig extends FilterdAbstrac
 		return false;
 	}
 
-	public void filter() {
+	public XLog filter() {
 		// TODO Auto-generated method stub
-		
+		return null;
 	}
 
 }

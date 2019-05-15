@@ -17,7 +17,7 @@ public class FilterdConfigurationWizardStep<T extends ActionsParameters> impleme
 	}
 
 	public JComponent getComponent(T model) {
-		return model.getConfiguration().getPropertiesPanel();
+		return model.getConfiguration().getConfigPanel();
 	}
 
 	public String getTitle() {
