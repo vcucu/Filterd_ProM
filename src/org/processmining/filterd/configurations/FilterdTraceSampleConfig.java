@@ -26,9 +26,6 @@ public class FilterdTraceSampleConfig extends FilterdAbstractConfig {
 		);
 		
 		parameters.add(valueFromRangeParam);
-		
-		
-		// TODO Auto-generated constructor stub
 	}
 
 	public FilterdAbstractConfig populate(JComponent component) {
@@ -45,6 +42,7 @@ public class FilterdTraceSampleConfig extends FilterdAbstractConfig {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
 
 	public boolean checkValidity(XLog log) {
 		return log.size() < ((ParameterValueFromRange<Integer>)(parameters.get(0))).getChosen();
