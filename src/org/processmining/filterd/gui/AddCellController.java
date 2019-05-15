@@ -7,26 +7,25 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 
-public class AddCellController {
-	
-	private NotebookModel model;
-	private VBox layout;
+public class AddCellController extends Cell {
 	
 	@FXML private Button addComputationCellButton;
 	@FXML private Button addTextCellButton;
 	
-	public AddCellController(NotebookModel model, VBox layout) {
-		this.model = model;
-		this.layout = layout;
+	public AddCellController(NotebookController controller) {
+		super(controller);
 	}
 	
 	@FXML
 	public void addComputationCell() {
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/processmining/filterd/gui/fxml/ComputationCell.fxml"));
-			VBox cellLayout = (VBox) loader.load();
-			layout.getChildren().add(cellLayout);
-			layout.getChildren().remove(layout.getChildren().size() - 2);
+			ComputationCellController newController = new ComputationCellController(getController());
+			loader.setController(newController);
+			VBox newCellLayout = (VBox) loader.load();
+			getLayout().getChildren().add(newCellLayout);
+			newController.setCellLayout(newCellLayout);
+			getLayout().getChildren().remove(getCellLayout());
 		} catch(IOException e) {
 			e.printStackTrace();
 		}
@@ -36,9 +35,12 @@ public class AddCellController {
 	public void addTextCell() {
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/processmining/filterd/gui/fxml/TextCell.fxml"));
-			VBox cellLayout = (VBox) loader.load();
-			layout.getChildren().add(cellLayout);
-			layout.getChildren().remove(layout.getChildren().size() - 2);
+			TextCellController newController = new TextCellController(getController());
+			loader.setController(newController);
+			VBox newCellLayout = (VBox) loader.load();
+			getLayout().getChildren().add(newCellLayout);
+			newController.setCellLayout(newCellLayout);
+			getLayout().getChildren().remove(getCellLayout());
 		} catch(IOException e) {
 			e.printStackTrace();
 		}

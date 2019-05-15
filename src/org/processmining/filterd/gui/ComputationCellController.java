@@ -1,12 +1,19 @@
 package org.processmining.filterd.gui;
 
-public class ComputationCellController {
+import javafx.fxml.FXML;
+
+public class ComputationCellController extends Cell {
 	
 	//TODO: add other FXML attributes
 	
 	//TODO: add controller methods
 	
-	public ComputationCellController() {
-		
+	public ComputationCellController(NotebookController controller) {
+		super(controller);
+	}
+	
+	@FXML
+	public void removeCell() {
+		getLayout().getChildren().remove(getCellLayout());
 	}
 }
