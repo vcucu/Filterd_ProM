@@ -2,6 +2,7 @@ package org.processmining.filterd.filters;
 
 import java.util.Collections;
 import java.util.List;
+
 import org.deckfour.xes.factory.XFactory;
 import org.deckfour.xes.factory.XFactoryRegistry;
 import org.deckfour.xes.model.XAttributeMap;

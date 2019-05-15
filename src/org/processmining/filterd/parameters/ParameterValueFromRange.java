@@ -2,12 +2,12 @@ package org.processmining.filterd.parameters;
 
 import java.util.List;
 
-public class ParameterValueFromRange extends Parameter {
+public class ParameterValueFromRange<T> extends Parameter {
 	private Object defaultChoice;
 	private Object chosen;
-	private List<Object> optionsPair;
+	private List<T> optionsPair;
 	
-	public ParameterValueFromRange(String name, String nameDisplayed, Object defaultChoice, List<Object> optionsPair) {
+	public ParameterValueFromRange(String name, String nameDisplayed, Object defaultChoice, List<T> optionsPair) {
 		super(name, nameDisplayed);
 		this.defaultChoice = defaultChoice;
 		this.optionsPair = optionsPair;
@@ -24,10 +24,10 @@ public class ParameterValueFromRange extends Parameter {
 	public void setChosen(Object chosen) {
 		this.chosen = chosen;
 	}
-	public List<Object> getOptionsPair() {
+	public List<T> getOptionsPair() {
 		return optionsPair;
 	}
-	public void setOptionsPair(List<Object> optionsPair) {
+	public void setOptionsPair(List<T> optionsPair) {
 		this.optionsPair = optionsPair;
 	}
 	
