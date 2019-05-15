@@ -1,16 +1,11 @@
 package org.processmining.filterd.filters;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
-import java.util.stream.Collector;
-
 import org.deckfour.xes.factory.XFactory;
 import org.deckfour.xes.factory.XFactoryRegistry;
 import org.deckfour.xes.model.XAttributeMap;
 import org.deckfour.xes.model.XLog;
-import org.deckfour.xes.model.XTrace;
 import org.processmining.filterd.parameters.Parameter;
 import org.processmining.filterd.parameters.ParameterValueFromRange;
 import org.processmining.framework.plugin.PluginContext;
@@ -36,7 +31,7 @@ public class FilterdTraceSampleFilter extends Filter {
 		//shuffle the copied input log to assure randomness
 		Collections.shuffle(copyLog);
 		
-		//add the first nrSamples elements from the copied input log to the output log
+		//add the first nrSamples traces from the copied input log to the output log
 		copyLog.stream()
 		.limit((int) nrSamples.getChosen())
 		.forEach(x -> filteredLog.add(x));
