@@ -134,7 +134,7 @@ public class TimeframeParameters extends FilterdAbstractConfig {
 		return (component instanceof TimeframePanel);
 	}
 
-	public JComponent getPropertiesPanel() {
+	public JComponent getConfigPanel() {
 		return new TimeframePanel(context, this);
 	}
 

@@ -110,7 +110,7 @@ public class OLD_FilterdEventAttributesParameters extends FilterdAbstractConfig 
 		}
 	}
 
-	public ProMPropertiesPanel getPropertiesPanel() {
+	public ProMPropertiesPanel getConfigPanel() {
 		return new FilterdEventAttributesPanel(context, this);
 	}
 
@@ -154,8 +154,8 @@ public class OLD_FilterdEventAttributesParameters extends FilterdAbstractConfig 
 		return false;
 	}
 
-	public void filter() {
+	public XLog filter() {
 		// TODO Auto-generated method stub
-		
+		return null;
 	}
 }

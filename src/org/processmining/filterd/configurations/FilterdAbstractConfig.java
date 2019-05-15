@@ -34,7 +34,14 @@ public abstract class FilterdAbstractConfig {
 	public XLog getLog() {
 		return log;
 	}
-
+    /**
+     * Setter for the {@log} attribute.
+     * Invokes {@checkValidity(log)}. If it returns true, it sets the log to the 
+     * corresponding value. If it returns false, it sets log to null and throws exception.
+     * 
+     * @param log the log to be set
+     * @throws InputMismatchException
+     */
 	public void setLog(XLog log) {
 		
 		if (this.checkValidity(log)) {
@@ -56,7 +63,13 @@ public abstract class FilterdAbstractConfig {
 	public boolean isValid() {
 		return isValid;
 	}
-	
+	/**
+	 * Get the parameter object according to its name.
+	 * 
+	 * @param whichParameter the name of the parameter whose type is to be returned
+	 * @return the parameter object or null if no parameter 
+	 * with {@whichParameter} name does not exist.
+	 */
 	public Parameter getParameter(String whichParameter) {
 		
 		for(Parameter parameter :parameters ) {
@@ -66,14 +79,36 @@ public abstract class FilterdAbstractConfig {
 		}
 		return null;
 	}
- 
+	/**
+	 * Checks whether the imported log complies with the filter configuration(s)
+	 * @param log the imported log in the cell
+	 * @return true if the log is valid, false otherwise
+	 */
 	public abstract boolean checkValidity(XLog log);
-
-	public abstract FilterdAbstractConfig populate(JComponent component);
-
-	public abstract boolean canPopulate(JComponent component);
-
-	public abstract JComponent getPropertiesPanel();
 	
-	public abstract void filter();
+	/**
+	 * Populates the parameters with information from the configuration panel.
+	 * @return concrete configuration of the configuration panel 
+	 */
+	public abstract FilterdAbstractConfig populate(JComponent component);
+	
+	/**
+	 * Checks whether all components from the configuration panel
+	 * have a mapping to all parameters of the concrete configuration.
+	 */
+	public abstract boolean canPopulate(JComponent component);
+	/**
+	 * Returns the configuration panel which is used by
+	 * the {@populate(component)} and {@canPopulate(component)}.
+	 * 
+	 * @return the concrete configuration panel
+	 */
+	public abstract JComponent getConfigPanel();
+	
+	/**
+	 * Invokes the {@filter(PluginContext context, XLog log, List<Parameter> parameters)} 
+	 * method of the concrete {@filterType}
+	 * @return the filtered log
+	 */
+	public abstract XLog filter();
 }

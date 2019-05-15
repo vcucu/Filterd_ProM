@@ -42,7 +42,7 @@ public class Filterd {
 		parameters.setParameters(filterParameters);
 
 		// show step 2 (configuration of a specific filter)
-		JComponent propertiesPanel = filterParameters.getPropertiesPanel();
+		JComponent propertiesPanel = filterParameters.getConfigPanel();
 		res = context.showWizard("Filterd plug-in configuration", true, true, propertiesPanel);
 		if(res != InteractionResult.FINISHED) {
 			context.getFutureResult(0).cancel(true);

@@ -3,7 +3,6 @@ package org.processmining.filterd.configurations;
 import javax.swing.JComponent;
 
 import org.deckfour.xes.model.XLog;
-import org.processmining.framework.util.ui.widgets.ProMPropertiesPanel;
 
 /*
  * obsolete
@@ -54,21 +53,17 @@ public class ActionsParameters extends FilterdAbstractConfig {
 		return false;
 	}
 
-	public ProMPropertiesPanel getConfigPanel() {
-		return null;
-	}
-
 	public boolean checkValidity(XLog log) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
-	public void filter() {
+	public XLog filter() {
 		// TODO Auto-generated method stub
-		
+		return null;
 	}
 
-	public JComponent getPropertiesPanel() {
+	public JComponent getConfigPanel() {
 		// TODO Auto-generated method stub
 		return null;
 	}
