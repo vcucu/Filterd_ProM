@@ -1,8 +1,10 @@
 package org.processmining.filterd.filters;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collector;
 
 import org.deckfour.xes.factory.XFactory;
 import org.deckfour.xes.factory.XFactoryRegistry;
@@ -17,11 +19,9 @@ public class FilterdTraceSampleFilter extends Filter {
 
 	public XLog filter(PluginContext context, XLog log, List<Parameter> parameters) {
 	
-		//get value of threshold parameter (i. e. the desired number of samples)
+		//get value of threshold parameter (i.e. the desired number of samples)
 		ParameterValueFromRange nrSamples = (ParameterValueFromRange) this.getParameter(parameters, "threshold");
-		
-		Random rand = new Random();
-		
+			
 		//initialize the log that will be output
 		XFactory factory = XFactoryRegistry.instance().currentDefault();
 		XLog filteredLog = factory.createLog((XAttributeMap) log.getAttributes().clone());
@@ -30,22 +30,17 @@ public class FilterdTraceSampleFilter extends Filter {
 		filteredLog.getGlobalTraceAttributes().addAll(log.getGlobalTraceAttributes());
 		filteredLog.getGlobalEventAttributes().addAll(log.getGlobalEventAttributes());
 		
-		//list of the randomly generated unique trace keys 
-		List<Integer> tracesAdded = new ArrayList<>(); 
+		//clone input log, since ProM documentation says filters should not change input logs
+		XLog copyLog = (XLog) log.clone();
 		
-		//while we haven't sampled enough traces
-		while(tracesAdded.size() < (int) nrSamples.getChosen()) {
-			//generate random trace key
-			int random = rand.nextInt(log.size());
-			
-			//if the trace hasn't been added before, add it to the output log and 
-			//add its key to the list of generated keys 	
-			if (!tracesAdded.contains(random)) {
-				tracesAdded.add(random);
-				XTrace sampleTrace = factory.createTrace(log.get(random).getAttributes());
-				filteredLog.add(sampleTrace);			
-			}
-		}
+		//shuffle the copied input log to assure randomness
+		Collections.shuffle(copyLog);
+		
+		//add the first nrSamples elements from the copied input log to the output log
+		copyLog.stream()
+		.limit((int) nrSamples.getChosen())
+		.forEach(x -> filteredLog.add(x));
+		
 		return filteredLog;
 	}
 
