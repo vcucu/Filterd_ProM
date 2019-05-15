@@ -12,7 +12,7 @@ public abstract class FilterdAbstractConfig {
 	
 	protected Filter filterType;
 	protected XLog log;
-	protected List<? extends Parameter> parameters;
+	protected List<Parameter> parameters;
 	protected boolean isValid;
 	protected XEventClassifier classifier;
 	
