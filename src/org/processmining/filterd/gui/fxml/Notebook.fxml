@@ -1,33 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.embed.swing.*?>
-<?import java.lang.*?>
-<?import java.net.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
 
-<GridPane alignment="center" hgap="10" styleClass="root" vgap="10" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
-  <padding><Insets bottom="10" left="25" right="25" top="25" /></padding>
+<VBox fx:id="layout" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-     
-     <Text id="text" fx:id="text" text="Welcome" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="0" />
-      <ComboBox fx:id="cmbVisualizer" onAction="#loadVisualizer" prefWidth="150.0" GridPane.rowIndex="1" />
-      <SwingNode fx:id="swgVisualizer" GridPane.columnSpan="2147483647" GridPane.rowIndex="2" GridPane.rowSpan="2147483647" />
+      <HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="51.0">
+         <children>
+            <Button fx:id="autoButton" mnemonicParsing="false" text="Auto">
+               <HBox.margin>
+                  <Insets left="40.0" />
+               </HBox.margin>
+            </Button>
+            <Button fx:id="manualButton" mnemonicParsing="false" text="Manual">
+               <HBox.margin>
+                  <Insets left="3.0" />
+               </HBox.margin>
+            </Button>
+            <Button fx:id="computeButton" mnemonicParsing="false" text="▶">
+               <HBox.margin>
+                  <Insets left="20.0" />
+               </HBox.margin>
+            </Button>
+            <Pane minHeight="0.0" minWidth="0.0" HBox.hgrow="ALWAYS" />
+            <Button fx:id="exportButton" mnemonicParsing="false" text="▶ Export to workspace">
+               <HBox.margin>
+                  <Insets right="10.0" />
+               </HBox.margin>
+            </Button>
+         </children>
+      </HBox>
+      <ScrollPane fx:id="pane" fitToWidth="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
+         <content>
+            <VBox alignment="TOP_CENTER">
+               <children>
+                  <Button fx:id="addCellButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" text="+">
+                     <VBox.margin>
+                        <Insets bottom="20.0" top="30.0" />
+                     </VBox.margin></Button>
+               </children>
+            </VBox>
+         </content></ScrollPane>
    </children>
-  
-  <stylesheets>
-    <URL value="@../css/Notebook.css" />
-  </stylesheets>
-   <columnConstraints>
-      <ColumnConstraints />
-      <ColumnConstraints />
-   </columnConstraints>
-   <rowConstraints>
-      <RowConstraints />
-      <RowConstraints />
-      <RowConstraints />
-   </rowConstraints>
-  
-</GridPane>
+</VBox>
