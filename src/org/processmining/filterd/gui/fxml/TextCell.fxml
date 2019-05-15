@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Rectangle?>
+
+
+<HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.171">
+   <children>
+      <Rectangle fx:id="TextCellStatusBar" fill="#799ea4" height="230.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="20.0" HBox.hgrow="NEVER" />
+      <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS">
+         <children>
+            <HBox>
+               <children>
+                  <AnchorPane maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="51.0" HBox.hgrow="ALWAYS">
+                     <children>
+                        <TextField fx:id="TextCellNameField" alignment="CENTER" minHeight="23.0" minWidth="100.0" text="Cell Name" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="165.0" AnchorPane.rightAnchor="165.0" AnchorPane.topAnchor="14.0" />
+                        <MenuButton minHeight="23.0" minWidth="40.0" mnemonicParsing="false" text="..." AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
+                          <items>
+                            <MenuItem mnemonicParsing="false" text="Remove cell" />
+                          </items>
+                        </MenuButton>
+                     </children>
+                  </AnchorPane>
+               </children>
+            </HBox>
+            <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
+               <children>
+                  <TextArea fx:id="TextCellTextArea" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="500.0" HBox.hgrow="ALWAYS" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</HBox>
