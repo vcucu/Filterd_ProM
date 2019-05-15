@@ -64,14 +64,6 @@ public class FilterdTraceStartEventConfig extends FilterdAbstractConfig {
 		// TODO Auto-generated method stub
 		return null;
 	}
-<<<<<<< HEAD
-
-	public boolean checkValidity(XLog log) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-=======
 	/*
 	 * The candidateLog is invalid if the global attributes list does not 
 	 * contain the selected attribute.
@@ -89,6 +81,5 @@ public class FilterdTraceStartEventConfig extends FilterdAbstractConfig {
 		}	
 		return true;
 	}
->>>>>>> origin/architecture
 
 }
