@@ -18,7 +18,6 @@ public class NotebookController {
 	private UIPluginContext context;
 	private XLog log;
 	
-	
 	@FXML private ScrollPane pane;
 	@FXML private VBox layout;
 	@FXML private Button autoButton;
@@ -41,12 +40,29 @@ public class NotebookController {
 	public void addCell() {
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/processmining/filterd/gui/fxml/AddCell.fxml"));
-			AddCellController addCellController = new AddCellController(model, layout);
-			loader.setController(addCellController);
-			HBox addCellLayout = (HBox) loader.load();
-			layout.getChildren().add(addCellLayout);
+			AddCellController newController = new AddCellController(this);
+			loader.setController(newController);
+			HBox newCellLayout = (HBox) loader.load();
+			layout.getChildren().add(newCellLayout);
+			newController.setCellLayout(newCellLayout);
 		} catch(IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public NotebookModel getModel() {
+		return model;
+	}
+
+	public void setModel(NotebookModel model) {
+		this.model = model;
+	}
+
+	public VBox getLayout() {
+		return layout;
+	}
+
+	public void setLayout(VBox layout) {
+		this.layout = layout;
 	}
 }

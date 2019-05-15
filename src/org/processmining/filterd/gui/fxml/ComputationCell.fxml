@@ -3,6 +3,8 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
@@ -29,7 +31,11 @@
                         <Region maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
                         <ComboBox prefHeight="20.0" prefWidth="150.0" HBox.hgrow="ALWAYS" />
                         <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="24.0" layoutX="180.0" layoutY="15.0" stroke="BLACK" strokeType="INSIDE" width="24.0" />
-                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="24.0" layoutX="214.0" layoutY="15.0" stroke="BLACK" strokeType="INSIDE" width="24.0" />
+                        <MenuButton mnemonicParsing="false">
+                          <items>
+                            <MenuItem mnemonicParsing="false" onAction="#removeCell" text="Remove Cell" />
+                          </items>
+                        </MenuButton>
                      </children>
                      <VBox.margin>
                         <Insets />
