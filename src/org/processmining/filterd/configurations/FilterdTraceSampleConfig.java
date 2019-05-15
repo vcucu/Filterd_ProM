@@ -1,15 +1,33 @@
 package org.processmining.filterd.configurations;
-import org.processmining.filterd.parameters.Parameter;
 import java.util.ArrayList;
+import java.util.List;
+
 import javax.swing.JComponent;
 
 import org.deckfour.xes.model.XLog;
 import org.processmining.filterd.filters.Filter;
+import org.processmining.filterd.parameters.ParameterValueFromRange;
 
 public class FilterdTraceSampleConfig extends FilterdAbstractConfig {
 
 	public FilterdTraceSampleConfig(XLog log, Filter filterType) {
 		super(log, filterType);
+		parameters = new ArrayList<>();
+		
+		List<Integer> optionsPair = new ArrayList<>();
+		optionsPair.add(0);
+		optionsPair.add(log.size());
+		
+		ParameterValueFromRange<Integer> valueFromRangeParam = new ParameterValueFromRange<>(
+			"threshold", 
+			"Sample size", 
+			0, 
+			optionsPair
+		);
+		
+		parameters.add(valueFromRangeParam);
+		
+		
 		// TODO Auto-generated constructor stub
 	}
 
@@ -29,8 +47,7 @@ public class FilterdTraceSampleConfig extends FilterdAbstractConfig {
 	}
 
 	public boolean checkValidity(XLog log) {
-		// TODO Auto-generated method stub
-		return false;
+		return log.size() < ((ParameterValueFromRange<Integer>)(parameters.get(0))).getChosen();
 	}
 
 }

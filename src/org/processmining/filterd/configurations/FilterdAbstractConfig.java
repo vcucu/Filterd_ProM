@@ -49,10 +49,10 @@ public abstract class FilterdAbstractConfig {
      * @param log the log to be set
      * @throws InputMismatchException
      */
-	public void setLog(XLog log) {
+	public void setLog(XLog candidateLog) {
 		
-		if (this.checkValidity(log)) {
-			this.log = log;
+		if (this.checkValidity(candidateLog)) {
+			this.log = candidateLog;
 			isValid = true;
 		} else {
 			// raise error
@@ -93,7 +93,7 @@ public abstract class FilterdAbstractConfig {
 	 * @param log the imported log in the cell
 	 * @return true if the log is valid, false otherwise
 	 */
-	public abstract boolean checkValidity(XLog log);
+	public abstract boolean checkValidity(XLog candidateLog);
 	
 	/**
 	 * Populates the parameters with information from the configuration panel.

@@ -4,20 +4,20 @@ import java.util.List;
 
 public class ParameterMultipleFromSet extends Parameter {
 
-	private String defaultChoice;
+	private List<String> defaultChoice;
 	private List<String> chosen;
 	private List<String> options;
 	
-	public ParameterMultipleFromSet(String name, String nameDisplayed, String defaultChoice, List<String> options) {
+	public ParameterMultipleFromSet(String name, String nameDisplayed, List<String> defaultChoice, List<String> options) {
 		super(name, nameDisplayed);
 		this.defaultChoice = defaultChoice;
 		this.options = options;
 	}
 	
-	public String getDefaultChoice() {
+	public List<String> getDefaultChoice() {
 		return defaultChoice;
 	}
-	public void setDefaultChoice(String defaultChoice) {
+	public void setDefaultChoice(List<String> defaultChoice) {
 		this.defaultChoice = defaultChoice;
 	}
 	public List<String> getChosen() {
