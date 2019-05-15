@@ -1,6 +1,6 @@
 package org.processmining.filterd.parameters;
 
-public class ParameterText {
+public class ParameterText extends Parameter {
 
 	private String defaultChoice;
 	private String chosen;

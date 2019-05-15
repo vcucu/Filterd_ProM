@@ -15,6 +15,12 @@ public abstract class FilterdAbstractConfig {
 	private boolean isValid;
 	private XEventClassifier classifier;
 	
+	public FilterdAbstractConfig(XLog log, Filter filterType ) {
+		this.filterType = filterType;
+		this.setLog(log);
+		
+	}
+	
 	public XEventClassifier getClassifier() {
 		return classifier;
 	}
@@ -46,8 +52,10 @@ public abstract class FilterdAbstractConfig {
 		
 		if (this.checkValidity(log)) {
 			this.log = log;
+			isValid = true;
 		} else {
 			// raise error
+			isValid = false;
 		}
 		
 	}

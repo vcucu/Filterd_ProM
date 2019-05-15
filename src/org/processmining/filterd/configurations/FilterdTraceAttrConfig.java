@@ -3,8 +3,14 @@ package org.processmining.filterd.configurations;
 import javax.swing.JComponent;
 
 import org.deckfour.xes.model.XLog;
+import org.processmining.filterd.filters.Filter;
 
 public class FilterdTraceAttrConfig extends FilterdAbstractConfig {
+
+	public FilterdTraceAttrConfig(XLog log, Filter filterType) {
+		super(log, filterType);
+		// TODO Auto-generated constructor stub
+	}
 
 	public FilterdAbstractConfig populate(JComponent component) {
 		// TODO Auto-generated method stub

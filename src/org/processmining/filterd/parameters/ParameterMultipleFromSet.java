@@ -2,7 +2,7 @@ package org.processmining.filterd.parameters;
 
 import java.util.List;
 
-public class ParameterMultipleFromSet {
+public class ParameterMultipleFromSet extends Parameter {
 
 	private String defaultChoice;
 	private List<String> choice;
