@@ -9,6 +9,7 @@ public abstract class Parameter {
 	public Parameter(String name, String nameDisplayed) {
 		this.name = name;
 		this.nameDisplayed = nameDisplayed;
+		
 	}
 	
 	public String getNameDisplayed() {
