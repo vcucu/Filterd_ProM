@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+
+
+<HBox fx:id="filterButton" prefHeight="48.0" prefWidth="236.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+         <HBox.margin>
+            <Insets left="10.0" top="11.0" />
+         </HBox.margin>
+      </ImageView>
+      <Label prefHeight="10.67" text="Filter Button" textAlignment="CENTER">
+         <HBox.margin>
+            <Insets top="15.0" />
+         </HBox.margin>
+      </Label>
+      <Pane HBox.hgrow="ALWAYS">
+         <HBox.margin>
+            <Insets />
+         </HBox.margin>
+      </Pane>
+      <ImageView fitHeight="10.67" fitWidth="10.67" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../../../../../Desktop/University/Univeristy%20year%203/SEP/GUI/arrow-up-solid%20(1).png" />
+         </image>
+         <HBox.margin>
+            <Insets right="10.0" top="20.0" />
+         </HBox.margin>
+      </ImageView>
+      <ImageView fitHeight="10.67" fitWidth="10.67" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../../../../../Desktop/University/Univeristy%20year%203/SEP/GUI/arrow-down-solid.png" />
+         </image>
+         <HBox.margin>
+            <Insets right="10.0" top="20.0" />
+         </HBox.margin>
+      </ImageView>
+      <ImageView fitHeight="10.67" fitWidth="10.67" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../../../../../Desktop/University/Univeristy%20year%203/SEP/GUI/times-solid.png" />
+         </image>
+         <HBox.margin>
+            <Insets right="20.0" top="20.0" />
+         </HBox.margin>
+      </ImageView>
+      <ImageView fitHeight="10.67" fitWidth="10.67" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../../../../../Desktop/University/Univeristy%20year%203/SEP/GUI/chevron-right-solid.png" />
+         </image>
+         <HBox.margin>
+            <Insets right="10.0" top="20.0" />
+         </HBox.margin>
+      </ImageView>
+   </children>
+</HBox>
