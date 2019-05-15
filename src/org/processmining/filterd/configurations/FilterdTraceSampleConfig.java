@@ -18,9 +18,16 @@ public class FilterdTraceSampleConfig extends FilterdAbstractConfig {
 		optionsPair.add(0);
 		optionsPair.add(log.size());
 		
-		ParameterValueFromRange param = new ParameterValueFromRange<>("threshold", "Sample size", new Integer(0), optionsPair);
+		ParameterValueFromRange<Integer> valueFromRangeParam = new ParameterValueFromRange<>(
+			"threshold", 
+			"Sample size", 
+			0, 
+			optionsPair
+		);
 		
-		parameters.add();
+		parameters.add(valueFromRangeParam);
+		
+		
 		// TODO Auto-generated constructor stub
 	}
 
