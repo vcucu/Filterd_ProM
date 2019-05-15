@@ -17,8 +17,8 @@ import org.processmining.framework.plugin.PluginContext;
 public class FilterdTraceSampleFilter extends Filter {
 
 	public XLog filter(PluginContext context, XLog log, List<Parameter> parameters) {
-		ParameterText name = (ParameterText) parameters.get(0);
-		ParameterValueFromRange nrSamples = (ParameterValueFromRange) parameters.get(1);
+	
+		ParameterValueFromRange nrSamples = (ParameterValueFromRange) this.getParameter(parameters, "threshold");
 		Random rand = new Random();
 		
 		XFactory factory = XFactoryRegistry.instance().currentDefault();
