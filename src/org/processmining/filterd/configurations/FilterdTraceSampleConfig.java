@@ -44,6 +44,7 @@ public class FilterdTraceSampleConfig extends FilterdAbstractConfig {
 	}
 
 
+	@SuppressWarnings("unchecked")
 	public boolean checkValidity(XLog log) {
 		return log.size() < ((ParameterValueFromRange<Integer>)(parameters.get(0))).getChosen();
 	}
