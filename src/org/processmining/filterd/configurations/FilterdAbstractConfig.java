@@ -7,6 +7,7 @@ import org.deckfour.xes.classification.XEventClassifier;
 import org.deckfour.xes.model.XLog;
 import org.processmining.filterd.filters.Filter;
 import org.processmining.filterd.parameters.Parameter;
+import org.processmining.framework.plugin.PluginContext;
 public abstract class FilterdAbstractConfig {
 	
 	protected Filter filterType;
@@ -116,7 +117,10 @@ public abstract class FilterdAbstractConfig {
 	/**
 	 * Invokes the {@filter(PluginContext context, XLog log, List<Parameter> parameters)} 
 	 * method of the concrete {@filterType}
+	 * @param context the PluginContext
 	 * @return the filtered log
 	 */
-	public abstract XLog filter();
+	public XLog filter(PluginContext context) {
+		return filterType.filter(context, log, parameters);
+	};
 }
