@@ -3,25 +3,25 @@ package org.processmining.filterd.parameters;
 import java.util.List;
 
 public class ParameterValueFromRange<T> extends Parameter {
-	private Object defaultChoice;
-	private Object chosen;
+	private T defaultChoice;
+	private T chosen;
 	private List<T> optionsPair;
 	
-	public ParameterValueFromRange(String name, String nameDisplayed, Object defaultChoice, List<T> optionsPair) {
+	public ParameterValueFromRange(String name, String nameDisplayed, T defaultChoice, List<T> optionsPair) {
 		super(name, nameDisplayed);
 		this.defaultChoice = defaultChoice;
 		this.optionsPair = optionsPair;
 	}
-	public Object getDefaultChoice() {
+	public T getDefaultChoice() {
 		return defaultChoice;
 	}
-	public void setDefaultChoice(Object defaultChoice) {
+	public void setDefaultChoice(T defaultChoice) {
 		this.defaultChoice = defaultChoice;
 	}
-	public Object getChosen() {
+	public T getChosen() {
 		return chosen;
 	}
-	public void setChosen(Object chosen) {
+	public void setChosen(T chosen) {
 		this.chosen = chosen;
 	}
 	public List<T> getOptionsPair() {

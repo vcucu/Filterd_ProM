@@ -57,13 +57,7 @@ public class FilterdTraceStartEventCategoricalConfig extends FilterdAbstractConf
 	}
 
 	public boolean checkValidity(XLog log) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	public XLog filter() {
-		// TODO Auto-generated method stub
-		return null;
+		return true;
 	}
 
 }

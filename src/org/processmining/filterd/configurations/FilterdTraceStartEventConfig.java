@@ -64,7 +64,10 @@ public class FilterdTraceStartEventConfig extends FilterdAbstractConfig {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+	/*
+	 * The candidateLog is invalid if the global attributes list does not 
+	 * contain the selected attribute.
+	 */
 	@Override
 	public boolean checkValidity(XLog candidateLog) {
 		List<String> globalAttrCandidateLog = new ArrayList<>();
@@ -75,14 +78,8 @@ public class FilterdTraceStartEventConfig extends FilterdAbstractConfig {
 		String attr = attrs.get(0);
 		if (!globalAttrCandidateLog.contains(attr)) {
 			return false;
-		}
-		
+		}	
 		return true;
-	}
-
-	public XLog filter() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }
