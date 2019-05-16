@@ -11,12 +11,12 @@
    <children>
       <HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="51.0">
          <children>
-            <Button fx:id="autoButton" onAction="#setComputationModeToAutomatic" mnemonicParsing="false" text="Auto">
+            <Button fx:id="autoButton" mnemonicParsing="false" onAction="#setComputationModeToAutomatic" text="Auto">
                <HBox.margin>
                   <Insets left="40.0" />
                </HBox.margin>
             </Button>
-            <Button fx:id="manualButton" onAction="#setComputationModeToManual" mnemonicParsing="false" text="Manual">
+            <Button fx:id="manualButton" mnemonicParsing="false" onAction="#setComputationModeToManual" text="Manual">
                <HBox.margin>
                   <Insets left="3.0" />
                </HBox.margin>
@@ -38,6 +38,7 @@
          <content>
             <VBox alignment="CENTER">
                <children>
+                  <!-- <Pane fx:id="configurationModal" prefHeight="200.0" prefWidth="200.0" /> -->
                   <VBox fx:id="layout" alignment="TOP_CENTER" spacing="5.0" VBox.vgrow="ALWAYS" />
                   <Button fx:id="addCellButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#addCell" text="+" VBox.vgrow="ALWAYS">
                      <VBox.margin>
