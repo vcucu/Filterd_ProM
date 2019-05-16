@@ -16,4 +16,14 @@ public class TextCellController extends Cell {
 	public void removeCell() {
 		getLayout().getChildren().remove(getCellLayout());
 	}
+
+	public void show() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void hide() {
+		// TODO Auto-generated method stub
+		
+	}
 }

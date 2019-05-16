@@ -2,7 +2,7 @@ package org.processmining.filterd.gui;
 
 import javafx.scene.layout.Pane;
 
-public class Cell {
+public abstract class Cell {
 
 	//TODO: add all the attributes from the UI Diagram
 

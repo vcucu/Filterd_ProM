@@ -45,4 +45,14 @@ public class AddCellController extends Cell {
 			e.printStackTrace();
 		}
 	}
+
+	public void show() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void hide() {
+		// TODO Auto-generated method stub
+		
+	}
 }

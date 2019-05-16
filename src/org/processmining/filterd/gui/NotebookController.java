@@ -69,6 +69,22 @@ public class NotebookController {
 		}
 	}
 
+	public NotebookModel getModel() {
+		return model;
+	}
+
+	public void setModel(NotebookModel model) {
+		this.model = model;
+	}
+
+	public VBox getLayout() {
+		return layout;
+	}
+
+	public void setLayout(VBox layout) {
+		this.layout = layout;
+	}
+
 	/**
 	 * Class offering NotebookController services to external invokers.
 	 * Passed as a parameter instead of a NotebookController reference to all child UI components.
