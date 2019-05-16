@@ -14,6 +14,9 @@ public class NotebookModel {
 	private ProMViewManager vm; // Current view manager	
     private ProMResourceManager rm; // Current resource manager
     
+    private ComputationMode compMode;
+
+    
     
     public NotebookModel(UIPluginContext context, XLog log) {
     	this.context = context;
@@ -39,6 +42,14 @@ public class NotebookModel {
 	
 	public ProMResourceManager getRm() {
 		return rm;
+	}
+
+	public ComputationMode getCompMode() {
+		return compMode;
+	}
+
+	public void setCompMode(ComputationMode compMode) {
+		this.compMode = compMode;
 	}
 
 }
