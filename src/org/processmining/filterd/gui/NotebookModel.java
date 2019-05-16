@@ -159,7 +159,7 @@ public class NotebookModel {
 	 * cell.
 	 * 
 	 * @param cell
-	 *            The cell whose descandants to recompute.
+	 *            The cell whose descendants to recompute.
 	 */
 	public void recomputeFrom(CellModel cell) {
 		//shouldn't this method belong to the NotebookController?

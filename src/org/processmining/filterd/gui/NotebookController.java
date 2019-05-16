@@ -236,7 +236,7 @@ public class NotebookController {
 	 */
 	public void removeCell(Cell cell) {
 		notebookLayout.getChildren().remove(cell.getCellLayout()); // removes the cell from the UI
-		model.removeCell(cell.getModel()); // removes the cell from the model
+		model.removeCell(cell.getCellModel()); // removes the cell from the model
 	}
 
 	/**

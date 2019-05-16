@@ -10,6 +10,7 @@ public class TextCellController extends Cell {
 	
 	public TextCellController(NotebookController controller) {
 		super(controller);
+		this.setCellModel(new CellModel());
 	}
 	
 	@FXML

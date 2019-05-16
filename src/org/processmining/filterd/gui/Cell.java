@@ -7,6 +7,7 @@ public abstract class Cell {
 	//TODO: add all the attributes from the UI Diagram
 
 	private NotebookController controller;
+	private CellModel cellModel;
 	private Pane layout;
 	private Pane cellLayout;
 
@@ -38,9 +39,13 @@ public abstract class Cell {
 	public void setCellLayout(Pane cellLayout) {
 		this.cellLayout = cellLayout;
 	}
-	
-	public CellModel getModel() {
-		
+
+	public CellModel getCellModel() {
+		return cellModel;
+	}
+
+	public void setCellModel(CellModel cellModel) {
+		this.cellModel = cellModel;
 	}
 
 	public abstract void show();

@@ -10,6 +10,7 @@ public class ComputationCellController extends Cell {
 	
 	public ComputationCellController(NotebookController controller) {
 		super(controller);
+		this.setCellModel(new CellModel());
 	}
 	
 	@FXML
