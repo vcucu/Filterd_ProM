@@ -2,9 +2,6 @@ package org.processmining.filterd.gui;
 
 import java.io.IOException;
 
-import org.deckfour.xes.model.XLog;
-import org.processmining.contexts.uitopia.UIPluginContext;
-
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
@@ -23,12 +20,16 @@ public class NotebookController {
 	@FXML private Button manualButton;
 	@FXML private Button computeButton;
 	@FXML private Button exportButton;
-	@FXML private ScrollPane pane;
-	@FXML private VBox layout;
+	@FXML private ScrollPane scrollPane;
+	@FXML private VBox cellLayout;
 	@FXML private Button addCellButton;
 
 	@FXML private Pane configurationModal;
 
+	@FXML private Button addComputationCellButton;
+	@FXML private Button addTextCellButton;
+	
+	
 	public NotebookController(NotebookModel model) {
 		this.model = model;
 		computationMode = ComputationMode.MANUAL;
@@ -95,7 +96,7 @@ public class NotebookController {
 			AddCellController newController = new AddCellController(this);
 			loader.setController(newController);
 			HBox newCellLayout = (HBox) loader.load();
-			layout.getChildren().add(newCellLayout);
+			cellLayout.getChildren().add(newCellLayout);
 			newController.setCellLayout(newCellLayout);
 		} catch(IOException e) {
 			e.printStackTrace();
@@ -111,10 +112,10 @@ public class NotebookController {
 	}
 
 	public VBox getLayout() {
-		return layout;
+		return cellLayout;
 	}
 
 	public void setLayout(VBox layout) {
-		this.layout = layout;
+		this.cellLayout = layout;
 	}
 }

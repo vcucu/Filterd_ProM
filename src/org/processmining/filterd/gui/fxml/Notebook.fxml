@@ -34,12 +34,22 @@
             </Button>
          </children>
       </HBox>
-      <ScrollPane fx:id="pane" fitToWidth="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
+      <ScrollPane fx:id="scrollPane" fitToWidth="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
          <content>
             <VBox alignment="CENTER">
                <children>
                   <!-- <Pane fx:id="configurationModal" prefHeight="200.0" prefWidth="200.0" /> -->
                   <VBox fx:id="layout" alignment="TOP_CENTER" spacing="5.0" VBox.vgrow="ALWAYS" />
+                  <HBox alignment="CENTER" prefHeight="85.0" prefWidth="400.0" visible="false">
+                     <children>
+                        <Button fx:id="addComputationCellButton" mnemonicParsing="false" text="Computation Cell" textAlignment="CENTER">
+                           <HBox.margin>
+                              <Insets right="50.0" />
+                           </HBox.margin>
+                        </Button>
+                        <Button fx:id="addTextCellButton" mnemonicParsing="false" text="Text Cell" textAlignment="CENTER" />
+                     </children>
+                  </HBox>
                   <Button fx:id="addCellButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#addCell" text="+" VBox.vgrow="ALWAYS">
                      <VBox.margin>
                         <Insets bottom="20.0" top="30.0" />
