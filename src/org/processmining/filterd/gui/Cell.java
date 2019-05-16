@@ -38,6 +38,10 @@ public abstract class Cell {
 	public void setCellLayout(Pane cellLayout) {
 		this.cellLayout = cellLayout;
 	}
+	
+	public CellModel getModel() {
+		
+	}
 
 	public abstract void show();
 
