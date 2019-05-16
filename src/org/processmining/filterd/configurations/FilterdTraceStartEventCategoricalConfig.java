@@ -31,7 +31,7 @@ public class FilterdTraceStartEventCategoricalConfig extends FilterdAbstractConf
 				
 		// Create desiredEvents parameter	
 		ParameterMultipleFromSet desiredEvents = new ParameterMultipleFromSet("desiredEvents",
-				"Select values", allValues, allValues);
+				"Select start values", allValues, allValues);
 		
 		//Create nullHandling parameter
 		ParameterYesNo nullHandling = new ParameterYesNo("nullHandling", 

@@ -1,13 +1,13 @@
 package org.processmining.filterd.filters;
-import org.processmining.filterd.parameters.*;
-
 import java.util.List;
 
-import org.deckfour.xes.factory.XFactory;
-import org.deckfour.xes.factory.XFactoryRegistry;
-import org.deckfour.xes.model.XAttributeMap;
-import org.deckfour.xes.model.*;
+import org.deckfour.xes.model.XEvent;
+import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
+import org.processmining.filterd.parameters.Parameter;
+import org.processmining.filterd.parameters.ParameterMultipleFromSet;
+import org.processmining.filterd.parameters.ParameterOneFromSet;
+import org.processmining.filterd.parameters.ParameterYesNo;
 import org.processmining.framework.plugin.PluginContext;
 
 public class FilterdTraceStartEventFilter extends Filter {
@@ -33,7 +33,7 @@ public class FilterdTraceStartEventFilter extends Filter {
 		
 		for (XTrace trace : log) {
 			//do not query on empty traces
-			if (trace.isEmpty()) {
+			if (!trace.isEmpty()) {
 				//retrieve the first event
 				XEvent first =  trace.get(0);
 				//retrieve the first value
