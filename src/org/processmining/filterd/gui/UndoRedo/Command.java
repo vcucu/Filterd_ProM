@@ -1,4 +1,4 @@
-package org.processmining.filterd.gui;
+package org.processmining.filterd.gui.UndoRedo;
 
 //command pattern implemented
 
