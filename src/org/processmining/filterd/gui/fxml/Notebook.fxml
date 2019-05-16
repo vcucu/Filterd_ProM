@@ -11,12 +11,12 @@
    <children>
       <HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="51.0">
          <children>
-            <Button fx:id="autoButton" mnemonicParsing="false" text="Auto">
+            <Button fx:id="autoButton" onAction="#setComputationModeToAutomatic" mnemonicParsing="false" text="Auto">
                <HBox.margin>
                   <Insets left="40.0" />
                </HBox.margin>
             </Button>
-            <Button fx:id="manualButton" mnemonicParsing="false" text="Manual">
+            <Button fx:id="manualButton" onAction="#setComputationModeToManual" mnemonicParsing="false" text="Manual">
                <HBox.margin>
                   <Insets left="3.0" />
                </HBox.margin>

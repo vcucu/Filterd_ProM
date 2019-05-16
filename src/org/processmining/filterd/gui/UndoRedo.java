@@ -15,7 +15,6 @@ public class UndoRedo {
 	private UndoRedo() {
 		undoStack = new Stack<Command>();
 		redoStack = new Stack<Command>();
-
 	}
 
 	//Get the only object available
@@ -91,7 +90,6 @@ public class UndoRedo {
 			command.execute();
 			undoStack.push(command);
 		}
-		//redoStack.clear();
 	}
 
 }
