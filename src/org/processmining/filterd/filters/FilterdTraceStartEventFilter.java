@@ -11,6 +11,8 @@ import org.deckfour.xes.model.XTrace;
 import org.processmining.framework.plugin.PluginContext;
 
 public class FilterdTraceStartEventFilter extends Filter {
+	
+	XLog filteredLog;
 
 	public XLog filter(PluginContext context, XLog log, List<Parameter> parameters) {
 		
@@ -29,21 +31,80 @@ public class FilterdTraceStartEventFilter extends Filter {
 		
 		
 		//initialize the log that will be output
-		XLog filteredLog = this.initializeLog(log);
+		filteredLog = this.initializeLog(log);
 		
-		for (XTrace trace : log) {
-			//do not query on empty traces
-			if (trace.isEmpty()) {
-				//retrieve the first event
-				XEvent first =  trace.get(0);
-				//retrieve the first value
-				String value = first.getAttributes().get(attribute.getChosen()).toString();
-				
+		
+		if (selectionType.getChosen() == "Filter in") {
+			//Keeping desired attributes in
+			if(nullHandling.getChosen()) {
+				//remove nulls
+				for (XTrace trace : log) {
+					//do not query on empty traces
+					if (trace.isEmpty()) {
+						//retrieve the first event
+						XEvent first =  trace.get(0);
+						//retrieve the first value
+						String value = first.getAttributes().get(attribute.getChosen()).toString();
+						if (desiredEvents.getChosen().contains(value)) {
+							filteredLog.add(trace);
+						}
+					}
+				}
+			} else {
+				//keep nulls in
+				for (XTrace trace : log) {
+					//do not query on empty traces
+					if (trace.isEmpty()) {
+						//retrieve the first event
+						XEvent first =  trace.get(0);
+						//retrieve the first value
+						String value = first.getAttributes().get(attribute.getChosen()).toString();
+						if ((desiredEvents.getChosen().contains(value)) || (value == null)) {
+							filteredLog.add(trace);
+						}
+					}
+				}
 			}
 			
+		} else {
+			//Removing desired attributes out
+			if(nullHandling.getChosen()) {
+				//remove nulls
+				for (XTrace trace : log) {
+					//do not query on empty traces
+					if (trace.isEmpty()) {
+						//retrieve the first event
+						XEvent first =  trace.get(0);
+						//retrieve the first value
+						String value = first.getAttributes().get(attribute.getChosen()).toString();
+						//if the events selection didnt contain the value and the value is not null
+						if (!(desiredEvents.getChosen().contains(value)) && !(value == null)) {
+							filteredLog.add(trace);
+						}
+					}
+				}
+			} else {
+				//keep nulls in
+				for (XTrace trace : log) {
+					//do not query on empty traces
+					if (trace.isEmpty()) {
+						//retrieve the first event
+						XEvent first =  trace.get(0);
+						//retrieve the first value
+						String value = first.getAttributes().get(attribute.getChosen()).toString();
+						//if the events selection didnt contain the value (also nulls are never contained)
+						if (!(desiredEvents.getChosen().contains(value))) {
+							filteredLog.add(trace);
+						}
+					}
+				}
+			}
 		}
+		
 		
 		return filteredLog;
 	}
+	
+		
 
 }

@@ -10,13 +10,13 @@ public class ParameterYesNo extends Parameter {
 		this.defaultChoice = defaultChoice;
 	
 	}
-	public boolean isDefaultChoice() {
+	public boolean getDefaultChoice() {
 		return defaultChoice;
 	}
 	public void setDefaultChoice(boolean defaultChoice) {
 		this.defaultChoice = defaultChoice;
 	}
-	public boolean isChosen() {
+	public boolean getChosen() {
 		return chosen;
 	}
 	public void setChosen(boolean chosen) {

@@ -19,12 +19,7 @@ public class FilterdTraceSampleFilter extends Filter {
 		ParameterValueFromRange nrSamples = (ParameterValueFromRange) this.getParameter(parameters, "threshold");
 			
 		//initialize the log that will be output
-		XFactory factory = XFactoryRegistry.instance().currentDefault();
-		XLog filteredLog = factory.createLog((XAttributeMap) log.getAttributes().clone());
-		filteredLog.getClassifiers().addAll(log.getClassifiers());
-		filteredLog.getExtensions().addAll(log.getExtensions());
-		filteredLog.getGlobalTraceAttributes().addAll(log.getGlobalTraceAttributes());
-		filteredLog.getGlobalEventAttributes().addAll(log.getGlobalEventAttributes());
+		XLog filteredLog = this.initializeLog(log);
 		
 		//clone input log, since ProM documentation says filters should not change input logs
 		XLog copyLog = (XLog) log.clone();
