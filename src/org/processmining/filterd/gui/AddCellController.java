@@ -2,36 +2,45 @@ package org.processmining.filterd.gui;
 
 import java.io.IOException;
 
-import org.deckfour.xes.model.XLog;
-import org.processmining.contexts.uitopia.UIPluginContext;
-
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-public class AddCellController {
+public class AddCellController extends Cell {
 	
-	private NotebookModel model;
-	private UIPluginContext context;
-	private XLog log;
-	private VBox layout;
+	@FXML private Button addComputationCellButton;
+	@FXML private Button addTextCellButton;
 	
-	@FXML private Button addComputationCell;
-	@FXML private Button addTextCell;
-	
-	public AddCellController(NotebookModel model, VBox layout) {
-		this.model = model;
-		this.layout = layout;
+	public AddCellController(NotebookController controller) {
+		super(controller);
 	}
 	
 	@FXML
 	public void addComputationCell() {
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/processmining/filterd/gui/fxml/ComputationCell.fxml"));
-			HBox cellLayout = (HBox) loader.load();
-			layout.getChildren().add(cellLayout);
+			ComputationCellController newController = new ComputationCellController(getController());
+			loader.setController(newController);
+			VBox newCellLayout = (VBox) loader.load();
+			getLayout().getChildren().add(newCellLayout);
+			newController.setCellLayout(newCellLayout);
+			getLayout().getChildren().remove(getCellLayout());
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@FXML
+	public void addTextCell() {
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/processmining/filterd/gui/fxml/TextCell.fxml"));
+			TextCellController newController = new TextCellController(getController());
+			loader.setController(newController);
+			VBox newCellLayout = (VBox) loader.load();
+			getLayout().getChildren().add(newCellLayout);
+			newController.setCellLayout(newCellLayout);
+			getLayout().getChildren().remove(getCellLayout());
 		} catch(IOException e) {
 			e.printStackTrace();
 		}

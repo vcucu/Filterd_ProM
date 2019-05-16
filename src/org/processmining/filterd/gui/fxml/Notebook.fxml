@@ -36,9 +36,10 @@
       </HBox>
       <ScrollPane fx:id="pane" fitToWidth="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
          <content>
-            <VBox fx:id="layout" alignment="TOP_CENTER" spacing="5.0">
+            <VBox alignment="CENTER">
                <children>
-                  <Button fx:id="addCellButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#addCell" text="+">
+                  <VBox fx:id="layout" alignment="TOP_CENTER" spacing="5.0" VBox.vgrow="ALWAYS" />
+                  <Button fx:id="addCellButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#addCell" text="+" VBox.vgrow="ALWAYS">
                      <VBox.margin>
                         <Insets bottom="20.0" top="30.0" />
                      </VBox.margin>

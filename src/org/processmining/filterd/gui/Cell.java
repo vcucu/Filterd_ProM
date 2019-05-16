@@ -1,28 +1,45 @@
 package org.processmining.filterd.gui;
 
-import org.processmining.filterd.gui.NotebookController.NotebookContext;
+import javafx.scene.layout.Pane;
 
-public abstract class Cell {
-	private String name;
-	private CellStatus status;
-	private NotebookContext notebookContext;
-	
-	Cell(NotebookContext notebookContext) {
-		this.notebookContext = notebookContext;
-		status = CellStatus.IDLE;
-		name = "Change me...";
-	}
-	
-	public abstract class CellContext {
-		
-		/**
-		 * Abstract method to maximize the cell. If cell is already maximized, nothing should happen.
-		 */
-		public abstract void show();
+public class Cell {
 
-		/**
-		 * Abstract method to minimize the cell. If cell is already minimized, nothing should happen.
-		 */
-		public abstract void hide();
+	//TODO: add all the attributes from the UI Diagram
+
+	private NotebookController controller;
+	private Pane layout;
+	private Pane cellLayout;
+
+	public Cell(NotebookController controller) {
+		this.controller = controller;
+		this.layout = controller.getLayout();
 	}
+
+	public NotebookController getController() {
+		return controller;
+	}
+
+	public void setController(NotebookController controller) {
+		this.controller = controller;
+	}
+
+	public Pane getLayout() {
+		return layout;
+	}
+
+	public void setLayout(Pane layout) {
+		this.layout = layout;
+	}
+
+	public Pane getCellLayout() {
+		return cellLayout;
+	}
+
+	public void setCellLayout(Pane cellLayout) {
+		this.cellLayout = cellLayout;
+	}
+
+	public abstract void show();
+
+	public abstract void hide();
 }

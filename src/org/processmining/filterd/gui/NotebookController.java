@@ -16,15 +16,14 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 public class NotebookController {
-	
+
 	private NotebookModel model;
 	private UIPluginContext contextProM;
 	private XLog initialInput;
 	private ComputationMode computationMode;
 	private List<Cell> cells;
 	private NotebookContext context;
-	
-	
+
 	@FXML private ScrollPane pane;
 	@FXML private VBox layout;
 	@FXML private Button autoButton;
@@ -32,20 +31,20 @@ public class NotebookController {
 	@FXML private Button computeButton;
 	@FXML private Button exportButton;
 	@FXML private Button addCellButton;
-	
+
 	public NotebookController(NotebookModel model) {
 		context = new NotebookContext();
-		
+
 		this.model = model;
 		computationMode = ComputationMode.MANUAL;
 		cells = new ArrayList<>();
 	}
-	
+
 	public void initialize() {
     	this.contextProM = model.getContext();
     	this.initialInput = model.getLog();
 	}
-	
+
 	@FXML
 	public void setComputationModeToAutomatic() {
 		computationMode = ComputationMode.AUTOMATIC;
@@ -55,40 +54,41 @@ public class NotebookController {
 	public void setComputationModeToManual() {
 		computationMode = ComputationMode.MANUAL;
 	}
-	
+
 	@FXML
 	public void addCell() {
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/processmining/filterd/gui/fxml/AddCell.fxml"));
-			AddCellController addCellController = new AddCellController(model, layout);
-			loader.setController(addCellController);
-			HBox addCellLayout = (HBox) loader.load();
-			layout.getChildren().add(addCellLayout);
+			AddCellController newController = new AddCellController(this);
+			loader.setController(newController);
+			HBox newCellLayout = (HBox) loader.load();
+			layout.getChildren().add(newCellLayout);
+			newController.setCellLayout(newCellLayout);
 		} catch(IOException e) {
 			e.printStackTrace();
 		}
 	}
 
 	/**
-	 * Class offering NotebookController services to external invokers. 
+	 * Class offering NotebookController services to external invokers.
 	 * Passed as a parameter instead of a NotebookController reference to all child UI components.
 	 */
 	public class NotebookContext {
-		
+
 		public ComputationMode getComputationMode() {
 			return computationMode;
 		}
-		
+
 		public void addCell(Cell cell) {
 			cells.add(cell);
 		}
-		
+
 		public void saveImageToWorkspace(BufferedImage image) {
 			// TODO: implement after VisualizerPanel is finished
 		}
-		
+
 		// TODO: implement getUndoRedo method after UndoRedo is implemented
-		
+
 		public void recomputeFrom(Cell from) {
 			// find the given cell in the list
 			int i;
