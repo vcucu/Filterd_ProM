@@ -23,13 +23,13 @@ public class FilterdTraceSampleFilter extends Filter {
 		XLog filteredLog = this.initializeLog(log);
 		
 		//clone input log, since ProM documentation says filters should not change input logs
-		XLog copyLog = (XLog) log.clone();
+		XLog clonedLog = (XLog) log.clone();
 		
 		//shuffle the copied input log to assure randomness
-		Collections.shuffle(copyLog);
+		Collections.shuffle(clonedLog);
 		
 		//add the first nrSamples traces from the copied input log to the output log
-		copyLog.stream()
+		clonedLog.stream()
 		.limit((long) nrSamples.getChosen())
 		.forEach(filteredLog :: add);
 		
