@@ -30,6 +30,7 @@ public class FilterdTraceSampleConfig extends FilterdAbstractConfig {
 
 	public FilterdAbstractConfig populate(JComponent component) {
 		// TODO Auto-generated method stub
+		// 
 		return null;
 	}
 
