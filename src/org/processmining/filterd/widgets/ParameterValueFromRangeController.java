@@ -13,8 +13,8 @@ public class ParameterValueFromRangeController extends ParameterController {
 	@FXML private Slider slider;
 	@FXML private Label label;
 	
-	public ParameterValueFromRangeController(String nameDisplayed, String name, double defaultValue, List<Double> minMaxPair) {
-		super(name);
+	public ParameterValueFromRangeController(String title, String id, double defaultValue, List<Double> minMaxPair) {
+		super(id);
 		// load contents
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/org/processmining/filterd/widgets/fxml/ParameterValueFromRange.fxml"));
         fxmlLoader.setController(this);
@@ -24,13 +24,9 @@ public class ParameterValueFromRangeController extends ParameterController {
             throw new RuntimeException(e);
         }
         // set specifics
-        label.setText(nameDisplayed);
+        label.setText(title);
         slider.setMin(minMaxPair.get(0));
         slider.setMax(minMaxPair.get(1));
         slider.setValue(defaultValue);
-	}
-	
-	public double getValue() {
-		return slider.getValue();
 	}
 }
