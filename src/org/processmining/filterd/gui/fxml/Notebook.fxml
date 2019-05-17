@@ -37,7 +37,7 @@
 				<Region maxHeight="1.7976931348623157E308"
 					maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
 				<Button fx:id="exportButton" mnemonicParsing="false"
-					text="▶ Export to workspace">
+					onAction="#exportButtonHandler" text="▶ Export to workspace">
 					<HBox.margin>
 						<Insets right="10.0" />
 					</HBox.margin>

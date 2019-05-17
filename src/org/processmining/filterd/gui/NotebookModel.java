@@ -18,7 +18,6 @@ import javafx.collections.ObservableList;
  *
  */
 public class NotebookModel {
-
 	// objects from ProM
 	private UIPluginContext promContext; // The ProM context to communicate with the ProM framework.
 	private ProMViewManager viewManager; // Current view manager.
@@ -29,6 +28,10 @@ public class NotebookModel {
 	private ObservableList<CellModel> cells; // the list of all cells currently in the notebook.
 	private ComputationMode computationMode; // the computation mode the notebook is currently in.
 
+
+	public NotebookModel() {
+		cells = FXCollections.emptyObservableList();
+	}
 	/**
 	 * The constructor which sets the initial input event log. Note that the
 	 * constructor does not have access to the @FXML annotated fields as @FXML
@@ -171,8 +174,13 @@ public class NotebookModel {
 	 * Saves the current notebook to the workspace.
 	 */
 	public void saveNotebook() {
-		//NOTE: shouldn't we give the notebook a name?
-		//TODO: implement
+		//NOTE: shouldn't we give the notebook a name? 
+
+		NotebookModel newNotebook = new NotebookModel(this.getPromContext(), this.getInitialInput());
+		newNotebook.addCells(this.getCells());
+
+		promContext.getProvidedObjectManager().createProvidedObject("Notebook File", newNotebook, NotebookModel.class, promContext);
+		promContext.getGlobalContext().getResourceManager().getResourceForInstance(newNotebook).setFavorite(true);
 	}
 
 	/**
