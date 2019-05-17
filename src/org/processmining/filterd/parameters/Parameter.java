@@ -2,9 +2,15 @@ package org.processmining.filterd.parameters;
 
 public abstract class Parameter {
 	
-	private String nameDisplayed;
-	private String explanation;
-	private String name;
+	protected String nameDisplayed;
+	protected String explanation;
+	protected String name;
+	
+	public Parameter(String name, String nameDisplayed) {
+		this.name = name;
+		this.nameDisplayed = nameDisplayed;
+		
+	}
 	
 	public String getNameDisplayed() {
 		return nameDisplayed;

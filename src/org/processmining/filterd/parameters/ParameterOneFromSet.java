@@ -2,16 +2,15 @@ package org.processmining.filterd.parameters;
 
 import java.util.List;
 
-public class ParameterOneFromSet {
+public class ParameterOneFromSet extends Parameter  {
 	
 	private String defaultChoice;
 	private String chosen;
 	private List<String> options;
 	
-	public ParameterOneFromSet(String defaultChoice, String chosen, List<String> options) {
-		super();
+	public ParameterOneFromSet(String name, String nameDisplayed, String defaultChoice, List<String> options) {
+		super(name, nameDisplayed);
 		this.defaultChoice = defaultChoice;
-		this.chosen = chosen;
 		this.options = options;
 	}
 	

@@ -7,13 +7,20 @@ import org.deckfour.xes.classification.XEventClassifier;
 import org.deckfour.xes.model.XLog;
 import org.processmining.filterd.filters.Filter;
 import org.processmining.filterd.parameters.Parameter;
+import org.processmining.framework.plugin.PluginContext;
 public abstract class FilterdAbstractConfig {
 	
-	private Filter filterType;
-	private XLog log;
-	private List<Parameter> parameters;
-	private boolean isValid;
-	private XEventClassifier classifier;
+	protected Filter filterType;
+	protected XLog log;
+	protected List<Parameter> parameters;
+	protected boolean isValid;
+	protected XEventClassifier classifier;
+	
+	public FilterdAbstractConfig(XLog log, Filter filterType ) {
+		this.filterType = filterType;
+		this.setLog(log);
+		
+	}
 	
 	public XEventClassifier getClassifier() {
 		return classifier;
@@ -42,12 +49,14 @@ public abstract class FilterdAbstractConfig {
      * @param log the log to be set
      * @throws InputMismatchException
      */
-	public void setLog(XLog log) {
+	public void setLog(XLog candidateLog) {
 		
-		if (this.checkValidity(log)) {
-			this.log = log;
+		if (this.checkValidity(candidateLog)) {
+			this.log = candidateLog;
+			isValid = true;
 		} else {
 			// raise error
+			isValid = false;
 		}
 		
 	}
@@ -84,7 +93,7 @@ public abstract class FilterdAbstractConfig {
 	 * @param log the imported log in the cell
 	 * @return true if the log is valid, false otherwise
 	 */
-	public abstract boolean checkValidity(XLog log);
+	public abstract boolean checkValidity(XLog candidateLog);
 	
 	/**
 	 * Populates the parameters with information from the configuration panel.
@@ -108,7 +117,10 @@ public abstract class FilterdAbstractConfig {
 	/**
 	 * Invokes the {@filter(PluginContext context, XLog log, List<Parameter> parameters)} 
 	 * method of the concrete {@filterType}
+	 * @param context the PluginContext
 	 * @return the filtered log
 	 */
-	public abstract XLog filter();
+	public XLog filter(PluginContext context) {
+		return filterType.filter(context, log, parameters);
+	};
 }

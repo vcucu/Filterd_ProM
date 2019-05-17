@@ -2,30 +2,29 @@ package org.processmining.filterd.parameters;
 
 import java.util.List;
 
-public class ParameterMultipleFromSet {
+public class ParameterMultipleFromSet extends Parameter {
 
-	private String defaultChoice;
-	private List<String> choice;
+	private List<String> defaultChoice;
+	private List<String> chosen;
 	private List<String> options;
 	
-	public ParameterMultipleFromSet(String defaultChoice, List<String> choice, List<String> options) {
-		super();
+	public ParameterMultipleFromSet(String name, String nameDisplayed, List<String> defaultChoice, List<String> options) {
+		super(name, nameDisplayed);
 		this.defaultChoice = defaultChoice;
-		this.choice = choice;
 		this.options = options;
 	}
 	
-	public String getDefaultChoice() {
+	public List<String> getDefaultChoice() {
 		return defaultChoice;
 	}
-	public void setDefaultChoice(String defaultChoice) {
+	public void setDefaultChoice(List<String> defaultChoice) {
 		this.defaultChoice = defaultChoice;
 	}
-	public List<String> getChoice() {
-		return choice;
+	public List<String> getChosen() {
+		return chosen;
 	}
-	public void setChoice(List<String> choice) {
-		this.choice = choice;
+	public void setChosen(List<String> chosen) {
+		this.chosen = chosen;
 	}
 	public List<String> getOptions() {
 		return options;

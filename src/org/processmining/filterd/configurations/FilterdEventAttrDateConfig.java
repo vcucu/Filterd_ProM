@@ -1,10 +1,17 @@
 package org.processmining.filterd.configurations;
-
+import org.processmining.filterd.parameters.Parameter;
+import java.util.ArrayList;
 import javax.swing.JComponent;
 
 import org.deckfour.xes.model.XLog;
+import org.processmining.filterd.filters.Filter;
 
 public class FilterdEventAttrDateConfig extends FilterdAbstractConfig{
+
+	public FilterdEventAttrDateConfig(XLog log, Filter filterType) {
+		super(log, filterType);
+		// TODO Auto-generated constructor stub
+	}
 
 	public FilterdAbstractConfig populate(JComponent component) {
 		// TODO Auto-generated method stub
