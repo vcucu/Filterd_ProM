@@ -30,6 +30,7 @@ public class FilterdVisualizer {
 			mostSignificantResult = 1, help = "Help text goes here")
 	@Visualizer(name = "Filterd Visualizer", pack = "Filterd")
 	
+	
 	public JComponent visualize(final UIPluginContext context, final XLog log) {
 
 		model = new NotebookModel(context, log);
@@ -41,22 +42,6 @@ public class FilterdVisualizer {
 		
 		return notebookPanel;
 	}
-	
-	@Plugin(name = "Filterd Visualizer", level = PluginLevel.PeerReviewed, parameterLabels = "Filter",
-			returnTypes = JComponent.class, returnLabels = "Filterd Notebook Visualizer", userAccessible = true,
-			mostSignificantResult = 1, help = "Help text goes here")
-	@Visualizer(name = "Filterd Visualizer", pack = "Filterd")
-	
-	public JComponent visualize(final UIPluginContext context, final NotebookModel model) {
-		controller = new NotebookController(model);
-		
-		// Initialize GUI components
-		notebookPanel = new JFXPanel();
-		initGUI(notebookPanel);
-		
-		return notebookPanel;
-	}
-	
 	
 	private void initGUI(final JFXPanel fxPanel) {
 		
