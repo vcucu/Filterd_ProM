@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+<VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" stylesheets="@../css/Notebook.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
 	<children>
 		<HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="51.0">
 			<children>
@@ -28,21 +28,18 @@
 					</HBox.margin>
 				</Button>
 				<Region maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
-				<Button fx:id="exportButton" mnemonicParsing="false" text="▶ Export to workspace">
+				<Button fx:id="exportButton" mnemonicParsing="false" onAction="#exportButtonHandler" text="▶ Export to workspace">
 					<HBox.margin>
 						<Insets right="10.0" />
 					</HBox.margin>
 				</Button>
 			</children>
 		</HBox>
-		<ScrollPane fx:id="scrollPane" fitToWidth="true" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="600.0" VBox.vgrow="ALWAYS">
+		<ScrollPane fx:id="scrollPane" fitToWidth="true" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
 			<content>
 				<VBox alignment="CENTER">
 					<children>
-						<VBox fx:id="notebookLayout" alignment="TOP_CENTER" spacing="5.0" VBox.vgrow="ALWAYS">
-                     <children>
-      						<Pane fx:id="configurationModal" />
-                     </children></VBox>
+						<VBox fx:id="notebookLayout" alignment="TOP_CENTER" spacing="5.0" VBox.vgrow="ALWAYS" />
 						<!-- managed="false" makes the element not take up space, this option 
 							cannot be set in the scene builder -->
 						<HBox fx:id="addCellModal" alignment="CENTER" managed="false" prefHeight="85.0" prefWidth="400.0" visible="false">
@@ -67,5 +64,6 @@
 				<Insets />
 			</opaqueInsets>
 		</ScrollPane>
+						<Pane fx:id="configurationModal" />
 	</children>
 </VBox>
