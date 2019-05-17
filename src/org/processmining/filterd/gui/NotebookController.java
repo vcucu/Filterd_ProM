@@ -66,38 +66,6 @@ public class NotebookController {
 	 * fields, thus UI elements can be manipulated here.
 	 */
 	public void initialize() {
-<<<<<<< HEAD
-		// create parameters
-		// yes no
-//		List<Parameter> params = new ArrayList<>();
-//    	params.add(new ParameterYesNo("yesNo", "Yes/No Label", true));
-//    	// one from set
-//    	List<String> oneFromSet = new ArrayList<>();
-//    	oneFromSet.add("Option 1");
-//    	oneFromSet.add("Option 2");
-//    	oneFromSet.add("Option 3");
-//    	oneFromSet.add("Option 4");
-//    	oneFromSet.add("Option 5");
-//    	oneFromSet.add("Option 6");
-//    	oneFromSet.add("Option 7");
-//    	params.add(new ParameterOneFromSet("oneFromSet", "One From Set Label", "Option 1", oneFromSet));
-//    	// multiple from set
-//    	List<String> multipleFromSet = new ArrayList<>();
-//    	multipleFromSet.add("Option 3");
-//    	multipleFromSet.add("Option 6");
-//    	multipleFromSet.add("Option 7");
-//    	params.add(new ParameterMultipleFromSet("multipleFromSet", "Multiple From Set Label", multipleFromSet, oneFromSet));
-//    	// value from range
-//    	List<Double> optionsPair = new ArrayList<>();
-//    	optionsPair.add(5.0);
-//    	optionsPair.add(15.0);
-//    	params.add(new ParameterValueFromRange<Double>("valueFromRange", "Value From Range Label", 13.2, optionsPair));
-//    	// text
-//    	params.add(new ParameterText("text", "Text", "Some value"));
-//    	// create controller and add contents to the view
-//    	FilterConfigPanelController ctrl = new FilterConfigPanelController("Some random filter configuration panel", params);
-//    	configurationModal.getChildren().add(ctrl.getContents());
-=======
 		//    	try {
 		//    		FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/processmining/filterd/gui/fxml/FilterConfigPanel.fxml"));
 		//
@@ -135,7 +103,6 @@ public class NotebookController {
 		//    	} catch(IOException e) {
 		//    		e.printStackTrace();
 		//    	}
->>>>>>> 9c087ac3958b9fccd4b727eeff6f50799416f3dc
 	}
 
 	/**
