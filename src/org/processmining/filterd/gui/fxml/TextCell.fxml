@@ -15,13 +15,13 @@
       <Circle fill="#787878" radius="8.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
       <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
          <children>
-            <Region maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="14.0" style="-fx-background-color: #799ea4;" HBox.hgrow="ALWAYS" />
+            <Region fx:id="statusBar" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minWidth="-Infinity" onMouseClicked="#handleStatusBar" prefWidth="14.0" style="-fx-background-color: #799ea4;" HBox.hgrow="ALWAYS" />
             <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" HBox.hgrow="ALWAYS">
                <children>
                   <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="35.0" spacing="10.0" VBox.vgrow="ALWAYS">
                      <children>
                         <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                        <TextField alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" text="Cell name" />
+                        <TextField fx:id="cellName" alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" onInputMethodTextChanged="#handleCellName" prefHeight="25.0" text="Cell name" />
                         <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
                         <MenuButton mnemonicParsing="false">
                           <items>

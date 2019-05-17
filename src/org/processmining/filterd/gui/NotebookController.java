@@ -166,7 +166,7 @@ public class NotebookController {
 	 */
 	@FXML
 	private void addTextCellButtonHandler() {
-		addTextCell();
+		addTextCell();		
 		setAddCellModalInvisible();
 	}
 
@@ -202,11 +202,15 @@ public class NotebookController {
 		try {
 			FXMLLoader loader = new FXMLLoader(
 					getClass().getResource("/org/processmining/filterd/gui/fxml/ComputationCell.fxml"));
-			ComputationCellController newController = new ComputationCellController(this);
+			ComputationCellModel cell = new ComputationCellModel();
+			ComputationCellController newController = new ComputationCellController(this,cell);			
 			loader.setController(newController);
 			VBox newCellLayout = (VBox) loader.load();
 			notebookLayout.getChildren().add(newCellLayout);
 			newController.setCellLayout(newCellLayout);
+			
+			//add cellmodel in notebook model with corresponnding ui cell componenet controller
+			model.addCell(cell);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -220,11 +224,14 @@ public class NotebookController {
 		try {
 			FXMLLoader loader = new FXMLLoader(
 					getClass().getResource("/org/processmining/filterd/gui/fxml/TextCell.fxml"));
-			TextCellController newController = new TextCellController(this);
+			TextCellModel cell = new TextCellModel();
+			TextCellController newController = new TextCellController(this, cell);			
 			loader.setController(newController);
 			VBox newCellLayout = (VBox) loader.load();
 			notebookLayout.getChildren().add(newCellLayout);
 			newController.setCellLayout(newCellLayout);
+			model.addCell(cell);
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -236,10 +243,10 @@ public class NotebookController {
 	 * @param cell
 	 *            the cell to remove from the notebook.
 	 */
-	public void removeCell(Cell cell) {
-		notebookLayout.getChildren().remove(cell.getCellLayout()); // removes the cell from the UI
-		model.removeCell(cell.getCellModel()); // removes the cell from the model
-	}
+//	public void removeCell(CellModel cell) {
+//		notebookLayout.getChildren().remove(cell.getCellLayout()); // removes the cell from the UI
+//		model.removeCell(cell.getCellModel()); // removes the cell from the model
+//	}
 
 	/**
 	 * Returns the model of the current notebook.
