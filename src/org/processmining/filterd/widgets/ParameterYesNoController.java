@@ -13,8 +13,8 @@ public class ParameterYesNoController extends ParameterController {
 	@FXML private CheckBox checkbox;
 	@FXML private Label label;
 	
-	public ParameterYesNoController(String title, String id, boolean defaultValue) {
-		super(id);
+	public ParameterYesNoController(String nameDisplayed, String name, boolean defaultValue) {
+		super(name);
 		// load contents
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/org/processmining/filterd/widgets/fxml/ParameterYesNo.fxml"));
         fxmlLoader.setController(this);
@@ -24,8 +24,11 @@ public class ParameterYesNoController extends ParameterController {
             throw new RuntimeException(e);
         }
         // set specifics
-        label.setText(title);
+        label.setText(nameDisplayed);
         checkbox.setSelected(defaultValue);
 	}
 
+	public boolean getValue() {
+		return checkbox.isSelected();
+	}
 }

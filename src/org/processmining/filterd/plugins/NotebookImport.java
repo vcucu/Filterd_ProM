@@ -30,8 +30,7 @@ public class NotebookImport extends AbstractImportPlugin {
 		ArrayList<CellModel> cells = (ArrayList<CellModel>) ois.readObject();
 		ois.close();
 
-		// TODO Fix this
-		NotebookModel notebook = new NotebookModel(context, log);
+		NotebookModel notebook = new NotebookModel(context);
 		notebook.addCells(FXCollections.observableArrayList(cells));
 
 		return notebook;

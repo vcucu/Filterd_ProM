@@ -16,8 +16,8 @@ public class ParameterOneFromSetController extends ParameterController {
 	@FXML private ComboBox<String> combobox;
 	@FXML private Label label;
 	
-	public ParameterOneFromSetController(String title, String id, String defaultValue, List<String> list) {
-		super(id);
+	public ParameterOneFromSetController(String nameDisplayed, String name, String defaultValue, List<String> list) {
+		super(name);
 		// load contents
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/org/processmining/filterd/widgets/fxml/ParameterOneFromSet.fxml"));
         fxmlLoader.setController(this);
@@ -27,10 +27,14 @@ public class ParameterOneFromSetController extends ParameterController {
             throw new RuntimeException(e);
         }
         // set specifics
-        label.setText(title);
+        label.setText(nameDisplayed);
         ObservableList<String> observableList = FXCollections.observableList(list);
         combobox.setItems(observableList);
         combobox.getSelectionModel().select(defaultValue);
+	}
+	
+	public String getValue() {
+		return combobox.getSelectionModel().getSelectedItem();
 	}
 	
 }
