@@ -171,8 +171,13 @@ public class NotebookModel {
 	 * Saves the current notebook to the workspace.
 	 */
 	public void saveNotebook() {
-		//NOTE: shouldn't we give the notebook a name?
-		//TODO: implement
+		//NOTE: shouldn't we give the notebook a name? 
+
+		NotebookModel newNotebook = new NotebookModel(this.getPromContext(), this.getInitialInput());
+		newNotebook.addCells(this.getCells());
+
+		promContext.getProvidedObjectManager().createProvidedObject("Notebook File", newNotebook, NotebookModel.class, promContext);
+		promContext.getGlobalContext().getResourceManager().getResourceForInstance(newNotebook).setFavorite(true);
 	}
 
 	/**
