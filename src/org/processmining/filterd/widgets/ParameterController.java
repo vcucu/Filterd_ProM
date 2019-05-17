@@ -4,13 +4,17 @@ import javafx.scene.layout.VBox;
 
 public abstract class ParameterController {
 	protected VBox contents;
-	protected String id;
+	protected String name;
 	
-	public ParameterController(String id) {
-		this.id = id;
+	public ParameterController(String name) {
+		this.name = name;
 	}
 	
 	public VBox getContents() {
 		return contents;
+	}
+	
+	public String getName() {
+		return name;
 	}
 }
