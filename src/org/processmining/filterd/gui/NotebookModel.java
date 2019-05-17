@@ -108,6 +108,7 @@ public class NotebookModel {
 	 */
 	public void addCell(CellModel cell) {
 		cells.add(cell);
+		cell.setContext(promContext);
 	}
 
 	/**

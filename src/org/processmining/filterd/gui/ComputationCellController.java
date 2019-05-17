@@ -12,7 +12,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-public class ComputationCellController extends Cell {
+public class ComputationCellController extends CellController {
 	
 	//TODO: add other FXML attributes
 	private List<FilterButtonModel> filters = new ArrayList<>();
@@ -23,8 +23,8 @@ public class ComputationCellController extends Cell {
 	
 	//TODO: add controller methods
 	
-	public ComputationCellController(NotebookController controller) {
-		super(controller);
+	public ComputationCellController(NotebookController controller, ComputationCellModel cell) {
+		super(controller, cell);
 		this.setCellModel(new CellModel());
 		filtersOL = FXCollections.observableList(filters);
 		
