@@ -7,6 +7,7 @@ import org.processmining.contexts.uitopia.UIContext;
 import org.processmining.contexts.uitopia.UIPluginContext;
 import org.processmining.contexts.uitopia.hub.ProMResourceManager;
 import org.processmining.contexts.uitopia.hub.ProMViewManager;
+import org.processmining.framework.plugin.PluginContext;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -28,6 +29,10 @@ public class NotebookModel {
 	// ObservableList allows for action listeners. ObeservableLists are provided by JavaFX
 	private ObservableList<CellModel> cells; // the list of all cells currently in the notebook.
 	private ComputationMode computationMode; // the computation mode the notebook is currently in.
+	
+	public NotebookModel(PluginContext context) {
+		cells = FXCollections.emptyObservableList(); // A different type of observablelist might be more efficient (for example ObservableArrayList)
+	}
 
 	/**
 	 * The constructor which sets the initial input event log. Note that the
