@@ -31,7 +31,7 @@ public class FilterConfigPanelController {
 	private boolean placeInLeftPane;
 	private VBox contents; // top-level box which contains all components in this config. panel  
 	
-	FilterConfigPanelController(String title, List<Parameter> parameters) {
+	public FilterConfigPanelController(String title, List<Parameter> parameters) {
 		placeInLeftPane = true;
 		controllers = new ArrayList<>();
 		// load UI
