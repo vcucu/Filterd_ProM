@@ -16,8 +16,8 @@ public class ParameterMultipleFromSetController extends ParameterController {
 	@FXML private ListView<String> list;
 	@FXML private Label label;
 	
-	public ParameterMultipleFromSetController(String nameDisplayed, String name, List<String> defaultValues, List<String> options) {
-		super(name);
+	public ParameterMultipleFromSetController(String title, String id, List<String> defaultValues, List<String> options) {
+		super(id);
 		// load contents
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/org/processmining/filterd/widgets/fxml/ParameterMultipleFromSet.fxml"));
         fxmlLoader.setController(this);
@@ -27,7 +27,7 @@ public class ParameterMultipleFromSetController extends ParameterController {
             throw new RuntimeException(e);
         }
         // set specifics
-        label.setText(nameDisplayed);
+        label.setText(title);
         list.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         ObservableList<String> observableList = FXCollections.observableList(options);
         list.setItems(observableList);
@@ -35,9 +35,5 @@ public class ParameterMultipleFromSetController extends ParameterController {
         	list.getSelectionModel().select(option);
         }
         list.scrollTo(defaultValues.get(0));
-	}
-	
-	public List<String> getValue() {
-		return list.getSelectionModel().getSelectedItems();
 	}
 }
