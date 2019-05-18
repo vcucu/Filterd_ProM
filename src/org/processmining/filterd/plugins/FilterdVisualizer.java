@@ -10,6 +10,7 @@ import org.processmining.contexts.uitopia.UIPluginContext;
 import org.processmining.contexts.uitopia.annotations.Visualizer;
 import org.processmining.filterd.gui.NotebookController;
 import org.processmining.filterd.gui.NotebookModel;
+import org.processmining.framework.plugin.ProMCanceller;
 import org.processmining.framework.plugin.annotations.Plugin;
 import org.processmining.framework.plugin.annotations.PluginLevel;
 
@@ -25,13 +26,16 @@ public class FilterdVisualizer {
 	private NotebookModel model;
 	private NotebookController controller;
 	
-	@Plugin(name = "Filterd Visualizer", level = PluginLevel.PeerReviewed, parameterLabels = "Filter",
+	public static final String NAME = "Filterd Visualizer";
+	public static final String HELP = "Help text goes here.";
+	
+	@Plugin(name = NAME, level = PluginLevel.PeerReviewed, parameterLabels = { "Log", "Canceller" },
 			returnTypes = JComponent.class, returnLabels = "Filterd Notebook Visualizer", userAccessible = true,
-			mostSignificantResult = 1, help = "Help text goes here")
+			mostSignificantResult = 1, help = HELP)
 	@Visualizer(name = "Filterd Visualizer", pack = "Filterd")
-	public JComponent visualize(final UIPluginContext context, final XLog log) {
+	public JComponent visualize(final UIPluginContext context, final XLog log, final ProMCanceller canceller) {
 
-		model = new NotebookModel(context, log);
+		model = new NotebookModel(context, log, canceller);
 		controller = new NotebookController(model);
 		
 		// Initialize GUI components
@@ -42,11 +46,11 @@ public class FilterdVisualizer {
 	}
 	
 	
-	@Plugin(name = "Filterd Visualizer", level = PluginLevel.PeerReviewed, parameterLabels = "Filter",
+	@Plugin(name = NAME, level = PluginLevel.PeerReviewed, parameterLabels = { "Log", "Canceller" },
 			returnTypes = JComponent.class, returnLabels = "Filterd Notebook Visualizer", userAccessible = true,
-			mostSignificantResult = 1, help = "Help text goes here")
+			mostSignificantResult = 1, help = HELP)
 	@Visualizer(name = "Filterd Visualizer", pack = "Filterd")
-	public JComponent visualize(final UIPluginContext context, final NotebookModel model) {
+	public JComponent visualize(final UIPluginContext context, final NotebookModel model, final ProMCanceller canceller) {
 
 		controller = new NotebookController(model);
 		
