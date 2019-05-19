@@ -20,6 +20,7 @@ public class FilterButtonController {
 	public FilterButtonController(ComputationCellController controller) {
 		this.controller = controller;
 		this.model = new FilterButtonModel(this);
+		model.addPropertyChangeListener(new FilterButtonListener());
 	}
 	
 	public Pane getCellLayout() {

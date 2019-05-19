@@ -210,7 +210,7 @@ public class NotebookController {
 			newController.setCellLayout(newCellLayout);
 			
 			//add cellmodel in notebook model with corresponnding ui cell componenet controller
-			model.addCell(cell);
+			//model.addCell(cell);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

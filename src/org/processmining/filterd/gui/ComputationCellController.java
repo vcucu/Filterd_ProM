@@ -31,7 +31,7 @@ public class ComputationCellController extends CellController {
 		filtersOL.addListener(new ListChangeListener<Object>() {
 			@Override
             public void onChanged(ListChangeListener.Change change) {
-                System.out.println("Detected a change! ");
+                System.out.println("Added new filter!");
             }
 		});
 	}
