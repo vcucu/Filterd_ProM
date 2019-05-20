@@ -12,11 +12,11 @@ import org.processmining.filterd.gui.FilterConfigPanelController;
 import org.processmining.filterd.parameters.Parameter;
 import org.processmining.filterd.parameters.ParameterOneFromSet;
 
-public class FilterdTraceStartEventConfig extends FilterdAbstractConfig {
+public class FilterdTraceEndEventConfig extends FilterdAbstractConfig {
 	
 	FilterdAbstractConfig concreteReference;
 
-	public FilterdTraceStartEventConfig(XLog log, Filter filterType) {
+	public FilterdTraceEndEventConfig(XLog log, Filter filterType) {
 		super(log, filterType);
 		parameters = new ArrayList<Parameter>();
 		
@@ -31,12 +31,13 @@ public class FilterdTraceStartEventConfig extends FilterdAbstractConfig {
 		//Create selectionType parameter
 		List<String> selectionTypeOptions = new ArrayList<>(Arrays.asList("Filter in", "Filter out"));
 		ParameterOneFromSet selectionType = new ParameterOneFromSet("selectionType",
-				"Selection type", selectionTypeOptions.get(0), selectionTypeOptions);	
+				"Selection type", "Filter in", selectionTypeOptions);	
 		
 		// Create the default concrete reference
 		concreteReference = new FilterdTraceStartEventCategoricalConfig(log, filterType, globalAttr.get(0));
 		
-		// Add all parameters to the list of parameters	
+		// Add all parameters to the list of parameters
+		
 		parameters.add(attribute);
 		parameters.add(selectionType);
 		parameters.addAll(concreteReference.getParameters());
@@ -64,10 +65,7 @@ public class FilterdTraceStartEventConfig extends FilterdAbstractConfig {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	/*
-	 * The candidateLog is invalid if the global attributes list does not 
-	 * contain the selected attribute.
-	 */
+	
 	@Override
 	public boolean checkValidity(XLog candidateLog) {
 		List<String> globalAttrCandidateLog = new ArrayList<>();
