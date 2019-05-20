@@ -107,8 +107,6 @@ public class NotebookController {
     	configurationModal.getChildren().add(ctrl.getContents());
 	}
 
-
-
 	/**
 	 * Handler for the auto button. Sets the computation mode of the notebook to
 	 * Automatic.
@@ -204,8 +202,8 @@ public class NotebookController {
 		try {
 			FXMLLoader loader = new FXMLLoader(
 					getClass().getResource("/org/processmining/filterd/gui/fxml/ComputationCell.fxml"));
-			ComputationCellModel cell = new ComputationCellModel();
-			ComputationCellController newController = new ComputationCellController(this,cell);			
+			ComputationCellModel cell = new ComputationCellModel(model.getPromContext(), model.getPromCanceller());
+			ComputationCellController newController = new ComputationCellController(this ,cell);			
 			loader.setController(newController);
 			VBox newCellLayout = (VBox) loader.load();
 			notebookLayout.getChildren().add(newCellLayout);
