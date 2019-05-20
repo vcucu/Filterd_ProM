@@ -34,12 +34,12 @@ public class FilterdTraceSampleConfig extends FilterdAbstractConfig {
 	}
 
 	public boolean canPopulate(JComponent component) {
-		// TODO Auto-generated method stub
-		return false;
+		//
+		return true;
 	}
 
 	public JComponent getConfigPanel() {
-		// TODO Auto-generated method stub
+	//	return new FilterdTraceSamplePanel(parameters);
 		return null;
 	}
 
