@@ -1,7 +1,6 @@
 *.settings
 *.svn
 bin/
-lib/
 tests/*
 !tests/src-test/
 !tests/testfiles/
