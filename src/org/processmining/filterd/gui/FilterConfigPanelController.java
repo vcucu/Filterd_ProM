@@ -7,12 +7,14 @@ import java.util.List;
 import org.processmining.filterd.parameters.Parameter;
 import org.processmining.filterd.parameters.ParameterMultipleFromSet;
 import org.processmining.filterd.parameters.ParameterOneFromSet;
+import org.processmining.filterd.parameters.ParameterRangeFromRange;
 import org.processmining.filterd.parameters.ParameterText;
 import org.processmining.filterd.parameters.ParameterValueFromRange;
 import org.processmining.filterd.parameters.ParameterYesNo;
 import org.processmining.filterd.widgets.ParameterController;
 import org.processmining.filterd.widgets.ParameterMultipleFromSetController;
 import org.processmining.filterd.widgets.ParameterOneFromSetController;
+import org.processmining.filterd.widgets.ParameterRangeFromRangeController;
 import org.processmining.filterd.widgets.ParameterTextController;
 import org.processmining.filterd.widgets.ParameterValueFromRangeController;
 import org.processmining.filterd.widgets.ParameterYesNoController;
@@ -94,6 +96,14 @@ public class FilterConfigPanelController {
 				ParameterController controller = new ParameterTextController(casted.getNameDisplayed(), 
 														casted.getName(), 
 														casted.getDefaultChoice());
+				container.getChildren().add(controller.getContents());
+				controllers.add(controller);
+			} else if(parameter instanceof ParameterRangeFromRange) {
+				ParameterRangeFromRange<Double> casted = (ParameterRangeFromRange<Double>) parameter;
+				ParameterController controller = new ParameterRangeFromRangeController(casted.getNameDisplayed(), 
+														casted.getName(), 
+														casted.getDefaultPair(),
+														casted.getOptionsPair());
 				container.getChildren().add(controller.getContents());
 				controllers.add(controller);
 			} else {

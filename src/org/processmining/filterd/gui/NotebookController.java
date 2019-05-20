@@ -7,6 +7,7 @@ import java.util.List;
 import org.processmining.filterd.parameters.Parameter;
 import org.processmining.filterd.parameters.ParameterMultipleFromSet;
 import org.processmining.filterd.parameters.ParameterOneFromSet;
+import org.processmining.filterd.parameters.ParameterRangeFromRange;
 import org.processmining.filterd.parameters.ParameterText;
 import org.processmining.filterd.parameters.ParameterValueFromRange;
 import org.processmining.filterd.parameters.ParameterYesNo;
@@ -100,6 +101,11 @@ public class NotebookController {
     	optionsPair.add(5.0);
     	optionsPair.add(15.0);
     	params.add(new ParameterValueFromRange<Double>("valueFromRange", "Value From Range Label", 13.2, optionsPair));
+    	// range from range
+    	List<Double> rangeFromRange = new ArrayList<>();
+    	rangeFromRange.add(7.5);
+    	rangeFromRange.add(12.5);
+    	params.add(new ParameterRangeFromRange<Double>("rangeFromRange", "Range From Range Label", rangeFromRange, optionsPair));
     	// text
     	params.add(new ParameterText("text", "Text", "Some value"));
     	// create controller and add contents to the view
