@@ -65,7 +65,7 @@ public class FilterdTraceFrequencyFilter extends Filter {
 		
 		// Get parameters set by the user in the configuration panel.
 		ParameterOneFromSet FreqOcc = (ParameterOneFromSet) parameters.get(0);
-		ParameterRangeFromRange<Integer> thresholdParameters = (ParameterRangeFromRange<Integer>) parameters.get(1);
+		ParameterRangeFromRange<Double> thresholdParameters = (ParameterRangeFromRange<Double>) parameters.get(1);
 		ParameterOneFromSet filterInOut = (ParameterOneFromSet) parameters.get(2);
 
 		int lowThreshold;
@@ -76,8 +76,8 @@ public class FilterdTraceFrequencyFilter extends Filter {
 		if (FreqOcc.getChosen().contains("occ")) {
 			// The parameters are given as absolute values, 
 			// thus we can simply retrieve them.
-			lowThreshold = thresholdParameters.getOptionsPair().get(0);
-			highThreshold = thresholdParameters.getOptionsPair().get(1);
+			lowThreshold = thresholdParameters.getOptionsPair().get(0).intValue();
+			highThreshold = thresholdParameters.getOptionsPair().get(1).intValue();
 		}
 		// Else the user wants to filter based on frequency.
 		else {
@@ -89,7 +89,7 @@ public class FilterdTraceFrequencyFilter extends Filter {
 			highThreshold = (thresholdParameters.getOptionsPair().get(0) * clonedLog.size()) / 100;
 			
 			/// Calculate which number of trace occurrence represents 
-			/// with the percentage of the lower thresholg.
+			/// with the percentage of the lower threshold.
 			int sum = 0;
 			int index = -1;
 			while (sum < lowThreshold) {
