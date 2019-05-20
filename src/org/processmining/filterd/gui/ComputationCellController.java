@@ -30,7 +30,7 @@ public class ComputationCellController extends CellController {
 	
 	@FXML private VBox panelLayout;
 	@FXML private Pane visualizerPane;
-	@FXML private ComboBox cmbEventLog;
+	@FXML private ComboBox<XLog> cmbEventLog;
 	@FXML private ComboBox<ViewType> cmbVisualizers;
 	
 	/**
@@ -40,9 +40,7 @@ public class ComputationCellController extends CellController {
 	public void initialize() {
 		ComputationCellModel model = (ComputationCellModel) this.getCellModel();
 		// TODO: load event logs in cmbEventLog
-		model.setXLog(NotebookModel.initialInput); // TODO: set logs from combobox
 		cmbEventLog.getItems().addAll(model.getXLogs());
-		cmbVisualizers.getItems().addAll(model.getVisualizers());
 	}
 	
 	//TODO: add controller methods
@@ -107,12 +105,18 @@ public class ComputationCellController extends CellController {
 		this.panelLayout = panelLayout;
 	}
 	
+	@FXML
+	public void prependCellButtonHandler() {
+		// TODO Add cell above the one that generated this
+	}
+	
 	// Set XLog
 	@FXML
 	public void setXLog(ActionEvent event) {
 		ComputationCellModel model = (ComputationCellModel) this.getCellModel();
 		XLog eventLog = (XLog) cmbEventLog.getValue();
 		model.setXLog(eventLog);
+		cmbVisualizers.getItems().addAll(model.getVisualizers());
 	}
 	
 	// Load visualizer

@@ -41,8 +41,6 @@ public class ComputationCellModel extends CellModel {
 		this.eventLogs = eventLogs;
 	}
 	
-	
-	
 	public List<XLog> getXLogs() {
 		return eventLogs;
 	}
