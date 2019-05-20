@@ -31,13 +31,12 @@ public class FilterdTraceStartEventConfig extends FilterdAbstractConfig {
 		//Create selectionType parameter
 		List<String> selectionTypeOptions = new ArrayList<>(Arrays.asList("Filter in", "Filter out"));
 		ParameterOneFromSet selectionType = new ParameterOneFromSet("selectionType",
-				"Selection type", "Filter in", selectionTypeOptions);	
+				"Selection type", selectionTypeOptions.get(0), selectionTypeOptions);	
 		
 		// Create the default concrete reference
 		concreteReference = new FilterdTraceStartEventCategoricalConfig(log, filterType, globalAttr.get(0));
 		
-		// Add all parameters to the list of parameters
-		
+		// Add all parameters to the list of parameters	
 		parameters.add(attribute);
 		parameters.add(selectionType);
 		parameters.addAll(concreteReference.getParameters());
