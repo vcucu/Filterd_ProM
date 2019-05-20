@@ -10,7 +10,6 @@ import org.processmining.filterd.parameters.Parameter;
 import org.processmining.filterd.parameters.ParameterOneFromSet;
 import org.processmining.filterd.parameters.ParameterValueFromRange;
 
-
 public class FilterdEventRateConfig extends FilterdAbstractConfig {
 
 	public FilterdEventRateConfig(XLog log, Filter filterType) {
