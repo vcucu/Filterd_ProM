@@ -53,7 +53,7 @@ public class ComputationCellController extends CellController {
 		filtersOL.addListener(new ListChangeListener<Object>() {
 			@Override
             public void onChanged(ListChangeListener.Change change) {
-                System.out.println("Detected a change! ");
+				System.out.println("Added new filter!");
             }
 		});
 	}
@@ -69,7 +69,6 @@ public class ComputationCellController extends CellController {
 			panelLayout.getChildren().add(newLayout);
 			newController.setCellLayout(newLayout);
 			filtersOL.add(newController.getModel());
-			newController.setIndex(filtersOL.size() - 1);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
