@@ -26,16 +26,16 @@ public class NotebookModel {
 	private ProMViewManager viewManager; // Current view manager.
 	private ProMResourceManager resourceManager; // Current resource manager.
 
-	static XLog initialInput; // the event log the notebook was initialized with.
+	private XLog initialInput; // the event log the notebook was initialized with.
 	// ObservableList allows for action listeners. ObeservableLists are provided by JavaFX
 	private ProMCanceller promCanceller;
 	private ObservableList<CellModel> cells; // the list of all cells currently in the notebook.
-	private List<CellModel> cellsList; // the list of all cells currently in the notebook.
 	private ComputationMode computationMode; // the computation mode the notebook is currently in.
 	
+	
+	// Only used by Import/Export plugin
 	public NotebookModel() {
-		this.cellsList = new ArrayList();
-		FXCollections.observableList(cellsList); // A different type of observablelist might be more efficient (for example ObservableArrayList)
+		this.cells = FXCollections.observableArrayList();
 	}
 
 	/**
@@ -52,8 +52,7 @@ public class NotebookModel {
 		this.promContext = context;
 		this.initialInput = log;
 		this.promCanceller = canceller; 
-		this.cellsList = new ArrayList();
-		FXCollections.observableList(cellsList); // A different type of observablelist might be more efficient (for example ObservableArrayList)
+		this.cells = FXCollections.observableArrayList();
 
 		// Get current view manager and resource manager.
 		UIContext globalContext = context.getGlobalContext();
@@ -66,8 +65,7 @@ public class NotebookModel {
 	public NotebookModel(UIPluginContext context, XLog log) {
 		this.promContext = context;
 		this.initialInput = log;
-		this.cellsList = new ArrayList();
-		FXCollections.observableList(cellsList); // A different type of observablelist might be more efficient (for example ObservableArrayList)
+		this.cells = FXCollections.observableArrayList();
 
 		// Get current view manager and resource manager.
 		UIContext globalContext = context.getGlobalContext();
@@ -126,7 +124,7 @@ public class NotebookModel {
 	 * @return A list of all cells currently in the notebook.
 	 */
 	public List<CellModel> getCells() {
-		return cellsList;
+		return cells;
 	}
 
 	/**
@@ -136,7 +134,7 @@ public class NotebookModel {
 	 *            The cell to add to this model
 	 */
 	public void addCell(CellModel cell) {
-		cellsList.add(cell);
+		cells.add(cell);
 	}
 
 	/**
@@ -146,7 +144,7 @@ public class NotebookModel {
 	 *            The list of cells to append to the cells in this model.
 	 */
 	public void addCells(List<CellModel> cells) {
-		cellsList.addAll(cells);
+		cells.addAll(cells);
 	}
 
 	/**
@@ -156,7 +154,7 @@ public class NotebookModel {
 	 *            The cell to remove from this model.
 	 */
 	public void removeCell(CellModel cell) {
-		cellsList.remove(cell);
+		cells.remove(cell);
 	}
 
 	/**
@@ -166,7 +164,7 @@ public class NotebookModel {
 	 *            The list containing the cells to remove from this model.
 	 */
 	public void removeCells(List<CellModel> cells) {
-		this.cellsList.removeAll(cells);
+		this.cells.removeAll(cells);
 	}
 
 	/**
