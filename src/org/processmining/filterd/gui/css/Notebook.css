@@ -3,5 +3,9 @@ root {
 }
 
 .root {
-	 -fx-background-color: #eeeeee;
+	-fx-background-color: #eeeeee;
+}
+
+.button-play {
+	-fx-shape: "url('@../../../../../../resources/icons/play-solid.svg')";
 }

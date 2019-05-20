@@ -7,6 +7,7 @@ import org.processmining.contexts.uitopia.UIContext;
 import org.processmining.contexts.uitopia.UIPluginContext;
 import org.processmining.contexts.uitopia.hub.ProMResourceManager;
 import org.processmining.contexts.uitopia.hub.ProMViewManager;
+import org.processmining.framework.plugin.PluginContext;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -28,6 +29,10 @@ public class NotebookModel {
 	// ObservableList allows for action listeners. ObeservableLists are provided by JavaFX
 	private ObservableList<CellModel> cells; // the list of all cells currently in the notebook.
 	private ComputationMode computationMode; // the computation mode the notebook is currently in.
+	
+	public NotebookModel(PluginContext context) {
+		cells = FXCollections.emptyObservableList(); // A different type of observablelist might be more efficient (for example ObservableArrayList)
+	}
 
 	/**
 	 * The constructor which sets the initial input event log. Note that the
@@ -103,6 +108,7 @@ public class NotebookModel {
 	 */
 	public void addCell(CellModel cell) {
 		cells.add(cell);
+		cell.setContext(promContext);
 	}
 
 	/**
@@ -171,8 +177,13 @@ public class NotebookModel {
 	 * Saves the current notebook to the workspace.
 	 */
 	public void saveNotebook() {
-		//NOTE: shouldn't we give the notebook a name?
-		//TODO: implement
+		//NOTE: shouldn't we give the notebook a name? 
+
+		NotebookModel newNotebook = new NotebookModel(this.getPromContext(), this.getInitialInput());
+		newNotebook.addCells(this.getCells());
+
+		promContext.getProvidedObjectManager().createProvidedObject("Notebook File", newNotebook, NotebookModel.class, promContext);
+		promContext.getGlobalContext().getResourceManager().getResourceForInstance(newNotebook).setFavorite(true);
 	}
 
 	/**
