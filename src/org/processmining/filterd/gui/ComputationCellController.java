@@ -8,6 +8,7 @@ import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 
 import org.deckfour.uitopia.api.model.ViewType;
+import org.deckfour.xes.model.XLog;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -40,6 +41,7 @@ public class ComputationCellController extends CellController {
 		ComputationCellModel model = (ComputationCellModel) this.getCellModel();
 		// TODO: load event logs in cmbEventLog
 		model.setXLog(NotebookModel.initialInput); // TODO: set logs from combobox
+		cmbEventLog.getItems().addAll(model.getXLogs());
 		cmbVisualizers.getItems().addAll(model.getVisualizers());
 	}
 	
@@ -103,6 +105,14 @@ public class ComputationCellController extends CellController {
 
 	public void setPanelLayout(VBox panelLayout) {
 		this.panelLayout = panelLayout;
+	}
+	
+	// Set XLog
+	@FXML
+	public void setXLog(ActionEvent event) {
+		ComputationCellModel model = (ComputationCellModel) this.getCellModel();
+		XLog eventLog = (XLog) cmbEventLog.getValue();
+		model.setXLog(eventLog);
 	}
 	
 	// Load visualizer

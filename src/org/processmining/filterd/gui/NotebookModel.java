@@ -137,7 +137,6 @@ public class NotebookModel {
 	 */
 	public void addCell(CellModel cell) {
 		cellsList.add(cell);
-		cell.setContext(promContext);
 	}
 
 	/**
@@ -224,4 +223,12 @@ public class NotebookModel {
 	public void loadNotebook(String name) {
 		//TODO: implement
 	}
+	
+	public List<XLog> getXLogs(int index) {
+		List<XLog> logs = new ArrayList<>();
+		// TODO: Make it return the available XLogs (from the cells above)
+		logs.add(initialInput);
+		return logs;
+	}
+	
 }

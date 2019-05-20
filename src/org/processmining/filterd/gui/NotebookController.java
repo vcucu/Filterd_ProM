@@ -23,7 +23,6 @@ import javafx.scene.layout.VBox;
 /**
  * This class contains the controller for the notebook.
  * 
- * @author Ewoud
  *
  */
 public class NotebookController {
@@ -34,30 +33,17 @@ public class NotebookController {
 	 * variables containing the (important) UI elements so they can be
 	 * interacted with in the code.
 	 */
-	@FXML
-	private Button autoButton;
-	@FXML
-	private Button manualButton;
-	@FXML
-	private Button computeButton;
-	@FXML
-	private Button exportButton;
-	@FXML
-	private ScrollPane scrollPane;
-	@FXML
-	private VBox notebookLayout;
-	@FXML
-	private Button addCellButton;
-	@FXML
-	private HBox addCellModal;
-	@FXML
-	private Button addComputationCellButton;
-	@FXML
-	private Button addTextCellButton;
-
-	// I'm not sure where this configuraitonModal is for?
-	@FXML
-	private Pane configurationModal;
+	@FXML private Button autoButton;
+	@FXML private Button manualButton;
+	@FXML private Button computeButton;
+	@FXML private Button exportButton;
+	@FXML private ScrollPane scrollPane;
+	@FXML private VBox notebookLayout;
+	@FXML private Button appendCellButton;
+	@FXML private HBox addCellModal;
+	@FXML private Button addComputationCellButton;
+	@FXML private Button addTextCellButton;
+	@FXML private Pane configurationModal; 	// I'm not sure where this configuraitonModal is for? - Ewoud
 
 	/**
 	 * The constructor which sets the model. Note that the constructor does not
@@ -152,7 +138,7 @@ public class NotebookController {
 	 * button modal.
 	 */
 	@FXML
-	private void addCellButtonHandler() {
+	private void appendCellButtonHandler() {
 		toggleAddCellModalVisibilty();
 	}
 
@@ -162,7 +148,7 @@ public class NotebookController {
 	 */
 	@FXML
 	private void addComputationCellButtonHandler() {
-		addComputationCell();
+		appendComputationCell();
 		setAddCellModalInvisible();
 	}
 
@@ -172,7 +158,7 @@ public class NotebookController {
 	 */
 	@FXML
 	private void addTextCellButtonHandler() {
-		addTextCell();		
+		appendTextCell();		
 		setAddCellModalInvisible();
 	}
 
@@ -204,19 +190,20 @@ public class NotebookController {
 	 * Creates a new computation cell model and corresponding controller and
 	 * adds the computation cell to the notebook UI and model.
 	 */
-	public void addComputationCell() {
+	public void appendComputationCell() {
 		try {
+			int index = model.getCells().size();	// Index of the new cell, so that we can compute which XLogs are available
 			FXMLLoader loader = new FXMLLoader(
 					getClass().getResource("/org/processmining/filterd/gui/fxml/ComputationCell.fxml"));
-			ComputationCellModel cell = new ComputationCellModel(model.getPromContext(), model.getPromCanceller());
-			ComputationCellController newController = new ComputationCellController(this ,cell);			
+			ComputationCellModel cellModel = new ComputationCellModel(model.getPromContext(), model.getPromCanceller(), model.getXLogs(index));
+			ComputationCellController newController = new ComputationCellController(this, cellModel);			
 			loader.setController(newController);
 			VBox newCellLayout = (VBox) loader.load();
 			notebookLayout.getChildren().add(newCellLayout);
 			newController.setCellLayout(newCellLayout);
 			
 			//add cellmodel in notebook model with corresponnding ui cell componenet controller
-			model.addCell(cell);
+			model.addCell(cellModel);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -226,11 +213,11 @@ public class NotebookController {
 	 * Creates a new text cell model and corresponding controller and adds the
 	 * computation cell to the notebook UI and model.
 	 */
-	public void addTextCell() {
+	public void appendTextCell() {
 		try {
 			FXMLLoader loader = new FXMLLoader(
 					getClass().getResource("/org/processmining/filterd/gui/fxml/TextCell.fxml"));
-			TextCellModel cell = new TextCellModel();
+			TextCellModel cell = new TextCellModel(model.getPromContext());
 			TextCellController newController = new TextCellController(this, cell);			
 			loader.setController(newController);
 			VBox newCellLayout = (VBox) loader.load();
