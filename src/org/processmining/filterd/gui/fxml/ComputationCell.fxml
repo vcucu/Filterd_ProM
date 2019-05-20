@@ -24,12 +24,12 @@
                <children>
                   <HBox maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="35.0" spacing="10.0" VBox.vgrow="ALWAYS">
                      <children>
-                        <ComboBox prefHeight="20.0" prefWidth="150.0" HBox.hgrow="ALWAYS" />
+                        <ComboBox fx:id="cmbEventLog" prefHeight="20.0" prefWidth="150.0" HBox.hgrow="ALWAYS" />
                         <Circle fill="#787878" radius="12.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
                         <Region maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
                         <TextField alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" text="Cell name" />
                         <Region maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
-                        <ComboBox prefHeight="20.0" prefWidth="150.0" HBox.hgrow="ALWAYS" />
+                        <ComboBox fx:id="cmbVisualizers" onAction="#loadVisualizer" prefHeight="20.0" prefWidth="150.0" HBox.hgrow="ALWAYS" />
                         <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="24.0" layoutX="180.0" layoutY="15.0" stroke="BLACK" strokeType="INSIDE" width="24.0" />
                         <MenuButton mnemonicParsing="false">
                           <items>
@@ -69,7 +69,7 @@
                               <Insets left="20.0" />
                            </HBox.margin>
                         </Rectangle>
-                        <Pane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="390.0" minWidth="600.0" HBox.hgrow="ALWAYS" />
+                        <Pane fx:id="visualizerPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="390.0" minWidth="600.0" HBox.hgrow="ALWAYS" />
                      </children>
                      <VBox.margin>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
