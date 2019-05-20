@@ -5,6 +5,7 @@ import javax.swing.JComponent;
 
 import org.deckfour.xes.model.XLog;
 import org.processmining.filterd.filters.Filter;
+import org.processmining.filterd.gui.FilterConfigPanelController;
 
 public class FilterdTraceAttrCategoricalConfig extends FilterdAbstractConfig {
 
@@ -13,17 +14,17 @@ public class FilterdTraceAttrCategoricalConfig extends FilterdAbstractConfig {
 		// TODO Auto-generated constructor stub
 	}
 
-	public FilterdAbstractConfig populate(JComponent component) {
+	public FilterdAbstractConfig populate(FilterConfigPanelController component) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public boolean canPopulate(JComponent component) {
+	public boolean canPopulate(FilterConfigPanelController component) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
-	public JComponent getConfigPanel() {
+	public FilterConfigPanelController getConfigPanel() {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -6,6 +6,7 @@ import javax.swing.JComponent;
 import org.deckfour.xes.classification.XEventClassifier;
 import org.deckfour.xes.model.XLog;
 import org.processmining.filterd.filters.Filter;
+import org.processmining.filterd.gui.FilterConfigPanelController;
 import org.processmining.filterd.parameters.Parameter;
 import org.processmining.framework.plugin.PluginContext;
 public abstract class FilterdAbstractConfig {
@@ -99,20 +100,20 @@ public abstract class FilterdAbstractConfig {
 	 * Populates the parameters with information from the configuration panel.
 	 * @return concrete configuration of the configuration panel 
 	 */
-	public abstract FilterdAbstractConfig populate(JComponent component);
+	public abstract FilterdAbstractConfig populate(FilterConfigPanelController component);
 	
 	/**
 	 * Checks whether all components from the configuration panel
 	 * have a mapping to all parameters of the concrete configuration.
 	 */
-	public abstract boolean canPopulate(JComponent component);
+	public abstract boolean canPopulate(FilterConfigPanelController component);
 	/**
 	 * Returns the configuration panel which is used by
 	 * the {@populate(component)} and {@canPopulate(component)}.
 	 * 
 	 * @return the concrete configuration panel
 	 */
-	public abstract JComponent getConfigPanel();
+	public abstract FilterConfigPanelController getConfigPanel();
 	
 	/**
 	 * Invokes the {@filter(PluginContext context, XLog log, List<Parameter> parameters)} 

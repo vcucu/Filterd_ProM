@@ -107,6 +107,8 @@ public class NotebookController {
     	configurationModal.getChildren().add(ctrl.getContents());
 	}
 
+
+
 	/**
 	 * Handler for the auto button. Sets the computation mode of the notebook to
 	 * Automatic.

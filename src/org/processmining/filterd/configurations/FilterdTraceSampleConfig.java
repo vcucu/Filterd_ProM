@@ -6,7 +6,11 @@ import javax.swing.JComponent;
 
 import org.deckfour.xes.model.XLog;
 import org.processmining.filterd.filters.Filter;
+import org.processmining.filterd.gui.FilterConfigPanelController;
 import org.processmining.filterd.parameters.ParameterValueFromRange;
+import org.processmining.filterd.widgets.ParameterValueFromRangeController;
+
+import javafx.scene.Node;
 
 public class FilterdTraceSampleConfig extends FilterdAbstractConfig {
 
@@ -14,33 +18,38 @@ public class FilterdTraceSampleConfig extends FilterdAbstractConfig {
 		super(log, filterType);
 		parameters = new ArrayList<>();
 		
-		List<Integer> optionsPair = new ArrayList<>();
-		optionsPair.add(0);
-		optionsPair.add(log.size());
+		List<Double> optionsPair = new ArrayList<>();
+		optionsPair.add(0d);
+		optionsPair.add((double)log.size());
 		
-		ParameterValueFromRange<Integer> valueFromRangeParam = new ParameterValueFromRange<>(
+		ParameterValueFromRange<Double> valueFromRangeParam = new ParameterValueFromRange<>(
 			"threshold", 
 			"Sample size", 
-			0, 
+			0d, 
 			optionsPair
 		);
 		
 		parameters.add(valueFromRangeParam);
 	}
 
-	public FilterdAbstractConfig populate(JComponent component) {
-		// TODO Auto-generated method stub
-		return null;
+	public FilterdAbstractConfig populate(FilterConfigPanelController component) {
+		ParameterValueFromRangeController controller = 
+				(ParameterValueFromRangeController) component.getControllers().get(0);
+	
+		((ParameterValueFromRange<Double>)this.parameters.get(0))
+		.setChosen(controller.getValue());
+		
+		return this;
 	}
 
-	public boolean canPopulate(JComponent component) {
-		//
+	public boolean canPopulate(FilterConfigPanelController component) {
+	
 		return true;
 	}
 
-	public JComponent getConfigPanel() {
-	//	return new FilterdTraceSamplePanel(parameters);
-		return null;
+	public FilterConfigPanelController getConfigPanel() {
+		return new FilterConfigPanelController("Filter trace sample configuration dialog", parameters);
+		
 	}
 
 
