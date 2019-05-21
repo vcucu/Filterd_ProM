@@ -1,16 +1,6 @@
 package org.processmining.filterd.gui;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.processmining.filterd.parameters.Parameter;
-import org.processmining.filterd.parameters.ParameterMultipleFromSet;
-import org.processmining.filterd.parameters.ParameterOneFromSet;
-import org.processmining.filterd.parameters.ParameterRangeFromRange;
-import org.processmining.filterd.parameters.ParameterText;
-import org.processmining.filterd.parameters.ParameterValueFromRange;
-import org.processmining.filterd.parameters.ParameterYesNo;
 
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
@@ -87,39 +77,39 @@ public class NotebookController {
 		
 		// create parameters
 		// yes no
-		List<Parameter> params = new ArrayList<>();
-    	params.add(new ParameterYesNo("yesNo", "Yes/No Label", true));
-    	// one from set
-    	List<String> oneFromSet = new ArrayList<>();
-    	oneFromSet.add("Option 1");
-    	oneFromSet.add("Option 2");
-    	oneFromSet.add("Option 3");
-    	oneFromSet.add("Option 4");
-    	oneFromSet.add("Option 5");
-    	oneFromSet.add("Option 6");
-    	oneFromSet.add("Option 7");
-    	params.add(new ParameterOneFromSet("oneFromSet", "One From Set Label", "Option 1", oneFromSet));
-    	// multiple from set
-    	List<String> multipleFromSet = new ArrayList<>();
-    	multipleFromSet.add("Option 3");
-    	multipleFromSet.add("Option 6");
-    	multipleFromSet.add("Option 7");
-    	params.add(new ParameterMultipleFromSet("multipleFromSet", "Multiple From Set Label", multipleFromSet, oneFromSet));
-    	// value from range
-    	List<Double> optionsPair = new ArrayList<>();
-    	optionsPair.add(5.0);
-    	optionsPair.add(15.0);
-    	params.add(new ParameterValueFromRange<Double>("valueFromRange", "Value From Range Label", 13.2, optionsPair));
-    	// range from range
-    	List<Double> rangeFromRange = new ArrayList<>();
-    	rangeFromRange.add(7.5);
-    	rangeFromRange.add(12.5);
-    	params.add(new ParameterRangeFromRange<Double>("rangeFromRange", "Range From Range Label", rangeFromRange, optionsPair));
-    	// text
-    	params.add(new ParameterText("text", "Text", "Some value"));
-    	// create controller and add contents to the view
-    	FilterConfigPanelController ctrl = new FilterConfigPanelController("Some random filter configuration panel", params);
-    	configurationModal.getChildren().add(ctrl.getContents());
+//		List<Parameter> params = new ArrayList<>();
+//    	params.add(new ParameterYesNo("yesNo", "Yes/No Label", true));
+//    	// one from set
+//    	List<String> oneFromSet = new ArrayList<>();
+//    	oneFromSet.add("Option 1");
+//    	oneFromSet.add("Option 2");
+//    	oneFromSet.add("Option 3");
+//    	oneFromSet.add("Option 4");
+//    	oneFromSet.add("Option 5");
+//    	oneFromSet.add("Option 6");
+//    	oneFromSet.add("Option 7");
+//    	params.add(new ParameterOneFromSet("oneFromSet", "One From Set Label", "Option 1", oneFromSet));
+//    	// multiple from set
+//    	List<String> multipleFromSet = new ArrayList<>();
+//    	multipleFromSet.add("Option 3");
+//    	multipleFromSet.add("Option 6");
+//    	multipleFromSet.add("Option 7");
+//    	params.add(new ParameterMultipleFromSet("multipleFromSet", "Multiple From Set Label", multipleFromSet, oneFromSet));
+//    	// value from range
+//    	List<Double> optionsPair = new ArrayList<>();
+//    	optionsPair.add(5.0);
+//    	optionsPair.add(15.0);
+//    	params.add(new ParameterValueFromRange<Double>("valueFromRange", "Value From Range Label", 13.2, optionsPair));
+//    	// range from range
+//    	List<Double> rangeFromRange = new ArrayList<>();
+//    	rangeFromRange.add(7.5);
+//    	rangeFromRange.add(12.5);
+//    	params.add(new ParameterRangeFromRange<Double>("rangeFromRange", "Range From Range Label", rangeFromRange, optionsPair));
+//    	// text
+//    	params.add(new ParameterText("text", "Text", "Some value"));
+//    	// create controller and add contents to the view
+//    	FilterConfigPanelController ctrl = new FilterConfigPanelController("Some random filter configuration panel", params);
+//    	configurationModal.getChildren().add(ctrl.getContents());
 	}
 
 	/**

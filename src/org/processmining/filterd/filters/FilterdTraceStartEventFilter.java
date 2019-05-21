@@ -11,7 +11,8 @@ import org.processmining.filterd.parameters.ParameterYesNo;
 import org.processmining.framework.plugin.PluginContext;
 
 public class FilterdTraceStartEventFilter extends Filter {
-
+	
+	XLog filteredLog;
 
 	public XLog filter(PluginContext context, XLog log, List<Parameter> parameters) {
 		
@@ -30,10 +31,10 @@ public class FilterdTraceStartEventFilter extends Filter {
 		
 		
 		//initialize the log that will be output
-		XLog filteredLog = this.initializeLog(log);
+		filteredLog = this.initializeLog(log);
 		
 		
-		if (selectionType.getChosen() == "Filter in") {
+		if (selectionType.getChosen().contentEquals("Filter in")) {
 			//Keeping desired attributes in
 			if(nullHandling.getChosen()) {
 				//remove nulls
@@ -99,7 +100,8 @@ public class FilterdTraceStartEventFilter extends Filter {
 				}
 			}
 		}
-		//after all the relevant traces were added, return the log
+		
+		
 		return filteredLog;
 	}
 	
