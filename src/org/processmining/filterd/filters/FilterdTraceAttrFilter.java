@@ -132,8 +132,60 @@ public class FilterdTraceAttrFilter extends Filter {
 		return false;
 	}
 	
-	public XLog filterNumerical() {
-		
+	public XLog filterNumerical(XLog clonedLog, ParameterRangeFromRange<Double> range,
+			ParameterOneFromSet selectionType, ParameterOneFromSet attribute) {
+			
+			//for each trace in the log, first assume that the trace should not
+			//be removed
+			for (XTrace trace : clonedLog) {
+				boolean ok = true;
+				
+				//for each event in the trace check if their attribute values are  
+				//in the range
+				for (XEvent event : trace) {
+					XAttributeMap eventAttributes = event.getAttributes();
+
+					/*
+					 * if the value of the event is outside the range and
+					 * it is mandatory for it to be inside the range,
+					 * make ok false
+					 */
+					if (selectionType.getChosen().equals("mandatory")) {
+						if (!(Long.parseLong(eventAttributes.get(attribute.getChosen())
+								.toString()) 
+								> range.getChosenPair().get(0) &&
+						Long.parseLong(eventAttributes.get(attribute.getChosen())
+								.toString()) 
+								< range.getChosenPair().get(1))){
+							ok = false;
+							break;
+						}
+
+					}
+					/*
+					 * if the value of the event is inside the range and
+					 * it is forbidden for it to be inside the range,
+					 * make ok false
+					 */
+					else {
+						if (Long.parseLong(eventAttributes.get(attribute.getChosen())
+								.toString()) 
+								> range.getChosenPair().get(0) &&
+						Long.parseLong(eventAttributes.get(attribute.getChosen())
+								.toString()) 
+								< range.getChosenPair().get(1)){
+							ok = false;
+							break;
+						}
+					}
+					//remove the trace if it's not okay
+					if (!ok) {
+						clonedLog.remove(trace);
+					}
+				}
+			}
+			return clonedLog;
+			
 	}
 	
 	public XLog filterTimeframe(XLog clonedLog,
