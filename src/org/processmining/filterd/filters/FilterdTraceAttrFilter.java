@@ -47,21 +47,39 @@ public class FilterdTraceAttrFilter extends Filter {
 	public XLog filterCategorical(XLog clonedLog, ParameterYesNo nullHandling,
 			ParameterOneFromSet selectionType, ParameterOneFromSet attribute,
 			ParameterMultipleFromSet desiredValues) {
+		
+		//for each trace in the log, first assume that all its events
+		//have one of the desired values
 		for(XTrace trace : clonedLog) {
 			boolean ok = true;
+			
+			//for each event in the trace check if its attribute has one of the
+			//desired values
 			for(XEvent event : trace) {
 				XAttributeMap eventAttributes = event.getAttributes();
+				//if the attribute value is null and we don't want to handle
+				//null values, just move on to the next event
 				if (!nullHandling.getChosen() && 
 						eventAttributes.get(attribute.getChosen()) == null) {
 					continue;
 				}
 				else {
+					
+					/*
+					 *if the attribute value of one event
+					 *is not one of the desired values,
+					 *then the whole trace should be removed and we don't care
+					 *about the rest of its events
+					 *
+					 */
 					if (!satisfies(eventAttributes, attribute.getChosen(),
 							desiredValues.getChosen())) {
 						ok = false;
+						break;
 					}
 				}
 			}
+			//remove the trace if it's not okay
 			if (!ok) {
 				clonedLog.remove(trace);
 			}
@@ -73,20 +91,23 @@ public class FilterdTraceAttrFilter extends Filter {
 	
 	public boolean satisfies(XAttributeMap attributes, String attribute_key,
 			List<String> attribute_values) {
+		//if the event does not have the desired attribute, return false
 		if (!attributes.containsKey(attribute_key)) {
 			return false;
 		}
 		XAttribute attr = attributes.get(attribute_key);
-		// the only way to get the value consistently out of all the attribute subclasses
+		// the only way to get the value consistently 
+		// out of all the attribute subclasses
 		String attr_value = attr.toString();
-
-		boolean ok = false;
+		
+		//if one of the desired values matches the attribute value, return true
+		//else return false
 		for (String s : attribute_values) {
 			if (attr_value.equals(s)) {
-				ok = true;
+				return true;
 			}
 		}
-		return ok;
+		return false;
 	}
 	
 	public XLog filterNumerical() {
