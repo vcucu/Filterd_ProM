@@ -132,10 +132,25 @@ public class FilterdTraceAttrFilter extends Filter {
 			long firstTimeStampMillis = getTimeStamp(firstEvent).getTime();
 			long secondTimeStampMillis = getTimeStamp(lastEvent).getTime();
 			
+			/* Base the filtering on the parameter chosen:
+			 * 
+			 * - "Contained in timeframe":
+			 * Keep the traces that are contained in the time frame.
+			 * - "Intersecting timeframe":
+			 * Keep the traces that intersect with the time frame.
+			 * - "Started in timeframe":
+			 * Keep the traces that were started in the time frame.
+			 * - "Completed in timeframe":
+			 * Keep the traces that were completed in the time frame.
+			 * - "Trim to timeframe":
+			 * Trim all the traces such that all the events are contained in the
+			 * time frame. Remove the traces that end up empty.
+			 */
 			switch (keepTracesOptions.getChosen()) {
 				
 				case "Contained in timeframe": {
 					
+					// If the trace is not contained, remove it.
 					if (firstTimeStampMillis < lowThreshold
 							|| secondTimeStampMillis > highThreshold) {
 						clonedLog.remove(trace);
@@ -145,8 +160,9 @@ public class FilterdTraceAttrFilter extends Filter {
 				}
 				case "Intersecting timeframe": {
 					
-					if (!(firstTimeStampMillis < highThreshold
-							&& secondTimeStampMillis > lowThreshold)) {
+					// If the trace is not intersecting, remove it.
+					if (!(firstTimeStampMillis <= highThreshold
+							&& secondTimeStampMillis >= lowThreshold)) {
 						clonedLog.remove(trace);
 					}
 					
@@ -154,7 +170,9 @@ public class FilterdTraceAttrFilter extends Filter {
 				}
 				case "Started in timeframe": {
 					
-					if (firstTimeStampMillis < lowThreshold) {
+					// If the trace is not started in the time frame, remove it.
+					if (firstTimeStampMillis < lowThreshold
+							|| firstTimeStampMillis > highThreshold) {
 						clonedLog.remove(trace);
 					}
 					
@@ -162,8 +180,10 @@ public class FilterdTraceAttrFilter extends Filter {
 				}
 				case "Completed in timeframe": {
 					
-					if (!(secondTimeStampMillis < highThreshold
-							&& secondTimeStampMillis > highThreshold)) {
+					// If the trace is not completed in the time frame, 
+					// remove it.
+					if (!(secondTimeStampMillis <= highThreshold
+							&& secondTimeStampMillis >= highThreshold)) {
 						clonedLog.remove(trace);
 					}
 					
@@ -171,12 +191,15 @@ public class FilterdTraceAttrFilter extends Filter {
 				}
 				case "Trim to timeframe": {
 					
+					// Check the time stamp of every event
 					for (XEvent event : trace) {
 						
 						long timeStamp = getTimeStamp(event).getTime();
 						
-						if (!(timeStamp > firstTimeStampMillis
-								&& timeStamp < secondTimeStampMillis)) {
+						// If the event is not contained in the time frame,
+						// remove it.
+						if (!(timeStamp >= firstTimeStampMillis
+								&& timeStamp <= secondTimeStampMillis)) {
 							
 							trace.remove(event);
 							
@@ -184,7 +207,7 @@ public class FilterdTraceAttrFilter extends Filter {
 						
 					}
 					
-					
+					// If the trace ended up empty, remove it.
 					if (trace.isEmpty()) {
 						clonedLog.remove(trace);
 					}
