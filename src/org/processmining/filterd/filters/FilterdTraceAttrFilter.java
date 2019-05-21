@@ -5,12 +5,16 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import org.deckfour.xes.model.XAttribute;
+import org.deckfour.xes.model.XAttributeMap;
 import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
 import org.processmining.filterd.parameters.Parameter;
+import org.processmining.filterd.parameters.ParameterMultipleFromSet;
 import org.processmining.filterd.parameters.ParameterOneFromSet;
 import org.processmining.filterd.parameters.ParameterRangeFromRange;
+import org.processmining.filterd.parameters.ParameterYesNo;
 import org.processmining.framework.plugin.PluginContext;
 
 public class FilterdTraceAttrFilter extends Filter {
@@ -40,8 +44,49 @@ public class FilterdTraceAttrFilter extends Filter {
 		return null;
 	}
 	
-	public XLog filterCategorical() {
-		return null;
+	public XLog filterCategorical(XLog clonedLog, ParameterYesNo nullHandling,
+			ParameterOneFromSet selectionType, ParameterOneFromSet attribute,
+			ParameterMultipleFromSet desiredValues) {
+		for(XTrace trace : clonedLog) {
+			boolean ok = true;
+			for(XEvent event : trace) {
+				XAttributeMap eventAttributes = event.getAttributes();
+				if (!nullHandling.getChosen() && 
+						eventAttributes.get(attribute.getChosen()) == null) {
+					continue;
+				}
+				else {
+					if (!satisfies(eventAttributes, attribute.getChosen(),
+							desiredValues.getChosen())) {
+						ok = false;
+					}
+				}
+			}
+			if (!ok) {
+				clonedLog.remove(trace);
+			}
+	
+		}
+		return clonedLog;
+		
+	}
+	
+	public boolean satisfies(XAttributeMap attributes, String attribute_key,
+			List<String> attribute_values) {
+		if (!attributes.containsKey(attribute_key)) {
+			return false;
+		}
+		XAttribute attr = attributes.get(attribute_key);
+		// the only way to get the value consistently out of all the attribute subclasses
+		String attr_value = attr.toString();
+
+		boolean ok = false;
+		for (String s : attribute_values) {
+			if (attr_value.equals(s)) {
+				ok = true;
+			}
+		}
+		return ok;
 	}
 	
 	public XLog filterNumerical() {
@@ -52,8 +97,7 @@ public class FilterdTraceAttrFilter extends Filter {
 		return null;
 	}
 	
-	public XLog filterPerformance(XLog log,
-			XLog clonedLog,
+	public XLog filterPerformance(XLog clonedLog,
 			ParameterOneFromSet filterOnDurationOrEvents, 
 			ParameterRangeFromRange<Double> threshold) {
 		
