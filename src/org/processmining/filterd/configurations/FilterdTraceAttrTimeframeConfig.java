@@ -25,8 +25,7 @@ public class FilterdTraceAttrTimeframeConfig extends FilterdAbstractConfig {
 	}
 
 	public FilterConfigPanelController getConfigPanel() {
-		// TODO Auto-generated method stub
-		return null;
+		return new FilterConfigPanelController("Timeframe Trace Attribute Configuration", parameters);
 	}
 
 	public boolean checkValidity(XLog log) {

@@ -53,8 +53,7 @@ public class FilterdTraceStartEventCategoricalConfig extends FilterdAbstractConf
 	}
 
 	public FilterConfigPanelController getConfigPanel() {
-		// TODO Auto-generated method stub
-		return null;
+		return new FilterConfigPanelController("Categorical Trace Start Event Configuration", parameters);
 	}
 
 	public boolean checkValidity(XLog log) {

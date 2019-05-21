@@ -56,7 +56,7 @@ public class FilterdTraceSampleConfig extends FilterdAbstractConfig {
 
 	public FilterConfigPanelController getConfigPanel() {
 		//return a new panel for this configuration with the relevant name and parameters
-		return new FilterConfigPanelController("Filter trace sample configuration dialog", parameters);
+		return new FilterConfigPanelController("Filter Trace Sample Configuration", parameters);
 		
 	}
 

@@ -62,7 +62,7 @@ public class FilterdTraceStartEventConfig extends FilterdAbstractConfig {
 	}
 
 	public FilterConfigPanelController getConfigPanel() {
-		return new FilterConfigPanelController("Trace End Event Configuration", parameters);
+		return new FilterConfigPanelController("Trace Start Event Configuration", parameters);
 	}
 	
 	public FilterdAbstractConfig changeReference(ParameterOneFromSetController chosen) {

@@ -103,7 +103,7 @@ public class FilterdTraceFrequencyConfig extends FilterdAbstractConfig {
 
 	public FilterConfigPanelController getConfigPanel() {
 		//return a new panel for this configuration with the relevant name and parameters
-		return new FilterConfigPanelController("Filter trace frequency configuration dialog", parameters);
+		return new FilterConfigPanelController("Filter Trace Frequency Configuration", parameters);
 	}
 
 	public boolean checkValidity(XLog log) {

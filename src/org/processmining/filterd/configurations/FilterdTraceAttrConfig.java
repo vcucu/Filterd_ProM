@@ -29,7 +29,7 @@ public class FilterdTraceAttrConfig extends FilterdAbstractConfig {
 	}
 
 	public FilterConfigPanelController getConfigPanel() {
-		return new FilterConfigPanelController("Trace End Event Configuration", parameters);
+		return new FilterConfigPanelController("Trace Attribute Configuration", parameters);
 	}
 	
 	public FilterdAbstractConfig changeReference(ParameterOneFromSetController chosen) {
