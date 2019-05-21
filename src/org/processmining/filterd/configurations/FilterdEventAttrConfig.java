@@ -6,9 +6,14 @@ import org.deckfour.xes.model.XLog;
 import org.processmining.filterd.filters.Filter;
 import org.processmining.filterd.gui.FilterConfigPanelController;
 import org.processmining.filterd.parameters.Parameter;
+import org.processmining.filterd.widgets.ParameterOneFromSetController;
+
 import java.util.ArrayList;
 public class FilterdEventAttrConfig extends FilterdAbstractConfig {
 
+	
+	FilterdAbstractConfig concreteReference;
+	
 	public FilterdEventAttrConfig(XLog log, Filter filterType) {
 		super(log, filterType);
 		// TODO Auto-generated constructor stub
@@ -25,6 +30,10 @@ public class FilterdEventAttrConfig extends FilterdAbstractConfig {
 	}
 
 	public FilterConfigPanelController getConfigPanel() {
+		return new FilterConfigPanelController("Trace End Event Configuration", parameters);
+	}
+	
+	public FilterdAbstractConfig changeReference(ParameterOneFromSetController chosen) {
 		// TODO Auto-generated method stub
 		return null;
 	}
