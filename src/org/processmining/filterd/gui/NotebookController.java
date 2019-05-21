@@ -12,7 +12,6 @@ import org.processmining.filterd.parameters.ParameterText;
 import org.processmining.filterd.parameters.ParameterValueFromRange;
 import org.processmining.filterd.parameters.ParameterYesNo;
 
-import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
@@ -63,27 +62,6 @@ public class NotebookController {
 	 * fields, thus UI elements can be manipulated here.
 	 */
 	public void initialize() {
-		
-		// Add listener cells from observable list
-		model.getCells().addListener(new ListChangeListener<CellModel>() {
-			@Override
-	        public void onChanged(Change<? extends CellModel> change) {
-				while(change.next()) {
-		            if (change.wasAdded()) {
-		            	int index = change.getFrom();
-		            	CellModel cell = model.getCells().get(index);
-		            	loadCell(cell);
-		            }
-//		            if (c.wasRemoved()) {
-//		                //TODO
-//		            }
-				}
-			}
-			
-			
-		});
-		//notebookLayout.get
-		
 		// create parameters
 		// yes no
 		List<Parameter> params = new ArrayList<>();
@@ -118,7 +96,7 @@ public class NotebookController {
     	params.add(new ParameterText("text", "Text", "Some value"));
     	// create controller and add contents to the view
     	FilterConfigPanelController ctrl = new FilterConfigPanelController("Some random filter configuration panel", params);
-    	configurationModal.getChildren().add(ctrl.getContents());
+    	configurationModal.getChildren().add(ctrl.getRoot());
 	}
 
 	/**
@@ -209,45 +187,44 @@ public class NotebookController {
 	}
 
 	/**
-	 * Creates a new ComputationCell model and adds it to the observable list.
+	 * Creates a new computation cell model and corresponding controller and
+	 * adds the computation cell to the notebook UI and model.
 	 */
 	public void appendComputationCell() {
-		int index = model.getCells().size();	// Index of the new cell, so that we can compute which XLogs are available
-		ComputationCellModel cellModel = new ComputationCellModel(model.getPromContext(), model.getPromCanceller(), model.getXLogs(index));			
-		model.addCell(cellModel);
+		try {
+			int index = model.getCells().size();	// Index of the new cell, so that we can compute which XLogs are available
+			FXMLLoader loader = new FXMLLoader(
+					getClass().getResource("/org/processmining/filterd/gui/fxml/ComputationCell.fxml"));
+			ComputationCellModel cellModel = new ComputationCellModel(model.getPromContext(), model.getPromCanceller(), model.getXLogs(index));
+			ComputationCellController newController = new ComputationCellController(this, cellModel);			
+			loader.setController(newController);
+			VBox newCellLayout = (VBox) loader.load();
+			notebookLayout.getChildren().add(newCellLayout);
+			newController.setCellLayout(newCellLayout);
+			
+			//add cellmodel in notebook model with corresponnding ui cell componenet controller
+			model.addCell(cellModel);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
-	 * Creates a new TextCell model and adds it to the observable list.
+	 * Creates a new text cell model and corresponding controller and adds the
+	 * computation cell to the notebook UI and model.
 	 */
 	public void appendTextCell() {
-		int index = model.getCells().size();	// Index of the new cell, so that we can compute which XLogs are available
-		TextCellModel cellModel = new TextCellModel(model.getPromContext());				
-		model.addCell(cellModel);
-	}
-	
-	/**
-	 * Given a cell model, this method creates a corresponding controller and
-	 * adds it the notebook UI.
-	 */
-	public void loadCell(CellModel cell) {
-		FXMLLoader loader = new FXMLLoader();
-		CellController newController;
-		if (cell.getClass().isAssignableFrom(ComputationCellModel.class)) {
-			// Cell to be added is a Computation cell
-			loader = new FXMLLoader(getClass().getResource("/org/processmining/filterd/gui/fxml/ComputationCell.fxml"));
-			newController = new ComputationCellController(this, (ComputationCellModel) cell);
-		} else {
-			// Cell to be added is a Text cell
-			loader = new FXMLLoader(getClass().getResource("/org/processmining/filterd/gui/fxml/TextCell.fxml"));
-			newController = new TextCellController(this, (TextCellModel) cell);	
-		}
-		loader.setController(newController);
-		VBox newCellLayout;
 		try {
-			newCellLayout = (VBox) loader.load();
+			FXMLLoader loader = new FXMLLoader(
+					getClass().getResource("/org/processmining/filterd/gui/fxml/TextCell.fxml"));
+			TextCellModel cell = new TextCellModel(model.getPromContext());
+			TextCellController newController = new TextCellController(this, cell);			
+			loader.setController(newController);
+			VBox newCellLayout = (VBox) loader.load();
 			notebookLayout.getChildren().add(newCellLayout);
 			newController.setCellLayout(newCellLayout);
+			model.addCell(cell);
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

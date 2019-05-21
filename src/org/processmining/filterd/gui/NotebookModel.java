@@ -123,7 +123,7 @@ public class NotebookModel {
 	 * 
 	 * @return A list of all cells currently in the notebook.
 	 */
-	public ObservableList<CellModel> getCells() {
+	public List<CellModel> getCells() {
 		return cells;
 	}
 

@@ -7,7 +7,7 @@ public class ParameterOneFromSet extends Parameter  {
 	private String defaultChoice;
 	private String chosen;
 	private List<String> options;
-	private boolean createsReference; 
+	private boolean createsReference;
 	
 	public ParameterOneFromSet(String name, String nameDisplayed, String defaultChoice, List<String> options) {
 		super(name, nameDisplayed);
