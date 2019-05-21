@@ -178,10 +178,11 @@ public class FilterdTraceAttrFilter extends Filter {
 							break;
 						}
 					}
-					//remove the trace if it's not okay
-					if (!ok) {
-						clonedLog.remove(trace);
-					}
+					
+				}
+				//remove the trace if it's not okay
+				if (!ok) {
+					clonedLog.remove(trace);
 				}
 			}
 			return clonedLog;
