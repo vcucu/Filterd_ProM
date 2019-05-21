@@ -3,8 +3,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.swing.JComponent;
-
 import org.deckfour.xes.model.XAttribute;
 import org.deckfour.xes.model.XLog;
 import org.processmining.filterd.filters.Filter;
@@ -19,13 +17,16 @@ public class FilterdTraceStartEventConfig extends FilterdAbstractConfig {
 	public FilterdTraceStartEventConfig(XLog log, Filter filterType) {
 		super(log, filterType);
 		parameters = new ArrayList<Parameter>();
+		complexClassifiers = new ArrayList<>();
 		
 		 // Get global attributes that are passed to the parameter 
-		List<String> globalAttr = this.computeGlobalAttributes(log);
+		List<String> globalAttrAndClassifiers = computeGlobalAttributes(log);
+		//add the complex classifiers to the list of global attributes 
+		globalAttrAndClassifiers.addAll(computeComplexClassifiers(log));
 		
 		// Create attribute parameter 
 		ParameterOneFromSet attribute = new ParameterOneFromSet("attribute", 
-				"Filter by", globalAttr.get(0), globalAttr);
+				"Filter by", globalAttrAndClassifiers.get(0), globalAttrAndClassifiers);
 		
 		
 		//Create selectionType parameter
@@ -34,7 +35,8 @@ public class FilterdTraceStartEventConfig extends FilterdAbstractConfig {
 				"Selection type", selectionTypeOptions.get(0), selectionTypeOptions);	
 		
 		// Create the default concrete reference
-		concreteReference = new FilterdTraceStartEventCategoricalConfig(log, filterType, globalAttr.get(0));
+		concreteReference = new FilterdTraceStartEventCategoricalConfig(log, filterType,
+				globalAttrAndClassifiers.get(0), complexClassifiers);
 		
 		// Add all parameters to the list of parameters	
 		parameters.add(attribute);
@@ -42,13 +44,7 @@ public class FilterdTraceStartEventConfig extends FilterdAbstractConfig {
 		parameters.addAll(concreteReference.getParameters());
 	}
 	
-	public List<String> computeGlobalAttributes(XLog log) {
-		List<String> globalAttr = new ArrayList<>();
-		for (XAttribute attribute : log.getGlobalEventAttributes()) {
-			globalAttr.add(attribute.getKey());
-		}
-		return globalAttr;
-	}
+	
 
 	public FilterdAbstractConfig populate(FilterConfigPanelController component) {
 		// TODO Auto-generated method stub
@@ -81,5 +77,5 @@ public class FilterdTraceStartEventConfig extends FilterdAbstractConfig {
 		}	
 		return true;
 	}
-
+	
 }

@@ -34,7 +34,7 @@ public class FilterdTraceStartEventFilter extends Filter {
 		filteredLog = this.initializeLog(log);
 		
 		
-		if (selectionType.getChosen() == "Filter in") {
+		if (selectionType.getChosen().contentEquals("Filter in")) {
 			//Keeping desired attributes in
 			if(nullHandling.getChosen()) {
 				//remove nulls

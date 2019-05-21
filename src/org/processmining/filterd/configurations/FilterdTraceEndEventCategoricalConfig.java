@@ -2,8 +2,10 @@ package org.processmining.filterd.configurations;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JComponent;
-
+import org.deckfour.xes.classification.XEventClass;
+import org.deckfour.xes.classification.XEventClassifier;
+import org.deckfour.xes.info.XLogInfo;
+import org.deckfour.xes.info.impl.XLogInfoImpl;
 import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
@@ -15,20 +17,39 @@ import org.processmining.filterd.parameters.ParameterYesNo;
 
 public class FilterdTraceEndEventCategoricalConfig extends FilterdAbstractConfig {
 
-	public FilterdTraceEndEventCategoricalConfig(XLog log, Filter filterType, String attribute) {
+	public FilterdTraceEndEventCategoricalConfig(XLog log, Filter filterType, String attribute,
+			List<XEventClassifier> classifiers) {
 		super(log, filterType);
 		parameters = new ArrayList<Parameter>();
-		
-		// Create list of all values for the selected attribute
+		isAttribute = true;
 		List<String> allValues = new ArrayList<>();
-		for (XTrace trace : log) {
-			for (XEvent event : trace) {
-				String value = event.getAttributes().get(attribute).toString();
-				if (!allValues.contains(value)) {
-					allValues.add(value);
+		
+		// check whether the selected string is an attribute or a classifier
+		for (XEventClassifier c: classifiers) {
+			if (c.name().equals(attribute)) {
+				isAttribute = false; // the selected string is a complex classifier
+				XLogInfo logInfo = XLogInfoImpl.create(log);
+				List<XEventClass> eventClasses = new ArrayList<>(logInfo.getEventClasses(c).getClasses());
+				for (XEventClass eventClass : eventClasses) {
+					allValues.add(eventClass.toString());
 				}
+				break;
 			}
 		}
+		
+		// none of the complex classifiers matched the selected values, therefore the 
+		// selected string is a global attribute
+		if (isAttribute) {
+			for (XTrace trace : log) {
+				for (XEvent event : trace) {
+					String value = event.getAttributes().get(attribute).toString();
+					if (!allValues.contains(value)) {
+						allValues.add(value);
+					}
+				}
+			}
+		}		
+		
 				
 		// Create desiredEvents parameter	
 		ParameterMultipleFromSet desiredEvents = new ParameterMultipleFromSet("desiredEvents",
