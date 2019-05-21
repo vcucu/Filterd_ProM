@@ -13,7 +13,6 @@ public abstract class CellController {
 	//TODO: add all the attributes from the UI Diagram
 	protected NotebookController controller;
 	protected CellModel cellModel;
-	protected Pane layout;
 	protected Pane cellLayout;
 	@FXML
 	protected Region statusBar; // has 8 states, Color x isHidden
@@ -23,8 +22,7 @@ public abstract class CellController {
 	protected HBox cellBody;
 
 	public CellController(NotebookController controller, CellModel cellModel) {
-		this.controller = controller;
-		this.layout = controller.getLayout(); //to be redone 
+		this.controller = controller; 
 		this.cellModel = cellModel;
 	}
 

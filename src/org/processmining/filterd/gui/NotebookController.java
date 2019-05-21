@@ -284,15 +284,6 @@ public class NotebookController {
 	}
 
 	/**
-	 * Returns the layout that contains the cells in this notebook.
-	 * 
-	 * @return the {@code VBox} that contains all the cells in this notebook.
-	 */
-	public VBox getLayout() {
-		return notebookLayout;
-	}
-
-	/**
 	 * Sets the layout that contains the cells in this notebook.
 	 * 
 	 * @param layout
