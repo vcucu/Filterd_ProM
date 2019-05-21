@@ -1,6 +1,7 @@
 package org.processmining.filterd.gui;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JComponent;
@@ -50,6 +51,7 @@ public class ComputationCellController extends CellController {
 
 	public ComputationCellController(NotebookController controller, ComputationCellModel model) {
 		super(controller, model);
+		filters = new ArrayList<>();
 		filtersOL = FXCollections.observableList(filters);
 
 		filtersOL.addListener(new ListChangeListener<Object>() {
