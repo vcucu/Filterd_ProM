@@ -254,15 +254,14 @@ public class NotebookController {
 	}
 
 	/**
-	 * Removes the input {@code cell} from the notebook UI and model.
+	 * Removes the input {@code cell} from the notebook model. Removal from the UI should happen through an actionListener.
 	 * 
 	 * @param cell
 	 *            the cell to remove from the notebook.
 	 */
-//	public void removeCell(CellModel cell) {
-//		notebookLayout.getChildren().remove(cell.getCellLayout()); // removes the cell from the UI
-//		model.removeCell(cell.getCellModel()); // removes the cell from the model
-//	}
+	public void removeCell(CellModel cell) {
+		model.removeCell(cell); // removes the cell from the model
+	}
 
 	/**
 	 * Returns the model of the current notebook.

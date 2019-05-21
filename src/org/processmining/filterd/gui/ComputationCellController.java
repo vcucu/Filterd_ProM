@@ -77,11 +77,6 @@ public class ComputationCellController extends CellController {
 		}
 	}
 
-	@FXML
-	public void removeCell() {
-		getLayout().getChildren().remove(getCellLayout());
-	}
-
 	public void show() {
 		// TODO Auto-generated method stub
 
@@ -121,6 +116,7 @@ public class ComputationCellController extends CellController {
 	@Override
 	public void setCellModel(CellModel cellModel) throws IllegalArgumentException {
 		if (!(cellModel instanceof ComputationCellModel)) {
+			//CellModel is not of type ComputationCellModel.
 			throw new IllegalArgumentException(
 					"ComputationCellController.setCellModel: expected object of type ComputationCellModel as input, instead got object of type"
 							+ cellModel.getClass().getCanonicalName());

@@ -1,7 +1,5 @@
 package org.processmining.filterd.gui;
 
-import javafx.fxml.FXML;
-
 public class TextCellController extends CellController {
 	NotebookController controller;
 	TextCellModel cell;
@@ -12,12 +10,6 @@ public class TextCellController extends CellController {
 	
 	public TextCellController(NotebookController controller, TextCellModel cell) {
 		super(controller, cell);
-	}
-		
-	
-	@FXML
-	public void removeCell() {
-		getLayout().getChildren().remove(getCellLayout());
 	}
 
 	public void show() {
