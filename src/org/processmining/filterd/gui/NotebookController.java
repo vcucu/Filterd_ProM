@@ -24,17 +24,28 @@ public class NotebookController {
 	 * variables containing the (important) UI elements so they can be
 	 * interacted with in the code.
 	 */
-	@FXML private Button autoButton;
-	@FXML private Button manualButton;
-	@FXML private Button computeButton;
-	@FXML private Button exportButton;
-	@FXML private ScrollPane scrollPane;
-	@FXML private VBox notebookLayout;
-	@FXML private Button appendCellButton;
-	@FXML private HBox addCellModal;
-	@FXML private Button addComputationCellButton;
-	@FXML private Button addTextCellButton;
-	@FXML private Pane configurationModal; 	// I'm not sure where this configuraitonModal is for? - Ewoud
+	@FXML
+	private Button autoButton;
+	@FXML
+	private Button manualButton;
+	@FXML
+	private Button computeButton;
+	@FXML
+	private Button exportButton;
+	@FXML
+	private ScrollPane scrollPane;
+	@FXML
+	private VBox notebookLayout;
+	@FXML
+	private Button appendCellButton;
+	@FXML
+	private HBox addCellModal;
+	@FXML
+	private Button addComputationCellButton;
+	@FXML
+	private Button addTextCellButton;
+	@FXML
+	private Pane configurationModal; // I'm not sure where this configuraitonModal is for? - Ewoud
 
 	/**
 	 * The constructor which sets the model. Note that the constructor does not
@@ -53,7 +64,7 @@ public class NotebookController {
 	 * fields, thus UI elements can be manipulated here.
 	 */
 	public void initialize() {
-		
+
 		// Add listener cells from observable list
 		model.getCells().addListener(new ListChangeListener<CellModel>() {
 			@Override
@@ -71,10 +82,7 @@ public class NotebookController {
 		            }
 				}
 			}
-			
-			
 		});
-		
 		// create parameters
 		// yes no
 //		List<Parameter> params = new ArrayList<>();
@@ -171,7 +179,7 @@ public class NotebookController {
 	 */
 	@FXML
 	private void addTextCellButtonHandler() {
-		appendTextCell();		
+		appendTextCell();
 		setAddCellModalInvisible();
 	}
 
@@ -203,8 +211,9 @@ public class NotebookController {
 	 * Creates a new ComputationCell model and adds it to the observable list.
 	 */
 	public void appendComputationCell() {
-		int index = model.getCells().size();	// Index of the new cell, so that we can compute which XLogs are available
-		ComputationCellModel cellModel = new ComputationCellModel(model.getPromContext(), model.getPromCanceller(), model.getXLogs(index));			
+		int index = model.getCells().size(); // Index of the new cell, so that we can compute which XLogs are available
+		ComputationCellModel cellModel = new ComputationCellModel(model.getPromContext(), model.getPromCanceller(),
+				model.getXLogs(index));
 		model.addCell(cellModel);
 	}
 
@@ -212,11 +221,11 @@ public class NotebookController {
 	 * Creates a new TextCell model and adds it to the observable list.
 	 */
 	public void appendTextCell() {
-		int index = model.getCells().size();	// Index of the new cell, so that we can compute which XLogs are available
-		TextCellModel cellModel = new TextCellModel(model.getPromContext());				
+		int index = model.getCells().size(); // Index of the new cell, so that we can compute which XLogs are available
+		TextCellModel cellModel = new TextCellModel(model.getPromContext());
 		model.addCell(cellModel);
 	}
-	
+
 	/**
 	 * Given a cell model, this method creates a corresponding controller and
 	 * adds it the notebook UI.
@@ -231,7 +240,7 @@ public class NotebookController {
 		} else {
 			// Cell to be added is a Text cell
 			loader = new FXMLLoader(getClass().getResource("/org/processmining/filterd/gui/fxml/TextCell.fxml"));
-			newController = new TextCellController(this, (TextCellModel) cell);	
+			newController = new TextCellController(this, (TextCellModel) cell);
 		}
 		loader.setController(newController);
 		VBox newCellLayout;

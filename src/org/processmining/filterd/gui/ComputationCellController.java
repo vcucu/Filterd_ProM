@@ -46,6 +46,7 @@ public class ComputationCellController extends CellController {
 		ComputationCellModel model = this.getCellModel();
 		// TODO: load event logs in cmbEventLog
 		cmbEventLog.getItems().addAll(model.getXLogs());
+		cellModel.getProperty().addPropertyChangeListener(new CellModelListeners(this));
 	}
 
 	//TODO: add controller methods
@@ -77,16 +78,6 @@ public class ComputationCellController extends CellController {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-
-	public void show() {
-		// TODO Auto-generated method stub
-
-	}
-
-	public void hide() {
-		// TODO Auto-generated method stub
-
 	}
 
 	public ObservableList<FilterButtonModel> getFiltersOL() {

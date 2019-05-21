@@ -1,37 +1,45 @@
 package org.processmining.filterd.gui;
 
+import java.beans.PropertyChangeListener;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 
 public abstract class CellController {
 
 	//TODO: add all the attributes from the UI Diagram
-	private NotebookController notebookController;
-	private CellModel cellModel;
-	private Pane cellLayout;
+	protected NotebookController controller;
+	protected CellModel cellModel;
+	protected Pane layout;
+	protected Pane cellLayout;
 	@FXML
-	private Region statusBar;
-	@FXML 
-	private TextField cellName;
-	
+	protected Region statusBar; // has 8 states, Color x isHidden
+	@FXML
+	protected TextField cellName;
+	@FXML
+	protected HBox cellBody;
 
 	public CellController(NotebookController controller, CellModel cellModel) {
-		this.notebookController = controller;
+		this.controller = controller;
+		this.layout = controller.getLayout(); //to be redone 
 		this.cellModel = cellModel;
 	}
 
-	/**
-	 * Handler for the status bar. Toggles the collapsing of the cell.
-	 */
-	@FXML
-	public void handleStatusBar() {
-		if (cellModel.isHidden()) {
-			this.hide();
-		}else {
-			this.show();
-		}
+	//	public void intialize() {
+	//		//add PropertyChangeListeners for each of cell model properties
+	//		cellModel.getProperty().addPropertyChangeListener(new CellModelListeners(this));
+	//
+	//	}
+
+	public void addPropertyChangeListener(PropertyChangeListener listener) {
+		cellModel.getProperty().addPropertyChangeListener(listener);
+	}
+
+	public NotebookController getController() {
+		return controller;
 	}
 	
 	/**
@@ -55,11 +63,11 @@ public abstract class CellController {
 	 * @return The notebook controller.
 	 */
 	public NotebookController getNotebookController() {
-		return notebookController;
+		return controller;
 	}
 
 	public void setController(NotebookController controller) {
-		this.notebookController = controller;
+		this.controller = controller;
 	}
 
 	/**
@@ -86,13 +94,33 @@ public abstract class CellController {
 		this.cellModel = cellModel;
 	}
 
-	/**
-	 * Shows (un-collapses) the cell.
-	 */
-	public abstract void show();
+	@FXML
+	public void handleStatusBar() {
+		//this causes for the isHidden attribute to fire a Change event to the CellControllerListeners 
+		//that in turn updates the view 
+		if (cellModel.isHidden()) {
+			cellModel.setHidden(false);
+			//System.out.println("setHidden in cell controller");
+		} else {
+			cellModel.setHidden(true);
 
-	/**
-	 * Hides (collapses) the cell.
-	 */
-	public abstract void hide();
+		}
+	}
+
+	public void changeCellName(String cellName) {
+		this.cellName.setText(cellName);
+	}
+
+	public void show() {
+		//System.out.println("We are now updating ui!");
+		//System.out.println(cellBody.equals(null));
+		cellBody.setVisible(true); // makes the content of the HBox invisible.
+		cellBody.setManaged(true); // makes the HBox take up no space. This option is note available in the Scene Builder.
+	}
+
+	public void hide() {
+		cellBody.setVisible(false); // makes the content of the HBox invisible.
+		cellBody.setManaged(false); // makes the HBox take up no space. This option is note available in the Scene Builder.
+
+	}
 }
