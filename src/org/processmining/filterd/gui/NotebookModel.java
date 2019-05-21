@@ -8,6 +8,7 @@ import org.processmining.contexts.uitopia.UIContext;
 import org.processmining.contexts.uitopia.UIPluginContext;
 import org.processmining.contexts.uitopia.hub.ProMResourceManager;
 import org.processmining.contexts.uitopia.hub.ProMViewManager;
+import org.processmining.filterd.models.YLog;
 import org.processmining.framework.plugin.ProMCanceller;
 
 import javafx.collections.FXCollections;
@@ -29,7 +30,7 @@ public class NotebookModel {
 	private ProMViewManager viewManager; // Current view manager.
 	private ProMResourceManager resourceManager; // Current resource manager.
 
-	private XLog initialInput; // the event log the notebook was initialized with.
+	private YLog initialInput; // the event log the notebook was initialized with.
 	// ObservableList allows for action listeners. ObeservableLists are provided by JavaFX
 	private ProMCanceller promCanceller;
 	private ObservableList<CellModel> cells; // the list of all cells currently in the notebook.
@@ -53,7 +54,7 @@ public class NotebookModel {
 	 */
 	public NotebookModel(UIPluginContext context, XLog log, ProMCanceller canceller) {
 		this.promContext = context;
-		this.initialInput = log;
+		this.initialInput = new YLog(log, "Initial input");
 		this.promCanceller = canceller; 
 		this.cells = FXCollections.observableArrayList();
 
@@ -104,7 +105,7 @@ public class NotebookModel {
 	 * 
 	 * @return The event log the notebook was initialized with.
 	 */
-	public XLog getInitialInput() {
+	public YLog getInitialInput() {
 		return initialInput;
 	}
 
@@ -211,8 +212,8 @@ public class NotebookModel {
 		//TODO: implement
 	}
 	
-	public List<XLog> getXLogs(int index) {
-		List<XLog> logs = new ArrayList<>();
+	public List<YLog> getXLogs(int index) {
+		List<YLog> logs = new ArrayList<>();
 		// TODO: Make it return the available XLogs (from the cells above)
 		logs.add(initialInput);
 		return logs;
@@ -221,7 +222,7 @@ public class NotebookModel {
 	
 	@Override
 	public NotebookModel clone() {
-		NotebookModel newNotebook = new NotebookModel(promContext, initialInput, promCanceller);
+		NotebookModel newNotebook = new NotebookModel(promContext, initialInput.get(), promCanceller);
 		newNotebook.addCells(cells);
 		newNotebook.setComputationMode(computationMode);
 		
