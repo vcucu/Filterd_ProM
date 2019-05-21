@@ -48,42 +48,64 @@ public class FilterdTraceAttrFilter extends Filter {
 			ParameterOneFromSet selectionType, ParameterOneFromSet attribute,
 			ParameterMultipleFromSet desiredValues) {
 		
-		//for each trace in the log, first assume that all its events
-		//have one of the desired values
+		//for each trace in the log, first assume that the trace should not
+		//be removed
 		for(XTrace trace : clonedLog) {
 			boolean ok = true;
 			
 			//for each event in the trace check if its attribute has one of the
-			//desired values
+			//chosen values
 			for(XEvent event : trace) {
 				XAttributeMap eventAttributes = event.getAttributes();
 				//if the attribute value is null and we don't want to handle
 				//null values, just move on to the next event
+				
 				if (!nullHandling.getChosen() && 
 						eventAttributes.get(attribute.getChosen()) == null) {
 					continue;
 				}
 				else {
 					
-					/*
-					 *if the attribute value of one event
-					 *is not one of the desired values,
-					 *then the whole trace should be removed and we don't care
-					 *about the rest of its events
-					 *
-					 */
+					
+					if (selectionType.getChosen().equals("mandatory")) {
+						
+						/*
+						 *if the attribute value of one event
+						 *is not one of the selected values,
+						 *then the whole trace should be removed 
+						 *and we don't care
+						 *about the rest of its events
+						 *
+						 */
 					if (!satisfies(eventAttributes, attribute.getChosen(),
 							desiredValues.getChosen())) {
 						ok = false;
 						break;
+						}
+					}
+					else {
+						
+						/*
+						 *if the attribute value of one event
+						 *is one of the selected values,
+						 *then the whole trace should be removed 
+						 *and we don't care
+						 *about the rest of its events
+						 *
+						 */
+					
+						if (satisfies(eventAttributes, attribute.getChosen(),
+								desiredValues.getChosen())) {
+							ok = false;
+							break;
+						}
 					}
 				}
-			}
 			//remove the trace if it's not okay
 			if (!ok) {
 				clonedLog.remove(trace);
+				}
 			}
-	
 		}
 		return clonedLog;
 		
@@ -111,7 +133,7 @@ public class FilterdTraceAttrFilter extends Filter {
 	}
 	
 	public XLog filterNumerical() {
-		return null;
+		
 	}
 	
 	public XLog filterTimeframe(XLog clonedLog,
