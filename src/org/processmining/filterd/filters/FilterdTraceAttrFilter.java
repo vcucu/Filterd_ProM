@@ -48,42 +48,64 @@ public class FilterdTraceAttrFilter extends Filter {
 			ParameterOneFromSet selectionType, ParameterOneFromSet attribute,
 			ParameterMultipleFromSet desiredValues) {
 		
-		//for each trace in the log, first assume that all its events
-		//have one of the desired values
+		//for each trace in the log, first assume that the trace should not
+		//be removed
 		for(XTrace trace : clonedLog) {
 			boolean ok = true;
 			
 			//for each event in the trace check if its attribute has one of the
-			//desired values
+			//chosen values
 			for(XEvent event : trace) {
 				XAttributeMap eventAttributes = event.getAttributes();
 				//if the attribute value is null and we don't want to handle
 				//null values, just move on to the next event
+				
 				if (!nullHandling.getChosen() && 
 						eventAttributes.get(attribute.getChosen()) == null) {
 					continue;
 				}
 				else {
 					
-					/*
-					 *if the attribute value of one event
-					 *is not one of the desired values,
-					 *then the whole trace should be removed and we don't care
-					 *about the rest of its events
-					 *
-					 */
+					
+					if (selectionType.getChosen().equals("mandatory")) {
+						
+						/*
+						 *if the attribute value of one event
+						 *is not one of the selected values,
+						 *then the whole trace should be removed 
+						 *and we don't care
+						 *about the rest of its events
+						 *
+						 */
 					if (!satisfies(eventAttributes, attribute.getChosen(),
 							desiredValues.getChosen())) {
 						ok = false;
 						break;
+						}
+					}
+					else {
+						
+						/*
+						 *if the attribute value of one event
+						 *is one of the selected values,
+						 *then the whole trace should be removed 
+						 *and we don't care
+						 *about the rest of its events
+						 *
+						 */
+					
+						if (satisfies(eventAttributes, attribute.getChosen(),
+								desiredValues.getChosen())) {
+							ok = false;
+							break;
+						}
 					}
 				}
-			}
 			//remove the trace if it's not okay
 			if (!ok) {
 				clonedLog.remove(trace);
+				}
 			}
-	
 		}
 		return clonedLog;
 		
@@ -110,8 +132,60 @@ public class FilterdTraceAttrFilter extends Filter {
 		return false;
 	}
 	
-	public XLog filterNumerical() {
-		return null;
+	public XLog filterNumerical(XLog clonedLog, ParameterRangeFromRange<Double> range,
+			ParameterOneFromSet selectionType, ParameterOneFromSet attribute) {
+			
+			//for each trace in the log, first assume that the trace should not
+			//be removed
+			for (XTrace trace : clonedLog) {
+				boolean ok = true;
+				
+				//for each event in the trace check if their attribute values are  
+				//in the range
+				for (XEvent event : trace) {
+					XAttributeMap eventAttributes = event.getAttributes();
+
+					/*
+					 * if the value of the event is outside the range and
+					 * it is mandatory for it to be inside the range,
+					 * make ok false
+					 */
+					if (selectionType.getChosen().equals("mandatory")) {
+						if (!(Long.parseLong(eventAttributes.get(attribute.getChosen())
+								.toString()) 
+								> range.getChosenPair().get(0) &&
+						Long.parseLong(eventAttributes.get(attribute.getChosen())
+								.toString()) 
+								< range.getChosenPair().get(1))){
+							ok = false;
+							break;
+						}
+
+					}
+					/*
+					 * if the value of the event is inside the range and
+					 * it is forbidden for it to be inside the range,
+					 * make ok false
+					 */
+					else {
+						if (Long.parseLong(eventAttributes.get(attribute.getChosen())
+								.toString()) 
+								> range.getChosenPair().get(0) &&
+						Long.parseLong(eventAttributes.get(attribute.getChosen())
+								.toString()) 
+								< range.getChosenPair().get(1)){
+							ok = false;
+							break;
+						}
+					}
+					//remove the trace if it's not okay
+					if (!ok) {
+						clonedLog.remove(trace);
+					}
+				}
+			}
+			return clonedLog;
+			
 	}
 	
 	public XLog filterTimeframe(XLog clonedLog,

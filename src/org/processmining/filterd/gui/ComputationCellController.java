@@ -9,6 +9,7 @@ import javax.swing.SwingUtilities;
 
 import org.deckfour.uitopia.api.model.ViewType;
 import org.deckfour.xes.model.XLog;
+import org.processmining.filterd.models.YLog;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -33,7 +34,7 @@ public class ComputationCellController extends CellController {
 	@FXML
 	private Pane visualizerPane;
 	@FXML
-	private ComboBox<XLog> cmbEventLog;
+	private ComboBox<YLog> cmbEventLog;
 	@FXML
 	private ComboBox<ViewType> cmbVisualizers;
 
@@ -145,7 +146,7 @@ public class ComputationCellController extends CellController {
 	@FXML
 	public void setXLog(ActionEvent event) {
 		ComputationCellModel model = this.getCellModel();
-		XLog eventLog = cmbEventLog.getValue();
+		XLog eventLog = cmbEventLog.getValue().get();
 		model.setXLog(eventLog);
 		cmbVisualizers.getItems().addAll(model.getVisualizers());
 	}
