@@ -14,6 +14,7 @@ import javax.swing.JComponent;
 
 import org.deckfour.xes.model.XLog;
 import org.processmining.filterd.filters.Filter;
+import org.processmining.filterd.gui.AbstractFilterConfigPanelController;
 import org.processmining.filterd.gui.FilterConfigPanelController;
 
 public class FilterdTraceFrequencyConfig extends FilterdAbstractConfig {
@@ -72,9 +73,11 @@ public class FilterdTraceFrequencyConfig extends FilterdAbstractConfig {
 				
 	}
 
-	public FilterdAbstractConfig populate(FilterConfigPanelController component) {
+	public FilterdAbstractConfig populate(AbstractFilterConfigPanelController component) {
 		//initialize the panel parameter controllers for each parameter
-		ParameterOneFromSetController foController = 
+		
+		//THIS COMMENT BLOCK CAN BE REMOVED IN THE NEXT COMMIT WHEN REPLACED BY METHOD IN THE ABSTRACT CLASS
+		/*ParameterOneFromSetController foController = 
 				(ParameterOneFromSetController) component.getControllers().get(0);
 		
 		ParameterRangeFromRangeController thrController = 
@@ -91,7 +94,7 @@ public class FilterdTraceFrequencyConfig extends FilterdAbstractConfig {
 		.setChosenPair((List<Double>)thrController.getValue());
 		
 		((ParameterOneFromSet)this.parameters.get(2))
-		.setChosen(filterInOutController.getValue());
+		.setChosen(filterInOutController.getValue());*/
 		
 		return this;
 	}

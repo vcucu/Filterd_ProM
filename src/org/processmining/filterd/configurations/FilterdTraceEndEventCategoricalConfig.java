@@ -10,6 +10,7 @@ import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
 import org.processmining.filterd.filters.Filter;
+import org.processmining.filterd.gui.AbstractFilterConfigPanelController;
 import org.processmining.filterd.gui.FilterConfigPanelController;
 import org.processmining.filterd.parameters.Parameter;
 import org.processmining.filterd.parameters.ParameterMultipleFromSet;
@@ -63,7 +64,7 @@ public class FilterdTraceEndEventCategoricalConfig extends FilterdAbstractConfig
 		parameters.add(nullHandling);
 	}
 
-	public FilterdAbstractConfig populate(FilterConfigPanelController component) {
+	public FilterdAbstractConfig populate(AbstractFilterConfigPanelController component) {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -3,13 +3,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.swing.JComponent;
+import org.processmining.filterd.widgets.*;
+
 import org.deckfour.xes.model.XAttribute;
 import org.deckfour.xes.model.XLog;
 import org.processmining.filterd.filters.Filter;
+import org.processmining.filterd.gui.AbstractFilterConfigPanelController;
 import org.processmining.filterd.gui.FilterConfigPanelController;
 import org.processmining.filterd.parameters.Parameter;
 import org.processmining.filterd.parameters.ParameterOneFromSet;
-import org.processmining.filterd.widgets.ParameterOneFromSetController;
+import org.processmining.filterd.parameters.ParameterRangeFromRange;
 
 public class FilterdTraceStartEventConfig extends FilterdAbstractConfig {
 	
@@ -25,7 +29,7 @@ public class FilterdTraceStartEventConfig extends FilterdAbstractConfig {
 		//add the complex classifiers to the list of global attributes 
 		globalAttrAndClassifiers.addAll(computeComplexClassifiers(log));
 		
-		// Create attribute parameter 
+		// Create attribute parameter, creates reference is true
 		ParameterOneFromSet attribute = new ParameterOneFromSet("attribute", 
 				"Filter by", globalAttrAndClassifiers.get(0), globalAttrAndClassifiers, true);
 
@@ -48,9 +52,21 @@ public class FilterdTraceStartEventConfig extends FilterdAbstractConfig {
 	
 	
 
-	public FilterdAbstractConfig populate(FilterConfigPanelController component) {
-		// TODO Auto-generated method stub
-		return null;
+	public FilterdAbstractConfig populate(AbstractFilterConfigPanelController component) {
+		return this;
+		/*ParameterOneFromSetController attrController = 
+				(ParameterOneFromSetController) component.getControllers().get(0);
+		
+		ParameterOneFromSetController selectionController = 
+				(ParameterOneFromSetController) component.getControllers().get(1);
+			
+		//update the parameters with the values from the parameter controllers
+		((ParameterOneFromSet)this.parameters.get(0))
+		.setChosen(attrController.getValue());
+		
+		((ParameterOneFromSet)this.parameters.get(1))
+		.setChosen(selectionController.getValue());*/
+		
 	}
 
 	public boolean canPopulate(FilterConfigPanelController component) {
@@ -83,5 +99,5 @@ public class FilterdTraceStartEventConfig extends FilterdAbstractConfig {
 		}	
 		return true;
 	}
-	
+
 }

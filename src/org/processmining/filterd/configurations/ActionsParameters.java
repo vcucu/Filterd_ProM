@@ -3,6 +3,8 @@ package org.processmining.filterd.configurations;
 import javax.swing.JComponent;
 
 import org.deckfour.xes.model.XLog;
+import org.processmining.filterd.gui.AbstractFilterConfigPanelController;
+import org.processmining.filterd.gui.FilterConfigPanelController;
 
 /*
  * obsolete
@@ -13,6 +15,7 @@ public class ActionsParameters extends FilterdAbstractConfig {
 	protected FilterdAbstractConfig parameters;
 
 	public ActionsParameters() {
+		super(null, null);
 		filter = "";
 	}
 	
@@ -45,14 +48,6 @@ public class ActionsParameters extends FilterdAbstractConfig {
 		return 0;
 	}
 
-	public FilterdAbstractConfig populate(JComponent component) {
-		return null;
-	}
-
-	public boolean canPopulate(JComponent component) {
-		return false;
-	}
-
 	public boolean checkValidity(XLog log) {
 		// TODO Auto-generated method stub
 		return false;
@@ -63,9 +58,21 @@ public class ActionsParameters extends FilterdAbstractConfig {
 		return null;
 	}
 
-	public JComponent getConfigPanel() {
+	public FilterConfigPanelController getConfigPanel() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public FilterdAbstractConfig populate(AbstractFilterConfigPanelController component) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean canPopulate(FilterConfigPanelController component) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }
