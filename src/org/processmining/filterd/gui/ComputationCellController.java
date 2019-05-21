@@ -1,7 +1,6 @@
 package org.processmining.filterd.gui;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JComponent;
@@ -25,7 +24,7 @@ import javafx.scene.layout.VBox;
 public class ComputationCellController extends CellController {
 
 	//TODO: add other FXML attributes
-	private List<FilterButtonModel> filters = new ArrayList<>();
+	private List<FilterButtonModel> filters;
 	private ObservableList<FilterButtonModel> filtersOL;
 
 	@FXML
