@@ -6,6 +6,7 @@ import javax.swing.JComponent;
 
 import org.deckfour.xes.model.XLog;
 import org.processmining.filterd.filters.Filter;
+import org.processmining.filterd.gui.AbstractFilterConfigPanelController;
 import org.processmining.filterd.gui.FilterConfigPanelController;
 import org.processmining.filterd.parameters.ParameterValueFromRange;
 import org.processmining.filterd.widgets.ParameterValueFromRangeController;
@@ -36,15 +37,16 @@ public class FilterdTraceSampleConfig extends FilterdAbstractConfig {
 		parameters.add(valueFromRangeParam);
 	}
 
-	public FilterdAbstractConfig populate(FilterConfigPanelController component) {
+	public FilterdAbstractConfig populate(AbstractFilterConfigPanelController component) {
 		
 		//update the sample size parameter with the value chosen in the 
 		//panel's slider, using the panel's parameter controller 
-		ParameterValueFromRangeController controller = 
+		//THIS COMMENT BLOCK CAN BE REMOVED IN THE NEXT COMMIT WHEN REPLACED BY METHOD IN THE ABSTRACT CLASS
+	/*	ParameterValueFromRangeController controller = 
 				(ParameterValueFromRangeController) component.getControllers().get(0);
 	
 		((ParameterValueFromRange<Double>)this.parameters.get(0))
-		.setChosen(controller.getValue());
+		.setChosen(controller.getValue());*/
 		
 		return this;
 	}

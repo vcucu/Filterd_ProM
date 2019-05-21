@@ -1,4 +1,5 @@
 package org.processmining.filterd.configurations;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JComponent;
@@ -6,6 +7,8 @@ import javax.swing.JComponent;
 import org.deckfour.xes.classification.XEventClassifier;
 import org.deckfour.xes.model.XLog;
 import org.processmining.filterd.filters.Filter;
+import org.processmining.filterd.widgets.*;
+import org.processmining.filterd.gui.AbstractFilterConfigPanelController;
 import org.processmining.filterd.gui.FilterConfigPanelController;
 import org.processmining.filterd.parameters.Parameter;
 import org.processmining.framework.plugin.PluginContext;
@@ -16,6 +19,7 @@ public abstract class FilterdAbstractConfig {
 	protected List<Parameter> parameters;
 	protected boolean isValid;
 	protected XEventClassifier classifier;
+
 	
 	public FilterdAbstractConfig(XLog log, Filter filterType ) {
 		this.filterType = filterType;
@@ -100,8 +104,44 @@ public abstract class FilterdAbstractConfig {
 	 * Populates the parameters with information from the configuration panel.
 	 * @return concrete configuration of the configuration panel 
 	 */
-	public abstract FilterdAbstractConfig populate(FilterConfigPanelController component);
+	public FilterdAbstractConfig populate(AbstractFilterConfigPanelController abstractComponent) {
 	
+	FilterConfigPanelController component = (FilterConfigPanelController) abstractComponent;
+	List<ParameterController> controllers = component.getControllers();
+	for(ParameterController controller : controllers) {
+
+		if(controller instanceof ParameterOneFromSetExtendedController) {
+			ParameterOneFromSetExtendedController casted = (ParameterOneFromSetExtendedController) controller;
+			//concreteReference.populate(casted.getNestedConfigPanel());
+			//this menthod needs to be in every referencable class
+		} else if(controller instanceof ParameterYesNoController) {
+			ParameterYesNoController casted = (ParameterYesNoController) controller;
+			//getParameter(controller.getName())).setChosen(casted.getValue());		
+		} else if(controller instanceof ParameterOneFromSetController) {
+			ParameterOneFromSetController casted = (ParameterOneFromSetController) controller;
+			
+		} else if(controller instanceof ParameterMultipleFromSetController) {
+			ParameterMultipleFromSetController casted = (ParameterMultipleFromSetController) controller;
+
+		} else if(controller instanceof ParameterValueFromRangeController) {
+			ParameterValueFromRangeController casted = (ParameterValueFromRangeController) controller;
+			
+		} else if(controller instanceof ParameterTextController) {
+			ParameterTextController casted = (ParameterTextController) controller;
+
+		} else if(controller instanceof ParameterRangeFromRangeController) {
+			ParameterRangeFromRangeController casted = (ParameterRangeFromRangeController) controller;
+
+		} else {
+			throw new IllegalArgumentException("Unsupporrted controller type.");
+		}	
+		//assumes that the controller has a name corresponding to the parameter name
+		
+		
+		}
+		return this;
+	}
+
 	/**
 	 * Checks whether all components from the configuration panel
 	 * have a mapping to all parameters of the concrete configuration.
