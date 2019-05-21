@@ -70,19 +70,20 @@ public class NotebookController {
 	        public void onChanged(Change<? extends CellModel> change) {
 				while(change.next()) {
 		            if (change.wasAdded()) {
+		            	// Add cell to the view
 		            	int index = change.getFrom();
 		            	CellModel cell = model.getCells().get(index);
 		            	loadCell(cell);
+		            } else if (change.wasRemoved()) {
+		            	// Delete cell from the view
+		            	int index = change.getFrom();
+		            	notebookLayout.getChildren().remove(index);
 		            }
-//		            if (c.wasRemoved()) {
-//		                //TODO
-//		            }
 				}
 			}
 			
 			
 		});
-		//notebookLayout.get
 		
 		// create parameters
 		// yes no
