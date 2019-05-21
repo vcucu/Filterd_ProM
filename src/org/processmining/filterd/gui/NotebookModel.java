@@ -21,6 +21,9 @@ import javafx.collections.ObservableList;
  */
 public class NotebookModel {
 
+	/**
+	 * TODO: IF YOU ADD A NEW VARIABLE, MAKE SURE TO UPDATE THE clone() METHOD!!!  
+	 */
 	// objects from ProM
 	private UIPluginContext promContext; // The ProM context to communicate with the ProM framework.
 	private ProMViewManager viewManager; // Current view manager.
@@ -37,6 +40,19 @@ public class NotebookModel {
 	public NotebookModel() {
 		this.cells = FXCollections.observableArrayList();
 	}
+	
+	// for import export (no canceller)
+	// TODO delete this and use the constructor with the canceller
+	public NotebookModel(UIPluginContext context, XLog log) {
+		this.promContext = context;
+		this.initialInput = log;
+		this.cells = FXCollections.observableArrayList();
+
+		// Get current view manager and resource manager.
+		UIContext globalContext = context.getGlobalContext();
+		viewManager = ProMViewManager.initialize(globalContext);
+		resourceManager = ProMResourceManager.initialize(globalContext);
+	}
 
 	/**
 	 * The constructor which sets the initial input event log. Note that the
@@ -52,19 +68,6 @@ public class NotebookModel {
 		this.promContext = context;
 		this.initialInput = log;
 		this.promCanceller = canceller; 
-		this.cells = FXCollections.observableArrayList();
-
-		// Get current view manager and resource manager.
-		UIContext globalContext = context.getGlobalContext();
-		viewManager = ProMViewManager.initialize(globalContext);
-		resourceManager = ProMResourceManager.initialize(globalContext);
-	}
-	
-	// for import export (no canceller)
-	// TODO delete this and use the constructor with the canceller
-	public NotebookModel(UIPluginContext context, XLog log) {
-		this.promContext = context;
-		this.initialInput = log;
 		this.cells = FXCollections.observableArrayList();
 
 		// Get current view manager and resource manager.
@@ -134,7 +137,7 @@ public class NotebookModel {
 	 *            The cell to add to this model
 	 */
 	public void addCell(CellModel cell) {
-		cells.add(cell);
+		this.cells.add(cell);
 	}
 
 	/**
@@ -144,7 +147,7 @@ public class NotebookModel {
 	 *            The list of cells to append to the cells in this model.
 	 */
 	public void addCells(List<CellModel> cells) {
-		cells.addAll(cells);
+		this.cells.addAll(cells);
 	}
 
 	/**
@@ -205,8 +208,7 @@ public class NotebookModel {
 	public void saveNotebook() {
 		//NOTE: shouldn't we give the notebook a name? 
 
-		NotebookModel newNotebook = new NotebookModel(promContext, initialInput, promCanceller);
-		newNotebook.addCells(this.getCells());
+		NotebookModel newNotebook = clone();
 
 		promContext.getProvidedObjectManager().createProvidedObject("Notebook File", newNotebook, NotebookModel.class, promContext);
 		promContext.getGlobalContext().getResourceManager().getResourceForInstance(newNotebook).setFavorite(true);
@@ -227,6 +229,16 @@ public class NotebookModel {
 		// TODO: Make it return the available XLogs (from the cells above)
 		logs.add(initialInput);
 		return logs;
+	}
+	
+	
+	@Override
+	public NotebookModel clone() {
+		NotebookModel newNotebook = new NotebookModel(promContext, initialInput, promCanceller);
+		newNotebook.addCells(cells);
+		newNotebook.setComputationMode(computationMode);
+		
+		return newNotebook;
 	}
 	
 }
