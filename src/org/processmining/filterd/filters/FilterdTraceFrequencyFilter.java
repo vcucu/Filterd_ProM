@@ -19,8 +19,6 @@ import org.processmining.framework.plugin.PluginContext;
 public class FilterdTraceFrequencyFilter extends Filter {
 
 	public XLog filter(PluginContext context, XLog log, List<Parameter> parameters) {
-		//initialize the log that will be output
-		XLog filteredLog = this.initializeLog(log);
 				
 		//clone input log, since ProM documentation says filters should not change input logs
 		XLog clonedLog = (XLog) log.clone();
