@@ -1,17 +1,8 @@
 package org.processmining.filterd.gui;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
-import org.processmining.filterd.parameters.Parameter;
-import org.processmining.filterd.parameters.ParameterMultipleFromSet;
-import org.processmining.filterd.parameters.ParameterOneFromSet;
-import org.processmining.filterd.parameters.ParameterRangeFromRange;
-import org.processmining.filterd.parameters.ParameterText;
-import org.processmining.filterd.parameters.ParameterValueFromRange;
-import org.processmining.filterd.parameters.ParameterYesNo;
-
+import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
@@ -22,7 +13,7 @@ import javafx.scene.layout.VBox;
 
 /**
  * This class contains the controller for the notebook.
- *
+ * 
  *
  */
 public class NotebookController {
@@ -49,7 +40,7 @@ public class NotebookController {
 	 * The constructor which sets the model. Note that the constructor does not
 	 * have access to the @FXML annotated fields as @FXML annotated fields are
 	 * populated after the execution of the constructor.
-	 *
+	 * 
 	 * @param model
 	 *            the model that is to be paired with this controller
 	 */
@@ -62,6 +53,7 @@ public class NotebookController {
 	 * fields, thus UI elements can be manipulated here.
 	 */
 	public void initialize() {
+		
 		// Add listener cells from observable list
 		model.getCells().addListener(new ListChangeListener<CellModel>() {
 			@Override
@@ -79,44 +71,45 @@ public class NotebookController {
 		            }
 				}
 			}
-
-
+			
+			
 		});
+		
 		// create parameters
 		// yes no
-		List<Parameter> params = new ArrayList<>();
-    	params.add(new ParameterYesNo("yesNo", "Yes/No Label", true));
-    	// one from set
-    	List<String> oneFromSet = new ArrayList<>();
-    	oneFromSet.add("Option 1");
-    	oneFromSet.add("Option 2");
-    	oneFromSet.add("Option 3");
-    	oneFromSet.add("Option 4");
-    	oneFromSet.add("Option 5");
-    	oneFromSet.add("Option 6");
-    	oneFromSet.add("Option 7");
-    	params.add(new ParameterOneFromSet("oneFromSet", "One From Set Label", "Option 1", oneFromSet));
-    	// multiple from set
-    	List<String> multipleFromSet = new ArrayList<>();
-    	multipleFromSet.add("Option 3");
-    	multipleFromSet.add("Option 6");
-    	multipleFromSet.add("Option 7");
-    	params.add(new ParameterMultipleFromSet("multipleFromSet", "Multiple From Set Label", multipleFromSet, oneFromSet));
-    	// value from range
-    	List<Double> optionsPair = new ArrayList<>();
-    	optionsPair.add(5.0);
-    	optionsPair.add(15.0);
-    	params.add(new ParameterValueFromRange<Double>("valueFromRange", "Value From Range Label", 13.2, optionsPair));
-    	// range from range
-    	List<Double> rangeFromRange = new ArrayList<>();
-    	rangeFromRange.add(7.5);
-    	rangeFromRange.add(12.5);
-    	params.add(new ParameterRangeFromRange<Double>("rangeFromRange", "Range From Range Label", rangeFromRange, optionsPair));
-    	// text
-    	params.add(new ParameterText("text", "Text", "Some value"));
-    	// create controller and add contents to the view
-    	FilterConfigPanelController ctrl = new FilterConfigPanelController("Some random filter configuration panel", params);
-    	configurationModal.getChildren().add(ctrl.getRoot());
+//		List<Parameter> params = new ArrayList<>();
+//    	params.add(new ParameterYesNo("yesNo", "Yes/No Label", true));
+//    	// one from set
+//    	List<String> oneFromSet = new ArrayList<>();
+//    	oneFromSet.add("Option 1");
+//    	oneFromSet.add("Option 2");
+//    	oneFromSet.add("Option 3");
+//    	oneFromSet.add("Option 4");
+//    	oneFromSet.add("Option 5");
+//    	oneFromSet.add("Option 6");
+//    	oneFromSet.add("Option 7");
+//    	params.add(new ParameterOneFromSet("oneFromSet", "One From Set Label", "Option 1", oneFromSet));
+//    	// multiple from set
+//    	List<String> multipleFromSet = new ArrayList<>();
+//    	multipleFromSet.add("Option 3");
+//    	multipleFromSet.add("Option 6");
+//    	multipleFromSet.add("Option 7");
+//    	params.add(new ParameterMultipleFromSet("multipleFromSet", "Multiple From Set Label", multipleFromSet, oneFromSet));
+//    	// value from range
+//    	List<Double> optionsPair = new ArrayList<>();
+//    	optionsPair.add(5.0);
+//    	optionsPair.add(15.0);
+//    	params.add(new ParameterValueFromRange<Double>("valueFromRange", "Value From Range Label", 13.2, optionsPair));
+//    	// range from range
+//    	List<Double> rangeFromRange = new ArrayList<>();
+//    	rangeFromRange.add(7.5);
+//    	rangeFromRange.add(12.5);
+//    	params.add(new ParameterRangeFromRange<Double>("rangeFromRange", "Range From Range Label", rangeFromRange, optionsPair));
+//    	// text
+//    	params.add(new ParameterText("text", "Text", "Some value"));
+//    	// create controller and add contents to the view
+//    	FilterConfigPanelController ctrl = new FilterConfigPanelController("Some random filter configuration panel", params);
+//    	configurationModal.getChildren().add(ctrl.getContents());
 	}
 
 	/**
@@ -178,13 +171,13 @@ public class NotebookController {
 	 */
 	@FXML
 	private void addTextCellButtonHandler() {
-		appendTextCell();
+		appendTextCell();		
 		setAddCellModalInvisible();
 	}
 
 	/**
 	 * Sets the computation mode of the notebook to {@code mode}.
-	 *
+	 * 
 	 * @param ComputationMode
 	 *            mode the computation mode to set the notebook to.
 	 */
@@ -207,44 +200,45 @@ public class NotebookController {
 	}
 
 	/**
-	 * Creates a new computation cell model and corresponding controller and
-	 * adds the computation cell to the notebook UI and model.
+	 * Creates a new ComputationCell model and adds it to the observable list.
 	 */
 	public void appendComputationCell() {
-		try {
-			int index = model.getCells().size();	// Index of the new cell, so that we can compute which XLogs are available
-			FXMLLoader loader = new FXMLLoader(
-					getClass().getResource("/org/processmining/filterd/gui/fxml/ComputationCell.fxml"));
-			ComputationCellModel cellModel = new ComputationCellModel(model.getPromContext(), model.getPromCanceller(), model.getXLogs(index));
-			ComputationCellController newController = new ComputationCellController(this, cellModel);
-			loader.setController(newController);
-			VBox newCellLayout = (VBox) loader.load();
-			notebookLayout.getChildren().add(newCellLayout);
-			newController.setCellLayout(newCellLayout);
-
-			//add cellmodel in notebook model with corresponnding ui cell componenet controller
-			model.addCell(cellModel);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		int index = model.getCells().size();	// Index of the new cell, so that we can compute which XLogs are available
+		ComputationCellModel cellModel = new ComputationCellModel(model.getPromContext(), model.getPromCanceller(), model.getXLogs(index));			
+		model.addCell(cellModel);
 	}
 
 	/**
-	 * Creates a new text cell model and corresponding controller and adds the
-	 * computation cell to the notebook UI and model.
+	 * Creates a new TextCell model and adds it to the observable list.
 	 */
 	public void appendTextCell() {
+		int index = model.getCells().size();	// Index of the new cell, so that we can compute which XLogs are available
+		TextCellModel cellModel = new TextCellModel(model.getPromContext());				
+		model.addCell(cellModel);
+	}
+	
+	/**
+	 * Given a cell model, this method creates a corresponding controller and
+	 * adds it the notebook UI.
+	 */
+	public void loadCell(CellModel cell) {
+		FXMLLoader loader = new FXMLLoader();
+		CellController newController;
+		if (cell.getClass().isAssignableFrom(ComputationCellModel.class)) {
+			// Cell to be added is a Computation cell
+			loader = new FXMLLoader(getClass().getResource("/org/processmining/filterd/gui/fxml/ComputationCell.fxml"));
+			newController = new ComputationCellController(this, (ComputationCellModel) cell);
+		} else {
+			// Cell to be added is a Text cell
+			loader = new FXMLLoader(getClass().getResource("/org/processmining/filterd/gui/fxml/TextCell.fxml"));
+			newController = new TextCellController(this, (TextCellModel) cell);	
+		}
+		loader.setController(newController);
+		VBox newCellLayout;
 		try {
-			FXMLLoader loader = new FXMLLoader(
-					getClass().getResource("/org/processmining/filterd/gui/fxml/TextCell.fxml"));
-			TextCellModel cell = new TextCellModel(model.getPromContext());
-			TextCellController newController = new TextCellController(this, cell);
-			loader.setController(newController);
-			VBox newCellLayout = (VBox) loader.load();
+			newCellLayout = (VBox) loader.load();
 			notebookLayout.getChildren().add(newCellLayout);
 			newController.setCellLayout(newCellLayout);
-			model.addCell(cell);
-
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -252,7 +246,7 @@ public class NotebookController {
 
 	/**
 	 * Removes the input {@code cell} from the notebook model. Removal from the UI should happen through an actionListener.
-	 *
+	 * 
 	 * @param cell
 	 *            the cell to remove from the notebook.
 	 */
@@ -262,7 +256,7 @@ public class NotebookController {
 
 	/**
 	 * Returns the model of the current notebook.
-	 *
+	 * 
 	 * @return the {@code NotebookModel} for the current notebook.
 	 */
 	public NotebookModel getModel() {
@@ -271,7 +265,7 @@ public class NotebookController {
 
 	/**
 	 * Sets a model for the current notebook.
-	 *
+	 * 
 	 * @param model
 	 *            the {@code NotebookModel} to set for the current notebook.
 	 */
@@ -282,7 +276,7 @@ public class NotebookController {
 
 	/**
 	 * Returns the layout that contains the cells in this notebook.
-	 *
+	 * 
 	 * @return the {@code VBox} that contains all the cells in this notebook.
 	 */
 	public VBox getLayout() {
@@ -291,7 +285,7 @@ public class NotebookController {
 
 	/**
 	 * Sets the layout that contains the cells in this notebook.
-	 *
+	 * 
 	 * @param layout
 	 *            the {@code VBox} to set as the layout, that contains cells,
 	 *            for the current notebook.
