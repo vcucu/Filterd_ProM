@@ -397,47 +397,60 @@ public class FilterdTraceAttrFilter extends Filter {
 	
 	private Date fixTimeZone(String time) {
 		
+		// Set time format for the time stamp
 		SimpleDateFormat dateFormat = new SimpleDateFormat(
 				"yyyy-MM-dd-HH:mm:ss.SSS");
 		
 		Date date = null;
 
+		// Time is in GMT
 		if (time.contains("Z")) {
 			time.replace("Z", "");
 			
 			try {
 				date = dateFormat.parse(time);	
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
+				// Print the trace so we know what went wrong.
 				e.printStackTrace();
 			}
-		} else {
-			String lastFourCharacters = time.substring(time.length() - 5, 
+		}
+		// Time is relative to GMT
+		else {
+			
+			// Represents the last 5 characters e.g. "02:00".
+			String lastFiveCharacters = time.substring(time.length() - 5, 
 					time.length() - 1);
 			
+			// Set time format for the hours relative to GMT.
 			SimpleDateFormat hourFormat = new SimpleDateFormat("hh:mm");
 			Date hourDate = null;
 			
+			// Parse the hours into a Date.
 			try {
-				hourDate = hourFormat.parse(lastFourCharacters);	
+				hourDate = hourFormat.parse(lastFiveCharacters);	
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
+				// Print the trace so we know what went wrong.
 				e.printStackTrace();
 			}
 			
+			// Replace the T-seperator with a colon.
 			time.replace("T", "-");
 			
+			// Get whether it was later or earlier relative to GMT.
 			char stringSign = time.charAt(time.length() - 3);
 			
+			// Remove The relative time as we already have it separated.
 			time = time.substring(0, time.length() - 7);
 
+			// Parse the time stamp into a Date.
 			try {
 				date = dateFormat.parse(time);	
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
+				// Print the trace so we know what went wrong.
 				e.printStackTrace();
 			}
 			
+			// Change the relative time to GMT
 			if (stringSign == '+') {
 				date.setTime(date.getTime() - hourDate.getTime());
 			} else {
