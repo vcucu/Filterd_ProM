@@ -93,7 +93,56 @@ public class FilterdTraceAttrFilter extends Filter {
 		return null;
 	}
 	
-	public XLog filterTimeframe(XLog log, XLog clonedLog) {
+	public XLog filterTimeframe(XLog log, 
+			XLog clonedLog,
+			ParameterOneFromSet keepTracesOptions,
+			ParameterRangeFromRange<Double> threshold) {
+		
+		// Threshold contains the thresholds in milliseconds.
+		double lowThreshold = threshold.getChosenPair().get(0);
+		double highThreshold = threshold.getChosenPair().get(1);
+		
+		
+		for (XTrace trace : clonedLog) {
+			
+			// Use first and last event to get the time stamps of the trace.
+			XEvent firstEvent = trace.get(0);
+			XEvent lastEvent = trace.get(trace.size());
+			
+			long firstTimeStampMillis = getTimeStamp(firstEvent).getTime();
+			long secondTimeStampMillis = getTimeStamp(lastEvent).getTime();
+			
+			switch (keepTracesOptions.getChosen()) {
+				
+				case "Contained in timeframe": {
+					
+					if (firstTimeStampMillis < lowThreshold
+							|| secondTimeStampMillis > highThreshold) {
+						clonedLog.remove(trace);
+					}
+					
+					break;
+				}
+				case "Intersecting timeframe": {
+					break;
+				}
+				case "Started in timeframe": {
+					break;
+				}
+				case "Completed in timeframe": {
+					break;
+				}
+				case "Trim to timeframe": {
+					break;
+				}
+				
+			}
+			
+			
+		}
+		
+		
+		
 		return null;
 	}
 	
