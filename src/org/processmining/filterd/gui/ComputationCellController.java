@@ -41,7 +41,7 @@ public class ComputationCellController extends CellController {
 	 * fields, thus UI elements can be manipulated here.
 	 */
 	public void initialize() {
-		ComputationCellModel model = (ComputationCellModel) this.getCellModel();
+		ComputationCellModel model = this.getCellModel();
 		// TODO: load event logs in cmbEventLog
 		cmbEventLog.getItems().addAll(model.getXLogs());
 	}
@@ -142,8 +142,8 @@ public class ComputationCellController extends CellController {
 	// Set XLog
 	@FXML
 	public void setXLog(ActionEvent event) {
-		ComputationCellModel model = (ComputationCellModel) this.getCellModel();
-		XLog eventLog = (XLog) cmbEventLog.getValue();
+		ComputationCellModel model = this.getCellModel();
+		XLog eventLog = cmbEventLog.getValue();
 		model.setXLog(eventLog);
 		cmbVisualizers.getItems().addAll(model.getVisualizers());
 	}
@@ -151,7 +151,7 @@ public class ComputationCellController extends CellController {
 	// Load visualizer
 	@FXML
 	private synchronized void loadVisualizer(ActionEvent event) {
-		ComputationCellModel model = (ComputationCellModel) this.getCellModel();
+		ComputationCellModel model = this.getCellModel();
 		JComponent visualizer = model.getVisualization(cmbVisualizers.getValue());
 		// Add a SwingNode to the Visualizer pane
 		SwingNode swgNode = new SwingNode();
