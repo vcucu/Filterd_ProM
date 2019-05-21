@@ -19,8 +19,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ComboBox;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
 public class ComputationCellController extends CellController {
@@ -32,7 +32,7 @@ public class ComputationCellController extends CellController {
 	@FXML
 	private VBox panelLayout;
 	@FXML
-	private Pane visualizerPane;
+	private AnchorPane visualizerPane;
 	@FXML
 	private ComboBox<YLog> cmbEventLog;
 	@FXML
@@ -150,6 +150,11 @@ public class ComputationCellController extends CellController {
 		// Add a SwingNode to the Visualizer pane
 		SwingNode swgNode = new SwingNode();
 		visualizerPane.getChildren().add(swgNode);
+		// We set the anchors for each side of the swingNode to 0 so it fits itself to the anchorPane and gets resized with the cell.
+		visualizerPane.setTopAnchor(swgNode, 0.0);
+		visualizerPane.setBottomAnchor(swgNode, 0.0);
+		visualizerPane.setLeftAnchor(swgNode, 0.0);
+		visualizerPane.setRightAnchor(swgNode, 0.0);
 		// Load Visualizer
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
