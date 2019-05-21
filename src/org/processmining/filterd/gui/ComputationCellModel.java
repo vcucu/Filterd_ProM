@@ -14,6 +14,7 @@ import org.processmining.contexts.uitopia.annotations.UITopiaVariant;
 import org.processmining.contexts.uitopia.annotations.Visualizer;
 import org.processmining.contexts.uitopia.hub.ProMResourceManager;
 import org.processmining.contexts.uitopia.hub.ProMViewManager;
+import org.processmining.filterd.models.YLog;
 import org.processmining.filterd.plugins.FilterdVisualizer;
 import org.processmining.framework.plugin.PluginParameterBinding;
 import org.processmining.framework.plugin.ProMCanceller;
@@ -25,9 +26,9 @@ public class ComputationCellModel extends CellModel {
 	
 	private ProMCanceller canceller;
 	private XLog log;
-	private List<XLog> eventLogs;
+	private List<YLog> eventLogs;
 	
-	public ComputationCellModel(UIPluginContext context, ProMCanceller canceller, List<XLog> eventLogs) {
+	public ComputationCellModel(UIPluginContext context, ProMCanceller canceller, List<YLog> eventLogs) {
 			super(context);
 			this.canceller = canceller;
 			this.eventLogs = eventLogs;
@@ -37,11 +38,11 @@ public class ComputationCellModel extends CellModel {
 		this.log = log;
 	}
 	
-	public void setXLogs(List<XLog> eventLogs) {
+	public void setXLogs(List<YLog> eventLogs) {
 		this.eventLogs = eventLogs;
 	}
 	
-	public List<XLog> getXLogs() {
+	public List<YLog> getXLogs() {
 		return eventLogs;
 	}
 	

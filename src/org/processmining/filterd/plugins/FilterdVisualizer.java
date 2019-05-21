@@ -46,7 +46,8 @@ public class FilterdVisualizer {
 	}
 	
 	
-	@Plugin(name = NAME, level = PluginLevel.PeerReviewed, parameterLabels = { "Log", "Canceller" },
+	// Used for import/export
+	@Plugin(name = NAME, level = PluginLevel.PeerReviewed, parameterLabels = { "Notebook model", "Canceller" },
 			returnTypes = JComponent.class, returnLabels = "Filterd Notebook Visualizer", userAccessible = true,
 			mostSignificantResult = 1, help = HELP)
 	@Visualizer(name = "Filterd Visualizer", pack = "Filterd")

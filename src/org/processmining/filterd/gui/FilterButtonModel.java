@@ -7,13 +7,10 @@ public class FilterButtonModel {
 	
 	private PropertyChangeSupport property;
 	private String text;
-	
-	private FilterButtonController controller;
 	private boolean selected;
 	
-	public FilterButtonModel(FilterButtonController controller) {
+	public FilterButtonModel() {
 		this.selected = false;
-		this.controller = controller;
 		this.property = new PropertyChangeSupport(this);
 	}
 
@@ -23,18 +20,10 @@ public class FilterButtonModel {
 
 	public void setSelected(boolean selected) {
 		this.selected = selected;
-		property.firePropertyChange("FilterSelected", false, selected);
+		property.firePropertyChange("FilterSelected", this, selected);
 	}
 	
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
 		property.addPropertyChangeListener(listener);
-	}
-
-	public FilterButtonController getController() {
-		return controller;
-	}
-
-	public void setController(FilterButtonController controller) {
-		this.controller = controller;
 	}
 }

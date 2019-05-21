@@ -22,7 +22,7 @@ import javafx.scene.layout.VBox;
 
 /**
  * This class contains the controller for the notebook.
- * 
+ *
  *
  */
 public class NotebookController {
@@ -49,7 +49,7 @@ public class NotebookController {
 	 * The constructor which sets the model. Note that the constructor does not
 	 * have access to the @FXML annotated fields as @FXML annotated fields are
 	 * populated after the execution of the constructor.
-	 * 
+	 *
 	 * @param model
 	 *            the model that is to be paired with this controller
 	 */
@@ -62,6 +62,26 @@ public class NotebookController {
 	 * fields, thus UI elements can be manipulated here.
 	 */
 	public void initialize() {
+		// Add listener cells from observable list
+		model.getCells().addListener(new ListChangeListener<CellModel>() {
+			@Override
+	        public void onChanged(Change<? extends CellModel> change) {
+				while(change.next()) {
+		            if (change.wasAdded()) {
+		            	// Add cell to the view
+		            	int index = change.getFrom();
+		            	CellModel cell = model.getCells().get(index);
+		            	loadCell(cell);
+		            } else if (change.wasRemoved()) {
+		            	// Delete cell from the view
+		            	int index = change.getFrom();
+		            	notebookLayout.getChildren().remove(index);
+		            }
+				}
+			}
+
+
+		});
 		// create parameters
 		// yes no
 		List<Parameter> params = new ArrayList<>();
@@ -158,13 +178,13 @@ public class NotebookController {
 	 */
 	@FXML
 	private void addTextCellButtonHandler() {
-		appendTextCell();		
+		appendTextCell();
 		setAddCellModalInvisible();
 	}
 
 	/**
 	 * Sets the computation mode of the notebook to {@code mode}.
-	 * 
+	 *
 	 * @param ComputationMode
 	 *            mode the computation mode to set the notebook to.
 	 */
@@ -196,12 +216,12 @@ public class NotebookController {
 			FXMLLoader loader = new FXMLLoader(
 					getClass().getResource("/org/processmining/filterd/gui/fxml/ComputationCell.fxml"));
 			ComputationCellModel cellModel = new ComputationCellModel(model.getPromContext(), model.getPromCanceller(), model.getXLogs(index));
-			ComputationCellController newController = new ComputationCellController(this, cellModel);			
+			ComputationCellController newController = new ComputationCellController(this, cellModel);
 			loader.setController(newController);
 			VBox newCellLayout = (VBox) loader.load();
 			notebookLayout.getChildren().add(newCellLayout);
 			newController.setCellLayout(newCellLayout);
-			
+
 			//add cellmodel in notebook model with corresponnding ui cell componenet controller
 			model.addCell(cellModel);
 		} catch (IOException e) {
@@ -218,7 +238,7 @@ public class NotebookController {
 			FXMLLoader loader = new FXMLLoader(
 					getClass().getResource("/org/processmining/filterd/gui/fxml/TextCell.fxml"));
 			TextCellModel cell = new TextCellModel(model.getPromContext());
-			TextCellController newController = new TextCellController(this, cell);			
+			TextCellController newController = new TextCellController(this, cell);
 			loader.setController(newController);
 			VBox newCellLayout = (VBox) loader.load();
 			notebookLayout.getChildren().add(newCellLayout);
@@ -231,19 +251,18 @@ public class NotebookController {
 	}
 
 	/**
-	 * Removes the input {@code cell} from the notebook UI and model.
-	 * 
+	 * Removes the input {@code cell} from the notebook model. Removal from the UI should happen through an actionListener.
+	 *
 	 * @param cell
 	 *            the cell to remove from the notebook.
 	 */
-//	public void removeCell(CellModel cell) {
-//		notebookLayout.getChildren().remove(cell.getCellLayout()); // removes the cell from the UI
-//		model.removeCell(cell.getCellModel()); // removes the cell from the model
-//	}
+	public void removeCell(CellModel cell) {
+		model.removeCell(cell); // removes the cell from the model
+	}
 
 	/**
 	 * Returns the model of the current notebook.
-	 * 
+	 *
 	 * @return the {@code NotebookModel} for the current notebook.
 	 */
 	public NotebookModel getModel() {
@@ -252,7 +271,7 @@ public class NotebookController {
 
 	/**
 	 * Sets a model for the current notebook.
-	 * 
+	 *
 	 * @param model
 	 *            the {@code NotebookModel} to set for the current notebook.
 	 */
@@ -263,7 +282,7 @@ public class NotebookController {
 
 	/**
 	 * Returns the layout that contains the cells in this notebook.
-	 * 
+	 *
 	 * @return the {@code VBox} that contains all the cells in this notebook.
 	 */
 	public VBox getLayout() {
@@ -272,7 +291,7 @@ public class NotebookController {
 
 	/**
 	 * Sets the layout that contains the cells in this notebook.
-	 * 
+	 *
 	 * @param layout
 	 *            the {@code VBox} to set as the layout, that contains cells,
 	 *            for the current notebook.
