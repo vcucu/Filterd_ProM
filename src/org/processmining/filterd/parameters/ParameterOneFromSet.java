@@ -7,11 +7,21 @@ public class ParameterOneFromSet extends Parameter  {
 	private String defaultChoice;
 	private String chosen;
 	private List<String> options;
+	private boolean createsReference; 
 	
 	public ParameterOneFromSet(String name, String nameDisplayed, String defaultChoice, List<String> options) {
 		super(name, nameDisplayed);
 		this.defaultChoice = defaultChoice;
 		this.options = options;
+		this.createsReference = false;
+	}
+	
+	public ParameterOneFromSet(String name, String nameDisplayed, 
+			String defaultChoice, List<String> options, boolean createsReference) {
+		super(name, nameDisplayed);
+		this.defaultChoice = defaultChoice;
+		this.options = options;
+		this.createsReference = createsReference;
 	}
 	
 	public String getDefaultChoice() {
@@ -31,6 +41,9 @@ public class ParameterOneFromSet extends Parameter  {
 	}
 	public void setOptions(List<String> options) {
 		this.options = options;
+	}
+	public boolean getCreatesReference() {
+		return createsReference;
 	}
 	
 }
