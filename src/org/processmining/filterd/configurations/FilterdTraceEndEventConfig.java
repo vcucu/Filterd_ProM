@@ -9,6 +9,7 @@ import org.processmining.filterd.filters.Filter;
 import org.processmining.filterd.gui.FilterConfigPanelController;
 import org.processmining.filterd.parameters.Parameter;
 import org.processmining.filterd.parameters.ParameterOneFromSet;
+import org.processmining.filterd.widgets.ParameterOneFromSetController;
 
 public class FilterdTraceEndEventConfig extends FilterdAbstractConfig {
 	
@@ -26,7 +27,8 @@ public class FilterdTraceEndEventConfig extends FilterdAbstractConfig {
 		
 		// Create attribute parameter 
 		ParameterOneFromSet attribute = new ParameterOneFromSet("attribute", 
-				"Filter by", globalAttrAndClassifiers.get(0), globalAttrAndClassifiers);
+				"Filter by", globalAttrAndClassifiers.get(0), globalAttrAndClassifiers, true);
+
 		
 		
 		//Create selectionType parameter
@@ -64,6 +66,10 @@ public class FilterdTraceEndEventConfig extends FilterdAbstractConfig {
 	}
 
 	public FilterConfigPanelController getConfigPanel() {
+		return new FilterConfigPanelController("Trace End Event Configuration", parameters);
+	}
+	
+	public FilterdAbstractConfig changeReference(ParameterOneFromSetController chosen) {
 		// TODO Auto-generated method stub
 		return null;
 	}

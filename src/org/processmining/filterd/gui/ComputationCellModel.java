@@ -14,6 +14,7 @@ import org.processmining.contexts.uitopia.annotations.UITopiaVariant;
 import org.processmining.contexts.uitopia.annotations.Visualizer;
 import org.processmining.contexts.uitopia.hub.ProMResourceManager;
 import org.processmining.contexts.uitopia.hub.ProMViewManager;
+import org.processmining.filterd.models.YLog;
 import org.processmining.filterd.plugins.FilterdVisualizer;
 import org.processmining.framework.plugin.PluginParameterBinding;
 import org.processmining.framework.plugin.ProMCanceller;
@@ -22,18 +23,27 @@ import org.processmining.framework.plugin.impl.PluginManagerImpl;
 import org.processmining.framework.util.Pair;
 
 public class ComputationCellModel extends CellModel {
-
-	private XLog log;
-	private ProMCanceller canceller;
 	
-	public ComputationCellModel(UIPluginContext context, ProMCanceller canceller) {
-			super();
-			setContext(context);
+	private ProMCanceller canceller;
+	private XLog log;
+	private List<YLog> eventLogs;
+	
+	public ComputationCellModel(UIPluginContext context, ProMCanceller canceller, List<YLog> eventLogs) {
+			super(context);
 			this.canceller = canceller;
+			this.eventLogs = eventLogs;
 	}
 	
 	public void setXLog(XLog log) {
 		this.log = log;
+	}
+	
+	public void setXLogs(List<YLog> eventLogs) {
+		this.eventLogs = eventLogs;
+	}
+	
+	public List<YLog> getXLogs() {
+		return eventLogs;
 	}
 	
     // Get visualizer names

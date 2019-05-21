@@ -25,8 +25,7 @@ public class FilterdEventAttrDateConfig extends FilterdAbstractConfig{
 	}
 
 	public FilterConfigPanelController getConfigPanel() {
-		// TODO Auto-generated method stub
-		return null;
+		return new FilterConfigPanelController("Date Event Attribute Configuration", parameters);
 	}
 
 	public boolean checkValidity(XLog log) {

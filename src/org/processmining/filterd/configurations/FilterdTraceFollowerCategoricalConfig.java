@@ -25,8 +25,7 @@ public class FilterdTraceFollowerCategoricalConfig extends FilterdAbstractConfig
 	}
 
 	public FilterConfigPanelController getConfigPanel() {
-		// TODO Auto-generated method stub
-		return null;
+		return new FilterConfigPanelController("Categorical Trace Follower Configuration", parameters);
 	}
 
 	public boolean checkValidity(XLog log) {

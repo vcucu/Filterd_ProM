@@ -52,7 +52,7 @@
 								<Button fx:id="addTextCellButton" mnemonicParsing="false" onAction="#addTextCellButtonHandler" text="Text Cell" textAlignment="CENTER" />
 							</children>
 						</HBox>
-						<Button fx:id="addCellButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#addCellButtonHandler" text="+" VBox.vgrow="ALWAYS">
+						<Button fx:id="appendCellButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#appendCellButtonHandler" text="+" VBox.vgrow="ALWAYS">
 							<VBox.margin>
 								<Insets bottom="20.0" top="30.0" />
 							</VBox.margin>

@@ -5,19 +5,14 @@ import org.processmining.contexts.uitopia.UIPluginContext;
 public class CellModel {
 
 	private boolean isHidden;
-	private UIPluginContext context;	
+	private UIPluginContext context;
 	private CellStatus statusBar;	
 	private String cellName;
 	
-	public CellModel() {
-	}
-	
-	
-	
-	public void setContext(UIPluginContext context) {
+	public CellModel(UIPluginContext context) {
 		this.context = context;
 	}
-
+	
 	public boolean isHidden() {
 		return isHidden;
 	}

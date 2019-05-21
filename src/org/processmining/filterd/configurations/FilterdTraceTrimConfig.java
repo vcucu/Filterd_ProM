@@ -1,5 +1,7 @@
 package org.processmining.filterd.configurations;
 import org.processmining.filterd.parameters.Parameter;
+import org.processmining.filterd.widgets.ParameterOneFromSetController;
+
 import java.util.ArrayList;
 import javax.swing.JComponent;
 
@@ -9,6 +11,8 @@ import org.processmining.filterd.gui.FilterConfigPanelController;
 
 public class FilterdTraceTrimConfig extends FilterdAbstractConfig {
 
+	FilterdAbstractConfig concreteReference;
+	
 	public FilterdTraceTrimConfig(XLog log, Filter filterType) {
 		super(log, filterType);
 		// TODO Auto-generated constructor stub
@@ -25,6 +29,10 @@ public class FilterdTraceTrimConfig extends FilterdAbstractConfig {
 	}
 
 	public FilterConfigPanelController getConfigPanel() {
+		return new FilterConfigPanelController("Trace Trim Configuration", parameters);
+	}
+	
+	public FilterdAbstractConfig changeReference(ParameterOneFromSetController chosen) {
 		// TODO Auto-generated method stub
 		return null;
 	}

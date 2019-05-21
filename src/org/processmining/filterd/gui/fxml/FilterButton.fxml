@@ -7,22 +7,38 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 
-<HBox fx:id="filterButtonLayout" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#selectFilterButton" prefHeight="45.0" prefWidth="245.0" spacing="5.0" stylesheets="@../css/FilterButton.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+<HBox fx:id="filterLayout" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#selectFilterButton" prefHeight="45.0" prefWidth="245.0" spacing="5.0" stylesheets="@../css/FilterButton.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Label text="Filter">
          <HBox.margin>
             <Insets left="10.0" />
          </HBox.margin></Label>
       <Region HBox.hgrow="ALWAYS" />
-      <ImageView fx:id="remove" fitHeight="20.0" fitWidth="20.0" onMouseClicked="#removeFilterButton" pickOnBounds="true" preserveRatio="true" visible="false">
+      <ImageView fx:id="moveUpButton" fitHeight="20.0" fitWidth="20.0" onMouseClicked="#moveUpFilterHandler" pickOnBounds="true" preserveRatio="true" visible="false">
+         <image>
+            <Image url="@../../../../../../resources/images/arrow-up-solid.png" />
+         </image>
+         <HBox.margin>
+            <Insets right="5.0" />
+         </HBox.margin>
+      </ImageView>
+      <ImageView fx:id="moveDownButton" fitHeight="20.0" fitWidth="20.0" onMouseClicked="#moveDownFilterHandler" pickOnBounds="true" preserveRatio="true" visible="false">
+         <HBox.margin>
+            <Insets right="5.0" />
+         </HBox.margin>
+         <image>
+            <Image url="@../../../../../../resources/images/arrow-down-solid.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="removeButton" fitHeight="20.0" fitWidth="20.0" onMouseClicked="#removeFilterHandler" pickOnBounds="true" preserveRatio="true" visible="false">
          <image>
             <Image url="@../../../../../../resources/images/times-solid.png" />
          </image>
          <HBox.margin>
-            <Insets right="10.0" />
+            <Insets right="15.0" />
          </HBox.margin>
       </ImageView>
-      <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="editButton" fitHeight="24.0" fitWidth="24.0" onMouseClicked="#editFilterHandler" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../../../../../../resources/images/angle-right-solid.png" />
          </image>

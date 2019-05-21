@@ -74,8 +74,7 @@ public class FilterdTraceEndEventCategoricalConfig extends FilterdAbstractConfig
 	}
 
 	public FilterConfigPanelController getConfigPanel() {
-		// TODO Auto-generated method stub
-		return null;
+		return new FilterConfigPanelController("Categorical Trace End Event Configuration", parameters);
 	}
 
 	public boolean checkValidity(XLog log) {

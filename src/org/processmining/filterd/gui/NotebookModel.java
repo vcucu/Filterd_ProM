@@ -8,6 +8,7 @@ import org.processmining.contexts.uitopia.UIContext;
 import org.processmining.contexts.uitopia.UIPluginContext;
 import org.processmining.contexts.uitopia.hub.ProMResourceManager;
 import org.processmining.contexts.uitopia.hub.ProMViewManager;
+import org.processmining.filterd.models.YLog;
 import org.processmining.framework.plugin.ProMCanceller;
 
 import javafx.collections.FXCollections;
@@ -21,21 +22,24 @@ import javafx.collections.ObservableList;
  */
 public class NotebookModel {
 
+	/**
+	 * TODO: IF YOU ADD A NEW VARIABLE, MAKE SURE TO UPDATE THE clone() METHOD!!!  
+	 */
 	// objects from ProM
 	private UIPluginContext promContext; // The ProM context to communicate with the ProM framework.
 	private ProMViewManager viewManager; // Current view manager.
 	private ProMResourceManager resourceManager; // Current resource manager.
 
-	static XLog initialInput; // the event log the notebook was initialized with.
+	private YLog initialInput; // the event log the notebook was initialized with.
 	// ObservableList allows for action listeners. ObeservableLists are provided by JavaFX
 	private ProMCanceller promCanceller;
 	private ObservableList<CellModel> cells; // the list of all cells currently in the notebook.
-	private List<CellModel> cellsList; // the list of all cells currently in the notebook.
 	private ComputationMode computationMode; // the computation mode the notebook is currently in.
 	
+	
+	// Only used by Import/Export plugin
 	public NotebookModel() {
-		this.cellsList = new ArrayList();
-		FXCollections.observableList(cellsList); // A different type of observablelist might be more efficient (for example ObservableArrayList)
+		this.cells = FXCollections.observableArrayList();
 	}
 
 	/**
@@ -50,24 +54,9 @@ public class NotebookModel {
 	 */
 	public NotebookModel(UIPluginContext context, XLog log, ProMCanceller canceller) {
 		this.promContext = context;
-		this.initialInput = log;
+		this.initialInput = new YLog(log, "Initial input");
 		this.promCanceller = canceller; 
-		this.cellsList = new ArrayList();
-		FXCollections.observableList(cellsList); // A different type of observablelist might be more efficient (for example ObservableArrayList)
-
-		// Get current view manager and resource manager.
-		UIContext globalContext = context.getGlobalContext();
-		viewManager = ProMViewManager.initialize(globalContext);
-		resourceManager = ProMResourceManager.initialize(globalContext);
-	}
-	
-	// for import export (no canceller)
-	// TODO delete this and use the constructor with the canceller
-	public NotebookModel(UIPluginContext context, XLog log) {
-		this.promContext = context;
-		this.initialInput = log;
-		this.cellsList = new ArrayList();
-		FXCollections.observableList(cellsList); // A different type of observablelist might be more efficient (for example ObservableArrayList)
+		this.cells = FXCollections.observableArrayList();
 
 		// Get current view manager and resource manager.
 		UIContext globalContext = context.getGlobalContext();
@@ -116,7 +105,7 @@ public class NotebookModel {
 	 * 
 	 * @return The event log the notebook was initialized with.
 	 */
-	public XLog getInitialInput() {
+	public YLog getInitialInput() {
 		return initialInput;
 	}
 
@@ -126,7 +115,7 @@ public class NotebookModel {
 	 * @return A list of all cells currently in the notebook.
 	 */
 	public List<CellModel> getCells() {
-		return cellsList;
+		return cells;
 	}
 
 	/**
@@ -136,8 +125,7 @@ public class NotebookModel {
 	 *            The cell to add to this model
 	 */
 	public void addCell(CellModel cell) {
-		cellsList.add(cell);
-		cell.setContext(promContext);
+		this.cells.add(cell);
 	}
 
 	/**
@@ -147,7 +135,7 @@ public class NotebookModel {
 	 *            The list of cells to append to the cells in this model.
 	 */
 	public void addCells(List<CellModel> cells) {
-		cellsList.addAll(cells);
+		this.cells.addAll(cells);
 	}
 
 	/**
@@ -157,7 +145,7 @@ public class NotebookModel {
 	 *            The cell to remove from this model.
 	 */
 	public void removeCell(CellModel cell) {
-		cellsList.remove(cell);
+		cells.remove(cell);
 	}
 
 	/**
@@ -167,7 +155,7 @@ public class NotebookModel {
 	 *            The list containing the cells to remove from this model.
 	 */
 	public void removeCells(List<CellModel> cells) {
-		this.cellsList.removeAll(cells);
+		this.cells.removeAll(cells);
 	}
 
 	/**
@@ -208,8 +196,7 @@ public class NotebookModel {
 	public void saveNotebook() {
 		//NOTE: shouldn't we give the notebook a name? 
 
-		NotebookModel newNotebook = new NotebookModel(promContext, initialInput, promCanceller);
-		newNotebook.addCells(this.getCells());
+		NotebookModel newNotebook = clone();
 
 		promContext.getProvidedObjectManager().createProvidedObject("Notebook File", newNotebook, NotebookModel.class, promContext);
 		promContext.getGlobalContext().getResourceManager().getResourceForInstance(newNotebook).setFavorite(true);
@@ -224,4 +211,22 @@ public class NotebookModel {
 	public void loadNotebook(String name) {
 		//TODO: implement
 	}
+	
+	public List<YLog> getXLogs(int index) {
+		List<YLog> logs = new ArrayList<>();
+		// TODO: Make it return the available XLogs (from the cells above)
+		logs.add(initialInput);
+		return logs;
+	}
+	
+	
+	@Override
+	public NotebookModel clone() {
+		NotebookModel newNotebook = new NotebookModel(promContext, initialInput.get(), promCanceller);
+		newNotebook.addCells(cells);
+		newNotebook.setComputationMode(computationMode);
+		
+		return newNotebook;
+	}
+	
 }

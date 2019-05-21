@@ -27,6 +27,9 @@ public class ParameterValueFromRangeController extends ParameterController {
         label.setText(nameDisplayed);
         slider.setMin(minMaxPair.get(0));
         slider.setMax(minMaxPair.get(1));
+        double majorTickUnit = (minMaxPair.get(1) - minMaxPair.get(0)) / 4.0;
+        slider.setMajorTickUnit(majorTickUnit);
+        slider.setMinorTickCount(4);
         slider.setValue(defaultValue);
 	}
 	

@@ -1,5 +1,7 @@
 package org.processmining.filterd.configurations;
 import org.processmining.filterd.parameters.Parameter;
+import org.processmining.filterd.widgets.ParameterOneFromSetController;
+
 import java.util.ArrayList;
 import javax.swing.JComponent;
 
@@ -9,6 +11,8 @@ import org.processmining.filterd.gui.FilterConfigPanelController;
 
 public class FilterdModifMergeSubsequentConfig extends FilterdAbstractConfig {
 
+	FilterdAbstractConfig concreteReference;
+	
 	public FilterdModifMergeSubsequentConfig(XLog log, Filter filterType) {
 		super(log, filterType);
 		// TODO Auto-generated constructor stub
@@ -25,6 +29,10 @@ public class FilterdModifMergeSubsequentConfig extends FilterdAbstractConfig {
 	}
 
 	public FilterConfigPanelController getConfigPanel() {
+		return new FilterConfigPanelController("Merge Subsequent Events Configuration", parameters);
+	}
+	
+	public FilterdAbstractConfig changeReference(ParameterOneFromSetController chosen) {
 		// TODO Auto-generated method stub
 		return null;
 	}

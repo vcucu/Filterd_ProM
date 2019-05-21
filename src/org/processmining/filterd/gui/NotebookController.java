@@ -7,6 +7,7 @@ import java.util.List;
 import org.processmining.filterd.parameters.Parameter;
 import org.processmining.filterd.parameters.ParameterMultipleFromSet;
 import org.processmining.filterd.parameters.ParameterOneFromSet;
+import org.processmining.filterd.parameters.ParameterRangeFromRange;
 import org.processmining.filterd.parameters.ParameterText;
 import org.processmining.filterd.parameters.ParameterValueFromRange;
 import org.processmining.filterd.parameters.ParameterYesNo;
@@ -21,8 +22,7 @@ import javafx.scene.layout.VBox;
 
 /**
  * This class contains the controller for the notebook.
- * 
- * @author Ewoud
+ *
  *
  */
 public class NotebookController {
@@ -33,36 +33,23 @@ public class NotebookController {
 	 * variables containing the (important) UI elements so they can be
 	 * interacted with in the code.
 	 */
-	@FXML
-	private Button autoButton;
-	@FXML
-	private Button manualButton;
-	@FXML
-	private Button computeButton;
-	@FXML
-	private Button exportButton;
-	@FXML
-	private ScrollPane scrollPane;
-	@FXML
-	private VBox notebookLayout;
-	@FXML
-	private Button addCellButton;
-	@FXML
-	private HBox addCellModal;
-	@FXML
-	private Button addComputationCellButton;
-	@FXML
-	private Button addTextCellButton;
-
-	// I'm not sure where this configuraitonModal is for?
-	@FXML
-	private Pane configurationModal;
+	@FXML private Button autoButton;
+	@FXML private Button manualButton;
+	@FXML private Button computeButton;
+	@FXML private Button exportButton;
+	@FXML private ScrollPane scrollPane;
+	@FXML private VBox notebookLayout;
+	@FXML private Button appendCellButton;
+	@FXML private HBox addCellModal;
+	@FXML private Button addComputationCellButton;
+	@FXML private Button addTextCellButton;
+	@FXML private Pane configurationModal; 	// I'm not sure where this configuraitonModal is for? - Ewoud
 
 	/**
 	 * The constructor which sets the model. Note that the constructor does not
 	 * have access to the @FXML annotated fields as @FXML annotated fields are
 	 * populated after the execution of the constructor.
-	 * 
+	 *
 	 * @param model
 	 *            the model that is to be paired with this controller
 	 */
@@ -75,6 +62,26 @@ public class NotebookController {
 	 * fields, thus UI elements can be manipulated here.
 	 */
 	public void initialize() {
+		// Add listener cells from observable list
+		model.getCells().addListener(new ListChangeListener<CellModel>() {
+			@Override
+	        public void onChanged(Change<? extends CellModel> change) {
+				while(change.next()) {
+		            if (change.wasAdded()) {
+		            	// Add cell to the view
+		            	int index = change.getFrom();
+		            	CellModel cell = model.getCells().get(index);
+		            	loadCell(cell);
+		            } else if (change.wasRemoved()) {
+		            	// Delete cell from the view
+		            	int index = change.getFrom();
+		            	notebookLayout.getChildren().remove(index);
+		            }
+				}
+			}
+
+
+		});
 		// create parameters
 		// yes no
 		List<Parameter> params = new ArrayList<>();
@@ -100,11 +107,16 @@ public class NotebookController {
     	optionsPair.add(5.0);
     	optionsPair.add(15.0);
     	params.add(new ParameterValueFromRange<Double>("valueFromRange", "Value From Range Label", 13.2, optionsPair));
+    	// range from range
+    	List<Double> rangeFromRange = new ArrayList<>();
+    	rangeFromRange.add(7.5);
+    	rangeFromRange.add(12.5);
+    	params.add(new ParameterRangeFromRange<Double>("rangeFromRange", "Range From Range Label", rangeFromRange, optionsPair));
     	// text
     	params.add(new ParameterText("text", "Text", "Some value"));
     	// create controller and add contents to the view
     	FilterConfigPanelController ctrl = new FilterConfigPanelController("Some random filter configuration panel", params);
-    	configurationModal.getChildren().add(ctrl.getContents());
+    	configurationModal.getChildren().add(ctrl.getRoot());
 	}
 
 	/**
@@ -146,7 +158,7 @@ public class NotebookController {
 	 * button modal.
 	 */
 	@FXML
-	private void addCellButtonHandler() {
+	private void appendCellButtonHandler() {
 		toggleAddCellModalVisibilty();
 	}
 
@@ -156,7 +168,7 @@ public class NotebookController {
 	 */
 	@FXML
 	private void addComputationCellButtonHandler() {
-		addComputationCell();
+		appendComputationCell();
 		setAddCellModalInvisible();
 	}
 
@@ -166,13 +178,13 @@ public class NotebookController {
 	 */
 	@FXML
 	private void addTextCellButtonHandler() {
-		addTextCell();		
+		appendTextCell();
 		setAddCellModalInvisible();
 	}
 
 	/**
 	 * Sets the computation mode of the notebook to {@code mode}.
-	 * 
+	 *
 	 * @param ComputationMode
 	 *            mode the computation mode to set the notebook to.
 	 */
@@ -198,19 +210,20 @@ public class NotebookController {
 	 * Creates a new computation cell model and corresponding controller and
 	 * adds the computation cell to the notebook UI and model.
 	 */
-	public void addComputationCell() {
+	public void appendComputationCell() {
 		try {
+			int index = model.getCells().size();	// Index of the new cell, so that we can compute which XLogs are available
 			FXMLLoader loader = new FXMLLoader(
 					getClass().getResource("/org/processmining/filterd/gui/fxml/ComputationCell.fxml"));
-			ComputationCellModel cell = new ComputationCellModel(model.getPromContext(), model.getPromCanceller());
-			ComputationCellController newController = new ComputationCellController(this ,cell);			
+			ComputationCellModel cellModel = new ComputationCellModel(model.getPromContext(), model.getPromCanceller(), model.getXLogs(index));
+			ComputationCellController newController = new ComputationCellController(this, cellModel);
 			loader.setController(newController);
 			VBox newCellLayout = (VBox) loader.load();
 			notebookLayout.getChildren().add(newCellLayout);
 			newController.setCellLayout(newCellLayout);
-			
+
 			//add cellmodel in notebook model with corresponnding ui cell componenet controller
-			model.addCell(cell);
+			model.addCell(cellModel);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -220,12 +233,12 @@ public class NotebookController {
 	 * Creates a new text cell model and corresponding controller and adds the
 	 * computation cell to the notebook UI and model.
 	 */
-	public void addTextCell() {
+	public void appendTextCell() {
 		try {
 			FXMLLoader loader = new FXMLLoader(
 					getClass().getResource("/org/processmining/filterd/gui/fxml/TextCell.fxml"));
-			TextCellModel cell = new TextCellModel();
-			TextCellController newController = new TextCellController(this, cell);			
+			TextCellModel cell = new TextCellModel(model.getPromContext());
+			TextCellController newController = new TextCellController(this, cell);
 			loader.setController(newController);
 			VBox newCellLayout = (VBox) loader.load();
 			notebookLayout.getChildren().add(newCellLayout);
@@ -238,19 +251,18 @@ public class NotebookController {
 	}
 
 	/**
-	 * Removes the input {@code cell} from the notebook UI and model.
-	 * 
+	 * Removes the input {@code cell} from the notebook model. Removal from the UI should happen through an actionListener.
+	 *
 	 * @param cell
 	 *            the cell to remove from the notebook.
 	 */
-//	public void removeCell(CellModel cell) {
-//		notebookLayout.getChildren().remove(cell.getCellLayout()); // removes the cell from the UI
-//		model.removeCell(cell.getCellModel()); // removes the cell from the model
-//	}
+	public void removeCell(CellModel cell) {
+		model.removeCell(cell); // removes the cell from the model
+	}
 
 	/**
 	 * Returns the model of the current notebook.
-	 * 
+	 *
 	 * @return the {@code NotebookModel} for the current notebook.
 	 */
 	public NotebookModel getModel() {
@@ -259,7 +271,7 @@ public class NotebookController {
 
 	/**
 	 * Sets a model for the current notebook.
-	 * 
+	 *
 	 * @param model
 	 *            the {@code NotebookModel} to set for the current notebook.
 	 */
@@ -270,7 +282,7 @@ public class NotebookController {
 
 	/**
 	 * Returns the layout that contains the cells in this notebook.
-	 * 
+	 *
 	 * @return the {@code VBox} that contains all the cells in this notebook.
 	 */
 	public VBox getLayout() {
@@ -279,7 +291,7 @@ public class NotebookController {
 
 	/**
 	 * Sets the layout that contains the cells in this notebook.
-	 * 
+	 *
 	 * @param layout
 	 *            the {@code VBox} to set as the layout, that contains cells,
 	 *            for the current notebook.
