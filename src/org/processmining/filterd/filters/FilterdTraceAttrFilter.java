@@ -114,8 +114,7 @@ public class FilterdTraceAttrFilter extends Filter {
 		return null;
 	}
 	
-	public XLog filterTimeframe(XLog log, 
-			XLog clonedLog,
+	public XLog filterTimeframe(XLog clonedLog,
 			ParameterOneFromSet keepTracesOptions,
 			ParameterRangeFromRange<Double> threshold) {
 		
@@ -145,15 +144,51 @@ public class FilterdTraceAttrFilter extends Filter {
 					break;
 				}
 				case "Intersecting timeframe": {
+					
+					if (!(firstTimeStampMillis < highThreshold
+							&& secondTimeStampMillis > lowThreshold)) {
+						clonedLog.remove(trace);
+					}
+					
 					break;
 				}
 				case "Started in timeframe": {
+					
+					if (firstTimeStampMillis < lowThreshold) {
+						clonedLog.remove(trace);
+					}
+					
 					break;
 				}
 				case "Completed in timeframe": {
+					
+					if (!(secondTimeStampMillis < highThreshold
+							&& secondTimeStampMillis > highThreshold)) {
+						clonedLog.remove(trace);
+					}
+					
 					break;
 				}
 				case "Trim to timeframe": {
+					
+					for (XEvent event : trace) {
+						
+						long timeStamp = getTimeStamp(event).getTime();
+						
+						if (!(timeStamp > firstTimeStampMillis
+								&& timeStamp < secondTimeStampMillis)) {
+							
+							trace.remove(event);
+							
+						}
+						
+					}
+					
+					
+					if (trace.isEmpty()) {
+						clonedLog.remove(trace);
+					}
+
 					break;
 				}
 				
@@ -164,7 +199,7 @@ public class FilterdTraceAttrFilter extends Filter {
 		
 		
 		
-		return null;
+		return clonedLog;
 	}
 	
 	public XLog filterPerformance(XLog clonedLog,
