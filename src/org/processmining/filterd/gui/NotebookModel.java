@@ -40,19 +40,6 @@ public class NotebookModel {
 	public NotebookModel() {
 		this.cells = FXCollections.observableArrayList();
 	}
-	
-	// for import export (no canceller)
-	// TODO delete this and use the constructor with the canceller
-	public NotebookModel(UIPluginContext context, XLog log) {
-		this.promContext = context;
-		this.initialInput = log;
-		this.cells = FXCollections.observableArrayList();
-
-		// Get current view manager and resource manager.
-		UIContext globalContext = context.getGlobalContext();
-		viewManager = ProMViewManager.initialize(globalContext);
-		resourceManager = ProMResourceManager.initialize(globalContext);
-	}
 
 	/**
 	 * The constructor which sets the initial input event log. Note that the
