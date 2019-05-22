@@ -9,7 +9,6 @@ import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
 import org.processmining.filterd.filters.Filter;
-import org.processmining.filterd.gui.AbstractFilterConfigPanelController;
 import org.processmining.filterd.gui.FilterConfigPanelController;
 import org.processmining.filterd.parameters.ParameterOneFromSet;
 import org.processmining.filterd.parameters.ParameterRangeFromRange;
@@ -23,8 +22,8 @@ public class FilterdTraceAttrTimeframeConfig extends FilterdAbstractConfig {
 		parameters = new ArrayList<>();
 		
 
-		// Create the array list for selecting the type of attribute the user
-		// has selected.
+		// Create the array list for selecting the method with which the traces
+		// are to be based on the time frame.
 		List<String> keepTracesList = new ArrayList<String>();
 		keepTracesList.add("Contained in timeframe");		
 		keepTracesList.add("Intersecting timeframe");
@@ -32,46 +31,27 @@ public class FilterdTraceAttrTimeframeConfig extends FilterdAbstractConfig {
 		keepTracesList.add("Completed in timeframe");
 		keepTracesList.add("Trim to timeframe");
 		
-		// Create the parameter for selecting the type of attribute.
-		ParameterOneFromSet attributeTypeSelector = 
+		// Create the parameter for selecting the method with which the traces
+		// are to be based on the time frame.
+		ParameterOneFromSet keepTracesParameter = 
 				new ParameterOneFromSet(
 						"keep traces", 
 						"Select trace options based on time frame", 
 						keepTracesList.get(0), 
 						keepTracesList);
 		
-		//initialize the threshold options parameter and add it to the parameters list
+		//initialize the threshold options list.
 		List<Double> thrOptions = new ArrayList<Double>();
 		
-		// Use first and last event to get the time stamps of the trace.
-		XEvent firstEvent = null; 
-		XEvent lastEvent = null;
+		// Calculate the first and last times of the log.
+		double firstAndLast[] = getFirstAndLastTimes(log);
 		
-		long firstTimeStampMillis = Long.MAX_VALUE;
-		long secondTimeStampMillis = Long.MIN_VALUE;
+		// Add the outermost values to the list
+		thrOptions.add(firstAndLast[0]);
+		thrOptions.add(firstAndLast[1]);
 		
-		for (XTrace trace : log) {
-			
-			firstEvent = trace.get(0);
-			lastEvent = trace.get(trace.size());
-			
-			long tempFirstTimeStampMillis = getTimeStamp(firstEvent).getTime();
-			long tempSecondTimeStampMillis = getTimeStamp(lastEvent).getTime();
-			
-			if (tempFirstTimeStampMillis < firstTimeStampMillis) {
-				firstTimeStampMillis = tempFirstTimeStampMillis;
-			}
-			
-			if (tempSecondTimeStampMillis > secondTimeStampMillis) {
-				secondTimeStampMillis = tempSecondTimeStampMillis;
-			}
-			
-		}
-		
-		//since the default option is "frequency", it goes from 1% to 100%
-		thrOptions.add((double) firstTimeStampMillis);
-		thrOptions.add((double) secondTimeStampMillis);
-		
+		// Create parameter for selecting the threshold and set the outermost
+		// values as the default values.
 		ParameterRangeFromRange<Double> parameterThreshold = 
 				new ParameterRangeFromRange<Double>(
 				"threshold", 
@@ -80,8 +60,52 @@ public class FilterdTraceAttrTimeframeConfig extends FilterdAbstractConfig {
 				thrOptions
 				);
 		
-		parameters.add(attributeTypeSelector);
+		// Add both parameters to the list.
+		parameters.add(keepTracesParameter);
 		parameters.add(parameterThreshold);		
+	}
+	
+	private double[] getFirstAndLastTimes(XLog log) {
+		
+		double[] firstAndLast = new double[2];
+		
+		// Use first and last event to get the time stamps of the trace.
+		XEvent firstEvent = null; 
+		XEvent lastEvent = null;
+		
+		// Set initial values for comparison.
+		long firstTimeStampMillis = Long.MAX_VALUE;
+		long secondTimeStampMillis = Long.MIN_VALUE;
+		
+		// Loop over every trace to get the times of every trace.
+		for (XTrace trace : log) {
+			
+			// First and last event is the start and finish time of this trace.
+			firstEvent = trace.get(0);
+			lastEvent = trace.get(trace.size());
+			
+			// Get time in milliseconds for easier comparisons.
+			long tempFirstTimeStampMillis = getTimeStamp(firstEvent).getTime();
+			long tempSecondTimeStampMillis = getTimeStamp(lastEvent).getTime();
+			
+			// Do comparisons to get the earliest time a trace is started.
+			if (tempFirstTimeStampMillis < firstTimeStampMillis) {
+				firstTimeStampMillis = tempFirstTimeStampMillis;
+			}
+			
+			// Do comparisons to get the latest time a trace is finished.
+			if (tempSecondTimeStampMillis > secondTimeStampMillis) {
+				secondTimeStampMillis = tempSecondTimeStampMillis;
+			}
+			
+		}
+		
+		// Set the found values in the array.
+		firstAndLast[0] = firstTimeStampMillis;
+		firstAndLast[1] = secondTimeStampMillis;
+			
+				
+		return firstAndLast;
 	}
 	
 	private Date getTimeStamp(XEvent event) {
@@ -197,13 +221,26 @@ public class FilterdTraceAttrTimeframeConfig extends FilterdAbstractConfig {
 	}
 
 	public boolean checkValidity(XLog log) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	public XLog filter() {
-		// TODO Auto-generated method stub
-		return null;
+		
+		// Check if the set thresholds are still within the times of the chosen
+		// log.
+		
+		// Get the first and last time of the chosen log.
+		double firstAndLast[] = getFirstAndLastTimes(log);
+		
+		// Get the threshold parameter.
+		ParameterRangeFromRange<Double> setThreshold = 
+				(ParameterRangeFromRange<Double>) parameters.get(1);
+		
+		List<Double> chosenValues = setThreshold.getChosenPair();
+		
+		// Check if the values chosen are within the times of the chosen log.
+		if (chosenValues.get(0) >= firstAndLast[0]
+				&& chosenValues.get(1) <= firstAndLast[1]) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 }
