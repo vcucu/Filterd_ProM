@@ -1,15 +1,15 @@
 package org.processmining.filterd.configurations;
 
-import javax.swing.JComponent;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.deckfour.xes.model.XLog;
 import org.processmining.filterd.filters.Filter;
 import org.processmining.filterd.gui.AbstractFilterConfigPanelController;
 import org.processmining.filterd.gui.FilterConfigPanelController;
 import org.processmining.filterd.parameters.Parameter;
+import org.processmining.filterd.parameters.ParameterOneFromSet;
 import org.processmining.filterd.widgets.ParameterOneFromSetController;
-
-import java.util.ArrayList;
 public class FilterdEventAttrConfig extends FilterdAbstractConfig {
 
 	
@@ -17,7 +17,26 @@ public class FilterdEventAttrConfig extends FilterdAbstractConfig {
 	
 	public FilterdEventAttrConfig(XLog log, Filter filterType) {
 		super(log, filterType);
-		// TODO Auto-generated constructor stub
+		parameters = new ArrayList<Parameter>();
+		
+		// Get global attributes that are passed to the parameter 
+		List<String> globalAttrAndClassifiers = computeGlobalAttributes(log);
+		//add the complex classifiers to the list of global attributes 
+		globalAttrAndClassifiers.addAll(computeComplexClassifiers(log));
+		
+		// Create attribute parameter, creates reference is true
+		ParameterOneFromSet attribute = new ParameterOneFromSet("attribute", 
+			"Filter by", globalAttrAndClassifiers.get(0), globalAttrAndClassifiers, true);
+
+		
+		//create reference to the dateConfig
+		concreteReference = new FilterdEventAttrDateConfig(log, filterType);
+		
+		//not needed for date, kept for generality
+		parameters.add(attribute);
+		parameters.addAll(concreteReference.getParameters());
+		
+		
 	}
 
 	public FilterdAbstractConfig populate(AbstractFilterConfigPanelController component) {
