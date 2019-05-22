@@ -1,8 +1,6 @@
 package org.processmining.filterd.gui;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
@@ -11,6 +9,7 @@ import org.deckfour.uitopia.api.model.ViewType;
 import org.deckfour.xes.model.XLog;
 import org.processmining.filterd.models.YLog;
 
+import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -22,12 +21,12 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.util.Callback;
 
 public class ComputationCellController extends CellController {
 
 	//TODO: add other FXML attributes
-	private List<FilterButtonModel> filters;
-	private ObservableList<FilterButtonModel> filtersOL;
+	private ObservableList<FilterButtonModel> filters;
 
 	@FXML
 	private VBox panelLayout;
@@ -53,13 +52,47 @@ public class ComputationCellController extends CellController {
 
 	public ComputationCellController(NotebookController controller, ComputationCellModel model) {
 		super(controller, model);
-		filters = new ArrayList<>();
-		filtersOL = FXCollections.observableList(filters);
+		
+		filters = FXCollections.observableArrayList(
+				new Callback<FilterButtonModel, Observable[]>() {
+					@Override
+					public Observable[] call(FilterButtonModel temp) {
+						return new Observable[] {
+								temp.nameProperty(),
+								temp.indexProperty(),
+								temp.selectedProperty()
+						};
+					}
+				});
 
-		filtersOL.addListener(new ListChangeListener<Object>() {
+		filters.addListener(new ListChangeListener<FilterButtonModel>() {
 			@Override
-			public void onChanged(ListChangeListener.Change change) {
-				System.out.println("Added new filter!");
+			public void onChanged(Change<? extends FilterButtonModel> change) {
+				while (change.next()) {
+					if (change.wasPermutated()) {
+						for (int i = change.getFrom(); i < change.getTo(); i++) {
+							System.out.printf("ID: %d ----------\n", filters.get(i).getIndex());
+							System.out.println("Permuted: " + i + " " + filters.get(i));
+						}
+					} else if (change.wasUpdated()) {
+						for (int i = change.getFrom(); i < change.getTo(); i++) {
+							System.out.printf("ID: %d ----------\n", filters.get(i).getIndex());
+							System.out.println("Updated: " + i + " " + filters.get(i));
+						}
+					} else {
+						for (FilterButtonModel removedFilter : change.getRemoved()) {
+							System.out.printf("ID: %d ----------\n", removedFilter.getIndex());
+							System.out.println("Removed: " + removedFilter);
+							for (int i = removedFilter.getIndex(); i < filters.size(); i++) {
+								filters.get(i).setIndex(i);
+							}
+						}
+						for (FilterButtonModel addedFilter : change.getAddedSubList()) {
+							System.out.printf("ID: %d ----------\n", addedFilter.getIndex());
+							System.out.println("Added: " + addedFilter);
+						}
+					}
+				}
 			}
 		});
 	}
@@ -74,18 +107,20 @@ public class ComputationCellController extends CellController {
 			HBox newLayout = (HBox) loader.load();
 			panelLayout.getChildren().add(newLayout);
 			newController.setCellLayout(newLayout);
-			filtersOL.add(newController.getModel());
+			newController.getModel().setIndex(filters.size());
+			filters.add(newController.getModel());
+			newController.selectFilterButton();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public ObservableList<FilterButtonModel> getFiltersOL() {
-		return filtersOL;
+	public ObservableList<FilterButtonModel> getFilters() {
+		return filters;
 	}
 
-	public void setFiltersOL(ObservableList<FilterButtonModel> filtersOL) {
-		this.filtersOL = filtersOL;
+	public void setFilters(ObservableList<FilterButtonModel> filters) {
+		this.filters = filters;
 	}
 
 	public VBox getPanelLayout() {

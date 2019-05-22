@@ -16,11 +16,17 @@ public class FilterButtonListener implements PropertyChangeListener {
 		if (event.getPropertyName().equals("FilterSelected")) {
 			FilterButtonModel model = (FilterButtonModel) event.getOldValue();
 			// Update the filter layout based on whether it is selected or not
-			if (model.isSelected()) {
+			if (model.getSelected()) {
 				controller.showButtons();
 			} else {
 				controller.hideButtons();
 			}
+		}
+		
+		if (event.getPropertyName().equals("FilterNameChanged")) {
+			FilterButtonModel model = (FilterButtonModel) event.getOldValue();
+			// Update the filter name based on the new value
+			controller.setFilterName(event.getNewValue().toString());
 		}
 	}
 }
