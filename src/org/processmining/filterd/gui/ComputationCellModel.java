@@ -28,11 +28,13 @@ public class ComputationCellModel extends CellModel {
 	private XLog log;
 	private List<YLog> eventLogs;
 	
+	
 	public ComputationCellModel(UIPluginContext context, ProMCanceller canceller, List<YLog> eventLogs) {
 			super(context);
 			this.canceller = canceller;
 			this.eventLogs = eventLogs;
-	}
+			}
+
 	
 	public void setXLog(XLog log) {
 		if(log == null) {

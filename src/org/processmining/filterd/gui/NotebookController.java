@@ -46,6 +46,13 @@ public class NotebookController {
 	private Button addTextCellButton;
 	@FXML
 	private Pane configurationModal; // I'm not sure where this configuraitonModal is for? - Ewoud
+	@FXML
+	private VBox notebookVisualiser;
+	@FXML 
+	private HBox notebookToolbar;
+	
+ 
+	
 
 	/**
 	 * The constructor which sets the model. Note that the constructor does not
@@ -58,6 +65,15 @@ public class NotebookController {
 	public NotebookController(NotebookModel model) {
 		this.model = model;
 	}
+
+	public VBox getNotebookVisualiser() {
+		return notebookVisualiser;
+	}
+
+	public HBox getNotebookToolbar() {
+		return notebookToolbar;
+	}
+
 
 	/**
 	 * Gets executed after the constructor. Has access to the @FXML annotated
