@@ -64,7 +64,7 @@ public class FilterdTraceAttrNumericalConfig extends FilterdAbstractConfig {
 
 	public boolean canPopulate(FilterConfigPanelController component) {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	public FilterConfigPanelController getConfigPanel() {
