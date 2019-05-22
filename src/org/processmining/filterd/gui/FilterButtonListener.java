@@ -24,9 +24,9 @@ public class FilterButtonListener implements PropertyChangeListener {
 		}
 		
 		if (event.getPropertyName().equals("FilterNameChanged")) {
-			FilterButtonModel model = (FilterButtonModel) event.getOldValue();
 			// Update the filter name based on the new value
 			controller.setFilterName(event.getNewValue().toString());
 		}
+		
 	}
 }

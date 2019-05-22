@@ -1,6 +1,7 @@
 package org.processmining.filterd.gui;
 
 import java.io.IOException;
+import java.util.Collections;
 
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
@@ -9,24 +10,22 @@ import org.deckfour.uitopia.api.model.ViewType;
 import org.deckfour.xes.model.XLog;
 import org.processmining.filterd.models.YLog;
 
-import javafx.beans.Observable;
-import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingNode;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.util.Callback;
+import prefuse.data.util.Index;
 
 public class ComputationCellController extends CellController {
 
 	//TODO: add other FXML attributes
-	private ObservableList<FilterButtonModel> filters;
 
 	@FXML
 	private VBox panelLayout;
@@ -50,6 +49,41 @@ public class ComputationCellController extends CellController {
 		// TODO: load event logs in cmbEventLog
 		cmbEventLog.getItems().addAll(model.getXLogs());
 		cellModel.getProperty().addPropertyChangeListener(new CellModelListeners(this));
+		
+		getCellModel().getFilters().addListener(new ListChangeListener<FilterButtonModel>() {
+			@Override
+			public synchronized void onChanged(Change<? extends FilterButtonModel> change) {
+				while (change.next()) {
+					if (change.wasAdded() && change.wasRemoved()) {
+						for (int i = change.getFrom(); i < change.getTo(); i++) {
+							int index1 = i;
+							Node filter1 = panelLayout.getChildrenUnmodifiable().get(index1);
+							int index2 = i+1;
+							Node filter2 = panelLayout.getChildrenUnmodifiable().get(index2);
+							panelLayout.getChildren().remove(filter1);
+							panelLayout.getChildren().add(index2, filter1);
+							panelLayout.getChildren().remove(filter2);
+							panelLayout.getChildren().add(index1, filter2);
+						}
+					} else if (change.wasRemoved() && !change.wasAdded()) {
+						for (FilterButtonModel removedFilter : change.getRemoved()) {
+							System.out.printf("ID: %d ----------\n", change.getFrom());
+							System.out.println("Removed: " + removedFilter);
+							int index = model.getFilters().indexOf(removedFilter);
+							panelLayout.getChildren().remove(index);
+						}
+					} else if (change.wasAdded() && !change.wasRemoved()) {
+						for (FilterButtonModel addedFilter : change.getAddedSubList()) {
+							System.out.printf("ID: %d ----------\n", change.getFrom());
+							System.out.println("Added: " + addedFilter);
+							int index = model.getFilters().indexOf(addedFilter);
+							FilterButtonModel filter = model.getFilters().get(index);
+							loadFilter(filter, index);
+						}
+					}
+				}
+			}
+		});
 	}
 
 	//TODO: add controller methods
@@ -57,76 +91,28 @@ public class ComputationCellController extends CellController {
 	public ComputationCellController(NotebookController controller, ComputationCellModel model) {
 		super(controller, model);
 		
-		filters = FXCollections.observableArrayList(
-				new Callback<FilterButtonModel, Observable[]>() {
-					@Override
-					public Observable[] call(FilterButtonModel temp) {
-						return new Observable[] {
-								temp.nameProperty(),
-								temp.indexProperty(),
-								temp.selectedProperty()
-						};
-					}
-				});
-
-		filters.addListener(new ListChangeListener<FilterButtonModel>() {
-			@Override
-			public void onChanged(Change<? extends FilterButtonModel> change) {
-				while (change.next()) {
-					if (change.wasPermutated()) {
-						for (int i = change.getFrom(); i < change.getTo(); i++) {
-							System.out.printf("ID: %d ----------\n", filters.get(i).getIndex());
-							System.out.println("Permuted: " + i + " " + filters.get(i));
-						}
-					} else if (change.wasUpdated()) {
-						for (int i = change.getFrom(); i < change.getTo(); i++) {
-							System.out.printf("ID: %d ----------\n", filters.get(i).getIndex());
-							System.out.println("Updated: " + i + " " + filters.get(i));
-						}
-					} else {
-						for (FilterButtonModel removedFilter : change.getRemoved()) {
-							System.out.printf("ID: %d ----------\n", removedFilter.getIndex());
-							System.out.println("Removed: " + removedFilter);
-							for (int i = removedFilter.getIndex(); i < filters.size(); i++) {
-								filters.get(i).setIndex(i);
-							}
-						}
-						for (FilterButtonModel addedFilter : change.getAddedSubList()) {
-							System.out.printf("ID: %d ----------\n", addedFilter.getIndex());
-							System.out.println("Added: " + addedFilter);
-						}
-					}
-				}
-			}
-		});
 		configurationModal = new ConfigurationModalController(this);
 		configurationModalShown = false;
 	}
 
 	@FXML
 	public void addFilter() {
+		int index = getCellModel().getFilters().size(); // Index of the new cell, so that we can compute which XLogs are available
+		FilterButtonModel filterModel = new FilterButtonModel();
+		getCellModel().addFilter(filterModel);
+	}
+	
+	public void loadFilter(FilterButtonModel model, int index) {
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/processmining/filterd/gui/fxml/FilterButton.fxml"));
+		FilterButtonController newController = new FilterButtonController(this, model);
+		loader.setController(newController);
 		try {
-			FXMLLoader loader = new FXMLLoader(
-					getClass().getResource("/org/processmining/filterd/gui/fxml/FilterButton.fxml"));
-			FilterButtonController newController = new FilterButtonController(this);
-			loader.setController(newController);
-			HBox newLayout = (HBox) loader.load();
-			panelLayout.getChildren().add(newLayout);
-			newController.setCellLayout(newLayout);
-			newController.getModel().setIndex(filters.size());
-			filters.add(newController.getModel());
-			newController.selectFilterButton();
+			HBox newPanelLayout = (HBox) loader.load();
+			panelLayout.getChildren().add(index, newPanelLayout);
+			newController.setCellLayout(newPanelLayout);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-
-	public ObservableList<FilterButtonModel> getFilters() {
-		return filters;
-	}
-
-	public void setFilters(ObservableList<FilterButtonModel> filters) {
-		this.filters = filters;
 	}
 
 	public VBox getPanelLayout() {

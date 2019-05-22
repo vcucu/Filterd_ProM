@@ -1,6 +1,7 @@
 package org.processmining.filterd.gui;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -22,16 +23,54 @@ import org.processmining.framework.plugin.annotations.Plugin;
 import org.processmining.framework.plugin.impl.PluginManagerImpl;
 import org.processmining.framework.util.Pair;
 
+import javafx.beans.Observable;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.util.Callback;
+
 public class ComputationCellModel extends CellModel {
 	
 	private ProMCanceller canceller;
 	private XLog log;
 	private List<YLog> eventLogs;
+	private ObservableList<FilterButtonModel> filters;
 	
 	public ComputationCellModel(UIPluginContext context, ProMCanceller canceller, List<YLog> eventLogs) {
 			super(context);
 			this.canceller = canceller;
 			this.eventLogs = eventLogs;
+			
+			filters = FXCollections.observableArrayList(//);
+					new Callback<FilterButtonModel, Observable[]>() {
+						@Override
+						public Observable[] call(FilterButtonModel temp) {
+							return new Observable[] {
+									temp.nameProperty(),
+									temp.selectedProperty()
+							};
+						}
+					});
+	}
+	
+	public void addFilter(FilterButtonModel filter) {
+		filters.add(filter);
+	}
+	
+	public void removeFilter(FilterButtonModel filter) {
+		filters.remove(filter);
+	}
+	
+	public void moveFilter(FilterButtonModel filter, int newIndex) {
+		int oldIndex = filters.indexOf(filter);
+		Collections.swap(filters, oldIndex, newIndex);
+	}
+	
+	public void addFilters(List<FilterButtonModel> filters) {
+		this.filters.addAll(filters);
+	}
+	
+	public void removeFilters(List<FilterButtonModel> filters) {
+		this.filters.removeAll(filters);
 	}
 	
 	public void setXLog(XLog log) {
@@ -44,6 +83,17 @@ public class ComputationCellModel extends CellModel {
 	
 	public List<YLog> getXLogs() {
 		return eventLogs;
+	}
+	
+	public ObservableList<FilterButtonModel> getFilters() {
+		return filters;
+	}
+	
+	public void selectFilter(FilterButtonModel model) {
+		for (FilterButtonModel filter : filters) {
+			filter.setSelected(false);
+		}
+		model.setSelected(true);
 	}
 	
     // Get visualizer names
