@@ -1,12 +1,17 @@
 package org.processmining.filterd.gui;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 
 import org.deckfour.uitopia.api.model.ViewType;
 import org.deckfour.xes.model.XLog;
+import org.processmining.filterd.configurations.FilterdAbstractConfig;
+import org.processmining.filterd.configurations.FilterdTraceStartEventConfig;
+import org.processmining.filterd.filters.FilterdTraceStartEventFilter;
 import org.processmining.filterd.models.YLog;
 
 import javafx.beans.Observable;
@@ -215,16 +220,16 @@ public class ComputationCellController extends CellController {
 	}
 	
 	public void hideConfigurationModal() {
-		// clear the configuration controller (graceful shutdown) 
-		configurationModal.clear();
 		visualizerPane.getChildren().clear();
 		// set visualizer as the content
-		visualizerPane.getChildren().add(visualizerSwgNode);
-		// set properties w.r.t. parent node (AnchorPane)
-		visualizerPane.setTopAnchor(visualizerSwgNode, 0.0);
-		visualizerPane.setBottomAnchor(visualizerSwgNode, 0.0);
-		visualizerPane.setLeftAnchor(visualizerSwgNode, 0.0);
-		visualizerPane.setRightAnchor(visualizerSwgNode, 0.0);
+		if(visualizerSwgNode != null) {
+			visualizerPane.getChildren().add(visualizerSwgNode);
+			// set properties w.r.t. parent node (AnchorPane)
+			visualizerPane.setTopAnchor(visualizerSwgNode, 0.0);
+			visualizerPane.setBottomAnchor(visualizerSwgNode, 0.0);
+			visualizerPane.setLeftAnchor(visualizerSwgNode, 0.0);
+			visualizerPane.setRightAnchor(visualizerSwgNode, 0.0);
+		}
 		configurationModalShown = false;
 	}
 	
@@ -246,5 +251,28 @@ public class ComputationCellController extends CellController {
 		visualizerPane.setLeftAnchor(configurationModalRoot, 0.0);
 		visualizerPane.setRightAnchor(configurationModalRoot, 0.0);
 		configurationModalShown = true;
+	}
+	
+	@FXML
+	private void toggleFilterPicker() {
+		visualizerPane.getChildren().clear();
+		List<String> filterOptions = new ArrayList<>();
+		filterOptions.add("Filter 1");
+		filterOptions.add("Filter 2");
+		configurationModal.showFilterList(filterOptions, new Callback<String, FilterdAbstractConfig>() {
+
+			public FilterdAbstractConfig call(String param) {
+				// TODO: create a new filter config based on the user's selection
+				ComputationCellModel model = (ComputationCellModel) cellModel;
+				return new FilterdTraceStartEventConfig(model.getLog(), new FilterdTraceStartEventFilter());
+			}
+			
+		});
+		VBox configurationModalRoot = configurationModal.getRoot();
+		visualizerPane.getChildren().add(configurationModalRoot);
+		visualizerPane.setTopAnchor(configurationModalRoot, 0.0);
+		visualizerPane.setBottomAnchor(configurationModalRoot, 0.0);
+		visualizerPane.setLeftAnchor(configurationModalRoot, 0.0);
+		visualizerPane.setRightAnchor(configurationModalRoot, 0.0);
 	}
 }
