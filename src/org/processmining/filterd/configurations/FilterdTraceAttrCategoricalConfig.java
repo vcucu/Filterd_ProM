@@ -58,6 +58,11 @@ public class FilterdTraceAttrCategoricalConfig extends FilterdAbstractConfig {
 				defaultChoice,
 				valuesList
 			);
+		
+		parameters.add(nullHandling);
+		parameters.add(selectionType);
+		parameters.add(desiredValues);
+		
 	}
 
 	public boolean canPopulate(FilterConfigPanelController component) {
