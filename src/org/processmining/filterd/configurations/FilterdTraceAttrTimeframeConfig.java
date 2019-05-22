@@ -54,7 +54,7 @@ public class FilterdTraceAttrTimeframeConfig extends FilterdAbstractConfig {
 		// values as the default values.
 		ParameterRangeFromRange<Double> parameterThreshold = 
 				new ParameterRangeFromRange<Double>(
-				"threshold", 
+				"Threshold", 
 				"Select threshold for timeframe", 
 				thrOptions, 
 				thrOptions
