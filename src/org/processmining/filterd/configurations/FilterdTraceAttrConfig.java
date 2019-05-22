@@ -58,7 +58,7 @@ public class FilterdTraceAttrConfig extends FilterdAbstractConfig {
 		// Create the parameter for selecting the attribute.
 		ParameterOneFromSet attributeSelector = 
 				new ParameterOneFromSet(
-						"attribute", 
+						"Attribute", 
 						"Select attribute", 
 						globalAttributesList.get(0), 
 						globalAttributesList);
@@ -75,7 +75,7 @@ public class FilterdTraceAttrConfig extends FilterdAbstractConfig {
 		// Create the parameter for selecting the type of attribute.
 		ParameterOneFromSet attributeTypeSelector = 
 				new ParameterOneFromSet(
-						"attribute type", 
+						"Attribute type", 
 						"Select attribute type", 
 						attributeTypeList.get(0), 
 						attributeTypeList);
