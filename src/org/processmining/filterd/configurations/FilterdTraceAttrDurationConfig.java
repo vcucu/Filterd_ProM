@@ -25,7 +25,7 @@ public class FilterdTraceAttrDurationConfig extends FilterdAbstractConfig {
 		// values as the default values.
 		ParameterRangeFromRange<Double> parameterThreshold = 
 				new ParameterRangeFromRange<Double>(
-				"threshold", 
+				"Threshold", 
 				"Select threshold for frequency", 
 				thrOptions, 
 				thrOptions
