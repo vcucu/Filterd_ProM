@@ -37,6 +37,10 @@ public class ComputationCellController extends CellController {
 	private ComboBox<YLog> cmbEventLog;
 	@FXML
 	private ComboBox<ViewType> cmbVisualizers;
+	private SwingNode visualizerSwgNode;
+	private ConfigurationModalController configurationModal;
+	private boolean configurationModalShown;
+	
 
 	/**
 	 * Gets executed after the constructor. Has access to the @FXML annotated
@@ -62,6 +66,8 @@ public class ComputationCellController extends CellController {
 				System.out.println("Added new filter!");
 			}
 		});
+		configurationModal = new ConfigurationModalController(this);
+		configurationModalShown = false;
 	}
 
 	@FXML
@@ -148,20 +154,62 @@ public class ComputationCellController extends CellController {
 		ComputationCellModel model = this.getCellModel();
 		JComponent visualizer = model.getVisualization(cmbVisualizers.getValue());
 		// Add a SwingNode to the Visualizer pane
-		SwingNode swgNode = new SwingNode();
-		visualizerPane.getChildren().add(swgNode);
+		visualizerSwgNode = new SwingNode();
+		visualizerPane.getChildren().add(visualizerSwgNode);
 		// We set the anchors for each side of the swingNode to 0 so it fits itself to the anchorPane and gets resized with the cell.
-		visualizerPane.setTopAnchor(swgNode, 0.0);
-		visualizerPane.setBottomAnchor(swgNode, 0.0);
-		visualizerPane.setLeftAnchor(swgNode, 0.0);
-		visualizerPane.setRightAnchor(swgNode, 0.0);
+		visualizerPane.setTopAnchor(visualizerSwgNode, 0.0);
+		visualizerPane.setBottomAnchor(visualizerSwgNode, 0.0);
+		visualizerPane.setLeftAnchor(visualizerSwgNode, 0.0);
+		visualizerPane.setRightAnchor(visualizerSwgNode, 0.0);
 		// Load Visualizer
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				swgNode.setContent(visualizer);
+				visualizerSwgNode.setContent(visualizer);
 			}
 		});
 	}
-
+	
+	@FXML
+	private void toggleConfigurationModal() {
+		if(configurationModalShown) {
+			hideConfigurationModal();
+		} else {
+			showConfigurationModal();
+		}
+	}
+	
+	public void hideConfigurationModal() {
+		// clear the configuration controller (graceful shutdown) 
+		configurationModal.clear();
+		visualizerPane.getChildren().clear();
+		// set visualizer as the content
+		visualizerPane.getChildren().add(visualizerSwgNode);
+		// set properties w.r.t. parent node (AnchorPane)
+		visualizerPane.setTopAnchor(visualizerSwgNode, 0.0);
+		visualizerPane.setBottomAnchor(visualizerSwgNode, 0.0);
+		visualizerPane.setLeftAnchor(visualizerSwgNode, 0.0);
+		visualizerPane.setRightAnchor(visualizerSwgNode, 0.0);
+		configurationModalShown = false;
+	}
+	
+	private void showConfigurationModal() {
+		// save current visualizer (TODO: is this needed?)
+		for(int i = 0; i < visualizerPane.getChildren().size(); i++) {
+			if(visualizerPane.getChildren().get(i) instanceof SwingNode) {
+				visualizerSwgNode = (SwingNode) visualizerPane.getChildren().get(i);
+				break;
+			}
+		}
+		visualizerPane.getChildren().clear();
+		// get root component of the configuration modal
+		VBox configurationModalRoot = configurationModal.getRoot();
+		visualizerPane.getChildren().add(configurationModalRoot);
+		// set properties w.r.t. parent node (AnchorPane)
+		visualizerPane.setTopAnchor(configurationModalRoot, 0.0);
+		visualizerPane.setBottomAnchor(configurationModalRoot, 0.0);
+		visualizerPane.setLeftAnchor(configurationModalRoot, 0.0);
+		visualizerPane.setRightAnchor(configurationModalRoot, 0.0);
+		configurationModalShown = true;
+	}
 }
