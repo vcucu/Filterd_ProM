@@ -182,11 +182,6 @@ public class FilterdTraceAttrTimeframeConfig extends FilterdAbstractConfig {
 		return date;
 	}
 
-	public FilterdAbstractConfig populate(AbstractFilterConfigPanelController component) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	public boolean canPopulate(FilterConfigPanelController component) {
 		// Can always populate since outer options are the first and final time
 		// of the log
