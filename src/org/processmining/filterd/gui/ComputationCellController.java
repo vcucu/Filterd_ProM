@@ -23,15 +23,22 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Rectangle;
 import javafx.util.Callback;
 
 public class ComputationCellController extends CellController {
 
 	//TODO: add other FXML attributes
 	private ObservableList<FilterButtonModel> filters;
+
+	private boolean isExpanded;
+	private VBox notebookVisualiser;
+	private HBox notebookToolbar;
+
 
 	@FXML
 	private VBox panelLayout;
@@ -41,10 +48,18 @@ public class ComputationCellController extends CellController {
 	private ComboBox<YLog> cmbEventLog;
 	@FXML
 	private ComboBox<ViewType> cmbVisualizers;
+
 	private SwingNode visualizerSwgNode;
 	private ConfigurationModalController configurationModal;
 	private boolean configurationModalShown;
-	
+
+	@FXML
+	private Rectangle expandButton;
+	@FXML
+	private ScrollPane filterPanelScroll;
+	@FXML
+	private VBox cell;
+
 
 	/**
 	 * Gets executed after the constructor. Has access to the @FXML annotated
@@ -54,10 +69,9 @@ public class ComputationCellController extends CellController {
 		ComputationCellModel model = this.getCellModel();
 		// TODO: load event logs in cmbEventLog
 		cmbEventLog.getItems().addAll(model.getXLogs());
+		//add listeners to the basic model components 
 		cellModel.getProperty().addPropertyChangeListener(new CellModelListeners(this));
 	}
-
-	//TODO: add controller methods
 
 	public ComputationCellController(NotebookController controller, ComputationCellModel model) {
 		super(controller, model);
@@ -75,6 +89,7 @@ public class ComputationCellController extends CellController {
 				});
 
 		filters.addListener(new ListChangeListener<FilterButtonModel>() {
+
 			@Override
 			public void onChanged(Change<? extends FilterButtonModel> change) {
 				while (change.next()) {
@@ -106,6 +121,10 @@ public class ComputationCellController extends CellController {
 		});
 		configurationModal = new ConfigurationModalController(this);
 		configurationModalShown = false;
+		
+		isExpanded = false;
+		notebookVisualiser = controller.getNotebookVisualiser();
+		notebookToolbar = controller.getNotebookToolbar();
 	}
 
 	@FXML
@@ -172,6 +191,31 @@ public class ComputationCellController extends CellController {
 	@Override
 	public ComputationCellModel getCellModel() {
 		return (ComputationCellModel) super.getCellModel();
+	}
+
+	/**
+	 * Handler added to the expansion button responsible for 
+	 * increasing the cell size to the window size
+	 */
+	@FXML
+	public void handleExpandVisualiser() {		 
+		visualizerPane.setStyle("-fx-background-color: #ff0000; ");
+		if (isExpanded) {
+			//make cell go to default size
+			isExpanded = false;
+			//unbind from window size
+			cell.prefHeightProperty().unbind();
+			//set the PrefHeight to what it is by default
+			cell.setPrefHeight(cell.USE_COMPUTED_SIZE);
+		} else {
+			isExpanded = true;
+			//set height of cell to be the size of the 'window'
+			cell.prefHeightProperty()
+					.bind(notebookVisualiser.heightProperty().subtract(notebookToolbar.heightProperty()));
+		}
+		//extend visualizerPane over the filter pane
+		filterPanelScroll.setVisible(!isExpanded);
+		filterPanelScroll.setManaged(!isExpanded);
 	}
 
 	@FXML
@@ -275,4 +319,24 @@ public class ComputationCellController extends CellController {
 		visualizerPane.setLeftAnchor(configurationModalRoot, 0.0);
 		visualizerPane.setRightAnchor(configurationModalRoot, 0.0);
 	}
+	@Override
+	public void show() {
+		super.show();
+		if(isExpanded) {
+			cell.prefHeightProperty()
+			.bind(notebookVisualiser.heightProperty().subtract(notebookToolbar.heightProperty()));
+		}
+	}
+	
+	@Override
+	public void hide() {
+		super.hide();
+		if(isExpanded) {
+			cell.prefHeightProperty().unbind();
+			//set the PrefHeight to what it is by default
+			cell.setPrefHeight(cell.USE_COMPUTED_SIZE);
+		}
+		
+	}
+	
 }

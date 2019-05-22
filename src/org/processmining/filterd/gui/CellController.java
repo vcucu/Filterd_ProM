@@ -5,15 +5,15 @@ import java.beans.PropertyChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 
 public abstract class CellController {
 
 	//TODO: add all the attributes from the UI Diagram
 	protected NotebookController controller;
 	protected CellModel cellModel;
-	protected Pane cellLayout;
+	protected VBox cellLayout;
 	@FXML
 	protected Region statusBar; // has 8 states, Color x isHidden
 	@FXML
@@ -72,11 +72,11 @@ public abstract class CellController {
 	 * Returns the layout of the current cell.
 	 * @return The layout of the current cell.
 	 */
-	public Pane getCellLayout() {
+	public VBox getCellLayout() {
 		return cellLayout;
 	}
 
-	public void setCellLayout(Pane cellLayout) {
+	public void setCellLayout(VBox cellLayout) {
 		this.cellLayout = cellLayout;
 	}
 
@@ -113,12 +113,11 @@ public abstract class CellController {
 		//System.out.println("We are now updating ui!");
 		//System.out.println(cellBody.equals(null));
 		cellBody.setVisible(true); // makes the content of the HBox invisible.
-		cellBody.setManaged(true); // makes the HBox take up no space. This option is note available in the Scene Builder.
+		cellBody.setManaged(true); // makes the HBox take up no space. This option is note available in the Scene Builder.		
 	}
 
 	public void hide() {
 		cellBody.setVisible(false); // makes the content of the HBox invisible.
 		cellBody.setManaged(false); // makes the HBox take up no space. This option is note available in the Scene Builder.
-
 	}
 }
