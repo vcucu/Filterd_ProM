@@ -23,23 +23,26 @@ public class FilterdTraceAttrCategoricalConfig extends FilterdAbstractConfig {
 	public FilterdTraceAttrCategoricalConfig(XLog log, Filter filterType, String
 			attribute) {
 		super(log, filterType);
-		//initialize the configuration's parameters list
+		
+		// Initialize the configuration's parameters list.
 		parameters = new ArrayList<>();
 				
 		ParameterYesNo nullHandling = new ParameterYesNo("nullHandling",
 				"Null handling:",
 				true);
 		
+		//initialize selection type parameter
 		List<String> selectionTypeOptions = new ArrayList<>();
-		selectionTypeOptions.add("mandatory");
-		selectionTypeOptions.add("forbidden");
+		selectionTypeOptions.add("Mandatory");
+		selectionTypeOptions.add("Forbidden");
 		
 		ParameterOneFromSet selectionType = new ParameterOneFromSet("selectionType",
 			"Selection type:",
-			"mandatory",
+			"Mandatory",
 			selectionTypeOptions);
 		
 		
+		//initialize the values parameter for the chosen attribute
 		Set<String> valuesSet = new HashSet<String>();
 		
 		for (XTrace trace : log) {
@@ -59,6 +62,7 @@ public class FilterdTraceAttrCategoricalConfig extends FilterdAbstractConfig {
 				valuesList
 			);
 		
+		//add the created parameters
 		parameters.add(nullHandling);
 		parameters.add(selectionType);
 		parameters.add(desiredValues);
