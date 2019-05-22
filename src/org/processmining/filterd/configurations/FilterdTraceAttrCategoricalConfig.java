@@ -20,8 +20,7 @@ import org.processmining.filterd.gui.FilterConfigPanelController;
 
 public class FilterdTraceAttrCategoricalConfig extends FilterdAbstractConfig {
 
-	public FilterdTraceAttrCategoricalConfig(XLog log, Filter filterType, String
-			attribute) {
+	public FilterdTraceAttrCategoricalConfig(XLog log, Filter filterType) {
 		super(log, filterType);
 		//initialize the configuration's parameters list
 		parameters = new ArrayList<>();
