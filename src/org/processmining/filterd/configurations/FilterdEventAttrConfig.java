@@ -1,6 +1,9 @@
 package org.processmining.filterd.configurations;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.deckfour.xes.model.XLog;
@@ -22,6 +25,7 @@ import org.processmining.filterd.widgets.ParameterRangeFromRangeController;
 import org.processmining.filterd.widgets.ParameterTextController;
 import org.processmining.filterd.widgets.ParameterValueFromRangeController;
 import org.processmining.filterd.widgets.ParameterYesNoController;
+
 public class FilterdEventAttrConfig extends FilterdAbstractConfig {
 
 	FilterdAbstractConfig concreteReference;
@@ -40,12 +44,8 @@ public class FilterdEventAttrConfig extends FilterdAbstractConfig {
 			"Filter by", globalAttrAndClassifiers.get(0), globalAttrAndClassifiers, true);
 
 		
-		//create reference to the dateConfig
-		concreteReference = new FilterdEventAttrDateConfig(log, filterType);
-		
-		//not needed for date, kept for generality
 		parameters.add(attribute);
-		parameters.addAll(concreteReference.getParameters());
+		//parameters.addAll(concreteReference.getParameters());
 		
 		
 	}
@@ -109,18 +109,84 @@ public class FilterdEventAttrConfig extends FilterdAbstractConfig {
 	}
 	
 	public FilterdAbstractConfig changeReference(ParameterOneFromSetController chosen) {
-		// TODO Auto-generated method stub
+		
+		concreteReference = new FilterdEventAttrDateConfig(log, filterType);
+		
 		return null;
 	}
    
 	public boolean checkValidity(XLog log) {
-		// TODO Auto-generated method stub
-		return false;
+		return concreteReference.checkValidity(log);
 	}
 
 	public XLog filter() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	private Date addTimezone (String time) {
+		// Set time format for the time stamp
+		SimpleDateFormat dateFormat = new SimpleDateFormat(
+				"yyyy-MM-dd-HH:mm:ss");
+
+		Date date = null;
+
+		// Time is in GMT
+		if (time.contains("Z")) {
+			time.replace("Z", "");
+
+			try {
+				date = dateFormat.parse(time);	
+			} catch (ParseException e) {
+				// Print the trace so we know what went wrong.
+				e.printStackTrace();
+			}
+		}
+		// Time is relative to GMT
+		else {
+
+			// Represents the last 5 characters e.g. "02:00".
+			String lastFiveCharacters = time.substring(time.length() - 5, 
+					time.length());
+
+			// Set time format for the hours relative to GMT.
+			SimpleDateFormat hourFormat = new SimpleDateFormat("hh:mm");
+			Date hourDate = null;
+
+			// Parse the hours into a Date.
+			try {
+				hourDate = hourFormat.parse(lastFiveCharacters);	
+			} catch (ParseException e) {
+				// Print the trace so we know what went wrong.
+				e.printStackTrace();
+			}
+
+			// Replace the T-separator with a colon.
+			time = time.replace("T", "-");
+
+			// Get whether it was later or earlier relative to GMT.
+			char stringSign = time.charAt(time.length() - 6);
+			
+			// Remove The relative time as we already have it separated.
+			time = time.substring(0, time.length() - 6);
+
+			// Parse the time stamp into a Date.
+			try {
+				date = dateFormat.parse(time);	
+			} catch (ParseException e) {
+				// Print the trace so we know what went wrong.
+				e.printStackTrace();
+			}
+
+			// Change the relative time to GMT
+			if (stringSign == '+') {
+				date.setTime(date.getTime() - hourDate.getTime());
+			} else {
+				date.setTime(date.getTime() + hourDate.getTime());
+			}
+		}
+
+		return date;
 	}
 
 }

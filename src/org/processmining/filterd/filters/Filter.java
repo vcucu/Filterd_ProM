@@ -16,6 +16,7 @@ public abstract class Filter {
 			
 		for(Parameter parameter :parameters ) {
 			if (parameter.getName().equals(whichParameter)) {	
+				System.out.println(parameter.getName());
 				return parameter;
 			}
 		}

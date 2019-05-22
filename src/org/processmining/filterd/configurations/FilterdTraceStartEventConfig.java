@@ -3,22 +3,28 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.swing.JComponent;
-import org.processmining.filterd.widgets.*;
-
 import org.deckfour.xes.model.XAttribute;
 import org.deckfour.xes.model.XLog;
 import org.processmining.filterd.filters.Filter;
 import org.processmining.filterd.gui.AbstractFilterConfigPanelController;
 import org.processmining.filterd.gui.FilterConfigPanelController;
 import org.processmining.filterd.parameters.Parameter;
+import org.processmining.filterd.parameters.ParameterMultipleFromSet;
 import org.processmining.filterd.parameters.ParameterOneFromSet;
 import org.processmining.filterd.parameters.ParameterRangeFromRange;
-import org.processmining.filterd.parameters.*;
-import org.processmining.filterd.widgets.*;
-import java.util.List;
+import org.processmining.filterd.parameters.ParameterText;
+import org.processmining.filterd.parameters.ParameterValueFromRange;
+import org.processmining.filterd.parameters.ParameterYesNo;
+import org.processmining.filterd.widgets.ParameterController;
+import org.processmining.filterd.widgets.ParameterMultipleFromSetController;
+import org.processmining.filterd.widgets.ParameterOneFromSetController;
+import org.processmining.filterd.widgets.ParameterOneFromSetExtendedController;
+import org.processmining.filterd.widgets.ParameterRangeFromRangeController;
+import org.processmining.filterd.widgets.ParameterTextController;
+import org.processmining.filterd.widgets.ParameterValueFromRangeController;
+import org.processmining.filterd.widgets.ParameterYesNoController;
 
-public class FilterdTraceStartEventConfig extends FilterdAbstractConfig {
+public class FilterdTraceStartEventConfig extends FilterdAbstractConfig implements Referenceable {
 	
 	FilterdAbstractConfig concreteReference;
 
@@ -50,7 +56,7 @@ public class FilterdTraceStartEventConfig extends FilterdAbstractConfig {
 		// Add all parameters to the list of parameters	
 		parameters.add(attribute);
 		parameters.add(selectionType);
-		parameters.addAll(concreteReference.getParameters());
+//		parameters.addAll(concreteReference.getParameters());
 	}
 	
 	
@@ -110,14 +116,16 @@ public class FilterdTraceStartEventConfig extends FilterdAbstractConfig {
 		return false;
 	}
 
-	public FilterConfigPanelController getConfigPanel() {
-		return new FilterConfigPanelController("Trace Start Event Configuration", parameters);
+	public AbstractFilterConfigPanelController getConfigPanel() {
+		return new FilterConfigPanelController("Trace Start Event Configuration", parameters, this);
 	}
 	
-	public FilterdAbstractConfig changeReference(ParameterOneFromSetController chosen) {
-		// TODO Auto-generated method stub
-		return null;
+	public FilterdAbstractConfig changeReference(ParameterOneFromSetExtendedController controller) {
+		concreteReference = new FilterdTraceStartEventCategoricalConfig(log, filterType,
+				controller.getValue(), complexClassifiers);
+		return concreteReference;
 	}
+	
 	/*
 	 * The candidateLog is invalid if the global attributes list does not 
 	 * contain the selected attribute.
@@ -128,7 +136,7 @@ public class FilterdTraceStartEventConfig extends FilterdAbstractConfig {
 		for (XAttribute attribute : candidateLog.getGlobalEventAttributes()) {
 			globalAttrCandidateLog.add(attribute.getKey());
 		}
-		List<String> attrs = computeGlobalAttributes(this.getLog());
+		List<String> attrs = computeGlobalAttributes(candidateLog);
 		String attr = attrs.get(0);
 		if (!globalAttrCandidateLog.contains(attr)) {
 			return false;
