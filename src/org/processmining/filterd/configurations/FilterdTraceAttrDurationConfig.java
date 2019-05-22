@@ -6,48 +6,50 @@ import java.util.List;
 import org.deckfour.xes.model.XLog;
 import org.processmining.filterd.filters.Filter;
 import org.processmining.filterd.gui.FilterConfigPanelController;
-import org.processmining.filterd.parameters.ParameterOneFromSet;
+import org.processmining.filterd.parameters.ParameterRangeFromRange;
 
 public class FilterdTraceAttrDurationConfig extends FilterdAbstractConfig {
 	
 	public FilterdTraceAttrDurationConfig(XLog log, Filter filterType) {
 		super(log, filterType);
 		
-		// Create the array list for filtering on duration or filtering on
-		// events.
-		List<String> durationOrEventsList = new ArrayList<String>();
-		durationOrEventsList.add("Filter on duration");		
-		durationOrEventsList.add("Filter on number of events");
-		
-		// Create the parameter for filtering on duration or filtering on
-		// events.
-		ParameterOneFromSet keepTracesParameter = 
-				new ParameterOneFromSet(
-						"filtering option", 
-						"Select trace filtering option", 
-						durationOrEventsList.get(0), 
-						durationOrEventsList);
-
 		//initialize the threshold options list.
 		List<Double> thrOptions = new ArrayList<Double>();
 		
+		// Frequency is a percentage, therefore minimum value is 0 and maximum
+		// value is 100.
+		thrOptions.add(0d);
+		thrOptions.add(100d);
 		
+		// Create parameter for selecting the threshold and set the outermost
+		// values as the default values.
+		ParameterRangeFromRange<Double> parameterThreshold = 
+				new ParameterRangeFromRange<Double>(
+				"threshold", 
+				"Select threshold for frequency", 
+				thrOptions, 
+				thrOptions
+				);
 		
+		parameters.add(parameterThreshold);
 	}
 
 	public boolean checkValidity(XLog candidateLog) {
-		// TODO Auto-generated method stub
-		return false;
+		// Always true since duration is a percentage.
+		return true;
 	}
 
 	public boolean canPopulate(FilterConfigPanelController component) {
-		// TODO Auto-generated method stub
-		return false;
+		// Always true since duration is a percentage.
+		return true;
 	}
 
 	public FilterConfigPanelController getConfigPanel() {
-		// TODO Auto-generated method stub
-		return null;
+		return new FilterConfigPanelController
+				(
+				"Duration Trace Attribute Configuration", 
+				parameters
+				);
 	}
 
 }
