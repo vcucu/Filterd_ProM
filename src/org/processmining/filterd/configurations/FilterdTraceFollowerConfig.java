@@ -88,7 +88,7 @@ public class FilterdTraceFollowerConfig extends FilterdAbstractConfig {
 		sameOrDifferentList.add("Different values");
 		
 		ParameterOneFromSet sameOrDifferentParameter = new ParameterOneFromSet(
-				"Same of Different value", 
+				"Same or Different value", 
 				"Select same or different value", 
 				sameOrDifferentList.get(0), 
 				sameOrDifferentList);
