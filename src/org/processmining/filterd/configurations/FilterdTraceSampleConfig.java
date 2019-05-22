@@ -52,7 +52,7 @@ public class FilterdTraceSampleConfig extends FilterdAbstractConfig {
 	@SuppressWarnings("unchecked")
 	public boolean checkValidity(XLog log) {
 		//the log is valid for this configuration if its size is bigger than the sample size
-		return log.size() > ((ParameterValueFromRange<Integer>)(parameters.get(0))).getChosen();
+		return log.size() >= ((ParameterValueFromRange<Integer>)(parameters.get(0))).getChosen();
 	}
 
 }
