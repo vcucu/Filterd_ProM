@@ -19,8 +19,10 @@ public class ConfigurationModalController {
 	private VBox root;
 	private FilterdAbstractConfig filterConfig;
 	private FilterConfigPanelController currentContentsController;
+	private ComputationCellController parent;
 	
-	public ConfigurationModalController() {
+	public ConfigurationModalController(ComputationCellController parent) {
+		this.parent = parent;
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/org/processmining/filterd/gui/fxml/ConfigurationModal.fxml"));
         fxmlLoader.setController(this);
         try {
@@ -31,12 +33,16 @@ public class ConfigurationModalController {
         }
 	}
 	
+	public void clear() {
+		filterConfig = null;
+		contentPane.getChildren().clear();
+	}
+	
 	@FXML 
 	public void cancel() {
 		// remove everything from this modal
-		filterConfig = null;
-		contentPane.getChildren().clear();
-		hide();
+		clear();
+		parent.hideConfigurationModal();
 	}
 	
 	@FXML 
@@ -45,19 +51,19 @@ public class ConfigurationModalController {
 		if(filterConfig.canPopulate(currentContentsController)) {
 			// if so populate it 
 			filterConfig.populate(currentContentsController);
+			parent.hideConfigurationModal();
 		}
-//		show();
 	}
 	
-	public void hide() {
-		root.setVisible(false);
-		root.setManaged(false);
-	}
-	
-	public void show() {
-		root.setVisible(true);
-		root.setManaged(true);
-	}
+//	public void hide() {
+//		root.setVisible(false);
+//		root.setManaged(false);
+//	}
+//	
+//	public void show() {
+//		root.setVisible(true);
+//		root.setManaged(true);
+//	}
 	
 	public void setContent(FilterdAbstractConfig filterConfig) {
 		// set internal variables
