@@ -8,7 +8,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 
 public class FilterButtonController {
-	
+
 	private ComputationCellController controller;
 	private Pane layout;
 	private FilterButtonModel model;
@@ -38,19 +38,19 @@ public class FilterButtonController {
 		buttons.add(moveUpButton);
 		buttons.add(moveDownButton);
 	}
-	
+
 	public Pane getCellLayout() {
 		return layout;
 	}
-	
+
 	public void setCellLayout(Pane layout) {
 		this.layout = layout;
 	}
-	
+
 	public FilterButtonModel getModel() {
 		return model;
 	}
-	
+
 	public void setModel(FilterButtonModel model) {
 		this.model = model;
 	}
@@ -76,13 +76,13 @@ public class FilterButtonController {
 			}
 		}
 	}
-	
+
 	@FXML
 	public void selectFilterButton() {
 		updateSelection();
 		model.setSelected(true);
 	}
-	
+
 	@FXML
 	private void editFilterHandler() {
 		System.out.println("Edit filter handler!");

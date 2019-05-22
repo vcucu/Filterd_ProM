@@ -433,7 +433,7 @@ public class FilterdTraceAttrFilter extends Filter {
 				e.printStackTrace();
 			}
 			
-			// Replace the T-seperator with a colon.
+			// Replace the T-separator with a colon.
 			time.replace("T", "-");
 			
 			// Get whether it was later or earlier relative to GMT.

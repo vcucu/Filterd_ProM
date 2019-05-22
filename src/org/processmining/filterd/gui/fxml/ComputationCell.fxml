@@ -7,8 +7,8 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Circle?>
@@ -19,7 +19,7 @@
       <Circle fx:id="prependCellButton" fill="#787878" onMouseClicked="#prependCellButtonHandler" radius="8.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
       <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
          <children>
-            <Region maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="14.0" style="-fx-background-color: green;" HBox.hgrow="ALWAYS" />
+            <Region fx:id="statusBar" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minWidth="-Infinity" onMouseClicked="#handleStatusBar" prefWidth="14.0" style="-fx-background-color: green;" HBox.hgrow="ALWAYS" />
             <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" HBox.hgrow="ALWAYS">
                <children>
                   <HBox maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="35.0" spacing="10.0" VBox.vgrow="ALWAYS">
@@ -27,7 +27,7 @@
                         <ComboBox fx:id="cmbEventLog" onAction="#setXLog" prefHeight="20.0" prefWidth="150.0" HBox.hgrow="ALWAYS" />
                         <Circle fill="#787878" radius="12.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
                         <Region maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
-                        <TextField alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" text="Cell name" />
+                        <TextField fx:id="cellName" alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" onAction="#handleCellName" prefHeight="25.0" text="Cell name" />
                         <Region maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
                         <ComboBox fx:id="cmbVisualizers" onAction="#loadVisualizer" prefHeight="20.0" prefWidth="150.0" HBox.hgrow="ALWAYS" />
                         <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="24.0" layoutX="180.0" layoutY="15.0" stroke="BLACK" strokeType="INSIDE" width="24.0" />
@@ -44,7 +44,7 @@
                         <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
                      </padding>
                   </HBox>
-                  <HBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
+                  <HBox fx:id="cellBody" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
                      <children>
                         <ScrollPane fitToWidth="true" hbarPolicy="NEVER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="390.0" prefWidth="245.0" HBox.hgrow="ALWAYS">
                            <content>
@@ -69,7 +69,7 @@
                               <Insets left="20.0" />
                            </HBox.margin>
                         </Rectangle>
-                        <Pane fx:id="visualizerPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="390.0" minWidth="600.0" HBox.hgrow="ALWAYS" />
+                        <AnchorPane fx:id="visualizerPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="390.0" minWidth="600.0" HBox.hgrow="ALWAYS" />
                      </children>
                      <VBox.margin>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />

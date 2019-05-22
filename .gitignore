@@ -4,3 +4,5 @@ bin/
 tests/*
 !tests/src-test/
 !tests/testfiles/
+*.jar
+*.jar
