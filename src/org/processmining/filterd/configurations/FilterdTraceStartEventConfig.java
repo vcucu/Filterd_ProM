@@ -56,7 +56,7 @@ public class FilterdTraceStartEventConfig extends FilterdAbstractConfig implemen
 		// Add all parameters to the list of parameters	
 		parameters.add(attribute);
 		parameters.add(selectionType);
-		parameters.addAll(concreteReference.getParameters());
+//		parameters.addAll(concreteReference.getParameters());
 	}
 	
 	
@@ -116,12 +116,13 @@ public class FilterdTraceStartEventConfig extends FilterdAbstractConfig implemen
 		return false;
 	}
 
-	public FilterConfigPanelController getConfigPanel() {
+	public AbstractFilterConfigPanelController getConfigPanel() {
 		return new FilterConfigPanelController("Trace Start Event Configuration", parameters, this);
 	}
 	
 	public FilterdAbstractConfig changeReference(ParameterOneFromSetExtendedController controller) {
-		// ...
+		concreteReference = new FilterdTraceStartEventCategoricalConfig(log, filterType,
+				controller.getValue(), complexClassifiers);
 		return concreteReference;
 	}
 	

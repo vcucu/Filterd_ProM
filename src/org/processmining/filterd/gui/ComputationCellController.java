@@ -61,7 +61,6 @@ public class ComputationCellController extends CellController {
 
 	public ComputationCellController(NotebookController controller, ComputationCellModel model) {
 		super(controller, model);
-		
 		filters = FXCollections.observableArrayList(
 				new Callback<FilterButtonModel, Observable[]>() {
 					@Override
