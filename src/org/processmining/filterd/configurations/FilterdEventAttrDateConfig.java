@@ -31,10 +31,10 @@ public class FilterdEventAttrDateConfig extends FilterdAbstractConfig{
 		times = new ArrayList<>();
 		defaultPair = new ArrayList<>();
 		optionsPair = new ArrayList<>();
-		defaultOption = new String("Trim to timeframe");
+		defaultOption = new String("Filter in");
 		optionList = new ArrayList<>();
 		optionList.add(defaultOption);
-		optionList.add("Cut out timeframe");
+		optionList.add("Filter out");
 
 		/*populate the array times with the ordered date&time of all events */
 		for (XTrace trace: log) {
@@ -62,7 +62,7 @@ public class FilterdEventAttrDateConfig extends FilterdAbstractConfig{
 		//Create nullHandling parameter
 		ParameterYesNo nullHandling = new ParameterYesNo("nullHandling", 
 				"Remove if no value provided", true);
-		ParameterOneFromSet selectionType = new ParameterOneFromSet("trimOptions",
+		ParameterOneFromSet selectionType = new ParameterOneFromSet("selectionType",
 				"Select option for trimming",defaultOption,optionList);
 
 		parameters.add(nullHandling);
