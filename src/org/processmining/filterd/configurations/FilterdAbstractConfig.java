@@ -16,7 +16,8 @@ import org.processmining.filterd.gui.AbstractFilterConfigPanelController;
 import org.processmining.filterd.gui.FilterConfigPanelController;
 import org.processmining.filterd.parameters.*;
 import org.processmining.framework.plugin.PluginContext;
-public abstract class FilterdAbstractConfig<T> {
+
+public abstract class FilterdAbstractConfig {
 	
 	protected Filter filterType;
 	protected XLog log;
@@ -145,7 +146,7 @@ public abstract class FilterdAbstractConfig<T> {
 	 * @return concrete configuration of the configuration panel 
 	 */
 
-	public FilterdAbstractConfig<T> populate(AbstractFilterConfigPanelController abstractComponent) {
+	public FilterdAbstractConfig populate(AbstractFilterConfigPanelController abstractComponent) {
 	
 		FilterConfigPanelController component = (FilterConfigPanelController) abstractComponent;
 		List<ParameterController> controllers = component.getControllers();
