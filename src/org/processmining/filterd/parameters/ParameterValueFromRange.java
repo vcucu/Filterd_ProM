@@ -6,12 +6,22 @@ public class ParameterValueFromRange<T> extends Parameter {
 	private T defaultChoice;
 	private T chosen;
 	private List<T> optionsPair;
+	private Class<T> genericTypeClass;
 	
 	public ParameterValueFromRange(String name, String nameDisplayed, T defaultChoice, List<T> optionsPair) {
 		super(name, nameDisplayed);
 		this.defaultChoice = defaultChoice;
 		this.optionsPair = optionsPair;
+		this.genericTypeClass = (Class<T>) Double.TYPE;
 	}
+	
+	public ParameterValueFromRange(String name, String nameDisplayed, T defaultChoice, List<T> optionsPair, Class<T> genericTypeClass) {
+		super(name, nameDisplayed);
+		this.defaultChoice = defaultChoice;
+		this.optionsPair = optionsPair;
+		this.genericTypeClass = genericTypeClass;
+	}
+	
 	public T getDefaultChoice() {
 		return defaultChoice;
 	}
@@ -31,5 +41,7 @@ public class ParameterValueFromRange<T> extends Parameter {
 		this.optionsPair = optionsPair;
 	}
 	
-	
+	public Class<T> getGenericTypeClass() {
+		return genericTypeClass;
+	}
 }
