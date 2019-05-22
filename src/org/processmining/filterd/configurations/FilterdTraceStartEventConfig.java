@@ -41,8 +41,6 @@ public class FilterdTraceStartEventConfig extends FilterdAbstractConfig implemen
 		// Create attribute parameter, creates reference is true
 		ParameterOneFromSet attribute = new ParameterOneFromSet("attribute", 
 				"Filter by", globalAttrAndClassifiers.get(0), globalAttrAndClassifiers, true);
-
-		
 		
 		//Create selectionType parameter
 		List<String> selectionTypeOptions = new ArrayList<>(Arrays.asList("Filter in", "Filter out"));
@@ -68,7 +66,7 @@ public class FilterdTraceStartEventConfig extends FilterdAbstractConfig implemen
 			//all cases assume that the controller has a name corresponding to the parameter name
 			if(controller instanceof ParameterOneFromSetExtendedController) {
 				ParameterOneFromSetExtendedController casted = (ParameterOneFromSetExtendedController) controller;
-				//concreteReference.populate(casted.getNestedConfigPanel());
+				concreteReference.populate(casted.getNestedConfigPanel());
 				//this method needs to be in every referencable class
 				
 			} else if(controller instanceof ParameterYesNoController) {
@@ -120,9 +118,11 @@ public class FilterdTraceStartEventConfig extends FilterdAbstractConfig implemen
 		return new FilterConfigPanelController("Trace Start Event Configuration", parameters, this);
 	}
 	
+
 	public FilterdAbstractConfig changeReference(ParameterOneFromSetExtendedController controller) {
 		concreteReference = new FilterdTraceStartEventCategoricalConfig(log, filterType,
 				controller.getValue(), complexClassifiers);
+
 		return concreteReference;
 	}
 	
