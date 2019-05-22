@@ -32,7 +32,6 @@ public class FilterButtonController {
 		this.controller = controller;
 		this.model = model;
 		this.buttons = new ArrayList<>();
-		model.addPropertyChangeListener(new FilterButtonListener(this));
 	}
 	
 	public void initialize() {
@@ -41,7 +40,16 @@ public class FilterButtonController {
 		buttons.add(moveUpButton);
 		buttons.add(moveDownButton);
 		
+		updateFilterButtonView();
+	}
+	
+	public void updateFilterButtonView() {
 		filterName.setText(model.getName());
+		if (model.getSelected()) {
+			showButtons();
+		} else {
+			hideButtons();
+		}
 	}
 
 	public Pane getCellLayout() {
@@ -80,7 +88,9 @@ public class FilterButtonController {
 
 	@FXML
 	public void selectFilterButton() {
-		controller.getCellModel().selectFilter(model);
+		if (!model.getSelected()) {
+			controller.getCellModel().selectFilter(model);
+		}
 	}
 
 	@FXML
@@ -90,20 +100,18 @@ public class FilterButtonController {
 	
 	@FXML
 	public void removeFilterHandler() {
-		controller.getCellModel().removeFilter(model);
+		controller.getPanelLayout().getChildren().remove(filterLayout);
+		controller.getCellModel().removeFilterModel(model);
+		controller.getCellModel().removeFilterController(this);
 	}
 	
 	@FXML
 	private void moveUpFilterHandler() {
 		System.out.println("MoveUp filter handler!");
-		int index = controller.getCellModel().getFilters().indexOf(model);
-		controller.getCellModel().moveFilter(model, index - 1);
 	}
 	
 	@FXML
 	private void moveDownFilterHandler() {
 		System.out.println("MoveDown filter handler!");
-		int index = controller.getCellModel().getFilters().indexOf(model);
-		controller.getCellModel().moveFilter(model, index + 1);
 	}
 }

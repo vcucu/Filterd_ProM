@@ -1,7 +1,6 @@
 package org.processmining.filterd.gui;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -34,12 +33,15 @@ public class ComputationCellModel extends CellModel {
 	private XLog log;
 	private List<YLog> eventLogs;
 	private ObservableList<FilterButtonModel> filters;
+	private ArrayList<FilterButtonController> filterControllers;
 
 
 	public ComputationCellModel(UIPluginContext context, ProMCanceller canceller, List<YLog> eventLogs) {
 			super(context);
 			this.canceller = canceller;
 			this.eventLogs = eventLogs;
+			
+			filterControllers = new ArrayList<>();
 
 			filters = FXCollections.observableArrayList(//);
 					new Callback<FilterButtonModel, Observable[]>() {
@@ -53,25 +55,28 @@ public class ComputationCellModel extends CellModel {
 					});
 	}
 
-	public void addFilter(FilterButtonModel filter) {
-		filters.add(filter);
+	public ObservableList<FilterButtonModel> getFilters() {
+		return filters;
 	}
 
-	public void removeFilter(FilterButtonModel filter) {
+	public void addFilterModel(int index, FilterButtonModel model) {
+		this.filters.add(index, model);
+	}
+	
+	public void removeFilterModel(FilterButtonModel filter) {
 		filters.remove(filter);
 	}
-
-	public void moveFilter(FilterButtonModel filter, int newIndex) {
-		int oldIndex = filters.indexOf(filter);
-		Collections.swap(filters, oldIndex, newIndex);
+	
+	public ArrayList<FilterButtonController> getFilterControllers() {
+		return filterControllers;
 	}
 
-	public void addFilters(List<FilterButtonModel> filters) {
-		this.filters.addAll(filters);
+	public void addFilterController(int index, FilterButtonController controller) {
+		this.filterControllers.add(index, controller);
 	}
-
-	public void removeFilters(List<FilterButtonModel> filters) {
-		this.filters.removeAll(filters);
+	
+	public void removeFilterController(FilterButtonController controller) {
+		this.filterControllers.remove(controller);
 	}
 
 	public void setXLog(XLog log) {
@@ -87,10 +92,6 @@ public class ComputationCellModel extends CellModel {
 
 	public List<YLog> getXLogs() {
 		return eventLogs;
-	}
-
-	public ObservableList<FilterButtonModel> getFilters() {
-		return filters;
 	}
 
 	public void selectFilter(FilterButtonModel model) {
