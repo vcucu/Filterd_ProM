@@ -37,20 +37,6 @@ public class FilterdTraceSampleConfig extends FilterdAbstractConfig {
 		parameters.add(valueFromRangeParam);
 	}
 
-	public FilterdAbstractConfig populate(AbstractFilterConfigPanelController component) {
-		
-		//update the sample size parameter with the value chosen in the 
-		//panel's slider, using the panel's parameter controller 
-		//THIS COMMENT BLOCK CAN BE REMOVED IN THE NEXT COMMIT WHEN REPLACED BY METHOD IN THE ABSTRACT CLASS
-	/*	ParameterValueFromRangeController controller = 
-				(ParameterValueFromRangeController) component.getControllers().get(0);
-	
-		((ParameterValueFromRange<Double>)this.parameters.get(0))
-		.setChosen(controller.getValue());*/
-		
-		return this;
-	}
-
 	public boolean canPopulate(FilterConfigPanelController component) {
 	
 		return true;
