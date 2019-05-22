@@ -1,5 +1,6 @@
 package org.processmining.filterd.parameters;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ParameterRangeFromRange<T> extends Parameter  {
@@ -13,6 +14,7 @@ public class ParameterRangeFromRange<T> extends Parameter  {
 		super(name, nameDisplayed);
 		this.defaultPair = defaultPair;
 		this.optionsPair = optionsPair;
+		this.chosenPair = new ArrayList<T>();
 		this.genericTypeClass = (Class<T>) Double.TYPE;
 	}
 	

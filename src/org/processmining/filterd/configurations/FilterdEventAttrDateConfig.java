@@ -48,7 +48,7 @@ public class FilterdEventAttrDateConfig extends FilterdAbstractConfig{
 
 		/* sort the timestamps in ascending order */
 		Collections.sort(times);
-
+		
 		defaultPair.add(new String(times.get(0)));
 		defaultPair.add(new String(times.get(times.size()-1)));
 		optionsPair.add(new String(times.get(0)));
@@ -120,7 +120,7 @@ public class FilterdEventAttrDateConfig extends FilterdAbstractConfig{
 	private Date addTimezone (String time) {
 		// Set time format for the time stamp
 		SimpleDateFormat dateFormat = new SimpleDateFormat(
-				"yyyy-MM-dd-HH:mm:ss.SSS");
+				"yyyy-MM-dd-HH:mm:ss");
 
 		Date date = null;
 
@@ -140,7 +140,8 @@ public class FilterdEventAttrDateConfig extends FilterdAbstractConfig{
 
 			// Represents the last 5 characters e.g. "02:00".
 			String lastFiveCharacters = time.substring(time.length() - 5, 
-					time.length() - 1);
+					time.length());
+			System.out.println(lastFiveCharacters);
 
 			// Set time format for the hours relative to GMT.
 			SimpleDateFormat hourFormat = new SimpleDateFormat("hh:mm");
@@ -155,13 +156,14 @@ public class FilterdEventAttrDateConfig extends FilterdAbstractConfig{
 			}
 
 			// Replace the T-separator with a colon.
-			time.replace("T", "-");
+			time = time.replace("T", "-");
 
 			// Get whether it was later or earlier relative to GMT.
-			char stringSign = time.charAt(time.length() - 3);
-
+			char stringSign = time.charAt(time.length() - 6);
+			System.out.println(stringSign);
+			
 			// Remove The relative time as we already have it separated.
-			time = time.substring(0, time.length() - 7);
+			time = time.substring(0, time.length() - 6);
 
 			// Parse the time stamp into a Date.
 			try {
