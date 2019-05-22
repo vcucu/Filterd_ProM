@@ -14,10 +14,13 @@ import org.processmining.framework.plugin.PluginContext;
 public class FilterdTraceSampleFilter extends Filter {
 
 	@SuppressWarnings("unchecked")
-	public XLog filter(PluginContext context, XLog log, List<Parameter> parameters) {
+	public XLog filter(PluginContext context, XLog log, 
+			List<Parameter> parameters) {
 	
 		//get value of threshold parameter (i.e. the desired number of samples)
-		ParameterValueFromRange<Long> nrSamples = (ParameterValueFromRange<Long>) this.getParameter(parameters, "threshold");
+		ParameterValueFromRange<Integer> nrSamples = 
+				(ParameterValueFromRange<Integer>) 
+				this.getParameter(parameters, "threshold");
 			
 		//initialize the log that will be output
 		XLog filteredLog = this.initializeLog(log);

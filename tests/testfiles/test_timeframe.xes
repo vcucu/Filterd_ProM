@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- This file has been generated with the OpenXES library. It conforms -->
+<!-- to the XML serialization of the XES standard for log storage and -->
+<!-- management. -->
+<!-- XES standard version: 1.0 -->
+<!-- OpenXES library version: 1.0RC7 -->
+<!-- OpenXES is available from http://www.openxes.org/ -->
+<log xes.version="1.0" xes.features="nested-attributes" openxes.version="1.0RC7">
+	<extension name="Time" prefix="time" uri="http://www.xes-standard.org/time.xesext"/>
+	<extension name="Lifecycle" prefix="lifecycle" uri="http://www.xes-standard.org/lifecycle.xesext"/>
+	<extension name="Concept" prefix="concept" uri="http://www.xes-standard.org/concept.xesext"/>
+	<classifier name="Event Name" keys="concept:name"/>
+	<classifier name="(Event Name AND Lifecycle transition)" keys="concept:name lifecycle:transition"/>
+	<string key="concept:name" value="Order Process Test Log"/>
+	<trace>
+		<string key="concept:name" value="41"/>
+		<string key="customer" value="Z"/>
+		<event>
+			<string key="delivery" value="514"/>
+			<string key="org:resource" value="Ellen"/>
+			<string key="concept:name" value="ship parcel"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2018-12-23T23:49:00.000+01:00"/>
+		</event>
+		<event>
+			<string key="delivery" value="623"/>
+			<string key="item" value="Gameboy"/>
+			<string key="org:resource" value="Bob"/>
+			<string key="concept:name" value="add item"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2018-12-23T23:51:00.000+01:00"/>
+		</event>
+		<event>
+			<string key="delivery" value="514"/>
+			<string key="org:resource" value="Bob"/>
+			<string key="concept:name" value="ship parcel"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2018-12-23T23:59:00.000+01:00"/>
+		</event>
+		<event>
+			<string key="org:resource" value="Alice"/>
+			<string key="concept:name" value="pack order"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2018-12-27T09:01:00.000+01:00"/>
+		</event>
+		<event>
+			<string key="org:resource" value="Alice"/>
+			<string key="concept:name" value="archive"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2018-12-27T09:02:00.000+01:00"/>
+		</event>
+	</trace>
+</log>

@@ -1,5 +1,6 @@
 package org.processmining.tests.filterdpackage;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -11,6 +12,12 @@ import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
 import org.junit.Test;
+import org.processmining.filterd.filters.FilterdEventAttrFilter;
+import org.processmining.filterd.parameters.Parameter;
+import org.processmining.filterd.parameters.ParameterOneFromSet;
+import org.processmining.filterd.parameters.ParameterRangeFromRange;
+import org.processmining.filterd.parameters.ParameterYesNo;
+import org.processmining.framework.plugin.PluginContext;
 
 import junit.framework.TestCase;
 
@@ -151,6 +158,47 @@ public class FilterdPackageTest extends TestCase {
 
 		if (k != log2.size()) return false; // check whether all of log2 has been verified.
 		return true;
+	}
+	
+	@Test
+	public void testTimeframe() throws Throwable{
+		XLog expected = parseLog("test_timeframe.xes");
+		PluginContext context = null;
+		ArrayList<Parameter> parameters = new ArrayList<>();
+		ArrayList<String> options = new ArrayList<>();
+        options.add("Filter in");
+		ParameterOneFromSet selectionType = new ParameterOneFromSet("selectionType"," "," ",options); 
+		selectionType.setChosen("Filter in");
+		
+		parameters.add(selectionType);
+		
+		ParameterYesNo nullHandling = new ParameterYesNo("","", true);
+		nullHandling.setChosen(false);
+		parameters.add(nullHandling);
+		
+		
+		
+		ParameterRangeFromRange<String> range = new ParameterRangeFromRange("range","",
+				Collections.EMPTY_LIST,Collections.EMPTY_LIST);
+		
+		ArrayList<String> chosen = new ArrayList<>();
+		chosen.add("2018-12-23-23:49:00.000");
+		chosen.add("2018-12-27-09:02:00.000");
+		
+		range.setChosenPair(chosen);
+		parameters.add(range);
+		
+		FilterdEventAttrFilter filter = new FilterdEventAttrFilter();
+		
+		
+		XLog computed = filter.filterTimestamp(context, originalLog, parameters);
+
+		for(XTrace trace : computed){
+			System.out.println(trace.size());
+		}
+		
+		System.out.println("Computed "+computed.size()+" Expected " + expected.size());
+		assert equalLog(expected,computed);
 	}
 
 	/* Corresponds to test case 2 from test_specification.xlsx.

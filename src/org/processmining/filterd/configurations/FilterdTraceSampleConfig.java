@@ -22,16 +22,18 @@ public class FilterdTraceSampleConfig extends FilterdAbstractConfig {
 		parameters = new ArrayList<>();
 		
 		//initialize the sample size larger to have options from 0 to the log's size
-		List<Double> optionsPair = new ArrayList<>();
-		optionsPair.add(0d);
-		optionsPair.add((double)log.size());
+		List<Integer> optionsPair = new ArrayList<>();
+		optionsPair.add(0);
+		optionsPair.add(log.size());
 		
 		//initialize the sample size parameter and add it to the parameters list
-		ParameterValueFromRange<Double> valueFromRangeParam = new ParameterValueFromRange<>(
+		ParameterValueFromRange<Integer> valueFromRangeParam = 
+				new ParameterValueFromRange<Integer>(
 			"threshold", 
 			"Sample size", 
-			0d, 
-			optionsPair
+			0, 
+			optionsPair,
+			Integer.class	
 		);
 		
 		parameters.add(valueFromRangeParam);
@@ -44,7 +46,8 @@ public class FilterdTraceSampleConfig extends FilterdAbstractConfig {
 
 	public FilterConfigPanelController getConfigPanel() {
 		//return a new panel for this configuration with the relevant name and parameters
-		return new FilterConfigPanelController("Filter Trace Sample Configuration", parameters);
+		return new FilterConfigPanelController(
+				"Filter Trace Sample Configuration", parameters);
 		
 	}
 
@@ -52,7 +55,8 @@ public class FilterdTraceSampleConfig extends FilterdAbstractConfig {
 	@SuppressWarnings("unchecked")
 	public boolean checkValidity(XLog log) {
 		//the log is valid for this configuration if its size is bigger than the sample size
-		return log.size() >= ((ParameterValueFromRange<Integer>)(parameters.get(0))).getChosen();
+		return log.size() >= ((ParameterValueFromRange<Integer>)
+				(parameters.get(0))).getChosen();
 	}
 
 }
