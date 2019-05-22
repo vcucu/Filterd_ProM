@@ -1,20 +1,29 @@
 package org.processmining.filterd.configurations;
 import java.util.ArrayList;
-import java.util.List;
-import javax.swing.JComponent;
-import org.processmining.filterd.parameters.*;
-import org.processmining.filterd.widgets.*;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 import org.deckfour.xes.model.XAttributeMap;
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
 import org.processmining.filterd.filters.Filter;
 import org.processmining.filterd.gui.AbstractFilterConfigPanelController;
 import org.processmining.filterd.gui.FilterConfigPanelController;
+import org.processmining.filterd.parameters.ParameterMultipleFromSet;
 import org.processmining.filterd.parameters.ParameterOneFromSet;
+import org.processmining.filterd.parameters.ParameterRangeFromRange;
+import org.processmining.filterd.parameters.ParameterText;
+import org.processmining.filterd.parameters.ParameterValueFromRange;
+import org.processmining.filterd.parameters.ParameterYesNo;
+import org.processmining.filterd.widgets.ParameterController;
+import org.processmining.filterd.widgets.ParameterMultipleFromSetController;
 import org.processmining.filterd.widgets.ParameterOneFromSetController;
+import org.processmining.filterd.widgets.ParameterOneFromSetExtendedController;
+import org.processmining.filterd.widgets.ParameterRangeFromRangeController;
+import org.processmining.filterd.widgets.ParameterTextController;
+import org.processmining.filterd.widgets.ParameterValueFromRangeController;
+import org.processmining.filterd.widgets.ParameterYesNoController;
 
 public class FilterdTraceAttrConfig extends FilterdAbstractConfig {
 
@@ -49,7 +58,7 @@ public class FilterdTraceAttrConfig extends FilterdAbstractConfig {
 		// Create the parameter for selecting the attribute.
 		ParameterOneFromSet attributeSelector = 
 				new ParameterOneFromSet(
-						"attribute", 
+						"Attribute", 
 						"Select attribute", 
 						globalAttributesList.get(0), 
 						globalAttributesList);
@@ -60,12 +69,13 @@ public class FilterdTraceAttrConfig extends FilterdAbstractConfig {
 		attributeTypeList.add("Categorical");		
 		attributeTypeList.add("Numerical");
 		attributeTypeList.add("Timeframe");
-		attributeTypeList.add("Performance");
+		attributeTypeList.add("Duration");
+		attributeTypeList.add("Filter on events");
 		
 		// Create the parameter for selecting the type of attribute.
 		ParameterOneFromSet attributeTypeSelector = 
 				new ParameterOneFromSet(
-						"attribute type", 
+						"Attribute type", 
 						"Select attribute type", 
 						attributeTypeList.get(0), 
 						attributeTypeList);
@@ -144,13 +154,15 @@ public class FilterdTraceAttrConfig extends FilterdAbstractConfig {
 			// Categorical, so we create a new categorical configuration.
 			case "Categorical": {
 				concreteReference = new FilterdTraceAttrCategoricalConfig(log, 
-						filterType);
+						filterType, 
+						((ParameterOneFromSet)(parameters.get(0))).getChosen());
 				break;
 			}
 			// Numerical, so we create a new numerical configuration.
 			case "Numerical": {
 				concreteReference = new FilterdTraceAttrNumericalConfig(log, 
-						filterType);
+						filterType, 
+						((ParameterOneFromSet)(parameters.get(0))).getChosen());
 				break;
 			}
 			// Timeframe, so we create a new time frame configuration.
@@ -159,9 +171,17 @@ public class FilterdTraceAttrConfig extends FilterdAbstractConfig {
 						filterType);
 				break;
 			}
-			// Performance, so we create a new performance configuration.
-			case "Performance": {
-				concreteReference = new FilterdTraceAttrPerformanceConfig(log, 
+			// Duration, so we create a new duration configuration.
+			case "Duration": {
+				concreteReference = new FilterdTraceAttrDurationConfig(log, 
+						filterType);
+				break;
+			}
+			// Filter on events, so we create a new filter on events
+			// configuration.
+			case "Filter on events": {
+				concreteReference = new FilterdTraceAttrNumberOfEventsConfig(
+						log, 
 						filterType);
 				break;
 			}
