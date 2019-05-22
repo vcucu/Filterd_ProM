@@ -3,6 +3,7 @@ package org.processmining.filterd.gui;
 import java.util.ArrayList;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -14,6 +15,8 @@ public class FilterButtonController {
 	private FilterButtonModel model;
 	private ArrayList<ImageView> buttons;
 	
+	@FXML
+	private Label filterName;
 	@FXML 
 	private HBox filterLayout;
 	@FXML
@@ -37,6 +40,8 @@ public class FilterButtonController {
 		buttons.add(removeButton);
 		buttons.add(moveUpButton);
 		buttons.add(moveDownButton);
+		
+		filterName.setText(model.getName());
 	}
 
 	public Pane getCellLayout() {
@@ -55,23 +60,27 @@ public class FilterButtonController {
 		this.model = model;
 	}
 	
+	public void setFilterName(String value) {
+		filterName.setText(value);
+	}
+	
 	public void showButtons() {
 		for (ImageView button : buttons) {
 			button.setVisible(true);
 		}
-		// filterLayout.setStyle("-fx-background-color: #0bd50b");
+		filterLayout.setStyle("-fx-background-color: #abecab");
 	}
 	
 	public void hideButtons() {
 		for (ImageView button : buttons) {
 			button.setVisible(false);
 		}
-		// filterLayout.setStyle("-fx-background-color: #eeeeee");
+		filterLayout.setStyle("-fx-background-color: #eeeeee");
 	}
 	
 	private void updateSelection() {
-		for (FilterButtonModel filterModel : controller.getFiltersOL()) {
-			if (filterModel.isSelected()) {
+		for (FilterButtonModel filterModel : controller.getFilters()) {
+			if (filterModel.getSelected()) {
 				filterModel.setSelected(false);
 			}
 		}
@@ -91,8 +100,8 @@ public class FilterButtonController {
 	@FXML
 	public void removeFilterHandler() {
 		controller.getPanelLayout().getChildren().remove(filterLayout);
-		controller.getFiltersOL().remove(model);
-		System.out.println("New filtersOL size: " + controller.getFiltersOL().size());
+		controller.getFilters().remove(model);
+		System.out.println("New filters size: " + controller.getFilters().size());
 	}
 	
 	@FXML
