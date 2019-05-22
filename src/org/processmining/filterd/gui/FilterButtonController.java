@@ -32,7 +32,6 @@ public class FilterButtonController {
 		this.controller = controller;
 		this.model = new FilterButtonModel();
 		this.buttons = new ArrayList<>();
-		model.addPropertyChangeListener(new FilterButtonListener(this));
 	}
 	
 	public void initialize() {
@@ -41,7 +40,16 @@ public class FilterButtonController {
 		buttons.add(moveUpButton);
 		buttons.add(moveDownButton);
 		
+		updateFilterButtonView();
+	}
+	
+	public void updateFilterButtonView() {
 		filterName.setText(model.getName());
+		if (model.getSelected()) {
+			showButtons();
+		} else {
+			hideButtons();
+		}
 	}
 
 	public Pane getCellLayout() {
@@ -88,8 +96,10 @@ public class FilterButtonController {
 
 	@FXML
 	public void selectFilterButton() {
-		updateSelection();
-		model.setSelected(true);
+		if (!model.getSelected()) {
+			updateSelection();
+			model.setSelected(true);
+		}
 	}
 
 	@FXML
@@ -101,16 +111,38 @@ public class FilterButtonController {
 	public void removeFilterHandler() {
 		controller.getPanelLayout().getChildren().remove(filterLayout);
 		controller.getFilters().remove(model);
-		System.out.println("New filters size: " + controller.getFilters().size());
+		controller.getFilterControllers().remove(this);
 	}
 	
 	@FXML
 	private void moveUpFilterHandler() {
-		System.out.println("MoveUp filter handler!");
+		int index = model.getIndex();
+		if (index > 0) {
+			controller.getPanelLayout().getChildren().remove(filterLayout);
+			
+			controller.getFilters().remove(model);
+			controller.getFilterControllers().remove(this);
+			
+			controller.addFilterModel(index - 1, model);
+			controller.addFilterController(index - 1, this);
+			
+			controller.getPanelLayout().getChildren().add(index - 1, filterLayout);
+		}
 	}
 	
 	@FXML
 	private void moveDownFilterHandler() {
-		System.out.println("MoveDown filter handler!");
+		int index = model.getIndex();
+		if (index < controller.getFilters().size() - 1) {
+			controller.getPanelLayout().getChildren().remove(filterLayout);
+			
+			controller.getFilters().remove(model);
+			controller.getFilterControllers().remove(this);
+			
+			controller.addFilterModel(index + 1, model);
+			controller.addFilterController(index + 1, this);
+			
+			controller.getPanelLayout().getChildren().add(index + 1, filterLayout);
+		}
 	}
 }

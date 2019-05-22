@@ -13,14 +13,10 @@ public class FilterButtonListener implements PropertyChangeListener {
 
 	@Override
 	public void propertyChange(PropertyChangeEvent event) {
-		if (event.getPropertyName().equals("FilterSelected")) {
+		if (event.getPropertyName().equals("FilterChanged")) {
 			FilterButtonModel model = (FilterButtonModel) event.getOldValue();
 			// Update the filter layout based on whether it is selected or not
-			if (model.getSelected()) {
-				controller.showButtons();
-			} else {
-				controller.hideButtons();
-			}
+			controller.updateFilterButtonView();
 		}
 		
 		if (event.getPropertyName().equals("FilterNameChanged")) {
