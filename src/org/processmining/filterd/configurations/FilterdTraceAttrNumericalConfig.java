@@ -20,11 +20,18 @@ public class FilterdTraceAttrNumericalConfig extends FilterdAbstractConfig {
 	public FilterdTraceAttrNumericalConfig(XLog log, Filter filterType,
 			String attribute) {
 		super(log, filterType);
+		
+		//initialize the parameters list
 		parameters = new ArrayList<>();
+		
+		//initialize the range as a list
 		List<Double> listRange = new ArrayList<Double>();
+		
+		//initialize the minimum and maximum values
 		double minValue = -Double.MAX_VALUE;
 		double maxValue = Double.MAX_VALUE;
 		
+		//get the minimum and maximum values of the desired attribute
 		for (XTrace trace : log) {
 			for (XEvent event : trace) {
 				String attrValueString = 
@@ -40,14 +47,19 @@ public class FilterdTraceAttrNumericalConfig extends FilterdAbstractConfig {
 			}
 		}
 		
+		//make the range span from the min value to the max value
+		
 		listRange.add(minValue);
 		listRange.add(maxValue);
+		
+		//create the range parameter
 		ParameterRangeFromRange<Double> range = 
 				new ParameterRangeFromRange<Double>("range", 
 						"Range", 
 						listRange, 
 						listRange); 
 		
+		//create the selection options parameter 
 		List<String> selectionOptions = new ArrayList<>();
 		
 		selectionOptions.add("Mandatory");
@@ -57,6 +69,7 @@ public class FilterdTraceAttrNumericalConfig extends FilterdAbstractConfig {
 				"Mandatory",
 				selectionOptions);
 		
+		//add the parameters
 		parameters.add(range);
 		parameters.add(selectionType);
 				
