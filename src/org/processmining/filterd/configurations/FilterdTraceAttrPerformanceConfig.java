@@ -1,18 +1,33 @@
 package org.processmining.filterd.configurations;
-import org.processmining.filterd.parameters.Parameter;
 import java.util.ArrayList;
-import javax.swing.JComponent;
+import java.util.List;
 
 import org.deckfour.xes.model.XLog;
 import org.processmining.filterd.filters.Filter;
-import org.processmining.filterd.gui.AbstractFilterConfigPanelController;
 import org.processmining.filterd.gui.FilterConfigPanelController;
+import org.processmining.filterd.parameters.ParameterOneFromSet;
 
 public class FilterdTraceAttrPerformanceConfig extends FilterdAbstractConfig {
 
 	public FilterdTraceAttrPerformanceConfig(XLog log, Filter filterType) {
 		super(log, filterType);
-		// TODO Auto-generated constructor stub
+		
+		// Create the array list for filtering on duration or filtering on
+		// events.
+		List<String> durationOrEventsList = new ArrayList<String>();
+		durationOrEventsList.add("Filter on duration");		
+		durationOrEventsList.add("Filter on number of events");
+		
+		// Create the parameter for filtering on duration or filtering on
+		// events.
+		ParameterOneFromSet keepTracesParameter = 
+				new ParameterOneFromSet(
+						"filtering option", 
+						"Select trace filtering option", 
+						durationOrEventsList.get(0), 
+						durationOrEventsList);
+		
+		
 	}
 
 
