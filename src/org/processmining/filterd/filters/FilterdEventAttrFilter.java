@@ -1,7 +1,5 @@
 package org.processmining.filterd.filters;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.deckfour.xes.factory.XFactory;
@@ -35,6 +33,9 @@ public class FilterdEventAttrFilter extends Filter {
 		ParameterYesNo nullHandling = new ParameterYesNo("nullHandling", 
 				"Remove if no value provided", true);
 		
+		ParameterYesNo emptyHandling = new ParameterYesNo("emptyHandling", 
+				"Remove if no value provided", true);
+		
 		ParameterOneFromSet selectionType = (ParameterOneFromSet) this
 				.getParameter(parameters, "selectionType");
 		
@@ -43,32 +44,41 @@ public class FilterdEventAttrFilter extends Filter {
 		
 		boolean choice = selectionType.getChosen().contains("Filter in");
 		boolean keepNull = nullHandling.getChosen();
+		boolean keepEmpty = emptyHandling.getChosen();
 		
 		filteredLog = this.initializeLog(log);
 		XFactory factory = XFactoryRegistry.instance().currentDefault();
 		
-		String lower = new String(range.getChosenPair().get(0));
-		String upper = new String (range.getChosenPair().get(1));
+		LocalDateTime lower = synchronizeGMT(range.getChosenPair().get(0));
+		LocalDateTime upper = synchronizeGMT(range.getChosenPair().get(1));
 
 		for (XTrace trace : log) {
 			XTrace filteredTrace = factory.createTrace(trace.getAttributes());
+			String key = "time:timestamp";
 			
 			for (XEvent event : trace) {
 				boolean add = !choice;
-				Date date = addTimezone(event.getAttributes().get("time:timestamp").toString());
-				SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss.SSS");
-				String strDate= formatter.format(date);
-				String time = new String(strDate.toString());
+				if (!event.getAttributes().containsKey(key)) {
+					if (keepEmpty) filteredTrace.add(event);
+					continue;
+				}
+				
+				String time = event.getAttributes().get(key).toString();
+				
+				// check if time has miliseconds, otherwise add it 
+				if (!time.contains(".")) time = time.substring(0, 19) + ".000" + time.substring(19);
 
-				if (time.compareTo(lower) >= 0 && time.compareTo(upper) <= 0) {
+				LocalDateTime date = synchronizeGMT(time);
+				
+				if (date.isAfter(lower) && date.isBefore(upper)) {
 					add = choice;
-					System.out.println(lower);
 				}
 
 				if (add) {
 					filteredTrace.add(event);
 				}
-				if(context!=null) {
+				
+				if (context != null) {
 					context.getProgress().inc();
 				}
 			}
@@ -80,71 +90,27 @@ public class FilterdEventAttrFilter extends Filter {
 
 		return filteredLog;
 	}
-
-	private Date addTimezone (String time) {
-		// Set time format for the time stamp
-		SimpleDateFormat dateFormat = new SimpleDateFormat(
-				"yyyy-MM-dd-HH:mm:ss");
-
-		Date date = null;
-
-		// Time is in GMT
-		if (time.contains("Z")) {
-			time.replace("Z", "");
-
-			try {
-				date = dateFormat.parse(time);	
-			} catch (ParseException e) {
-				// Print the trace so we know what went wrong.
-				e.printStackTrace();
-			}
-		}
-		// Time is relative to GMT
-		else {
-
-			// Represents the last 5 characters e.g. "02:00".
-			String lastFiveCharacters = time.substring(time.length() - 5, 
-					time.length());
-
-			// Set time format for the hours relative to GMT.
-			SimpleDateFormat hourFormat = new SimpleDateFormat("hh:mm");
-			Date hourDate = null;
-
-			// Parse the hours into a Date.
-			try {
-				hourDate = hourFormat.parse(lastFiveCharacters);	
-			} catch (ParseException e) {
-				// Print the trace so we know what went wrong.
-				e.printStackTrace();
-			}
-
-			// Replace the T-separator with a colon.
-			time = time.replace("T", "-");
-
-			// Get whether it was later or earlier relative to GMT.
-			char stringSign = time.charAt(time.length() - 6);
+	
+	/* time format assumed to be YYYY-MM-DDThh:mm:ss.SSSZ */
+	private LocalDateTime synchronizeGMT(String time) {
+		LocalDateTime date = LocalDateTime.parse(time.substring(0, 23));
+		int offsetH;
+		int offsetM;
+		
+		if (time.length() > 23) {
+			boolean sign = false;
+			if (time.charAt(23) == '+') sign = true;
 			
-			// Remove The relative time as we already have it separated.
-			time = time.substring(0, time.length() - 6);
+			offsetH = Integer.parseInt(time.substring(24, 26));
+			offsetM = Integer.parseInt(time.substring(27, 29));
 			
-
-			// Parse the time stamp into a Date.
-			try {
-				date = dateFormat.parse(time);	
-			} catch (ParseException e) {
-				// Print the trace so we know what went wrong.
-				e.printStackTrace();
-			}
-
-			// Change the relative time to GMT
-			if (stringSign == '+') {
-				date.setTime(date.getTime() - hourDate.getTime());
+			if (sign) {
+				return date.plusHours(offsetH).plusMinutes(offsetM);
 			} else {
-				date.setTime(date.getTime() + hourDate.getTime());
+				return date.minusHours(offsetH).minusMinutes(offsetM);
 			}
 		}
 
 		return date;
 	}
-
 }

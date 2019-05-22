@@ -1,9 +1,7 @@
 package org.processmining.filterd.configurations;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 
 import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XLog;
@@ -40,32 +38,38 @@ public class FilterdEventAttrDateConfig extends FilterdAbstractConfig{
 		for (XTrace trace: log) {
 			for (XEvent event : trace) {
 				/* timestamp format YYYY-MM-DDTHH:MM:SS.ssssGMT with GMT = {Z, + , -} */
-				String time = event.getAttributes().get("time:timestamp").toString();
-				Date date = addTimezone(time);
-				times.add(date.toString());
+				String value = event.getAttributes().get("time:timestamp").toString();
+				LocalDateTime time = synchronizeGMT(value);
+				times.add(time.toString());
 			}
 		}
 
 		/* sort the timestamps in ascending order */
 		Collections.sort(times);
-		
+
 		defaultPair.add(new String(times.get(0)));
 		defaultPair.add(new String(times.get(times.size()-1)));
 		optionsPair.add(new String(times.get(0)));
 		optionsPair.add(new String(times.get(times.size()-1)));
 
-		//create slider values parameter
+		// slider values parameter
 		range = new ParameterRangeFromRange<>("range",
 				"Select timeframe", defaultPair, optionsPair);
 
-
-		//Create nullHandling parameter
+		// should you remove empty traces
 		ParameterYesNo nullHandling = new ParameterYesNo("nullHandling", 
-				"Remove if no value provided", true);
+				"Remove empty traces.", true);
+
+		// should you keep events which do not have the specified attribute
+		ParameterYesNo emptyHandling = new ParameterYesNo("emptyHandling", 
+				"Keep events if attribute not specified.", false);
+
+		// filter in or filter out
 		ParameterOneFromSet selectionType = new ParameterOneFromSet("selectionType",
-				"Select option for trimming",defaultOption,optionList);
+				"Select option for filtering", defaultOption, optionList);
 
 		parameters.add(nullHandling);
+		parameters.add(emptyHandling);
 		parameters.add(selectionType);
 		parameters.add(range);
 
@@ -77,112 +81,55 @@ public class FilterdEventAttrDateConfig extends FilterdAbstractConfig{
 	}
 
 	public FilterConfigPanelController getConfigPanel() {
-		return new FilterConfigPanelController("Date Event Attribute Configuration", parameters);
+		return new FilterConfigPanelController("Date Event Attribute Configuration", parameters, this);
 	}
 
 	public boolean checkValidity(XLog log) {
-		
-		ArrayList<String> times = new ArrayList<>();
-		
+		ArrayList<LocalDateTime> times = new ArrayList<>();
+		LocalDateTime lower = synchronizeGMT(range.getChosenPair().get(0));
+		LocalDateTime upper = synchronizeGMT(range.getChosenPair().get(1));
+
 		for (XTrace trace : log) {
 			for (XEvent event : trace) {
-				for (String key : event.getAttributes().keySet()) {
-					if (key.contains("time:timestamp")) {
-						Date date = addTimezone(event.getAttributes().get(key).toString());
-						String time = new String(date.toString());
-						times.add(time);
-					}
-				}	
+				String key = "time:timestamp";
+				LocalDateTime time = synchronizeGMT(event.getAttributes().get(key).toString());
+				times.add(time);
 			}
 		}
-		
+
 		Collections.sort(times);
-		
-		//if XLog has no time:timestamp attributes
-		if(times.size()==0) {
-			return false;
-		}
-		
-		if(range.getChosenPair().get(0).compareTo(times.get(0)) < 0
-				|| range.getChosenPair().get(1).compareTo(times.get(times.size()-1)) > 0) {
-			return false;
-		}
-		
-		return true;
+
+		/* an old date configuration is valid iff the old bounds are in the new log
+		 * and there exists time:timestamp attributes */
+		return times.size() != 0 &&  lower.isAfter(times.get(0)) && upper.isBefore(times.get(times.size()-1));
 	}
 
 	public XLog filter() {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
 
-	private Date addTimezone (String time) {
-		// Set time format for the time stamp
-		SimpleDateFormat dateFormat = new SimpleDateFormat(
-				"yyyy-MM-dd-HH:mm:ss");
 
-		Date date = null;
-
-		// Time is in GMT
-		if (time.contains("Z")) {
-			time.replace("Z", "");
-
-			try {
-				date = dateFormat.parse(time);	
-			} catch (ParseException e) {
-				// Print the trace so we know what went wrong.
-				e.printStackTrace();
-			}
-		}
-		// Time is relative to GMT
-		else {
-
-			// Represents the last 5 characters e.g. "02:00".
-			String lastFiveCharacters = time.substring(time.length() - 5, 
-					time.length());
-			System.out.println(lastFiveCharacters);
-
-			// Set time format for the hours relative to GMT.
-			SimpleDateFormat hourFormat = new SimpleDateFormat("hh:mm");
-			Date hourDate = null;
-
-			// Parse the hours into a Date.
-			try {
-				hourDate = hourFormat.parse(lastFiveCharacters);	
-			} catch (ParseException e) {
-				// Print the trace so we know what went wrong.
-				e.printStackTrace();
-			}
-
-			// Replace the T-separator with a colon.
-			time = time.replace("T", "-");
-
-			// Get whether it was later or earlier relative to GMT.
-			char stringSign = time.charAt(time.length() - 6);
-			System.out.println(stringSign);
+	/* time format assumed to be YYYY-MM-DDThh:mm:ss.SSSZ */
+	private LocalDateTime synchronizeGMT(String time) {
+		LocalDateTime date = LocalDateTime.parse(time.substring(0, 23));
+		int offsetH;
+		int offsetM;
+		
+		if (time.length() > 23) {
+			boolean sign = false;
+			if (time.charAt(23) == '+') sign = true;
 			
-			// Remove The relative time as we already have it separated.
-			time = time.substring(0, time.length() - 6);
-
-			// Parse the time stamp into a Date.
-			try {
-				date = dateFormat.parse(time);	
-			} catch (ParseException e) {
-				// Print the trace so we know what went wrong.
-				e.printStackTrace();
-			}
-
-			// Change the relative time to GMT
-			if (stringSign == '+') {
-				date.setTime(date.getTime() - hourDate.getTime());
+			offsetH = Integer.parseInt(time.substring(24, 26));
+			offsetM = Integer.parseInt(time.substring(27, 29));
+			
+			if (sign) {
+				return date.plusHours(offsetH).plusMinutes(offsetM);
 			} else {
-				date.setTime(date.getTime() + hourDate.getTime());
+				return date.minusHours(offsetH).minusMinutes(offsetM);
 			}
 		}
 
 		return date;
 	}
-
-
 }

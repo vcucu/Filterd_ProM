@@ -15,8 +15,7 @@ public abstract class Filter {
 	public Parameter getParameter(List<Parameter> parameters, String whichParameter) {
 			
 		for(Parameter parameter :parameters ) {
-			if (parameter.getName().equals(whichParameter)) {	
-				System.out.println(parameter.getName());
+			if (parameter.getName().equals(whichParameter)) {
 				return parameter;
 			}
 		}
