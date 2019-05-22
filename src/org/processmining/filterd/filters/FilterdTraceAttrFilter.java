@@ -71,11 +71,11 @@ public class FilterdTraceAttrFilter extends Filter {
 		 * 	The time frame selected by the user.
 		 * 
 		 * - NumberOfEvents:
-		 * 	4th parameter, threshold:
+		 * 	3rd parameter, threshold:
 		 * 	The threshold set by the user.
 		 * 
 		 * - Duration:
-		 * 	4th parameter, threshold:
+		 * 	3rd parameter, threshold:
 		 * 	The threshold set by the user.
 		 * 
 		 */

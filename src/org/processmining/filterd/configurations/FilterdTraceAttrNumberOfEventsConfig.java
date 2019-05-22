@@ -7,9 +7,9 @@ import org.processmining.filterd.filters.Filter;
 import org.processmining.filterd.gui.FilterConfigPanelController;
 import org.processmining.filterd.parameters.ParameterOneFromSet;
 
-public class FilterdTraceAttrPerformanceConfig extends FilterdAbstractConfig {
+public class FilterdTraceAttrNumberOfEventsConfig extends FilterdAbstractConfig {
 
-	public FilterdTraceAttrPerformanceConfig(XLog log, Filter filterType) {
+	public FilterdTraceAttrNumberOfEventsConfig(XLog log, Filter filterType) {
 		super(log, filterType);
 		
 		// Create the array list for filtering on duration or filtering on
@@ -26,6 +26,10 @@ public class FilterdTraceAttrPerformanceConfig extends FilterdAbstractConfig {
 						"Select trace filtering option", 
 						durationOrEventsList.get(0), 
 						durationOrEventsList);
+
+		//initialize the threshold options list.
+		List<Double> thrOptions = new ArrayList<Double>();
+		
 		
 		
 	}
