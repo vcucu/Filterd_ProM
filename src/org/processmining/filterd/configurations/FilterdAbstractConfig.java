@@ -213,7 +213,7 @@ public abstract class FilterdAbstractConfig {
 	 * 
 	 * @return the concrete configuration panel
 	 */
-	public abstract FilterConfigPanelController getConfigPanel();
+	public abstract AbstractFilterConfigPanelController getConfigPanel();
 	
 	/**
 	 * Invokes the {@filter(PluginContext context, XLog log, List<Parameter> parameters)} 

@@ -14,14 +14,13 @@ import org.processmining.filterd.configurations.FilterdTraceStartEventConfig;
 import org.processmining.filterd.filters.FilterdTraceStartEventFilter;
 import org.processmining.filterd.models.YLog;
 
-import javafx.beans.Observable;
-import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingNode;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
@@ -33,7 +32,6 @@ import javafx.util.Callback;
 public class ComputationCellController extends CellController {
 
 	//TODO: add other FXML attributes
-	private ObservableList<FilterButtonModel> filters;
 
 	private boolean isExpanded;
 	private VBox notebookVisualiser;
@@ -69,59 +67,53 @@ public class ComputationCellController extends CellController {
 		ComputationCellModel model = this.getCellModel();
 		// TODO: load event logs in cmbEventLog
 		cmbEventLog.getItems().addAll(model.getXLogs());
-		//add listeners to the basic model components 
+		//add listeners to the basic model components
 		cellModel.getProperty().addPropertyChangeListener(new CellModelListeners(this));
-	}
 
-	public ComputationCellController(NotebookController controller, ComputationCellModel model) {
-		super(controller, model);
-		
-		filters = FXCollections.observableArrayList(
-				new Callback<FilterButtonModel, Observable[]>() {
-					@Override
-					public Observable[] call(FilterButtonModel temp) {
-						return new Observable[] {
-								temp.nameProperty(),
-								temp.indexProperty(),
-								temp.selectedProperty()
-						};
-					}
-				});
-
-		filters.addListener(new ListChangeListener<FilterButtonModel>() {
-
+		getCellModel().getFilters().addListener(new ListChangeListener<FilterButtonModel>() {
 			@Override
-			public void onChanged(Change<? extends FilterButtonModel> change) {
+			public synchronized void onChanged(Change<? extends FilterButtonModel> change) {
 				while (change.next()) {
-					if (change.wasPermutated()) {
+					if (change.wasAdded() && change.wasRemoved()) {
 						for (int i = change.getFrom(); i < change.getTo(); i++) {
-							System.out.printf("ID: %d ----------\n", filters.get(i).getIndex());
-							System.out.println("Permuted: " + i + " " + filters.get(i));
+							int index1 = i;
+							Node filter1 = panelLayout.getChildrenUnmodifiable().get(index1);
+							int index2 = i+1;
+							Node filter2 = panelLayout.getChildrenUnmodifiable().get(index2);
+							panelLayout.getChildren().remove(filter1);
+							panelLayout.getChildren().add(index2, filter1);
+							panelLayout.getChildren().remove(filter2);
+							panelLayout.getChildren().add(index1, filter2);
 						}
-					} else if (change.wasUpdated()) {
-						for (int i = change.getFrom(); i < change.getTo(); i++) {
-							System.out.printf("ID: %d ----------\n", filters.get(i).getIndex());
-							System.out.println("Updated: " + i + " " + filters.get(i));
-						}
-					} else {
+					} else if (change.wasRemoved() && !change.wasAdded()) {
 						for (FilterButtonModel removedFilter : change.getRemoved()) {
-							System.out.printf("ID: %d ----------\n", removedFilter.getIndex());
+							System.out.printf("ID: %d ----------\n", change.getFrom());
 							System.out.println("Removed: " + removedFilter);
-							for (int i = removedFilter.getIndex(); i < filters.size(); i++) {
-								filters.get(i).setIndex(i);
-							}
+							int index = model.getFilters().indexOf(removedFilter);
+							panelLayout.getChildren().remove(index);
 						}
+					} else if (change.wasAdded() && !change.wasRemoved()) {
 						for (FilterButtonModel addedFilter : change.getAddedSubList()) {
-							System.out.printf("ID: %d ----------\n", addedFilter.getIndex());
+							System.out.printf("ID: %d ----------\n", change.getFrom());
 							System.out.println("Added: " + addedFilter);
+							int index = model.getFilters().indexOf(addedFilter);
+							FilterButtonModel filter = model.getFilters().get(index);
+							loadFilter(filter, index);
 						}
 					}
 				}
 			}
 		});
+	}
+
+	//TODO: add controller methods
+
+	public ComputationCellController(NotebookController controller, ComputationCellModel model) {
+		super(controller, model);
+
 		configurationModal = new ConfigurationModalController(this);
 		configurationModalShown = false;
-		
+
 		isExpanded = false;
 		notebookVisualiser = controller.getNotebookVisualiser();
 		notebookToolbar = controller.getNotebookToolbar();
@@ -129,28 +121,22 @@ public class ComputationCellController extends CellController {
 
 	@FXML
 	public void addFilter() {
+		int index = getCellModel().getFilters().size(); // Index of the new cell, so that we can compute which XLogs are available
+		FilterButtonModel filterModel = new FilterButtonModel();
+		getCellModel().addFilter(filterModel);
+	}
+
+	public void loadFilter(FilterButtonModel model, int index) {
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/processmining/filterd/gui/fxml/FilterButton.fxml"));
+		FilterButtonController newController = new FilterButtonController(this, model);
+		loader.setController(newController);
 		try {
-			FXMLLoader loader = new FXMLLoader(
-					getClass().getResource("/org/processmining/filterd/gui/fxml/FilterButton.fxml"));
-			FilterButtonController newController = new FilterButtonController(this);
-			loader.setController(newController);
-			HBox newLayout = (HBox) loader.load();
-			panelLayout.getChildren().add(newLayout);
-			newController.setCellLayout(newLayout);
-			newController.getModel().setIndex(filters.size());
-			filters.add(newController.getModel());
-			newController.selectFilterButton();
+			HBox newPanelLayout = (HBox) loader.load();
+			panelLayout.getChildren().add(index, newPanelLayout);
+			newController.setCellLayout(newPanelLayout);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-
-	public ObservableList<FilterButtonModel> getFilters() {
-		return filters;
-	}
-
-	public void setFilters(ObservableList<FilterButtonModel> filters) {
-		this.filters = filters;
 	}
 
 	public VBox getPanelLayout() {
@@ -164,7 +150,7 @@ public class ComputationCellController extends CellController {
 	/**
 	 * Sets the cell model of the current cell. This method is overridden so it
 	 * only takes a ComputationCellModel instead of all subclasses of CellModel.
-	 * 
+	 *
 	 * @param cellModel
 	 *            The ComputationCellModel to set.
 	 * @throws IllegalArgumentException
@@ -194,11 +180,11 @@ public class ComputationCellController extends CellController {
 	}
 
 	/**
-	 * Handler added to the expansion button responsible for 
+	 * Handler added to the expansion button responsible for
 	 * increasing the cell size to the window size
 	 */
 	@FXML
-	public void handleExpandVisualiser() {		 
+	public void handleExpandVisualiser() {
 		visualizerPane.setStyle("-fx-background-color: #ff0000; ");
 		if (isExpanded) {
 			//make cell go to default size
@@ -253,7 +239,7 @@ public class ComputationCellController extends CellController {
 			}
 		});
 	}
-	
+
 	@FXML
 	private void toggleConfigurationModal() {
 		if(configurationModalShown) {
@@ -262,7 +248,7 @@ public class ComputationCellController extends CellController {
 			showConfigurationModal();
 		}
 	}
-	
+
 	public void hideConfigurationModal() {
 		visualizerPane.getChildren().clear();
 		// set visualizer as the content
@@ -276,7 +262,7 @@ public class ComputationCellController extends CellController {
 		}
 		configurationModalShown = false;
 	}
-	
+
 	private void showConfigurationModal() {
 		// save current visualizer (TODO: is this needed?)
 		for(int i = 0; i < visualizerPane.getChildren().size(); i++) {
@@ -296,7 +282,7 @@ public class ComputationCellController extends CellController {
 		visualizerPane.setRightAnchor(configurationModalRoot, 0.0);
 		configurationModalShown = true;
 	}
-	
+
 	@FXML
 	private void toggleFilterPicker() {
 		visualizerPane.getChildren().clear();
@@ -310,7 +296,7 @@ public class ComputationCellController extends CellController {
 				ComputationCellModel model = (ComputationCellModel) cellModel;
 				return new FilterdTraceStartEventConfig(model.getLog(), new FilterdTraceStartEventFilter());
 			}
-			
+
 		});
 		VBox configurationModalRoot = configurationModal.getRoot();
 		visualizerPane.getChildren().add(configurationModalRoot);
@@ -327,7 +313,7 @@ public class ComputationCellController extends CellController {
 			.bind(notebookVisualiser.heightProperty().subtract(notebookToolbar.heightProperty()));
 		}
 	}
-	
+
 	@Override
 	public void hide() {
 		super.hide();
@@ -336,7 +322,7 @@ public class ComputationCellController extends CellController {
 			//set the PrefHeight to what it is by default
 			cell.setPrefHeight(cell.USE_COMPUTED_SIZE);
 		}
-		
+
 	}
-	
+
 }

@@ -5,44 +5,43 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox prefWidth="400.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+<VBox xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <GridPane>
-        <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-        </columnConstraints>
-        <rowConstraints>
-          <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-        </rowConstraints>
+      <HBox maxWidth="1.7976931348623157E308">
          <children>
-            <ComboBox fx:id="combobox" maxWidth="1.7976931348623157E308" onAction="#selectionChanged" prefWidth="200.0" promptText="Pick one..." />
-            <VBox maxWidth="1.7976931348623157E308" GridPane.columnIndex="1">
+            <GridPane HBox.hgrow="ALWAYS">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="200.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="200.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+              </rowConstraints>
                <children>
-                  <Label fx:id="label" alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="ParameterOneFromSet" VBox.vgrow="ALWAYS" />
+                  <ComboBox fx:id="combobox" maxWidth="1.7976931348623157E308" onAction="#selectionChanged" promptText="Pick one..." GridPane.hgrow="ALWAYS" />
+                  <VBox maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS">
+                     <children>
+                        <Label fx:id="label" alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="ParameterOneFromSet" VBox.vgrow="ALWAYS" />
+                     </children>
+                  </VBox>
                </children>
-            </VBox>
+            </GridPane>
          </children>
          <VBox.margin>
-            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+            <Insets left="15.0" right="15.0" top="15.0" />
          </VBox.margin>
-      </GridPane>
-      <GridPane>
-         <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" percentWidth="15.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="280.0" percentWidth="70.0" />
-            <ColumnConstraints hgrow="SOMETIMES" percentWidth="15.0" />
-         </columnConstraints>
-         <rowConstraints>
-            <RowConstraints vgrow="SOMETIMES" />
-         </rowConstraints>
+      </HBox>
+      <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
          <children>
-            <Pane fx:id="nestedPanel" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" />
+            <VBox fx:id="nestedPanel" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-border-color: red; -fx-border-width: 1;" HBox.hgrow="ALWAYS" />
          </children>
-      </GridPane>
+         <VBox.margin>
+            <Insets bottom="15.0" left="15.0" right="15.0" top="10.0" />
+         </VBox.margin>
+      </HBox>
    </children>
 </VBox>

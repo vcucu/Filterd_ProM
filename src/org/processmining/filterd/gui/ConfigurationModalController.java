@@ -25,7 +25,7 @@ public class ConfigurationModalController {
 	@FXML private HBox contentPane;
 	private VBox root;
 	private FilterdAbstractConfig filterConfig;
-	private FilterConfigPanelController currentContentsController;
+	private AbstractFilterConfigPanelController currentContentsController;
 	private ComputationCellController parent;
 	private boolean isConfiguringFilter;
 	private Callback<String, FilterdAbstractConfig> filterSelectionCallback;
@@ -84,8 +84,9 @@ public class ConfigurationModalController {
 	@FXML 
 	private void apply() {
 		if(isConfiguringFilter) {
-			// user is configuring a filter config. -> apply changes if possible 
-			if(filterConfig.canPopulate(currentContentsController)) {
+			// user is configuring a filter config. -> apply changes if possible
+			FilterConfigPanelController casted = (FilterConfigPanelController) currentContentsController; 
+			if(filterConfig.canPopulate(casted)) {
 				filterConfig.populate(currentContentsController);
 			}
 			parent.hideConfigurationModal();
