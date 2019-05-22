@@ -3,13 +3,10 @@ package org.processmining.filterd.configurations;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XLog;
-import org.deckfour.xes.model.XTrace;
 import org.processmining.filterd.filters.Filter;
 import org.processmining.filterd.gui.AbstractFilterConfigPanelController;
 import org.processmining.filterd.gui.FilterConfigPanelController;
@@ -28,6 +25,7 @@ import org.processmining.filterd.widgets.ParameterRangeFromRangeController;
 import org.processmining.filterd.widgets.ParameterTextController;
 import org.processmining.filterd.widgets.ParameterValueFromRangeController;
 import org.processmining.filterd.widgets.ParameterYesNoController;
+
 public class FilterdEventAttrConfig extends FilterdAbstractConfig {
 
 	FilterdAbstractConfig concreteReference;
@@ -118,30 +116,7 @@ public class FilterdEventAttrConfig extends FilterdAbstractConfig {
 	}
    
 	public boolean checkValidity(XLog log) {
-		
-		List<String> times = new ArrayList<>();
-		
-		for (XTrace trace: log) {
-			for (XEvent event : trace) {
-				for (String key : event.getAttributes().keySet()) {
-					if (key.contains("time:timestamp")) {
-							/* timestamp format YYYY-MM-DDTHH:MM:SS.ssssGMT with GMT = {Z, + , -} */
-							String time = event.getAttributes().get(key).toString();
-							Date date = addTimezone(time);
-							times.add(date.toString());
-					}
-				}
-			}
-		}
-		if(times.size()==0) {
-			return false;
-		}
-		/* sort the timestamps in ascending order */
-		Collections.sort(times);
-		
-		
-		
-		return true;
+		return concreteReference.checkValidity(log);
 	}
 
 	public XLog filter() {

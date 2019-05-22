@@ -22,6 +22,7 @@ public class FilterdEventAttrDateConfig extends FilterdAbstractConfig{
 	private ArrayList<String> optionsPair;
 	String defaultOption;
 	ArrayList<String> optionList;
+	ParameterRangeFromRange<String> range;
 
 	public FilterdEventAttrDateConfig(XLog log, Filter filterType) {
 		super(log, filterType);
@@ -42,8 +43,6 @@ public class FilterdEventAttrDateConfig extends FilterdAbstractConfig{
 				String time = event.getAttributes().get("time:timestamp").toString();
 				Date date = addTimezone(time);
 				times.add(date.toString());
-
-
 			}
 		}
 
@@ -56,7 +55,7 @@ public class FilterdEventAttrDateConfig extends FilterdAbstractConfig{
 		optionsPair.add(new String(times.get(times.size()-1)));
 
 		//create slider values parameter
-		ParameterRangeFromRange<String> range = new ParameterRangeFromRange<>("range",
+		range = new ParameterRangeFromRange<>("range",
 				"Select timeframe", defaultPair, optionsPair);
 
 
@@ -82,14 +81,41 @@ public class FilterdEventAttrDateConfig extends FilterdAbstractConfig{
 	}
 
 	public boolean checkValidity(XLog log) {
-		// TODO Auto-generated method stub
-		return false;
+		
+		ArrayList<String> times = new ArrayList<>();
+		
+		for (XTrace trace : log) {
+			for (XEvent event : trace) {
+				for (String key : event.getAttributes().keySet()) {
+					if (key.contains("time:timestamp")) {
+						Date date = addTimezone(event.getAttributes().get(key).toString());
+						String time = new String(date.toString());
+						times.add(time);
+					}
+				}	
+			}
+		}
+		
+		Collections.sort(times);
+		
+		//if XLog has no time:timestamp attributes
+		if(times.size()==0) {
+			return false;
+		}
+		
+		if(range.getChosenPair().get(0).compareTo(times.get(0)) < 0
+				|| range.getChosenPair().get(1).compareTo(times.get(times.size()-1)) > 0) {
+			return false;
+		}
+		
+		return true;
 	}
 
 	public XLog filter() {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
 
 	private Date addTimezone (String time) {
 		// Set time format for the time stamp
