@@ -67,7 +67,7 @@ public class FilterdTraceAttrCategoricalConfig extends FilterdAbstractConfig {
 
 	public boolean canPopulate(FilterConfigPanelController component) {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	public FilterConfigPanelController getConfigPanel() {
@@ -75,7 +75,6 @@ public class FilterdTraceAttrCategoricalConfig extends FilterdAbstractConfig {
 	}
 
 	public boolean checkValidity(XLog log) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 

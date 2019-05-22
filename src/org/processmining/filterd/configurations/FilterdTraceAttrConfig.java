@@ -144,7 +144,7 @@ public class FilterdTraceAttrConfig extends FilterdAbstractConfig {
 			// Categorical, so we create a new categorical configuration.
 			case "Categorical": {
 				concreteReference = new FilterdTraceAttrCategoricalConfig(log, 
-						filterType);
+						filterType, ((ParameterOneFromSet)(parameters.get(0))).getChosen());
 				break;
 			}
 			// Numerical, so we create a new numerical configuration.
