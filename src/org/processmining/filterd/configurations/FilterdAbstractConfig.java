@@ -1,9 +1,9 @@
 package org.processmining.filterd.configurations;
 import java.util.ArrayList;
-
 import java.util.Collection;
-
 import java.util.List;
+
+import javax.swing.JComponent;
 
 import org.deckfour.xes.classification.XEventClassifier;
 import org.deckfour.xes.info.XLogInfo;
@@ -14,9 +14,9 @@ import org.processmining.filterd.filters.Filter;
 import org.processmining.filterd.widgets.*;
 import org.processmining.filterd.gui.AbstractFilterConfigPanelController;
 import org.processmining.filterd.gui.FilterConfigPanelController;
-import org.processmining.filterd.parameters.Parameter;
+import org.processmining.filterd.parameters.*;
 import org.processmining.framework.plugin.PluginContext;
-public abstract class FilterdAbstractConfig {
+public abstract class FilterdAbstractConfig<T> {
 	
 	protected Filter filterType;
 	protected XLog log;
@@ -144,40 +144,47 @@ public abstract class FilterdAbstractConfig {
 	 * Populates the parameters with information from the configuration panel.
 	 * @return concrete configuration of the configuration panel 
 	 */
-	public FilterdAbstractConfig populate(AbstractFilterConfigPanelController abstractComponent) {
+
+	public FilterdAbstractConfig<T> populate(AbstractFilterConfigPanelController abstractComponent) {
 	
-	FilterConfigPanelController component = (FilterConfigPanelController) abstractComponent;
-	List<ParameterController> controllers = component.getControllers();
-	for(ParameterController controller : controllers) {
-
-		if(controller instanceof ParameterOneFromSetExtendedController) {
-			ParameterOneFromSetExtendedController casted = (ParameterOneFromSetExtendedController) controller;
-			//concreteReference.populate(casted.getNestedConfigPanel());
-			//this menthod needs to be in every referencable class
-		} else if(controller instanceof ParameterYesNoController) {
-			ParameterYesNoController casted = (ParameterYesNoController) controller;
-			//getParameter(controller.getName())).setChosen(casted.getValue());		
-		} else if(controller instanceof ParameterOneFromSetController) {
-			ParameterOneFromSetController casted = (ParameterOneFromSetController) controller;
-			
-		} else if(controller instanceof ParameterMultipleFromSetController) {
-			ParameterMultipleFromSetController casted = (ParameterMultipleFromSetController) controller;
-
-		} else if(controller instanceof ParameterValueFromRangeController) {
-			ParameterValueFromRangeController casted = (ParameterValueFromRangeController) controller;
-			
-		} else if(controller instanceof ParameterTextController) {
-			ParameterTextController casted = (ParameterTextController) controller;
-
-		} else if(controller instanceof ParameterRangeFromRangeController) {
-			ParameterRangeFromRangeController casted = (ParameterRangeFromRangeController) controller;
-
-		} else {
-			throw new IllegalArgumentException("Unsupporrted controller type.");
-		}	
-		//assumes that the controller has a name corresponding to the parameter name
-		
-		
+		FilterConfigPanelController component = (FilterConfigPanelController) abstractComponent;
+		List<ParameterController> controllers = component.getControllers();
+		for(ParameterController controller : controllers) {
+			//all cases assume that the controller has a name corresponding to the parameter name
+			if(controller instanceof ParameterYesNoController) {
+				ParameterYesNoController casted = (ParameterYesNoController) controller;
+				ParameterYesNo param = (ParameterYesNo) getParameter(controller.getName());
+				param.setChosen(casted.getValue());	
+				
+			} else if(controller instanceof ParameterOneFromSetController) {
+				ParameterOneFromSetController casted = (ParameterOneFromSetController) controller;
+				ParameterOneFromSet param = (ParameterOneFromSet) getParameter(controller.getName());
+				param.setChosen(casted.getValue());	
+				
+			} else if(controller instanceof ParameterMultipleFromSetController) {
+				ParameterMultipleFromSetController casted = (ParameterMultipleFromSetController) controller;
+				ParameterMultipleFromSet param = (ParameterMultipleFromSet) getParameter(controller.getName());
+				param.setChosen(casted.getValue());				
+				
+			} else if(controller instanceof ParameterValueFromRangeController) {
+				ParameterValueFromRangeController casted = (ParameterValueFromRangeController) controller;
+				ParameterValueFromRange<Double> param = (ParameterValueFromRange) getParameter(controller.getName());
+				param.setChosen(casted.getValue());	
+				
+			} else if(controller instanceof ParameterTextController) {
+				ParameterTextController casted = (ParameterTextController) controller;
+				ParameterText param = (ParameterText) getParameter(controller.getName());
+				param.setChosen(casted.getValue());	
+				
+			} else if(controller instanceof ParameterRangeFromRangeController) {
+				ParameterRangeFromRangeController casted = (ParameterRangeFromRangeController) controller;
+				ParameterRangeFromRange<Double> param = (ParameterRangeFromRange) getParameter(controller.getName());
+				param.setChosenPair(casted.getValue());	
+				
+			} else {
+				throw new IllegalArgumentException("Unsupporrted controller type.");
+			}	
+				
 		}
 		return this;
 	}

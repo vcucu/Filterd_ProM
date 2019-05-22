@@ -60,11 +60,6 @@ public class FilterdTraceAttrCategoricalConfig extends FilterdAbstractConfig {
 			);
 	}
 
-	public FilterdAbstractConfig populate(AbstractFilterConfigPanelController component) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	public boolean canPopulate(FilterConfigPanelController component) {
 		// TODO Auto-generated method stub
 		return false;
