@@ -10,7 +10,9 @@ import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
 import org.processmining.filterd.parameters.Parameter;
+import org.processmining.filterd.parameters.ParameterOneFromSet;
 import org.processmining.filterd.parameters.ParameterRangeFromRange;
+import org.processmining.filterd.parameters.ParameterYesNo;
 import org.processmining.framework.plugin.PluginContext;
 
 public class FilterdEventAttrFilter extends Filter {
@@ -24,9 +26,18 @@ public class FilterdEventAttrFilter extends Filter {
 
 	public XLog filterTimestamp(PluginContext context, XLog log, List<Parameter> parameters) {
 
+		ParameterYesNo nullHandling = new ParameterYesNo("nullHandling", 
+				"Remove if no value provided", true);
+		
+		ParameterOneFromSet selectionType = (ParameterOneFromSet) this
+				.getParameter(parameters, "selectionType");
+		
 		ParameterRangeFromRange<String> range = (ParameterRangeFromRange<String>) this
 				.getParameter(parameters,"range");
-
+		
+		boolean choice = selectionType.getChosen().contains("Filter in");
+		boolean keepNull = nullHandling.getChosen();
+		
 		XLog filteredLog = this.initializeLog(log);
 		XFactory factory = XFactoryRegistry.instance().currentDefault();
 		
@@ -37,11 +48,12 @@ public class FilterdEventAttrFilter extends Filter {
 			XTrace filteredTrace = factory.createTrace(trace.getAttributes());
 			
 			for (XEvent event : trace) {
-				boolean add = false;
+				
+				boolean add = !choice;
 				Date date = addTimezone(event.getAttributes().get("time:timestamp").toString());
 				String time = new String(date.toString());
 				if (time.compareTo(lower) >= 0 && time.compareTo(upper) <= 0) {
-					add = true;
+					add = choice;
 				}
 
 				if (add) {
@@ -49,9 +61,8 @@ public class FilterdEventAttrFilter extends Filter {
 				}
 				context.getProgress().inc();
 			}
-			//add !parameters.isRemoveEmptyTraces() || once its added to 
-			//FilterdEventAttrDateConfig
-			if (!filteredTrace.isEmpty()) {
+			
+			if (!filteredTrace.isEmpty() || keepNull) {
 				filteredLog.add(filteredTrace);
 			}
 		}
