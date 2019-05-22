@@ -107,11 +107,29 @@ public class FilterButtonController {
 	
 	@FXML
 	private void moveUpFilterHandler() {
-		System.out.println("MoveUp filter handler!");
+		int index = model.getIndex();
+		if (index > 0) {
+			moveFilterButton(index - 1);
+		}
 	}
 	
 	@FXML
 	private void moveDownFilterHandler() {
-		System.out.println("MoveDown filter handler!");
+		int index = model.getIndex();
+		if (index < controller.getCellModel().getFilters().size() - 1) {
+			moveFilterButton(index + 1);
+		}
+	}
+	
+	private void moveFilterButton(int index) {
+		controller.getPanelLayout().getChildren().remove(filterLayout);
+		
+		controller.getCellModel().getFilters().remove(model);
+		controller.getCellModel().getFilterControllers().remove(this);
+		
+		controller.getCellModel().addFilterModel(index, model);
+		controller.getCellModel().addFilterController(index, this);
+		
+		controller.getPanelLayout().getChildren().add(index, filterLayout);
 	}
 }

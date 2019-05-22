@@ -135,6 +135,7 @@ public class ComputationCellController extends CellController {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		newController.selectFilterButton();
 	}
 
 	public VBox getPanelLayout() {
