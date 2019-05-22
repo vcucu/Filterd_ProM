@@ -35,6 +35,9 @@ public class ComputationCellModel extends CellModel {
 	}
 	
 	public void setXLog(XLog log) {
+		if(log == null) {
+			throw new IllegalArgumentException("Log cannot be null!");
+		}
 		this.log = log;
 	}
 	
@@ -118,6 +121,10 @@ public class ComputationCellModel extends CellModel {
 		// If the visualizer could not be found, show some text.
 		return new JLabel("Visualizer " + type.getTypeName() + " could not be found.");
 	}
+    
+    public XLog getLog() {
+    	return log;
+    }
 
 
 }

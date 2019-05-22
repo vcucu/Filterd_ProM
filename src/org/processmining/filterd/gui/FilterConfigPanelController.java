@@ -25,9 +25,10 @@ public class FilterConfigPanelController extends AbstractFilterConfigPanelContro
 	private boolean placeInLeftPane;
 	private FilterdAbstractConfig owner;
 	
-	public FilterConfigPanelController(String title, List<Parameter> parameters) {
+	public FilterConfigPanelController(String title, List<Parameter> parameters, FilterdAbstractConfig owner) {
 		placeInLeftPane = true;
 		controllers = new ArrayList<>();
+		this.owner = owner;
 		// load UI
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/processmining/filterd/gui/fxml/FilterConfigPanel.fxml"));
 		loader.setController(this);
