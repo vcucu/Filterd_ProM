@@ -833,7 +833,7 @@ public class FilterdPackageTest extends TestCase {
 		int numberOfSamples = 5;
 		
 		/* manually instantiate the filter's parameters */
-		ArrayList<Parameter> parameters = new ArrayList<>();
+		List<Parameter> parameters = new ArrayList<>();
 		
 		List<Integer> optionsPair = new ArrayList<Integer>();
 		optionsPair.add(0);
@@ -857,7 +857,7 @@ public class FilterdPackageTest extends TestCase {
 		parameters.add(numberOfSamplesParameter);
 		
 		FilterdTraceSampleFilter filter = new FilterdTraceSampleFilter();
-		computed = filter.filter(null, expected, parameters);
+		computed = filter.filter(null, originalLog, parameters);
 
 		assert containsLog(expected, computed);
 	}

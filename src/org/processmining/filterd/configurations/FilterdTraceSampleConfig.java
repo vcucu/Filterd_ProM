@@ -2,16 +2,10 @@ package org.processmining.filterd.configurations;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JComponent;
-
 import org.deckfour.xes.model.XLog;
 import org.processmining.filterd.filters.Filter;
-import org.processmining.filterd.gui.AbstractFilterConfigPanelController;
 import org.processmining.filterd.gui.FilterConfigPanelController;
 import org.processmining.filterd.parameters.ParameterValueFromRange;
-import org.processmining.filterd.widgets.ParameterValueFromRangeController;
-
-import javafx.scene.Node;
 
 public class FilterdTraceSampleConfig extends FilterdAbstractConfig {
 
@@ -47,7 +41,7 @@ public class FilterdTraceSampleConfig extends FilterdAbstractConfig {
 	public FilterConfigPanelController getConfigPanel() {
 		//return a new panel for this configuration with the relevant name and parameters
 		return new FilterConfigPanelController(
-				"Filter Trace Sample Configuration", parameters);
+				"Filter Trace Sample Configuration", parameters, this);
 		
 	}
 

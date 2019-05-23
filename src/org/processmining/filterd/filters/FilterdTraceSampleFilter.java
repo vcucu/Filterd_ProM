@@ -20,9 +20,8 @@ public class FilterdTraceSampleFilter extends Filter {
 	
 		//get value of threshold parameter (i.e. the desired number of samples)
 		ParameterValueFromRange<Integer> nrSamples = 
-				(ParameterValueFromRange<Integer>) 
-				this.getParameter(parameters, "threshold");
-			
+				(ParameterValueFromRange<Integer>) parameters.get(0);	
+		
 		//initialize the log that will be output
 		XLog filteredLog = this.initializeLog(log);
 		
