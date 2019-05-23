@@ -14,7 +14,7 @@ import org.processmining.filterd.parameters.ParameterRangeFromRange;
 import org.processmining.filterd.parameters.ParameterYesNo;
 import org.processmining.filterd.tools.Toolbox;
 
-public class FilterdEventAttrDateConfig extends FilterdAbstractGreenConfig{
+public class FilterdEventAttrDateConfig extends FilterdAbstractReferenceableConfig{
 
 	private ArrayList<String> times; 
 	private ArrayList<String> defaultPair;

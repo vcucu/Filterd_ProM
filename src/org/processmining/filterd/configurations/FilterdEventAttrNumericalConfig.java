@@ -8,7 +8,7 @@ import org.processmining.filterd.filters.Filter;
 import org.processmining.filterd.gui.AbstractFilterConfigPanelController;
 import org.processmining.filterd.gui.FilterConfigPanelController;
 
-public class FilterdEventAttrNumericalConfig extends FilterdAbstractGreenConfig {
+public class FilterdEventAttrNumericalConfig extends FilterdAbstractReferenceableConfig {
 
 	public FilterdEventAttrNumericalConfig(XLog log, Filter filterType) {
 		super(log, filterType);

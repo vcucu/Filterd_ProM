@@ -14,9 +14,8 @@ import org.processmining.filterd.parameters.Parameter;
 import org.processmining.filterd.parameters.ParameterOneFromSet;
 import org.processmining.filterd.widgets.ParameterOneFromSetController;
 
-public class FilterdTraceEndEventConfig extends FilterdAbstractConfig {
-	
-	FilterdAbstractConfig concreteReference;
+public class FilterdTraceEndEventConfig extends FilterdAbstractReferencingConfig {
+
 
 	public FilterdTraceEndEventConfig(XLog log, Filter filterType) {
 		super(log, filterType);

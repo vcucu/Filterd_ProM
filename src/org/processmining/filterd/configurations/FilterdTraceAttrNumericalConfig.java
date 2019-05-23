@@ -15,7 +15,7 @@ import org.processmining.filterd.filters.Filter;
 import org.processmining.filterd.gui.AbstractFilterConfigPanelController;
 import org.processmining.filterd.gui.FilterConfigPanelController;
 
-public class FilterdTraceAttrNumericalConfig extends FilterdAbstractGreenConfig {
+public class FilterdTraceAttrNumericalConfig extends FilterdAbstractReferenceableConfig {
 
 	public FilterdTraceAttrNumericalConfig(XLog log, Filter filterType,
 			String attribute) {

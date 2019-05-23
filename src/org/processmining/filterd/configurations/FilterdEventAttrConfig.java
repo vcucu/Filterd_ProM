@@ -23,9 +23,7 @@ import org.processmining.filterd.widgets.ParameterTextController;
 import org.processmining.filterd.widgets.ParameterValueFromRangeController;
 import org.processmining.filterd.widgets.ParameterYesNoController;
 
-public class FilterdEventAttrConfig extends FilterdAbstractConfig {
-
-	FilterdAbstractConfig concreteReference;
+public class FilterdEventAttrConfig extends FilterdAbstractReferencingConfig {
 	
 	public FilterdEventAttrConfig(XLog log, Filter filterType) {
 		super(log, filterType);
@@ -43,8 +41,7 @@ public class FilterdEventAttrConfig extends FilterdAbstractConfig {
 		
 		parameters.add(attribute);
 		//parameters.addAll(concreteReference.getParameters());
-		
-		
+				
 	}
 
 	@Override

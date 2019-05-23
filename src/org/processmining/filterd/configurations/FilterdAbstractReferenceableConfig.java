@@ -21,9 +21,9 @@ import org.processmining.filterd.widgets.ParameterTextController;
 import org.processmining.filterd.widgets.ParameterValueFromRangeController;
 import org.processmining.filterd.widgets.ParameterYesNoController;
 
-public abstract class FilterdAbstractGreenConfig extends FilterdAbstractConfig {
+public abstract class FilterdAbstractReferenceableConfig extends FilterdAbstractConfig {
 
-	public FilterdAbstractGreenConfig(XLog log, Filter filterType) {
+	public FilterdAbstractReferenceableConfig(XLog log, Filter filterType) {
 		super(log, filterType);
 	}
 
