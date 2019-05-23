@@ -8,7 +8,7 @@ import org.processmining.filterd.filters.Filter;
 import org.processmining.filterd.gui.FilterConfigPanelController;
 import org.processmining.filterd.parameters.ParameterRangeFromRange;
 
-public class FilterdTraceAttrNumberOfEventsConfig extends FilterdAbstractConfig {
+public class FilterdTraceAttrNumberOfEventsConfig extends FilterdAbstractReferenceableConfig {
 
 	public FilterdTraceAttrNumberOfEventsConfig(XLog log, Filter filterType) {
 		super(log, filterType);
@@ -73,11 +73,6 @@ public class FilterdTraceAttrNumberOfEventsConfig extends FilterdAbstractConfig 
 		return true;
 	}
 
-	public FilterConfigPanelController getConfigPanel() {
-		return new FilterConfigPanelController(
-				"Filter on events Trace Attribute Configuration", 
-				parameters);
-	}
 
 	public boolean checkValidity(XLog log) {
 		

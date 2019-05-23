@@ -68,6 +68,9 @@ public class ConfigurationModalController {
 		// set internal variables
 		this.filterConfig = filterConfig;
 		this.currentContentsController = filterConfig.getConfigPanel();
+		if(this.currentContentsController instanceof NestedFilterConfigPanelController) {
+			throw new IllegalArgumentException("Filter configuration panel controller is nested. Is this filter config. nested?");
+		}
 		// populate contents pane
 		HBox.setHgrow(currentContentsController.getRoot(), Priority.ALWAYS); // make the content 100% of the available width
 		contentPane.getChildren().clear(); // remove anything that may be left over by previous contents
@@ -95,16 +98,17 @@ public class ConfigurationModalController {
 			String userSelection = list.getSelectionModel().getSelectedItem();
 			showFilterConfiguration(filterSelectionCallback.call(userSelection));
 		} else if(this.configurationStep == ConfigurationStep.CONFIGURE_FILTER) {
-			// user is configuring a filter config. -> apply changes if possible
-			FilterConfigPanelController casted = (FilterConfigPanelController) currentContentsController; 
-			if(filterConfig.canPopulate(casted)) {
-				filterConfig.populate(currentContentsController);
+			if(currentContentsController instanceof NestedFilterConfigPanelController) {
+				throw new IllegalStateException("Filter configuration panel controller is nested");
 			}
+			// user is configuring a filter config. -> apply changes
+			FilterConfigPanelController casted = (FilterConfigPanelController) currentContentsController; 
+			filterConfig.populate(casted);
 			parent.hideConfigurationModal();
 			resetModal();
 		}
 	}
-	
+
 	public void resetModal() {
 		filterConfig = null;
 		contentPane.getChildren().clear();

@@ -13,7 +13,7 @@ import org.processmining.filterd.gui.FilterConfigPanelController;
 import org.processmining.filterd.parameters.ParameterOneFromSet;
 import org.processmining.filterd.parameters.ParameterRangeFromRange;
 
-public class FilterdTraceAttrTimeframeConfig extends FilterdAbstractConfig {
+public class FilterdTraceAttrTimeframeConfig extends FilterdAbstractReferenceableConfig {
 
 	public FilterdTraceAttrTimeframeConfig(XLog log, Filter filterType) {
 		super(log, filterType);
@@ -210,14 +210,6 @@ public class FilterdTraceAttrTimeframeConfig extends FilterdAbstractConfig {
 		// Can always populate since outer options are the first and final time
 		// of the log
 		return true;
-	}
-
-	public FilterConfigPanelController getConfigPanel() {
-		return new FilterConfigPanelController
-				(
-				"Timeframe Trace Attribute Configuration", 
-				parameters
-				);
 	}
 
 	public boolean checkValidity(XLog log) {

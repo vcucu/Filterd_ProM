@@ -5,14 +5,10 @@ import org.processmining.filterd.parameters.*;
 import org.processmining.filterd.widgets.*;
 
 import java.util.List;
-import java.util.ArrayList;
-
 import org.deckfour.xes.model.XLog;
 import org.processmining.filterd.filters.Filter;
 
-public class FilterdModifMergeSubsequentConfig extends FilterdAbstractConfig {
-
-	FilterdAbstractConfig concreteReference;
+public class FilterdModifMergeSubsequentConfig extends FilterdAbstractReferencingConfig {
 	
 	public FilterdModifMergeSubsequentConfig(XLog log, Filter filterType) {
 		super(log, filterType);
@@ -67,12 +63,12 @@ public class FilterdModifMergeSubsequentConfig extends FilterdAbstractConfig {
 	}
 
 	public boolean canPopulate(FilterConfigPanelController component) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+		//check whether no params are empty if you populate with the component
+		return true;
+	};
 
 	public FilterConfigPanelController getConfigPanel() {
-		return new FilterConfigPanelController("Merge Subsequent Events Configuration", parameters);
+		return new FilterConfigPanelController("Merge Subsequent Events Configuration", parameters, this);
 	}
 	
 	public FilterdAbstractConfig changeReference(ParameterOneFromSetController chosen) {

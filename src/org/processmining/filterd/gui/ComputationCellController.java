@@ -21,10 +21,13 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.MenuButton;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Callback;
 
@@ -33,9 +36,12 @@ public class ComputationCellController extends CellController {
 	//TODO: add other FXML attributes
 
 	private boolean isExpanded;
+	private boolean isFullScreen;
 	private VBox notebookVisualiser;
 	private HBox notebookToolbar;
 
+	@FXML
+	private VBox fullScreen;
 
 	@FXML
 	private VBox panelLayout;
@@ -49,6 +55,7 @@ public class ComputationCellController extends CellController {
 	private SwingNode visualizerSwgNode;
 	private ConfigurationModalController configurationModal;
 	private boolean isConfigurationModalShown;
+	private ScrollPane scrollPane;
 
 	@FXML
 	private Rectangle expandButton;
@@ -56,7 +63,17 @@ public class ComputationCellController extends CellController {
 	private ScrollPane filterPanelScroll;
 	@FXML
 	private VBox cell;
+	@FXML
+	private Rectangle fullScreenButton;
+	@FXML
+	private Circle playButton;
+	@FXML
+	private MenuButton CellSettings;
+	@FXML
+	private Circle prependCellButton;
 
+	@FXML
+	private HBox fullToolbar;
 
 	/**
 	 * Gets executed after the constructor. Has access to the @FXML annotated
@@ -83,7 +100,8 @@ public class ComputationCellController extends CellController {
 							System.out.printf("ID: %d ----------\n", getCellModel().getFilters().get(i).getIndex());
 							System.out.println("Updated: " + i + " " + getCellModel().getFilters().get(i));
 							System.out.println("SELECTED: " + getCellModel().getFilters().get(i).getSelected());
-							getCellModel().getFilterControllers().get(getCellModel().getFilters().get(i).getIndex()).updateFilterButtonView();
+							getCellModel().getFilterControllers().get(getCellModel().getFilters().get(i).getIndex())
+									.updateFilterButtonView();
 						}
 					} else {
 						for (FilterButtonModel removedFilter : change.getRemoved()) {
@@ -112,13 +130,16 @@ public class ComputationCellController extends CellController {
 		this.isConfigurationModalShown = false;
 
 		isExpanded = false;
+		isFullScreen = false;
 		notebookVisualiser = controller.getNotebookVisualiser();
 		notebookToolbar = controller.getNotebookToolbar();
+		scrollPane = controller.getScrollPane();
 	}
 
 	@FXML
 	public void addFilter() {
-		if(!this.isConfigurationModalShown || this.configurationModal.getConfigurationStep() != ConfigurationStep.ADD_FILTER) {
+		if (!this.isConfigurationModalShown
+				|| this.configurationModal.getConfigurationStep() != ConfigurationStep.ADD_FILTER) {
 			int index = getCellModel().getFilters().size(); // Index of the new cell, so that we can compute which XLogs are available
 			FilterButtonModel filterModel = new FilterButtonModel(index);
 			getCellModel().addFilterModel(index, filterModel);
@@ -127,7 +148,8 @@ public class ComputationCellController extends CellController {
 	}
 
 	public void loadFilter(int index, FilterButtonModel model) {
-		FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/processmining/filterd/gui/fxml/FilterButton.fxml"));
+		FXMLLoader loader = new FXMLLoader(
+				getClass().getResource("/org/processmining/filterd/gui/fxml/FilterButton.fxml"));
 		FilterButtonController newController = new FilterButtonController(this, model);
 		loader.setController(newController);
 		getCellModel().addFilterController(index, newController);
@@ -184,12 +206,12 @@ public class ComputationCellController extends CellController {
 	}
 
 	/**
-	 * Handler added to the expansion button responsible for
-	 * increasing the cell size to the window size
+	 * Handler added to the expansion button responsible for increasing the cell
+	 * size to the window size
 	 */
 	@FXML
 	public void handleExpandVisualiser() {
-		visualizerPane.setStyle("-fx-background-color: #ff0000; ");
+		//visualizerPane.setStyle("-fx-background-color: #ff0000; ");
 		if (isExpanded) {
 			//make cell go to default size
 			isExpanded = false;
@@ -197,7 +219,7 @@ public class ComputationCellController extends CellController {
 			cell.prefHeightProperty().unbind();
 			//set the PrefHeight to what it is by default
 			cell.setPrefHeight(cell.USE_COMPUTED_SIZE);
-		} else {
+		} else if (!isExpanded && !isConfigurationModalShown) {
 			isExpanded = true;
 			//set height of cell to be the size of the 'window'
 			cell.prefHeightProperty()
@@ -208,9 +230,49 @@ public class ComputationCellController extends CellController {
 		filterPanelScroll.setManaged(!isExpanded);
 	}
 
+	/**
+	 * Handler added to the fullScreenButton responsible for making the cell go
+	 * full screen
+	 */
 	@FXML
-	public void prependCellButtonHandler() {
-		// TODO Add cell above the one that generated this
+	public void handleFullScreen() {
+		if (isFullScreen) {
+			//set visualiserPane as child of corresponding enlarged cell
+			cellBody.getChildren().add(visualizerPane);
+			//remove fullscreen cell child from the notebookVisualiser
+			notebookVisualiser.getChildren().remove(fullScreen);
+			//make the list of cells visible
+			scrollPane.setVisible(isFullScreen);
+			scrollPane.setManaged(isFullScreen);
+			isFullScreen = false;
+		} else if (!isFullScreen && !isConfigurationModalShown) {
+			//notebookVisualiser.setStyle("-fx-background-color: #00ffff; ");
+			//hide the scrollpane containing the list of cells in notebook
+			scrollPane.setVisible(isFullScreen);
+			scrollPane.setManaged(isFullScreen);
+			//if the fullscreen hasn't been loaded yet then load
+			if (fullScreen == null) {
+				//load the fullScreen fxml
+				FXMLLoader loader = new FXMLLoader(
+						getClass().getResource("/org/processmining/filterd/gui/fxml/FullScreenCell.fxml"));
+				loader.setController(this);
+				try {
+					fullScreen = (VBox) loader.load();
+					//fullScreen.setStyle("-fx-background-color: #0000ff; ");
+					//fullToolbar.setStyle("-fx-background-color: ##008080; ");
+					fullScreen.setVgrow(visualizerPane, Priority.ALWAYS);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			notebookVisualiser.getChildren().add(fullScreen);
+			//add visualiserPane as a child, automatically removed from list of children
+			//of the corresponding Computation cell, must be re-added when undoing fullscreen mode
+			fullScreen.getChildren().add(visualizerPane);
+			notebookVisualiser.setVgrow(fullScreen, Priority.ALWAYS);
+			isFullScreen = true;
+		}
 	}
 
 	// Set XLog
@@ -245,11 +307,11 @@ public class ComputationCellController extends CellController {
 	}
 
 	public void hideConfigurationModal() {
-		if(this.isConfigurationModalShown) {
+		if (this.isConfigurationModalShown) {
 			ConfigurationStep configurationStep = configurationModal.getConfigurationStep();
 			visualizerPane.getChildren().clear();
 			// set visualizer as the content
-			if(visualizerSwgNode != null) {
+			if (visualizerSwgNode != null) {
 				visualizerPane.getChildren().add(visualizerSwgNode);
 				// set properties w.r.t. parent node (AnchorPane)
 				visualizerPane.setTopAnchor(visualizerSwgNode, 0.0);
@@ -258,26 +320,28 @@ public class ComputationCellController extends CellController {
 				visualizerPane.setRightAnchor(visualizerSwgNode, 0.0);
 			}
 			// if filter selection was cancelled, delete the added button
-			if(configurationStep == ConfigurationStep.ADD_FILTER) {
+			if (configurationStep == ConfigurationStep.ADD_FILTER) {
 				// remove model
-				FilterButtonModel buttonToRemove = getCellModel().getFilters().get(getCellModel().getFilters().size() - 1);
+				FilterButtonModel buttonToRemove = getCellModel().getFilters()
+						.get(getCellModel().getFilters().size() - 1);
 				getCellModel().removeFilterModel(buttonToRemove);
 				// remove controller
-				FilterButtonController controllerToRemove = getCellModel().getFilterControllers().get(getCellModel().getFilterControllers().size() - 1);
+				FilterButtonController controllerToRemove = getCellModel().getFilterControllers()
+						.get(getCellModel().getFilterControllers().size() - 1);
 				getCellModel().removeFilterController(controllerToRemove);
 				getPanelLayout().getChildren().remove(controllerToRemove.getFilterLayout());
-			}			
+			}
 		}
 		this.isConfigurationModalShown = false;
 	}
 
 	public void showModalFilterConfiguration(FilterdAbstractConfig filterConfig) {
-		if(filterConfig == null) {
+		if (filterConfig == null) {
 			throw new IllegalArgumentException("Fitler configuration cannot be null");
 		}
 		// save current visualizer (TODO: is this needed?)
-		for(int i = 0; i < visualizerPane.getChildren().size(); i++) {
-			if(visualizerPane.getChildren().get(i) instanceof SwingNode) {
+		for (int i = 0; i < visualizerPane.getChildren().size(); i++) {
+			if (visualizerPane.getChildren().get(i) instanceof SwingNode) {
 				visualizerSwgNode = (SwingNode) visualizerPane.getChildren().get(i);
 				break;
 			}
@@ -306,7 +370,8 @@ public class ComputationCellController extends CellController {
 			public FilterdAbstractConfig call(String userSelection) {
 				// TODO: create a new filter config based on the user's selection
 				ComputationCellModel model = (ComputationCellModel) cellModel;
-				FilterdAbstractConfig filterConfig = new FilterdTraceStartEventConfig(model.getInputLog(), new FilterdTraceStartEventFilter());
+				FilterdAbstractConfig filterConfig = new FilterdTraceStartEventConfig(model.getInputLog(),
+						new FilterdTraceStartEventFilter());
 				filterButtonModel.setFilterConfig(filterConfig);
 				// TODO: set cell status to OUT_OF_DATE
 				return filterConfig;
@@ -321,28 +386,27 @@ public class ComputationCellController extends CellController {
 		visualizerPane.setRightAnchor(configurationModalRoot, 0.0);
 		this.isConfigurationModalShown = true;
 	}
+
 	@Override
 	public void show() {
 		super.show();
-		if(isExpanded) {
+		if (isExpanded) {
 			cell.prefHeightProperty()
-			.bind(notebookVisualiser.heightProperty().subtract(notebookToolbar.heightProperty()));
+					.bind(notebookVisualiser.heightProperty().subtract(notebookToolbar.heightProperty()));
 		}
 	}
 
 	@Override
 	public void hide() {
 		super.hide();
-		if(isExpanded) {
+		if (isExpanded) {
 			cell.prefHeightProperty().unbind();
 			//set the PrefHeight to what it is by default
 			cell.setPrefHeight(cell.USE_COMPUTED_SIZE);
 		}
-
 	}
-	
+
 	public ConfigurationModalController getConfigurationModal() {
 		return this.configurationModal;
 	}
-
 }

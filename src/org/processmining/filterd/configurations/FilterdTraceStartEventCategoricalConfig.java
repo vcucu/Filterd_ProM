@@ -10,14 +10,12 @@ import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
 import org.processmining.filterd.filters.Filter;
-import org.processmining.filterd.gui.AbstractFilterConfigPanelController;
 import org.processmining.filterd.gui.FilterConfigPanelController;
-import org.processmining.filterd.gui.NestedFilterConfigPanelController;
 import org.processmining.filterd.parameters.Parameter;
 import org.processmining.filterd.parameters.ParameterMultipleFromSet;
 import org.processmining.filterd.parameters.ParameterYesNo;
 
-public class FilterdTraceStartEventCategoricalConfig extends FilterdAbstractConfig {	
+public class FilterdTraceStartEventCategoricalConfig extends FilterdAbstractReferenceableConfig {	
 	
 	public FilterdTraceStartEventCategoricalConfig(XLog log, Filter filterType, String attribute, 
 			List<XEventClassifier> classifiers) {
@@ -65,13 +63,9 @@ public class FilterdTraceStartEventCategoricalConfig extends FilterdAbstractConf
 	}
 
 	public boolean canPopulate(FilterConfigPanelController component) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	public AbstractFilterConfigPanelController getConfigPanel() {
-		return new NestedFilterConfigPanelController(parameters);
-	}
+		//check whether no params are empty if you populate with the component
+		return true;
+	};
 
 	public boolean checkValidity(XLog log) {
 		return true;

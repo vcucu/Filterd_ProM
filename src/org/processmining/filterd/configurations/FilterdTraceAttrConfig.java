@@ -25,9 +25,8 @@ import org.processmining.filterd.widgets.ParameterTextController;
 import org.processmining.filterd.widgets.ParameterValueFromRangeController;
 import org.processmining.filterd.widgets.ParameterYesNoController;
 
-public class FilterdTraceAttrConfig extends FilterdAbstractConfig {
+public class FilterdTraceAttrConfig extends FilterdAbstractReferencingConfig {
 
-	FilterdAbstractConfig concreteReference; 
 	
 	public FilterdTraceAttrConfig(XLog log, Filter filterType) {
 		super(log, filterType);
@@ -91,8 +90,8 @@ public class FilterdTraceAttrConfig extends FilterdAbstractConfig {
 			//all cases assume that the controller has a name corresponding to the parameter name
 			if(controller instanceof ParameterOneFromSetExtendedController) {
 				ParameterOneFromSetExtendedController casted = (ParameterOneFromSetExtendedController) controller;
-				//concreteReference.populate(casted.getNestedConfigPanel());
-				//this method needs to be in every referencable class
+				concreteReference.populate(casted.getNestedConfigPanel());
+				//this method needs to be in every referencing class
 				
 			} else if(controller instanceof ParameterYesNoController) {
 				ParameterYesNoController casted = (ParameterYesNoController) controller;
@@ -142,7 +141,7 @@ public class FilterdTraceAttrConfig extends FilterdAbstractConfig {
 	public FilterConfigPanelController getConfigPanel() {
 		return new FilterConfigPanelController(
 				"Trace Attribute Configuration", 
-				parameters
+				parameters, this
 				);
 	}
 	

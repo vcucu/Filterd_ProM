@@ -29,7 +29,7 @@ import org.processmining.filterd.widgets.ParameterTextController;
 import org.processmining.filterd.widgets.ParameterValueFromRangeController;
 import org.processmining.filterd.widgets.ParameterYesNoController;
 
-public class FilterdTraceFollowerConfig extends FilterdAbstractConfig {
+public class FilterdTraceFollowerConfig extends FilterdAbstractReferencingConfig {
 
 	public FilterdTraceFollowerConfig(XLog log, Filter filterType) {
 		super(log, filterType);
@@ -278,8 +278,8 @@ public class FilterdTraceFollowerConfig extends FilterdAbstractConfig {
 			//all cases assume that the controller has a name corresponding to the parameter name
 			if(controller instanceof ParameterOneFromSetExtendedController) {
 				ParameterOneFromSetExtendedController casted = (ParameterOneFromSetExtendedController) controller;
-				//concreteReference.populate(casted.getNestedConfigPanel());
-				//this method needs to be in every referencable class
+				concreteReference.populate(casted.getNestedConfigPanel());
+				//this method needs to be in every referencing class
 				
 			} else if(controller instanceof ParameterYesNoController) {
 				ParameterYesNoController casted = (ParameterYesNoController) controller;
@@ -320,14 +320,14 @@ public class FilterdTraceFollowerConfig extends FilterdAbstractConfig {
 	}
 
 	public boolean canPopulate(FilterConfigPanelController component) {
-		// Can always populate it.
+		//check whether no params are empty if you populate with the component
 		return true;
-	}
+	};
 
 	public FilterConfigPanelController getConfigPanel() {
 		return new FilterConfigPanelController(
 				"Trace Follower Configuration", 
-				parameters);
+				parameters, this);
 	}
 
 	public boolean checkValidity(XLog log) {

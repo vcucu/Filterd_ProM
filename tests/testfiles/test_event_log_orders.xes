@@ -9,6 +9,12 @@
 	<extension name="Time" prefix="time" uri="http://www.xes-standard.org/time.xesext"/>
 	<extension name="Lifecycle" prefix="lifecycle" uri="http://www.xes-standard.org/lifecycle.xesext"/>
 	<extension name="Concept" prefix="concept" uri="http://www.xes-standard.org/concept.xesext"/>
+	<global scope="event">
+		<string key="org:resource" value="Resource"/>
+		<string key="concept:name" value="String"/>
+		<string key="lifecycle:transition" value="String"/>
+		<date key="time:timestamp" value="2020-12-21T07:23:00.000+01:00"/>	
+	</global>
 	<classifier name="Event Name" keys="concept:name"/>
 	<classifier name="(Event Name AND Lifecycle transition)" keys="concept:name lifecycle:transition"/>
 	<string key="concept:name" value="Order Process Test Log"/>

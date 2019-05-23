@@ -14,12 +14,11 @@ public abstract class CellController {
 	protected NotebookController controller;
 	protected CellModel cellModel;
 	protected VBox cellLayout;
-	@FXML
-	protected Region statusBar; // has 8 states, Color x isHidden
-	@FXML
-	protected TextField cellName;
-	@FXML
-	protected HBox cellBody;
+	
+	@FXML protected Region statusBar; // has 8 states, Color x isHidden
+	@FXML protected TextField cellName;
+	@FXML protected HBox cellBody;
+	
 
 	public CellController(NotebookController controller, CellModel cellModel) {
 		this.controller = controller; 
@@ -107,6 +106,13 @@ public abstract class CellController {
 
 	public void changeCellName(String cellName) {
 		this.cellName.setText(cellName);
+	}
+	
+	@FXML
+	public void prependCellButtonHandler() {
+		CellModel model = getCellModel();
+		int index = controller.getModel().getCells().indexOf(model);
+		controller.toggleAddCellModal(index);
 	}
 
 	public void show() {

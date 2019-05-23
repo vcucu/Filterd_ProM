@@ -1,14 +1,9 @@
 package org.processmining.filterd.configurations;
-import org.processmining.filterd.parameters.Parameter;
-import java.util.ArrayList;
-import javax.swing.JComponent;
-
 import org.deckfour.xes.model.XLog;
 import org.processmining.filterd.filters.Filter;
-import org.processmining.filterd.gui.AbstractFilterConfigPanelController;
 import org.processmining.filterd.gui.FilterConfigPanelController;
 
-public class FilterdTraceFollowerCategoricalConfig extends FilterdAbstractConfig {
+public class FilterdTraceFollowerCategoricalConfig extends FilterdAbstractReferenceableConfig {
 
 	public FilterdTraceFollowerCategoricalConfig(XLog log, Filter filterType) {
 		super(log, filterType);
@@ -16,14 +11,9 @@ public class FilterdTraceFollowerCategoricalConfig extends FilterdAbstractConfig
 	}
 
 	public boolean canPopulate(FilterConfigPanelController component) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	public FilterConfigPanelController getConfigPanel() {
-		return new FilterConfigPanelController("Categorical Trace Follower Configuration", parameters);
-	}
-
+		//check whether no params are empty if you populate with the component
+		return true;
+	};
 	public boolean checkValidity(XLog log) {
 		// TODO Auto-generated method stub
 		return false;

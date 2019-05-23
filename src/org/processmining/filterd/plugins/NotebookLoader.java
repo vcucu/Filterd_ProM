@@ -13,7 +13,7 @@ public class NotebookLoader {
 	@UITopiaVariant(affiliation = UITopiaVariant.EHV, author = "M. Diea & T. Stoenescu", email = "sl")
 	@PluginVariant(variantLabel = "Filterd plug-in, setup wizard", requiredParameterLabels = {0, 1})
 	public NotebookModel load(UIPluginContext context, NotebookModel imported, XLog log) {
-		NotebookModel notebook = new NotebookModel(context, log);
+		NotebookModel notebook = new NotebookModel(context, log, null); //added null for no error
 		notebook.addCells(imported.getCells());
 		return notebook;
 	}

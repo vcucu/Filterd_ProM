@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.processmining.filterd.configurations.FilterdAbstractConfig;
-import org.processmining.filterd.configurations.Referenceable;
+import org.processmining.filterd.configurations.FilterdAbstractReferencingConfig;
 import org.processmining.filterd.gui.AbstractFilterConfigPanelController;
 
 import javafx.collections.FXCollections;
@@ -21,9 +21,9 @@ public class ParameterOneFromSetExtendedController extends ParameterController {
 	@FXML private Label label;
 	@FXML private VBox nestedPanel;
 	private AbstractFilterConfigPanelController nestedConfigPanel;
-	private Referenceable owner;
+	private FilterdAbstractReferencingConfig owner;
 	
-	public ParameterOneFromSetExtendedController(String nameDisplayed, String name, String defaultValue, List<String> list, Referenceable owner) {
+	public ParameterOneFromSetExtendedController(String nameDisplayed, String name, String defaultValue, List<String> list, FilterdAbstractReferencingConfig owner) {
 		super(name);
 		this.owner = owner;
 		// load contents
@@ -39,7 +39,7 @@ public class ParameterOneFromSetExtendedController extends ParameterController {
         ObservableList<String> observableList = FXCollections.observableList(list);
         combobox.setItems(observableList);
         combobox.getSelectionModel().select(defaultValue);
-        selectionChanged(); // force the view to update
+        setNestedContent(owner.getConcreteReference());
 	}
 	
 	public String getValue() {

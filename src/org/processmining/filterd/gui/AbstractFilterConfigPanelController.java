@@ -29,7 +29,7 @@ public abstract class AbstractFilterConfigPanelController {
 	public void addParameterYesNo(ParameterYesNo parameter) {
 		ParameterController controller = new ParameterYesNoController(parameter.getNameDisplayed(), 
 				parameter.getName(), 
-				parameter.getDefaultChoice());
+				parameter.getChosen());
 		getNextContainer().getChildren().add(controller.getContents());
 		controllers.add(controller);
 	}
@@ -37,7 +37,7 @@ public abstract class AbstractFilterConfigPanelController {
 	public void addParameterOneFromSet(ParameterOneFromSet parameter) {
 		ParameterController controller = new ParameterOneFromSetController(parameter.getNameDisplayed(), 
 				parameter.getName(),
-				parameter.getDefaultChoice(), 
+				parameter.getChosen() == null ? parameter.getDefaultChoice() : parameter.getChosen(), 
 				parameter.getOptions());
 		getNextContainer().getChildren().add(controller.getContents());
 		controllers.add(controller);
@@ -46,7 +46,7 @@ public abstract class AbstractFilterConfigPanelController {
 	public void addParameterMultipleFromSet(ParameterMultipleFromSet parameter) {
 		ParameterController controller = new ParameterMultipleFromSetController(parameter.getNameDisplayed(), 
 				parameter.getName(), 
-				parameter.getDefaultChoice(), 
+				parameter.getChosen() == null ? parameter.getDefaultChoice() : parameter.getChosen(), 
 				parameter.getOptions());
 		getNextContainer().getChildren().add(controller.getContents());
 		controllers.add(controller);
@@ -55,7 +55,7 @@ public abstract class AbstractFilterConfigPanelController {
 	public <N extends Number> void addParameterValueFromRange(ParameterValueFromRange<N> parameter) {
 		ParameterController controller = new ParameterValueFromRangeController<N>(parameter.getNameDisplayed(), 
 				parameter.getName(), 
-				parameter.getDefaultChoice(), 
+				parameter.getChosen(), 
 				parameter.getOptionsPair(),
 				parameter.getGenericTypeClass());
 		getNextContainer().getChildren().add(controller.getContents());
@@ -65,7 +65,7 @@ public abstract class AbstractFilterConfigPanelController {
 	public void addParameterText(ParameterText parameter) {
 		ParameterController controller = new ParameterTextController(parameter.getNameDisplayed(), 
 				parameter.getName(), 
-				parameter.getDefaultChoice());
+				parameter.getChosen() == null ? parameter.getDefaultChoice() : parameter.getChosen());
 		getNextContainer().getChildren().add(controller.getContents());
 		controllers.add(controller);
 	}
@@ -73,7 +73,7 @@ public abstract class AbstractFilterConfigPanelController {
 	public <N extends Number> void addParameterRangeFromRange(ParameterRangeFromRange<N> parameter) {
 		ParameterController controller = new ParameterRangeFromRangeController<N>(parameter.getNameDisplayed(), 
 				parameter.getName(), 
-				parameter.getDefaultPair(),
+				parameter.getChosenPair().size() == 0 ? parameter.getDefaultPair() : parameter.getChosenPair(),
 				parameter.getOptionsPair(),
 				parameter.getGenericTypeClass());
 		getNextContainer().getChildren().add(controller.getContents());
@@ -104,6 +104,10 @@ public abstract class AbstractFilterConfigPanelController {
 				throw new IllegalArgumentException("Unsupporrted parameter type.");
 			}
 		}
+	}
+	
+	public List<ParameterController> getControllers() {
+		return controllers;
 	}
 	
 	public VBox getRoot() {

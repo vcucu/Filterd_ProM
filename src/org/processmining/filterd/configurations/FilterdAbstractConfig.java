@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.deckfour.xes.classification.XEventClassifier;
+import org.deckfour.xes.extension.XExtension;
 import org.deckfour.xes.info.XLogInfo;
 import org.deckfour.xes.info.impl.XLogInfoImpl;
 import org.deckfour.xes.model.XAttribute;
@@ -34,11 +35,13 @@ public abstract class FilterdAbstractConfig {
 	protected List<Parameter> parameters;
 	protected boolean isValid;
 	protected XEventClassifier classifier;
+	protected List<XExtension> standardExtensions;
 
 	protected List<XEventClassifier> complexClassifiers; // classifiers which are based on two or more attributes
 	protected boolean isAttribute; // checks whether selected string is attribute or complex classifier
 
 	public FilterdAbstractConfig(XLog log, Filter filterType ) {
+		
 		this.filterType = filterType;
 		this.setLog(log);
 		
@@ -76,6 +79,20 @@ public abstract class FilterdAbstractConfig {
 			}
 		}
 		return globalAttr;
+	}
+	
+	
+	/**
+	 * Computes the list of all attributes of all events in the log
+	 * @param log the log to be interrogated
+	 * @return the list of names of the events' attributes
+	 */
+	public List<String> computeAttributes(XLog log) {
+		XLogInfo logInfo = XLogInfoImpl.create(log);
+		List<String> attributes = new ArrayList<>();
+		Collection<String> attributes_collection =  logInfo.getEventAttributeInfo().getAttributeKeys();	
+		attributes.addAll(attributes_collection);
+		return attributes;
 	}
 	
 	/**
@@ -181,7 +198,7 @@ public abstract class FilterdAbstractConfig {
 				
 			} else if(controller instanceof ParameterValueFromRangeController) {
 				ParameterValueFromRangeController casted = (ParameterValueFromRangeController) controller;
-				ParameterValueFromRange<Double> param = (ParameterValueFromRange) getParameter(controller.getName());
+				ParameterValueFromRange param = (ParameterValueFromRange) getParameter(controller.getName());
 				param.setChosen(casted.getValue());	
 				
 			} else if(controller instanceof ParameterTextController) {
@@ -191,7 +208,7 @@ public abstract class FilterdAbstractConfig {
 				
 			} else if(controller instanceof ParameterRangeFromRangeController) {
 				ParameterRangeFromRangeController casted = (ParameterRangeFromRangeController) controller;
-				ParameterRangeFromRange<Double> param = (ParameterRangeFromRange) getParameter(controller.getName());
+				ParameterRangeFromRange param = (ParameterRangeFromRange) getParameter(controller.getName());
 				param.setChosenPair(casted.getValue());	
 				
 			} else {
