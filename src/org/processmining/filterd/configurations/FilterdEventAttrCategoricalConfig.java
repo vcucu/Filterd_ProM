@@ -15,11 +15,6 @@ public class FilterdEventAttrCategoricalConfig extends FilterdAbstractConfig{
 		// TODO Auto-generated constructor stub
 	}
 
-	public boolean canPopulate(FilterConfigPanelController component) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
 	public FilterConfigPanelController getConfigPanel() {
 		return new FilterConfigPanelController("Categorical Event Attribute Configuration", parameters, this);
 	}
@@ -28,6 +23,11 @@ public class FilterdEventAttrCategoricalConfig extends FilterdAbstractConfig{
 		// TODO Auto-generated method stub
 		return false;
 	}
+	
+	public boolean canPopulate(FilterConfigPanelController component) {
+		//check whether no params are empty if you populate with the component
+		return true;
+	};
 
 	public XLog filter() {
 		// TODO Auto-generated method stub

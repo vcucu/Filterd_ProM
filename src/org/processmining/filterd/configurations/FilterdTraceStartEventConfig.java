@@ -110,9 +110,9 @@ public class FilterdTraceStartEventConfig extends FilterdAbstractConfig implemen
 	}
 
 	public boolean canPopulate(FilterConfigPanelController component) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+		//check whether no params are empty if you populate with the component
+		return true;
+	};
 
 	public AbstractFilterConfigPanelController getConfigPanel() {
 		return new FilterConfigPanelController("Trace Start Event Configuration", parameters, this);

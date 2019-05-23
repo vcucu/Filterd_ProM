@@ -27,7 +27,7 @@ public class FilterdTraceTrimConfig extends FilterdAbstractConfig {
 			//all cases assume that the controller has a name corresponding to the parameter name
 			if(controller instanceof ParameterOneFromSetExtendedController) {
 				ParameterOneFromSetExtendedController casted = (ParameterOneFromSetExtendedController) controller;
-				//concreteReference.populate(casted.getNestedConfigPanel());
+				concreteReference.populate(casted.getNestedConfigPanel());
 				//this method needs to be in every referencable class
 				
 			} else if(controller instanceof ParameterYesNoController) {

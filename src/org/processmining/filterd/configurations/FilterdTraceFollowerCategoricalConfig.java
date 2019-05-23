@@ -16,9 +16,9 @@ public class FilterdTraceFollowerCategoricalConfig extends FilterdAbstractConfig
 	}
 
 	public boolean canPopulate(FilterConfigPanelController component) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+		//check whether no params are empty if you populate with the component
+		return true;
+	};
 
 	public FilterConfigPanelController getConfigPanel() {
 		return new FilterConfigPanelController("Categorical Trace Follower Configuration", parameters, this);

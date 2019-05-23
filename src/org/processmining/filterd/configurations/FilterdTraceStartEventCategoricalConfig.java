@@ -65,9 +65,9 @@ public class FilterdTraceStartEventCategoricalConfig extends FilterdAbstractConf
 	}
 
 	public boolean canPopulate(FilterConfigPanelController component) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+		//check whether no params are empty if you populate with the component
+		return true;
+	};
 
 	public AbstractFilterConfigPanelController getConfigPanel() {
 		return new NestedFilterConfigPanelController(parameters);
