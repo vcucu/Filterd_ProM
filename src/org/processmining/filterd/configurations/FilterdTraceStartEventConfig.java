@@ -47,7 +47,9 @@ public class FilterdTraceStartEventConfig extends FilterdAbstractConfig implemen
 		ParameterOneFromSet selectionType = new ParameterOneFromSet("selectionType",
 				"Selection type", selectionTypeOptions.get(0), selectionTypeOptions);	
 		
-		
+		//initialize the concreteReference with a default value
+		concreteReference = new FilterdTraceStartEventCategoricalConfig
+				(log, filterType, attrAndClassifiers.get(0), complexClassifiers);	
 		
 		// Add all parameters to the list of parameters	
 		parameters.add(attribute);
