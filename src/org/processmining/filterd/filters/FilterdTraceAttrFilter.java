@@ -22,9 +22,6 @@ public class FilterdTraceAttrFilter extends Filter {
 	public XLog filter(PluginContext context, 
 			XLog log, 
 			List<Parameter> parameters) {
-		
-		//initialize the log that will be output
-		XLog filteredLog = this.initializeLog(log);
 						
 		// clone input log, since ProM documentation says filters should not 
 		// change input logs
@@ -33,19 +30,100 @@ public class FilterdTraceAttrFilter extends Filter {
 		
 		/*
 		 * 1st parameter: Select attribute to filter on.
+		 * 2nd parameter: Select type of attribute.
+		 * 
+		 * Consecutive parameters are based on the attribute type.
+		 * 
+		 * - Categorical:
+		 * 	3rd parameter, Null handling:
+		 * 	Remove the trace if an event does not have this attribute.
+		 * 	If Null handling == true
+		 * 		Then Remove the trace.
+		 * 	Else
+		 * 		Then Continue.
+		 * 	4th parameter, selection type:
+		 * 	Choice out of 2 options:
+		 * 	- "Mandatory": Mandatory to have the selection the user made for the
+		 * 	chosen attribute.
+		 * 	- "Forbidden": Forbidden to have the selection the user made for the
+		 * 	chosen attribute.
+		 * 	5th parameter, attribute:
+		 * 	What attribute the user has selected to filter on.
+		 * 	6th parameter, desired values:
+		 * 	The values the selected attribute can take.
+		 * 
+		 * - Numerical:
+		 * 	3rd parameter, range:
+		 * 	The range selected by the user.
+		 * 	4th parameter, selection type:
+		 * 	Choice out of 2 options:
+		 * 	- "Mandatory": Mandatory to have the selection the user made for the
+		 * 	chosen attribute.
+		 * 	- "Forbidden": Forbidden to have the selection the user made for the
+		 * 	chosen attribute.
+		 * 	5th parameter, attribute
+		 * 	What attribute the user has selected to filter on.
+		 * 
+		 * - Time frame:
+		 * 	3rd parameter, keep traces options:
+		 * 	How the traces are to be filtered with the threshold set.
+		 * 	4th parameter, threshold:
+		 * 	The time frame selected by the user.
+		 * 
+		 * - NumberOfEvents:
+		 * 	3rd parameter, threshold:
+		 * 	The threshold set by the user.
+		 * 
+		 * - Duration:
+		 * 	3rd parameter, threshold:
+		 * 	The threshold set by the user.
+		 * 
 		 */
 		
+		ParameterOneFromSet attrType = (ParameterOneFromSet) parameters.get(1);
+		String attrValue = attrType.getChosen();
 		
-		
-		for (XTrace trace : log) {
-			
+		switch (attrValue) {
+			case "Categorical": {
+				clonedLog = filterCategorical(clonedLog, 
+						(ParameterYesNo) parameters.get(2), 
+						(ParameterOneFromSet) parameters.get(3), 
+						(ParameterOneFromSet) parameters.get(4), 
+						(ParameterMultipleFromSet) parameters.get(5));
+				break;
+			}
+			case "Numerical": {
+				clonedLog = filterNumerical(clonedLog, 
+						(ParameterRangeFromRange<Double>) parameters.get(2), 
+						(ParameterOneFromSet) parameters.get(3), 
+						(ParameterOneFromSet) parameters.get(4));
+				break;
+			}
+			case "Timeframe": {
+				clonedLog = filterTimeframe(clonedLog, 
+						(ParameterOneFromSet) parameters.get(2), 
+						(ParameterRangeFromRange<Double>) parameters.get(3));
+				break;
+			}
+			case "Duration": {
+				clonedLog = filterDuration(clonedLog, 
+						(ParameterRangeFromRange<Double>) parameters.get(2));
+				break;
+			}
+			case "Number of events": {
+				clonedLog = filterDuration(clonedLog, 
+						(ParameterRangeFromRange<Double>) parameters.get(2));
+				break;
+			}
 		}
 		
-		return null;
+		return clonedLog;
 	}
 	
-	public XLog filterCategorical(XLog clonedLog, ParameterYesNo nullHandling,
-			ParameterOneFromSet selectionType, ParameterOneFromSet attribute,
+	public XLog filterCategorical(XLog clonedLog, 
+			ParameterYesNo nullHandling,
+			ParameterOneFromSet selectionType, 
+			ParameterOneFromSet attribute,
 			ParameterMultipleFromSet desiredValues) {
 		
 		//for each trace in the log, first assume that the trace should not
@@ -67,7 +145,7 @@ public class FilterdTraceAttrFilter extends Filter {
 				else {
 					
 					
-					if (selectionType.getChosen().equals("mandatory")) {
+					if (selectionType.getChosen().equals("Mandatory")) {
 						
 						/*
 						 *if the attribute value of one event
@@ -132,8 +210,10 @@ public class FilterdTraceAttrFilter extends Filter {
 		return false;
 	}
 	
-	public XLog filterNumerical(XLog clonedLog, ParameterRangeFromRange<Double> range,
-			ParameterOneFromSet selectionType, ParameterOneFromSet attribute) {
+	public XLog filterNumerical(XLog clonedLog, 
+			ParameterRangeFromRange<Double> range,
+			ParameterOneFromSet selectionType, 
+			ParameterOneFromSet attribute) {
 			
 			//for each trace in the log, first assume that the trace should not
 			//be removed
@@ -150,7 +230,7 @@ public class FilterdTraceAttrFilter extends Filter {
 					 * it is mandatory for it to be inside the range,
 					 * make ok false
 					 */
-					if (selectionType.getChosen().equals("mandatory")) {
+					if (selectionType.getChosen().equals("Mandatory")) {
 						if (!(Long.parseLong(eventAttributes.get(attribute.getChosen())
 								.toString()) 
 								> range.getChosenPair().get(0) &&
@@ -300,65 +380,58 @@ public class FilterdTraceAttrFilter extends Filter {
 		return clonedLog;
 	}
 	
-	public XLog filterPerformance(XLog clonedLog,
-			ParameterOneFromSet filterOnDurationOrEvents, 
+	public XLog filterDuration(XLog clonedLog,
 			ParameterRangeFromRange<Double> threshold) {
 		
-		
-		
-		// If filtering on duration
-		//  Then threshold contains the thresholds in milliseconds.
-		// If filtering  on # of events
-		//  Then threshold contains the thresholds in number of events.
+		// Threshold contains the thresholds in milliseconds.
 		double lowThreshold = threshold.getChosenPair().get(0);
 		double highThreshold = threshold.getChosenPair().get(1);
 		
 		
-		/// Check if the user wants to filter based on duration or # of events.
-		// Filter on duration.
-		if (filterOnDurationOrEvents.getChosen().contains("duration")) {
+		for (XTrace trace : clonedLog) {
 			
-			for (XTrace trace : clonedLog) {
-				
-				// Use first and last event to calculate the total duration of
-				// the trace.
-				XEvent firstEvent = trace.get(0);
-				XEvent lastEvent = trace.get(trace.size());
-				
-				Date firstTimeStamp = getTimeStamp(firstEvent);
-				Date secondTimeStamp = getTimeStamp(lastEvent);
-				
-				// Duration = final time stamp - first time stamp.
-				long duration = secondTimeStamp.getTime()
-						- firstTimeStamp.getTime();
-				
-				// See if if is within thresholds set by the user.
-				// Otherwise, remove it.
-				if (duration < lowThreshold || duration > highThreshold) {
-					clonedLog.remove(trace);
-				}
-				
-			}
+			// Use first and last event to calculate the total duration of
+			// the trace.
+			XEvent firstEvent = trace.get(0);
+			XEvent lastEvent = trace.get(trace.size());
 			
-		}
-		// Filter on # of events.
-		else {
+			Date firstTimeStamp = getTimeStamp(firstEvent);
+			Date secondTimeStamp = getTimeStamp(lastEvent);
 			
-			for (XTrace trace : clonedLog) {
-				
-				// A trace contains a list of events.
-				// Check if the size of this list is within thresholds set by
-				// the user.
-				// Otherwise, remove it.
-				if (trace.size() < lowThreshold 
-						|| trace.size() > highThreshold) {
-					clonedLog.remove(trace);
-				}
-				
+			// Duration = final time stamp - first time stamp.
+			long duration = secondTimeStamp.getTime()
+					- firstTimeStamp.getTime();
+			
+			// See if if is within thresholds set by the user.
+			// Otherwise, remove it.
+			if (duration < lowThreshold || duration > highThreshold) {
+				clonedLog.remove(trace);
 			}
 			
 		}
 		
+		return clonedLog;
+	}
+	
+	public XLog filterNumberOfEvents(XLog clonedLog,
+			ParameterRangeFromRange<Double> threshold) {
+
+		// Threshold contains the thresholds in number of events.
+		double lowThreshold = threshold.getChosenPair().get(0);
+		double highThreshold = threshold.getChosenPair().get(1);
+		
+		for (XTrace trace : clonedLog) {
+			
+			// A trace contains a list of events.
+			// Check if the size of this list is within thresholds set by
+			// the user.
+			// Otherwise, remove it.
+			if (trace.size() < lowThreshold 
+					|| trace.size() > highThreshold) {
+				clonedLog.remove(trace);
+			}
+			
+		}
 		
 		return clonedLog;
 	}

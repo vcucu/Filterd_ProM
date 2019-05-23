@@ -212,10 +212,17 @@ public class NotebookModel {
 		//TODO: implement
 	}
 	
-	public List<YLog> getXLogs(int index) {
+	public List<YLog> getOutputLogsTill(int index) {
 		List<YLog> logs = new ArrayList<>();
 		// TODO: Make it return the available XLogs (from the cells above)
 		logs.add(initialInput);
+		for (int i = 0; i < index; i++) {
+			CellModel gCell = getCells().get(i);
+			if (getCells().get(i) instanceof ComputationCellModel) {
+				ComputationCellModel cell = (ComputationCellModel) gCell;
+				logs.addAll(cell.getOutputLogs());
+			}
+		}
 		return logs;
 	}
 	

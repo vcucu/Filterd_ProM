@@ -65,18 +65,13 @@ public class FilterdEventRateConfig extends FilterdAbstractConfig {
 		parameters.add(desiredEvents);
 	}
 
-	public FilterdAbstractConfig populate(AbstractFilterConfigPanelController component) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	public boolean canPopulate(FilterConfigPanelController component) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+		//check whether no params are empty if you populate with the component
+		return true;
+	};
 
 	public FilterConfigPanelController getConfigPanel() {
-		return new FilterConfigPanelController("Event Rate Configuration", parameters);
+		return new FilterConfigPanelController("Event Rate Configuration", parameters, this);
 	}
 	// I did not find any case where a different input log would cause invalidity
 	public boolean checkValidity(XLog candidateLog) {	

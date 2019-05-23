@@ -16,6 +16,13 @@ import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
 import org.junit.Test;
+import org.processmining.filterd.filters.FilterdEventAttrFilter;
+import org.processmining.filterd.filters.FilterdTraceSampleFilter;
+import org.processmining.filterd.parameters.Parameter;
+import org.processmining.filterd.parameters.ParameterOneFromSet;
+import org.processmining.filterd.parameters.ParameterRangeFromRange;
+import org.processmining.filterd.parameters.ParameterValueFromRange;
+import org.processmining.filterd.parameters.ParameterYesNo;
 
 import junit.framework.TestCase;
 
@@ -59,16 +66,16 @@ public class FilterdPackageTest extends TestCase {
 	 * Assumes that both logs are sorted in ascending order by trace ID.
 	 * Events inside each trace are sorted chronologically.
 	 * 
-	 * @param log1 - first log to be compared.
-	 * @param log2 - second log to be compared.
+	 * @param expected - first log to be compared.
+	 * @param computed - second log to be compared.
 	 * @result true - if logs are the same
 	 * 		   false - otherwise.
 	 */
-	public boolean equalLog(XLog log1, XLog log2) {
+	public boolean equalLog(XLog expected, XLog computed) {
 		XLogInfoFactory factory = new XLogInfoFactory();
-		XLogInfo infoExpected = factory.createLogInfo(log1);
-		XLogInfo infoComputed = factory.createLogInfo(log2); 
-		
+		XLogInfo infoExpected = factory.createLogInfo(expected);
+		XLogInfo infoComputed = factory.createLogInfo(computed);
+
 
 		int tracesExpected = infoExpected.getNumberOfTraces();
 		int tracesComputed = infoComputed.getNumberOfTraces();
@@ -76,21 +83,21 @@ public class FilterdPackageTest extends TestCase {
 		int eventsComputed = infoComputed.getNumberOfEvents();
 
 		/* the logs must have the same number of traces and events */
-		if (tracesExpected != tracesComputed) return false;
+		if (tracesExpected != tracesComputed) return false; 
 		if (eventsExpected != eventsComputed) return false;
 
-		for (int i = 0; i < log1.size(); i++) {
-			XTrace trace1 = log1.get(i);
-			XTrace trace2 = log2.get(i);
+		for (int i = 0; i < expected.size(); i++) {
+			XTrace trace1 = expected.get(i);
+			XTrace trace2 = computed.get(i);
 
-			if(trace1.getAttributes().get("concept:name").equals(trace2.getAttributes().get("concept:name")) 
+			if (trace1.getAttributes().get("concept:name").equals(trace2.getAttributes().get("concept:name")) 
 					&& trace1.getAttributes().get("customer").equals(trace2.getAttributes().get("customer"))){
 				for (int j = 0; j < trace1.size(); j++) {
 					XEvent event1 = trace1.get(j);
 					XEvent event2 = trace2.get(j);
 					/* check whether the traces have the same events */
 					if (!event1.getAttributes().equals(event2.getAttributes())) {
-						System.out.println("Events do not have the same attr");
+						System.out.println("Events do not have the same attributes");
 						return false;
 					}
 				}
@@ -100,6 +107,7 @@ public class FilterdPackageTest extends TestCase {
 			}
 
 		}
+
 		return true;
 	}
 
@@ -537,9 +545,75 @@ public class FilterdPackageTest extends TestCase {
 	 * Result: case 76 - 6 events.
 	 */
 	@Test
-	public void testTimeframeContains() throws Throwable {
+	public void testTimeframeInFalse() throws Throwable {
 		XLog expected = parseLog("test_timeframe_1.xes");
-		XLog computed = null; // insert filter operation
+		
+		List empty = Collections.EMPTY_LIST;
+		
+		/* manually instantiate the filter's parameters */
+		ArrayList<Parameter> parameters = new ArrayList<>();
+		
+		ParameterOneFromSet selectionType = new ParameterOneFromSet("selectionType", "", "", empty); 
+		selectionType.setChosen("Filter in");
+		parameters.add(selectionType);
+		
+		/* remove empty traces */ 
+		ParameterYesNo nullHandling = new ParameterYesNo("", "", true);
+		nullHandling.setChosen(false);
+		parameters.add(nullHandling);
+		
+		ParameterYesNo emptyHandling = new ParameterYesNo("", "", true);
+		emptyHandling.setChosen(false);
+		parameters.add(emptyHandling);
+		
+		ParameterRangeFromRange<String> range = new ParameterRangeFromRange<String>("range", "", empty, empty);
+		ArrayList<String> chosen = new ArrayList<>();
+		chosen.add("2019-01-01T00:00:00.000");
+		chosen.add("2019-12-27T09:02:00.000"); // random date far after the original log
+		range.setChosenPair(chosen);
+		parameters.add(range);
+		
+		FilterdEventAttrFilter filter = new FilterdEventAttrFilter();
+		XLog computed = filter.filterTimestamp(null, originalLog, parameters);
+
+		assert equalLog(expected, computed);
+	}
+	
+	
+	/* Keeps events NOT contained in 01/01/2019 - end of original log.
+	 * 
+	 * Result: original log - case 76.
+	 */
+	@Test
+	public void testTimeframeOutFalse() throws Throwable {
+		XLog expected = parseLog("test_timeframe_3.xes");
+		
+		List empty = Collections.EMPTY_LIST;
+		
+		/* manually instantiate the filter's parameters */
+		ArrayList<Parameter> parameters = new ArrayList<>();
+		
+		ParameterOneFromSet selectionType = new ParameterOneFromSet("selectionType", "", "", empty); 
+		selectionType.setChosen("Filter out");
+		parameters.add(selectionType);
+		
+		ParameterYesNo nullHandling = new ParameterYesNo("", "", true);
+		nullHandling.setChosen(false);
+		parameters.add(nullHandling);
+		
+		ParameterYesNo emptyHandling = new ParameterYesNo("", "", true);
+		emptyHandling.setChosen(false);
+		parameters.add(emptyHandling);
+		
+		ParameterRangeFromRange<String> range = new ParameterRangeFromRange<String>("range","", empty, empty);
+		ArrayList<String> chosen = new ArrayList<>();
+		chosen.add("2019-01-01T00:00:00.000");
+		chosen.add("2019-12-27T09:02:00.000"); // random date far after the original log
+		range.setChosenPair(chosen);
+		parameters.add(range);
+		
+		FilterdEventAttrFilter filter = new FilterdEventAttrFilter();
+		XLog computed = filter.filterTimestamp(null, originalLog, parameters);
 
 		assert equalLog(expected, computed);
 	}
@@ -778,6 +852,35 @@ public class FilterdPackageTest extends TestCase {
 	public void testExtractSample() throws Throwable {
 		XLog expected = originalLog;
 		XLog computed = null; // insert filter operation
+		
+		int numberOfSamples = 5;
+		
+		/* manually instantiate the filter's parameters */
+		List<Parameter> parameters = new ArrayList<>();
+		
+		List<Integer> optionsPair = new ArrayList<Integer>();
+		optionsPair.add(0);
+		optionsPair.add(originalLog.size());
+		
+		System.out.println(
+				"number of original traces is " + originalLog.size()
+				);
+		
+		System.out.println("Taking " + numberOfSamples + " sample traces");
+		
+		ParameterValueFromRange<Integer> numberOfSamplesParameter = 
+				new ParameterValueFromRange<Integer>(
+						"Number of samples", 
+						"Select number of samples", 
+						optionsPair.get(0), 
+						optionsPair);
+		
+		numberOfSamplesParameter.setChosen(numberOfSamples);
+		
+		parameters.add(numberOfSamplesParameter);
+		
+		FilterdTraceSampleFilter filter = new FilterdTraceSampleFilter();
+		computed = filter.filter(null, originalLog, parameters);
 
 		assert containsLog(expected, computed);
 	}

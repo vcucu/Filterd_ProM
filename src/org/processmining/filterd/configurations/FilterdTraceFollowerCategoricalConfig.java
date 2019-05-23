@@ -8,27 +8,17 @@ import org.processmining.filterd.filters.Filter;
 import org.processmining.filterd.gui.AbstractFilterConfigPanelController;
 import org.processmining.filterd.gui.FilterConfigPanelController;
 
-public class FilterdTraceFollowerCategoricalConfig extends FilterdAbstractConfig {
+public class FilterdTraceFollowerCategoricalConfig extends FilterdAbstractGreenConfig {
 
 	public FilterdTraceFollowerCategoricalConfig(XLog log, Filter filterType) {
 		super(log, filterType);
 		// TODO Auto-generated constructor stub
 	}
 
-	public FilterdAbstractConfig populate(AbstractFilterConfigPanelController component) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	public boolean canPopulate(FilterConfigPanelController component) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	public FilterConfigPanelController getConfigPanel() {
-		return new FilterConfigPanelController("Categorical Trace Follower Configuration", parameters);
-	}
-
+		//check whether no params are empty if you populate with the component
+		return true;
+	};
 	public boolean checkValidity(XLog log) {
 		// TODO Auto-generated method stub
 		return false;

@@ -13,15 +13,21 @@ import org.processmining.filterd.filters.Filter;
 import org.processmining.filterd.gui.AbstractFilterConfigPanelController;
 import org.processmining.filterd.gui.FilterConfigPanelController;
 import org.processmining.filterd.parameters.Parameter;
+import org.processmining.filterd.parameters.ParameterMultipleFromSet;
+import org.processmining.filterd.parameters.ParameterOneFromSet;
+import org.processmining.filterd.parameters.ParameterRangeFromRange;
+import org.processmining.filterd.parameters.ParameterText;
+import org.processmining.filterd.parameters.ParameterValueFromRange;
+import org.processmining.filterd.parameters.ParameterYesNo;
 import org.processmining.filterd.widgets.ParameterController;
 import org.processmining.filterd.widgets.ParameterMultipleFromSetController;
 import org.processmining.filterd.widgets.ParameterOneFromSetController;
-import org.processmining.filterd.widgets.ParameterOneFromSetExtendedController;
 import org.processmining.filterd.widgets.ParameterRangeFromRangeController;
 import org.processmining.filterd.widgets.ParameterTextController;
 import org.processmining.filterd.widgets.ParameterValueFromRangeController;
 import org.processmining.filterd.widgets.ParameterYesNoController;
 import org.processmining.framework.plugin.PluginContext;
+
 public abstract class FilterdAbstractConfig {
 	
 	protected Filter filterType;
@@ -67,8 +73,10 @@ public abstract class FilterdAbstractConfig {
 	 */
 	public List<String> computeGlobalAttributes(XLog log) {
 		List<String> globalAttr = new ArrayList<>();
-		for (XAttribute attribute : log.getGlobalEventAttributes()) {
-			globalAttr.add(attribute.getKey());
+		if(log.getGlobalEventAttributes() != null) {
+			for (XAttribute attribute : log.getGlobalEventAttributes()) {
+				globalAttr.add(attribute.getKey());
+			}
 		}
 		return globalAttr;
 	}
@@ -166,40 +174,47 @@ public abstract class FilterdAbstractConfig {
 	 * Populates the parameters with information from the configuration panel.
 	 * @return concrete configuration of the configuration panel 
 	 */
+
 	public FilterdAbstractConfig populate(AbstractFilterConfigPanelController abstractComponent) {
 	
-	FilterConfigPanelController component = (FilterConfigPanelController) abstractComponent;
-	List<ParameterController> controllers = component.getControllers();
-	for(ParameterController controller : controllers) {
-
-		if(controller instanceof ParameterOneFromSetExtendedController) {
-			ParameterOneFromSetExtendedController casted = (ParameterOneFromSetExtendedController) controller;
-			//concreteReference.populate(casted.getNestedConfigPanel());
-			//this menthod needs to be in every referencable class
-		} else if(controller instanceof ParameterYesNoController) {
-			ParameterYesNoController casted = (ParameterYesNoController) controller;
-			//getParameter(controller.getName())).setChosen(casted.getValue());		
-		} else if(controller instanceof ParameterOneFromSetController) {
-			ParameterOneFromSetController casted = (ParameterOneFromSetController) controller;
-			
-		} else if(controller instanceof ParameterMultipleFromSetController) {
-			ParameterMultipleFromSetController casted = (ParameterMultipleFromSetController) controller;
-
-		} else if(controller instanceof ParameterValueFromRangeController) {
-			ParameterValueFromRangeController casted = (ParameterValueFromRangeController) controller;
-			
-		} else if(controller instanceof ParameterTextController) {
-			ParameterTextController casted = (ParameterTextController) controller;
-
-		} else if(controller instanceof ParameterRangeFromRangeController) {
-			ParameterRangeFromRangeController casted = (ParameterRangeFromRangeController) controller;
-
-		} else {
-			throw new IllegalArgumentException("Unsupporrted controller type.");
-		}	
-		//assumes that the controller has a name corresponding to the parameter name
-		
-		
+		FilterConfigPanelController component = (FilterConfigPanelController) abstractComponent;
+		List<ParameterController> controllers = component.getControllers();
+		for(ParameterController controller : controllers) {
+			//all cases assume that the controller has a name corresponding to the parameter name
+			if(controller instanceof ParameterYesNoController) {
+				ParameterYesNoController casted = (ParameterYesNoController) controller;
+				ParameterYesNo param = (ParameterYesNo) getParameter(controller.getName());
+				param.setChosen(casted.getValue());	
+				
+			} else if(controller instanceof ParameterOneFromSetController) {
+				ParameterOneFromSetController casted = (ParameterOneFromSetController) controller;
+				ParameterOneFromSet param = (ParameterOneFromSet) getParameter(controller.getName());
+				param.setChosen(casted.getValue());	
+				
+			} else if(controller instanceof ParameterMultipleFromSetController) {
+				ParameterMultipleFromSetController casted = (ParameterMultipleFromSetController) controller;
+				ParameterMultipleFromSet param = (ParameterMultipleFromSet) getParameter(controller.getName());
+				param.setChosen(casted.getValue());				
+				
+			} else if(controller instanceof ParameterValueFromRangeController) {
+				ParameterValueFromRangeController casted = (ParameterValueFromRangeController) controller;
+				ParameterValueFromRange param = (ParameterValueFromRange) getParameter(controller.getName());
+				param.setChosen(casted.getValue());	
+				
+			} else if(controller instanceof ParameterTextController) {
+				ParameterTextController casted = (ParameterTextController) controller;
+				ParameterText param = (ParameterText) getParameter(controller.getName());
+				param.setChosen(casted.getValue());	
+				
+			} else if(controller instanceof ParameterRangeFromRangeController) {
+				ParameterRangeFromRangeController casted = (ParameterRangeFromRangeController) controller;
+				ParameterRangeFromRange param = (ParameterRangeFromRange) getParameter(controller.getName());
+				param.setChosenPair(casted.getValue());	
+				
+			} else {
+				throw new IllegalArgumentException("Unsupporrted controller type.");
+			}	
+				
 		}
 		return this;
 	}
@@ -215,7 +230,7 @@ public abstract class FilterdAbstractConfig {
 	 * 
 	 * @return the concrete configuration panel
 	 */
-	public abstract FilterConfigPanelController getConfigPanel();
+	public abstract AbstractFilterConfigPanelController getConfigPanel();
 	
 	/**
 	 * Invokes the {@filter(PluginContext context, XLog log, List<Parameter> parameters)} 

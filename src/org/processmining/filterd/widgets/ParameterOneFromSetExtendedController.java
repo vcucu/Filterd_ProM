@@ -13,13 +13,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
 public class ParameterOneFromSetExtendedController extends ParameterController {
 	@FXML private ComboBox<String> combobox;
 	@FXML private Label label;
-	@FXML private Pane nestedPanel;
+	@FXML private VBox nestedPanel;
 	private AbstractFilterConfigPanelController nestedConfigPanel;
 	private Referenceable owner;
 	
@@ -27,7 +27,7 @@ public class ParameterOneFromSetExtendedController extends ParameterController {
 		super(name);
 		this.owner = owner;
 		// load contents
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/org/processmining/filterd/widgets/fxml/ParameterOneFromSet.fxml"));
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/org/processmining/filterd/widgets/fxml/ParameterOneFromSetExtended.fxml"));
         fxmlLoader.setController(this);
         try {
             contents = (VBox) fxmlLoader.load();
@@ -39,6 +39,7 @@ public class ParameterOneFromSetExtendedController extends ParameterController {
         ObservableList<String> observableList = FXCollections.observableList(list);
         combobox.setItems(observableList);
         combobox.getSelectionModel().select(defaultValue);
+        setNestedContent(owner.getConcreteReference());
 	}
 	
 	public String getValue() {
@@ -47,8 +48,10 @@ public class ParameterOneFromSetExtendedController extends ParameterController {
 	
 	public void setNestedContent(FilterdAbstractConfig nestedFilterConfig) {
 		nestedConfigPanel = nestedFilterConfig.getConfigPanel();
+		VBox nestedConfigPanelRoot = nestedConfigPanel.getRoot();
 		nestedPanel.getChildren().clear();
-		nestedPanel.getChildren().add(nestedConfigPanel.getRoot());
+		VBox.setVgrow(nestedPanel, Priority.ALWAYS);
+		nestedPanel.getChildren().add(nestedConfigPanelRoot);
 	}
 	
 	public AbstractFilterConfigPanelController getNestedConfigPanel() {

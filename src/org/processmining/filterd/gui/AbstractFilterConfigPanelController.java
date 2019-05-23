@@ -29,7 +29,7 @@ public abstract class AbstractFilterConfigPanelController {
 	public void addParameterYesNo(ParameterYesNo parameter) {
 		ParameterController controller = new ParameterYesNoController(parameter.getNameDisplayed(), 
 				parameter.getName(), 
-				parameter.getDefaultChoice());
+				parameter.getChosen());
 		getNextContainer().getChildren().add(controller.getContents());
 		controllers.add(controller);
 	}
@@ -37,7 +37,7 @@ public abstract class AbstractFilterConfigPanelController {
 	public void addParameterOneFromSet(ParameterOneFromSet parameter) {
 		ParameterController controller = new ParameterOneFromSetController(parameter.getNameDisplayed(), 
 				parameter.getName(),
-				parameter.getDefaultChoice(), 
+				parameter.getChosen() == null ? parameter.getDefaultChoice() : parameter.getChosen(), 
 				parameter.getOptions());
 		getNextContainer().getChildren().add(controller.getContents());
 		controllers.add(controller);
@@ -46,17 +46,18 @@ public abstract class AbstractFilterConfigPanelController {
 	public void addParameterMultipleFromSet(ParameterMultipleFromSet parameter) {
 		ParameterController controller = new ParameterMultipleFromSetController(parameter.getNameDisplayed(), 
 				parameter.getName(), 
-				parameter.getDefaultChoice(), 
+				parameter.getChosen() == null ? parameter.getDefaultChoice() : parameter.getChosen(), 
 				parameter.getOptions());
 		getNextContainer().getChildren().add(controller.getContents());
 		controllers.add(controller);
 	}
 	
-	public void addParameterValueFromRange(ParameterValueFromRange<Double> parameter) {
-		ParameterController controller = new ParameterValueFromRangeController(parameter.getNameDisplayed(), 
+	public <N extends Number> void addParameterValueFromRange(ParameterValueFromRange<N> parameter) {
+		ParameterController controller = new ParameterValueFromRangeController<N>(parameter.getNameDisplayed(), 
 				parameter.getName(), 
-				parameter.getDefaultChoice(), 
-				parameter.getOptionsPair());
+				parameter.getChosen(), 
+				parameter.getOptionsPair(),
+				parameter.getGenericTypeClass());
 		getNextContainer().getChildren().add(controller.getContents());
 		controllers.add(controller);
 	}
@@ -64,21 +65,22 @@ public abstract class AbstractFilterConfigPanelController {
 	public void addParameterText(ParameterText parameter) {
 		ParameterController controller = new ParameterTextController(parameter.getNameDisplayed(), 
 				parameter.getName(), 
-				parameter.getDefaultChoice());
+				parameter.getChosen() == null ? parameter.getDefaultChoice() : parameter.getChosen());
 		getNextContainer().getChildren().add(controller.getContents());
 		controllers.add(controller);
 	}
 	
-	public void addParameterRangeFromRange(ParameterRangeFromRange<Double> parameter) {
-		ParameterController controller = new ParameterRangeFromRangeController(parameter.getNameDisplayed(), 
+	public <N extends Number> void addParameterRangeFromRange(ParameterRangeFromRange<N> parameter) {
+		ParameterController controller = new ParameterRangeFromRangeController<N>(parameter.getNameDisplayed(), 
 				parameter.getName(), 
-				parameter.getDefaultPair(),
-				parameter.getOptionsPair());
+				parameter.getChosenPair().size() == 0 ? parameter.getDefaultPair() : parameter.getChosenPair(),
+				parameter.getOptionsPair(),
+				parameter.getGenericTypeClass());
 		getNextContainer().getChildren().add(controller.getContents());
 		controllers.add(controller);
 	}
 	
-	protected void populateFromParameters(List<Parameter> parameters) {
+	protected <N1 extends Number, N2 extends Number> void populateFromParameters(List<Parameter> parameters) {
 		for(Parameter parameter : parameters) {
 			if(parameter instanceof ParameterYesNo) {
 				ParameterYesNo casted = (ParameterYesNo) parameter;
@@ -90,18 +92,22 @@ public abstract class AbstractFilterConfigPanelController {
 				ParameterMultipleFromSet casted = (ParameterMultipleFromSet) parameter;
 				addParameterMultipleFromSet(casted);
 			} else if(parameter instanceof ParameterValueFromRange) {
-				ParameterValueFromRange<Double> casted = (ParameterValueFromRange<Double>) parameter;
+				ParameterValueFromRange<N1> casted = (ParameterValueFromRange<N1>) parameter;
 				addParameterValueFromRange(casted);
 			} else if(parameter instanceof ParameterText) {
 				ParameterText casted = (ParameterText) parameter;
 				addParameterText(casted);
 			} else if(parameter instanceof ParameterRangeFromRange) {
-				ParameterRangeFromRange<Double> casted = (ParameterRangeFromRange<Double>) parameter;
+				ParameterRangeFromRange<N2> casted = (ParameterRangeFromRange<N2>) parameter;
 				addParameterRangeFromRange(casted);
 			} else {
 				throw new IllegalArgumentException("Unsupporrted parameter type.");
 			}
 		}
+	}
+	
+	public List<ParameterController> getControllers() {
+		return controllers;
 	}
 	
 	public VBox getRoot() {

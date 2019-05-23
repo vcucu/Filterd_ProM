@@ -73,40 +73,14 @@ public class FilterdTraceFrequencyConfig extends FilterdAbstractConfig {
 				
 	}
 
-	public FilterdAbstractConfig populate(AbstractFilterConfigPanelController component) {
-		//initialize the panel parameter controllers for each parameter
-		
-		//THIS COMMENT BLOCK CAN BE REMOVED IN THE NEXT COMMIT WHEN REPLACED BY METHOD IN THE ABSTRACT CLASS
-		/*ParameterOneFromSetController foController = 
-				(ParameterOneFromSetController) component.getControllers().get(0);
-		
-		ParameterRangeFromRangeController thrController = 
-				(ParameterRangeFromRangeController) component.getControllers().get(1);
-		
-		ParameterOneFromSetController filterInOutController = 
-				(ParameterOneFromSetController) component.getControllers().get(2);
-	
-		//update the parameters with the values from the parameter controllers
-		((ParameterOneFromSet)this.parameters.get(0))
-		.setChosen(foController.getValue());
-		
-		((ParameterRangeFromRange<Double>)this.parameters.get(1))
-		.setChosenPair((List<Double>)thrController.getValue());
-		
-		((ParameterOneFromSet)this.parameters.get(2))
-		.setChosen(filterInOutController.getValue());*/
-		
-		return this;
-	}
-
 	public boolean canPopulate(FilterConfigPanelController component) {
-		
+		//check whether no params are empty if you populate with the component
 		return true;
-	}
+	};
 
 	public FilterConfigPanelController getConfigPanel() {
 		//return a new panel for this configuration with the relevant name and parameters
-		return new FilterConfigPanelController("Filter Trace Frequency Configuration", parameters);
+		return new FilterConfigPanelController("Filter Trace Frequency Configuration", parameters, this);
 	}
 
 	public boolean checkValidity(XLog log) {

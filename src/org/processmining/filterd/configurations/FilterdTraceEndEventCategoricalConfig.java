@@ -16,7 +16,7 @@ import org.processmining.filterd.parameters.Parameter;
 import org.processmining.filterd.parameters.ParameterMultipleFromSet;
 import org.processmining.filterd.parameters.ParameterYesNo;
 
-public class FilterdTraceEndEventCategoricalConfig extends FilterdAbstractConfig {
+public class FilterdTraceEndEventCategoricalConfig extends FilterdAbstractGreenConfig {
 
 	public FilterdTraceEndEventCategoricalConfig(XLog log, Filter filterType, String attribute,
 			List<XEventClassifier> classifiers) {
@@ -64,19 +64,10 @@ public class FilterdTraceEndEventCategoricalConfig extends FilterdAbstractConfig
 		parameters.add(nullHandling);
 	}
 
-	public FilterdAbstractConfig populate(AbstractFilterConfigPanelController component) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	public boolean canPopulate(FilterConfigPanelController component) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	public FilterConfigPanelController getConfigPanel() {
-		return new FilterConfigPanelController("Categorical Trace End Event Configuration", parameters);
-	}
+		//check whether no params are empty if you populate with the component
+		return true;
+	};
 
 	public boolean checkValidity(XLog log) {
 		// TODO Auto-generated method stub

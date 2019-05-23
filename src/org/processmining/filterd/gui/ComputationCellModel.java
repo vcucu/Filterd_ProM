@@ -22,30 +22,98 @@ import org.processmining.framework.plugin.annotations.Plugin;
 import org.processmining.framework.plugin.impl.PluginManagerImpl;
 import org.processmining.framework.util.Pair;
 
+import javafx.beans.Observable;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.util.Callback;
+
 public class ComputationCellModel extends CellModel {
-	
+
 	private ProMCanceller canceller;
 	private XLog log;
-	private List<YLog> eventLogs;
-	
+	private List<YLog> inputLogs;
+	private List<YLog> outputLogs;
+	private ObservableList<FilterButtonModel> filters;
+	private ArrayList<FilterButtonController> filterControllers;
+
+
 	public ComputationCellModel(UIPluginContext context, ProMCanceller canceller, List<YLog> eventLogs) {
 			super(context);
 			this.canceller = canceller;
-			this.eventLogs = eventLogs;
+			this.inputLogs = eventLogs;
+			
+			filterControllers = new ArrayList<>();
+
+			filters = FXCollections.observableArrayList(//);
+					new Callback<FilterButtonModel, Observable[]>() {
+						@Override
+						public Observable[] call(FilterButtonModel temp) {
+							return new Observable[] {
+									temp.nameProperty(),
+									temp.selectedProperty()
+							};
+						}
+					});
+	}
+
+	public ObservableList<FilterButtonModel> getFilters() {
+		return filters;
+	}
+
+	public void addFilterModel(int index, FilterButtonModel model) {
+		this.filters.add(index, model);
 	}
 	
+	public void removeFilterModel(FilterButtonModel filter) {
+		filters.remove(filter);
+	}
+	
+	public ArrayList<FilterButtonController> getFilterControllers() {
+		return filterControllers;
+	}
+
+	public void addFilterController(int index, FilterButtonController controller) {
+		this.filterControllers.add(index, controller);
+	}
+	
+	public void removeFilterController(FilterButtonController controller) {
+		this.filterControllers.remove(controller);
+	}
+
 	public void setXLog(XLog log) {
+		if(log == null) {
+			throw new IllegalArgumentException("Log cannot be null!");
+		}
 		this.log = log;
 	}
 	
-	public void setXLogs(List<YLog> eventLogs) {
-		this.eventLogs = eventLogs;
+    public XLog getInputLog() {
+    	return log;
+    }
+
+	public void setInputLogs(List<YLog> eventLogs) {
+		this.inputLogs = eventLogs;
+	}
+
+	public List<YLog> getInputLogs() {
+		return inputLogs;
 	}
 	
-	public List<YLog> getXLogs() {
-		return eventLogs;
+	public void setOutputLogs(List<YLog> outputLogs) {
+		this.outputLogs = outputLogs;
 	}
 	
+	public List<YLog> getOutputLogs() {
+		return outputLogs;
+	}
+
+	public void selectFilter(FilterButtonModel model) {
+		for (FilterButtonModel filter : filters) {
+			filter.setSelected(false);
+		}
+		model.setSelected(true);
+	}
+
     // Get visualizer names
 	// LET OP! Log must be set first.
     public List<ViewType> getVisualizers() {
@@ -54,7 +122,7 @@ public class ComputationCellModel extends CellModel {
 		// Get the necessary managers
 		ProMViewManager vm = ProMViewManager.initialize(context.getGlobalContext()); // Get current view manager
 		ProMResourceManager rm = ProMResourceManager.initialize(context.getGlobalContext()); // Get current resource manager
-		// Get the possible visualizers for the input event log. 
+		// Get the possible visualizers for the input event log.
 		List<ViewType> logViewTypes = vm.getViewTypes(rm.getResourceForInstance(log));
 		// Add all visualizer (except this one).
 		for (ViewType type : logViewTypes) {
@@ -65,7 +133,7 @@ public class ComputationCellModel extends CellModel {
 		}
 		return visualizers;
     }
-    
+
     public JComponent getVisualization(ViewType type) {
     	UIPluginContext context = getContext();
 		// Get all log visualizers.
@@ -118,6 +186,5 @@ public class ComputationCellModel extends CellModel {
 		// If the visualizer could not be found, show some text.
 		return new JLabel("Visualizer " + type.getTypeName() + " could not be found.");
 	}
-
 
 }

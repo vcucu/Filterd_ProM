@@ -2,21 +2,34 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import org.controlsfx.control.RangeSlider?>
 
-
-<VBox prefWidth="400.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.171">
+<VBox xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+      <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
          <children>
-            <RangeSlider fx:id="slider" blockIncrement="1.0" highValue="75.0" lowValue="25.0" max="100.0" prefWidth="200.0" showTickLabels="true" />
-            <VBox maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS">
+            <GridPane maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="200.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="200.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="25.0" vgrow="SOMETIMES" />
+              </rowConstraints>
                <children>
-                  <Label fx:id="label" alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="ParameterRangeFromRange" VBox.vgrow="ALWAYS" />
+                  <RangeSlider fx:id="slider" blockIncrement="1.0" highValue="75.0" lowValue="25.0" max="100.0" maxWidth="200.0" showTickLabels="true" GridPane.hgrow="ALWAYS" />
+                  <VBox maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS">
+                     <children>
+                        <Label fx:id="label" alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="ParameterRangeFromRange" VBox.vgrow="ALWAYS" />
+                     </children>
+                  </VBox>
                </children>
-            </VBox>
+            </GridPane>
          </children>
          <VBox.margin>
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />

@@ -25,9 +25,10 @@ public class FilterConfigPanelController extends AbstractFilterConfigPanelContro
 	private boolean placeInLeftPane;
 	private FilterdAbstractConfig owner;
 	
-	public FilterConfigPanelController(String title, List<Parameter> parameters) {
+	public FilterConfigPanelController(String title, List<Parameter> parameters, FilterdAbstractConfig owner) {
 		placeInLeftPane = true;
 		controllers = new ArrayList<>();
+		this.owner = owner;
 		// load UI
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/processmining/filterd/gui/fxml/FilterConfigPanel.fxml"));
 		loader.setController(this);
@@ -49,15 +50,18 @@ public class FilterConfigPanelController extends AbstractFilterConfigPanelContro
 				throw new IllegalStateException("Filter configuration is not Referenceable, but there is a ParameterOneFromSet that creates a reference.");
 			}
 			Referenceable casted = (Referenceable) owner;
+			System.out.print("Chosen is: ");
+			System.out.println(parameter.getChosen());
+			System.out.println(parameter.getChosen() == null);
 			controller = new ParameterOneFromSetExtendedController(parameter.getNameDisplayed(), 
 					parameter.getName(),
-					parameter.getDefaultChoice(), 
+					parameter.getChosen() == null ? parameter.getDefaultChoice() : parameter.getChosen(), 
 					parameter.getOptions(),
 					casted);
 		} else {
 			controller = new ParameterOneFromSetController(parameter.getNameDisplayed(), 
 					parameter.getName(),
-					parameter.getDefaultChoice(), 
+					parameter.getChosen() == null ? parameter.getDefaultChoice() : parameter.getChosen(), 
 					parameter.getOptions());
 		}
 		getNextContainer().getChildren().add(controller.getContents());

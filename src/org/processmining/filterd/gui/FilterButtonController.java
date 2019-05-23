@@ -28,11 +28,10 @@ public class FilterButtonController {
 	@FXML
 	private ImageView moveDownButton;
 	
-	public FilterButtonController(ComputationCellController controller) {
+	public FilterButtonController(ComputationCellController controller, FilterButtonModel model) {
 		this.controller = controller;
-		this.model = new FilterButtonModel();
+		this.model = model;
 		this.buttons = new ArrayList<>();
-		model.addPropertyChangeListener(new FilterButtonListener(this));
 	}
 	
 	public void initialize() {
@@ -41,7 +40,16 @@ public class FilterButtonController {
 		buttons.add(moveUpButton);
 		buttons.add(moveDownButton);
 		
+		updateFilterButtonView();
+	}
+	
+	public void updateFilterButtonView() {
 		filterName.setText(model.getName());
+		if (model.getSelected()) {
+			showButtons();
+		} else {
+			hideButtons();
+		}
 	}
 
 	public Pane getCellLayout() {
@@ -64,6 +72,14 @@ public class FilterButtonController {
 		filterName.setText(value);
 	}
 	
+	public void setFilterLayout(HBox temp) {
+		this.filterLayout = temp;
+	}
+	
+	public HBox getFilterLayout() {
+		return this.filterLayout;
+	}
+	
 	public void showButtons() {
 		for (ImageView button : buttons) {
 			button.setVisible(true);
@@ -77,40 +93,54 @@ public class FilterButtonController {
 		}
 		filterLayout.setStyle("-fx-background-color: #eeeeee");
 	}
-	
-	private void updateSelection() {
-		for (FilterButtonModel filterModel : controller.getFilters()) {
-			if (filterModel.getSelected()) {
-				filterModel.setSelected(false);
-			}
+
+	@FXML
+	public void selectFilterButton() {
+		if(!model.getSelected()) {
+			controller.hideConfigurationModal();
+			controller.getCellModel().selectFilter(model);
 		}
 	}
 
 	@FXML
-	public void selectFilterButton() {
-		updateSelection();
-		model.setSelected(true);
-	}
-
-	@FXML
 	private void editFilterHandler() {
-		System.out.println("Edit filter handler!");
+		if(this.model.getFilterConfig() != null) {
+			this.controller.showModalFilterConfiguration(this.model.getFilterConfig());
+		}
 	}
 	
 	@FXML
 	public void removeFilterHandler() {
 		controller.getPanelLayout().getChildren().remove(filterLayout);
-		controller.getFilters().remove(model);
-		System.out.println("New filters size: " + controller.getFilters().size());
+		controller.getCellModel().removeFilterModel(model);
+		controller.getCellModel().removeFilterController(this);
 	}
 	
 	@FXML
 	private void moveUpFilterHandler() {
-		System.out.println("MoveUp filter handler!");
+		int index = model.getIndex();
+		if (index > 0) {
+			moveFilterButton(index - 1);
+		}
 	}
 	
 	@FXML
 	private void moveDownFilterHandler() {
-		System.out.println("MoveDown filter handler!");
+		int index = model.getIndex();
+		if (index < controller.getCellModel().getFilters().size() - 1) {
+			moveFilterButton(index + 1);
+		}
+	}
+	
+	private void moveFilterButton(int index) {
+		controller.getPanelLayout().getChildren().remove(filterLayout);
+		
+		controller.getCellModel().getFilters().remove(model);
+		controller.getCellModel().getFilterControllers().remove(this);
+		
+		controller.getCellModel().addFilterModel(index, model);
+		controller.getCellModel().addFilterController(index, this);
+		
+		controller.getPanelLayout().getChildren().add(index, filterLayout);
 	}
 }

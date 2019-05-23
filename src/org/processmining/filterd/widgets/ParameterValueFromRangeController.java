@@ -9,12 +9,14 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.VBox;
 
-public class ParameterValueFromRangeController extends ParameterController {
+public class ParameterValueFromRangeController<N extends Number> extends ParameterController {
 	@FXML private Slider slider;
 	@FXML private Label label;
+	private Class<N> genericTypeClass;
 	
-	public ParameterValueFromRangeController(String nameDisplayed, String name, double defaultValue, List<Double> minMaxPair) {
+	public ParameterValueFromRangeController(String nameDisplayed, String name, N defaultValue, List<N> minMaxPair, Class<N> genericTypeClass) {
 		super(name);
+		this.genericTypeClass = genericTypeClass;
 		// load contents
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/org/processmining/filterd/widgets/fxml/ParameterValueFromRange.fxml"));
         fxmlLoader.setController(this);
@@ -25,15 +27,28 @@ public class ParameterValueFromRangeController extends ParameterController {
         }
         // set specifics
         label.setText(nameDisplayed);
-        slider.setMin(minMaxPair.get(0));
-        slider.setMax(minMaxPair.get(1));
-        double majorTickUnit = (minMaxPair.get(1) - minMaxPair.get(0)) / 4.0;
-        slider.setMajorTickUnit(majorTickUnit);
+        slider.setMin((double) minMaxPair.get(0));
+        slider.setMax((double) minMaxPair.get(1));
         slider.setMinorTickCount(4);
-        slider.setValue(defaultValue);
+        slider.setValue((double) defaultValue);
+        double majorTickUnit = ((double) minMaxPair.get(1) - (double) minMaxPair.get(0)) / 4.0;
+        slider.setMajorTickUnit(Math.floor(majorTickUnit));
+        if(genericTypeClass.equals(Double.TYPE)) {
+        	slider.setBlockIncrement(0.1);
+        } else if(genericTypeClass.equals(Integer.TYPE)) {
+        	slider.setBlockIncrement(1);
+        } else {
+        	throw new IllegalArgumentException("Supported types are integer and double");
+        }
 	}
 	
-	public double getValue() {
-		return slider.getValue();
+	public N getValue() {
+		if(genericTypeClass.equals(Double.TYPE)) {
+			return (N)(Object) slider.getValue();
+        } else if(genericTypeClass.equals(Integer.TYPE)) {
+        	return (N)(Object) Math.round(slider.getValue());
+        } else {
+        	throw new IllegalStateException("Supported types are integer and double");
+        }
 	}
 }
