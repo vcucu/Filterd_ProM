@@ -147,6 +147,40 @@ public class NotebookModel {
 	public void removeCell(CellModel cell) {
 		cells.remove(cell);
 	}
+	
+	/**
+	 * Adds a single cell to the list of cells in this model.
+	 * 
+	 * @param index
+	 *            The position in the list which the cell should be added
+	 * @param cell
+	 *            The cell to add to this model
+	 */
+	public void addCell(int index, CellModel cell) {
+		this.cells.add(index, cell);
+	}
+
+	/**
+	 * Appends a list of cells to the list of cells in this model.
+	 * 
+	 * @param index
+	 *            The position in the list in which the cells should be added
+	 * @param cells
+	 *            The list of cells to append to the cells in this model.
+	 */
+	public void addCells(int index, List<CellModel> cells) {
+		this.cells.addAll(index, cells);
+	}
+	
+	/**
+	 * Removes a cell from the list of cells in this model.
+	 * 
+	 * @param index
+	 *            The index of the cell to be removed.
+	 */
+	public void removeCell(int index) {
+		cells.remove(index);
+	}
 
 	/**
 	 * Removes all cells in a list from the list of cells in this model.
@@ -213,17 +247,19 @@ public class NotebookModel {
 	}
 	
 	public List<YLog> getOutputLogsTill(int index) {
-		List<YLog> logs = new ArrayList<>();
-		// TODO: Make it return the available XLogs (from the cells above)
-		logs.add(initialInput);
-		for (int i = 0; i < index; i++) {
-			CellModel gCell = getCells().get(i);
-			if (getCells().get(i) instanceof ComputationCellModel) {
-				ComputationCellModel cell = (ComputationCellModel) gCell;
-				logs.addAll(cell.getOutputLogs());
+		if (! (index >= getCells().size() || index < 0)) {
+			List<YLog> logs = new ArrayList<>();
+			logs.add(initialInput);
+			for (int i = 0; i < index; i++) {
+				CellModel gCell = getCells().get(i);
+				if (getCells().get(i) instanceof ComputationCellModel) {
+					ComputationCellModel cell = (ComputationCellModel) gCell;
+					logs.addAll(cell.getOutputLogs());
+				}
 			}
+			return logs;
 		}
-		return logs;
+		return new ArrayList<>();
 	}
 	
 	

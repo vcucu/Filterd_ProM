@@ -208,11 +208,6 @@ public class ComputationCellController extends CellController {
 		filterPanelScroll.setManaged(!isExpanded);
 	}
 
-	@FXML
-	public void prependCellButtonHandler() {
-		// TODO Add cell above the one that generated this
-	}
-
 	// Set XLog
 	@FXML
 	public void setXLog(ActionEvent event) {

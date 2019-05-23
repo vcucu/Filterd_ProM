@@ -39,7 +39,7 @@ public class NotebookController {
 	@FXML
 	private Button appendCellButton;
 	@FXML
-	private HBox addCellModal;
+	private HBox addCellHBox;
 	@FXML
 	private Button addComputationCellButton;
 	@FXML
@@ -79,8 +79,7 @@ public class NotebookController {
 	 * Gets executed after the constructor. Has access to the @FXML annotated
 	 * fields, thus UI elements can be manipulated here.
 	 */
-	public void initialize() {
-
+	public void initialize() {	
 		// Add listener cells from observable list
 		model.getCells().addListener(new ListChangeListener<CellModel>() {
 			@Override
@@ -99,41 +98,16 @@ public class NotebookController {
 				}
 			}
 		});
-		// create parameters
-		// yes no
-//		List<Parameter> params = new ArrayList<>();
-//    	params.add(new ParameterYesNo("yesNo", "Yes/No Label", true));
-//    	// one from set
-//    	List<String> oneFromSet = new ArrayList<>();
-//    	oneFromSet.add("Option 1");
-//    	oneFromSet.add("Option 2");
-//    	oneFromSet.add("Option 3");
-//    	oneFromSet.add("Option 4");
-//    	oneFromSet.add("Option 5");
-//    	oneFromSet.add("Option 6");
-//    	oneFromSet.add("Option 7");
-//    	params.add(new ParameterOneFromSet("oneFromSet", "One From Set Label", "Option 1", oneFromSet));
-//    	// multiple from set
-//    	List<String> multipleFromSet = new ArrayList<>();
-//    	multipleFromSet.add("Option 3");
-//    	multipleFromSet.add("Option 6");
-//    	multipleFromSet.add("Option 7");
-//    	params.add(new ParameterMultipleFromSet("multipleFromSet", "Multiple From Set Label", multipleFromSet, oneFromSet));
-//    	// value from range
-//    	List<Double> optionsPair = new ArrayList<>();
-//    	optionsPair.add(5.0);
-//    	optionsPair.add(15.0);
-//    	params.add(new ParameterValueFromRange<Double>("valueFromRange", "Value From Range Label", 13.2, optionsPair));
-//    	// range from range
-//    	List<Double> rangeFromRange = new ArrayList<>();
-//    	rangeFromRange.add(7.5);
-//    	rangeFromRange.add(12.5);
-//    	params.add(new ParameterRangeFromRange<Double>("rangeFromRange", "Range From Range Label", rangeFromRange, optionsPair));
-//    	// text
-//    	params.add(new ParameterText("text", "Text", "Some value"));
-//    	// create controller and add contents to the view
-//    	FilterConfigPanelController ctrl = new FilterConfigPanelController("Some random filter configuration panel", params);
-//    	configurationModal.getChildren().add(ctrl.getContents());
+
+		// Initialize AddCelModal
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/processmining/filterd/gui/fxml/AddCell.fxml"));
+			loader.setController(new AddCellController());
+			addCellHBox.getChildren().add((HBox) loader.load());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 	/**
@@ -176,27 +150,8 @@ public class NotebookController {
 	 */
 	@FXML
 	private void appendCellButtonHandler() {
-		toggleAddCellModalVisibilty();
-	}
-
-	/**
-	 * Handler for the add computation cell button. Adds a new computation cell
-	 * to the notebook and hides the add cell button modal.
-	 */
-	@FXML
-	private void addComputationCellButtonHandler() {
-		appendComputationCell();
-		setAddCellModalInvisible();
-	}
-
-	/**
-	 * Handler for the add text cell button. Adds a new text cell to the
-	 * notebook and hides the add cell button modal.
-	 */
-	@FXML
-	private void addTextCellButtonHandler() {
-		appendTextCell();
-		setAddCellModalInvisible();
+		int index = model.getCells().size();
+		toggleAddCellModal(index);
 	}
 
 	/**
@@ -226,20 +181,18 @@ public class NotebookController {
 	/**
 	 * Creates a new ComputationCell model and adds it to the observable list.
 	 */
-	public void appendComputationCell() {
-		int index = model.getCells().size(); // Index of the new cell, so that we can compute which XLogs are available
+	public void addComputationCell(int index) {
 		ComputationCellModel cellModel = new ComputationCellModel(model.getPromContext(), model.getPromCanceller(),
 				model.getOutputLogsTill(index));
-		model.addCell(cellModel);
+		model.addCell(index, cellModel);
 	}
 
 	/**
 	 * Creates a new TextCell model and adds it to the observable list.
 	 */
-	public void appendTextCell() {
-		int index = model.getCells().size(); // Index of the new cell, so that we can compute which XLogs are available
+	public void addTextCell(int index) {
 		TextCellModel cellModel = new TextCellModel(model.getPromContext());
-		model.addCell(cellModel);
+		model.addCell(index, cellModel);
 	}
 
 	/**
@@ -289,52 +242,64 @@ public class NotebookController {
 	}
 
 	/**
-	 * Sets a model for the current notebook.
-	 * 
-	 * @param model
-	 *            the {@code NotebookModel} to set for the current notebook.
+	 * Make the add cell modal disappear.
 	 */
-	public void setModel(NotebookModel model) {
-		//do we need this method? seems dangerous to me.
-		this.model = model;
-	}
-
-	/**
-	 * Sets the layout that contains the cells in this notebook.
-	 * 
-	 * @param layout
-	 *            the {@code VBox} to set as the layout, that contains cells,
-	 *            for the current notebook.
-	 */
-	public void setLayout(VBox layout) {
-		//do we need this method? seems dangerous to me.
-		this.notebookLayout = layout;
+	public void hideAddCellModal() {
+		addCellHBox.setVisible(false); // makes the content of the modal (HBox) invisible.
+		addCellHBox.setManaged(false); // makes the modal (HBox) take up no space. This option is note available in the
+										// Scene Builder.
+		notebookLayout.getChildren().remove(addCellHBox);
 	}
 
 	/**
 	 * Make the add cell modal appear.
 	 */
-	private void setAddCellModalVisible() {
-		addCellModal.setVisible(true); // makes the content of the modal (HBox) visible.
-		addCellModal.setManaged(true); // makes the modal (HBox) take up space. This option is note available in the Scene Builder.
+	public void showAddCellModal(int index) {
+		addCellHBox.setVisible(true); // makes the content of the modal (HBox) visible.
+		addCellHBox.setManaged(true); // makes the modal (HBox) take up space. This option is note available in the
+										// Scene Builder.
+		notebookLayout.getChildren().add(index, addCellHBox);
 	}
-
-	/**
-	 * Make the add cell modal disappear.
-	 */
-	private void setAddCellModalInvisible() {
-		addCellModal.setVisible(false); // makes the content of the modal (HBox) invisible.
-		addCellModal.setManaged(false); // makes the modal (HBox) take up no space. This option is note available in the Scene Builder.
-	}
-
+	
 	/**
 	 * Toggle the visibility of the add cell modal
 	 */
-	private void toggleAddCellModalVisibilty() {
-		if (addCellModal.isVisible()) {
-			setAddCellModalInvisible();
-		} else {
-			setAddCellModalVisible();
+	public void toggleAddCellModal(int index) {
+		boolean isVisible = addCellHBox.isVisible();
+		boolean indexOf = (index == notebookLayout.getChildrenUnmodifiable().indexOf(addCellHBox));
+		if (isVisible) {
+			hideAddCellModal();
+		}
+		if (!indexOf) {
+			showAddCellModal(index);
 		}
 	}
+
+	class AddCellController {
+		
+		/**
+		 * Handler for the add computation cell button. Adds a new computation cell
+		 * to the notebook and hides the add cell button modal.
+		 */
+		@FXML
+		private void addComputationCellButtonHandler() {
+			int index = notebookLayout.getChildrenUnmodifiable().indexOf(addCellHBox);
+			hideAddCellModal();
+			addComputationCell(index);
+		}
+
+		/**
+		 * Handler for the add text cell button. Adds a new text cell to the
+		 * notebook and hides the add cell button modal.
+		 */
+		@FXML
+		private void addTextCellButtonHandler() {
+			int index = notebookLayout.getChildrenUnmodifiable().indexOf(addCellHBox);
+			hideAddCellModal();
+			addTextCell(index);
+		}
+		
+	}
+	
 }
+
