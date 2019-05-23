@@ -11,20 +11,21 @@ import org.processmining.filterd.parameters.Parameter;
 import org.processmining.filterd.parameters.ParameterOneFromSet;
 import org.processmining.filterd.parameters.ParameterRangeFromRange;
 import org.processmining.filterd.parameters.ParameterYesNo;
+import org.processmining.filterd.tools.Toolbox;
 import org.processmining.framework.plugin.PluginContext;
 
 public class FilterdEventAttrFilter extends Filter {
 	
 	XLog filteredLog;
+	Toolbox toolbox;
 	
-	public FilterdEventAttrFilter() {
-		
-	}
+	public FilterdEventAttrFilter() {}
 	
 	@Override
 	public XLog filter(PluginContext context, XLog log, List<Parameter> parameters) {
 		// TODO Auto-generated method stub this method should just contain a switch for the following 4 methods
 		//that are invisible still :}
+		toolbox = Toolbox.getInstance();
 		return null;
 	}
 
@@ -49,8 +50,8 @@ public class FilterdEventAttrFilter extends Filter {
 		filteredLog = this.initializeLog(log);
 		XFactory factory = XFactoryRegistry.instance().currentDefault();
 		
-		LocalDateTime lower = synchronizeGMT(range.getChosenPair().get(0));
-		LocalDateTime upper = synchronizeGMT(range.getChosenPair().get(1));
+		LocalDateTime lower = toolbox.synchronizeGMT(range.getChosenPair().get(0));
+		LocalDateTime upper = toolbox.synchronizeGMT(range.getChosenPair().get(1));
 
 		for (XTrace trace : log) {
 			XTrace filteredTrace = factory.createTrace(trace.getAttributes());
@@ -68,7 +69,7 @@ public class FilterdEventAttrFilter extends Filter {
 				// check if time has miliseconds, otherwise add it 
 				if (!time.contains(".")) time = time.substring(0, 19) + ".000" + time.substring(19);
 
-				LocalDateTime date = synchronizeGMT(time);
+				LocalDateTime date = toolbox.synchronizeGMT(time);
 				
 				if (date.isAfter(lower) && date.isBefore(upper)) {
 					add = choice;
@@ -89,28 +90,5 @@ public class FilterdEventAttrFilter extends Filter {
 		}
 
 		return filteredLog;
-	}
-	
-	/* time format assumed to be YYYY-MM-DDThh:mm:ss.SSSZ */
-	private LocalDateTime synchronizeGMT(String time) {
-		LocalDateTime date = LocalDateTime.parse(time.substring(0, 23));
-		int offsetH;
-		int offsetM;
-		
-		if (time.length() > 23) {
-			boolean sign = false;
-			if (time.charAt(23) == '+') sign = true;
-			
-			offsetH = Integer.parseInt(time.substring(24, 26));
-			offsetM = Integer.parseInt(time.substring(27, 29));
-			
-			if (sign) {
-				return date.plusHours(offsetH).plusMinutes(offsetM);
-			} else {
-				return date.minusHours(offsetH).minusMinutes(offsetM);
-			}
-		}
-
-		return date;
 	}
 }
