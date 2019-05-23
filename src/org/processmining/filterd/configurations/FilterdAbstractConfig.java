@@ -181,7 +181,7 @@ public abstract class FilterdAbstractConfig {
 				
 			} else if(controller instanceof ParameterValueFromRangeController) {
 				ParameterValueFromRangeController casted = (ParameterValueFromRangeController) controller;
-				ParameterValueFromRange<Double> param = (ParameterValueFromRange) getParameter(controller.getName());
+				ParameterValueFromRange param = (ParameterValueFromRange) getParameter(controller.getName());
 				param.setChosen(casted.getValue());	
 				
 			} else if(controller instanceof ParameterTextController) {
@@ -191,7 +191,7 @@ public abstract class FilterdAbstractConfig {
 				
 			} else if(controller instanceof ParameterRangeFromRangeController) {
 				ParameterRangeFromRangeController casted = (ParameterRangeFromRangeController) controller;
-				ParameterRangeFromRange<Double> param = (ParameterRangeFromRange) getParameter(controller.getName());
+				ParameterRangeFromRange param = (ParameterRangeFromRange) getParameter(controller.getName());
 				param.setChosenPair(casted.getValue());	
 				
 			} else {
