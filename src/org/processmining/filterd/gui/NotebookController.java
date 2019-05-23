@@ -229,7 +229,7 @@ public class NotebookController {
 	public void appendComputationCell() {
 		int index = model.getCells().size(); // Index of the new cell, so that we can compute which XLogs are available
 		ComputationCellModel cellModel = new ComputationCellModel(model.getPromContext(), model.getPromCanceller(),
-				model.getXLogs(index));
+				model.getOutputLogsTill(index));
 		model.addCell(cellModel);
 	}
 
