@@ -1,36 +1,51 @@
 package org.processmining.filterd.configurations;
-import org.processmining.filterd.parameters.*;
-import org.processmining.filterd.widgets.*;
-import java.util.List;
 
-import java.util.ArrayList;
-import javax.swing.JComponent;
+import java.util.List;
 
 import org.deckfour.xes.model.XLog;
 import org.processmining.filterd.filters.Filter;
 import org.processmining.filterd.gui.AbstractFilterConfigPanelController;
 import org.processmining.filterd.gui.FilterConfigPanelController;
+import org.processmining.filterd.gui.NestedFilterConfigPanelController;
+import org.processmining.filterd.parameters.ParameterMultipleFromSet;
+import org.processmining.filterd.parameters.ParameterOneFromSet;
+import org.processmining.filterd.parameters.ParameterRangeFromRange;
+import org.processmining.filterd.parameters.ParameterText;
+import org.processmining.filterd.parameters.ParameterValueFromRange;
+import org.processmining.filterd.parameters.ParameterYesNo;
+import org.processmining.filterd.widgets.ParameterController;
+import org.processmining.filterd.widgets.ParameterMultipleFromSetController;
+import org.processmining.filterd.widgets.ParameterOneFromSetController;
+import org.processmining.filterd.widgets.ParameterRangeFromRangeController;
+import org.processmining.filterd.widgets.ParameterTextController;
+import org.processmining.filterd.widgets.ParameterValueFromRangeController;
+import org.processmining.filterd.widgets.ParameterYesNoController;
 
-public class FilterdTraceTrimConfig extends FilterdAbstractConfig {
+public abstract class FilterdAbstractGreenConfig extends FilterdAbstractConfig {
 
-	FilterdAbstractConfig concreteReference;
-	
-	public FilterdTraceTrimConfig(XLog log, Filter filterType) {
+	public FilterdAbstractGreenConfig(XLog log, Filter filterType) {
 		super(log, filterType);
-		// TODO Auto-generated constructor stub
 	}
 
+	@Override
+	public abstract boolean checkValidity(XLog candidateLog);
+
+	@Override
+	public abstract boolean canPopulate(FilterConfigPanelController component);
+	
+	@Override
+	public NestedFilterConfigPanelController getConfigPanel() {
+		return new NestedFilterConfigPanelController(parameters);
+	}
+	
+	@Override
 	public FilterdAbstractConfig populate(AbstractFilterConfigPanelController abstractComponent) {
-		FilterConfigPanelController component = (FilterConfigPanelController) abstractComponent;
+		
+		NestedFilterConfigPanelController component = (NestedFilterConfigPanelController) abstractComponent;
 		List<ParameterController> controllers = component.getControllers();
 		for(ParameterController controller : controllers) {
 			//all cases assume that the controller has a name corresponding to the parameter name
-			if(controller instanceof ParameterOneFromSetExtendedController) {
-				ParameterOneFromSetExtendedController casted = (ParameterOneFromSetExtendedController) controller;
-				concreteReference.populate(casted.getNestedConfigPanel());
-				//this method needs to be in every referencable class
-				
-			} else if(controller instanceof ParameterYesNoController) {
+			if(controller instanceof ParameterYesNoController) {
 				ParameterYesNoController casted = (ParameterYesNoController) controller;
 				ParameterYesNo param = (ParameterYesNo) getParameter(controller.getName());
 				param.setChosen(casted.getValue());	
@@ -63,33 +78,9 @@ public class FilterdTraceTrimConfig extends FilterdAbstractConfig {
 			} else {
 				throw new IllegalArgumentException("Unsupporrted controller type.");
 			}	
-			
+				
 		}
 		return this;
-	}
-
-	public boolean canPopulate(FilterConfigPanelController component) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	public FilterConfigPanelController getConfigPanel() {
-		return new FilterConfigPanelController("Trace Trim Configuration", parameters, this);
-	}
-	
-	public FilterdAbstractConfig changeReference(ParameterOneFromSetController chosen) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public boolean checkValidity(XLog log) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	public XLog filter() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }

@@ -18,7 +18,7 @@ import org.processmining.filterd.filters.Filter;
 import org.processmining.filterd.gui.AbstractFilterConfigPanelController;
 import org.processmining.filterd.gui.FilterConfigPanelController;
 
-public class FilterdTraceAttrCategoricalConfig extends FilterdAbstractConfig {
+public class FilterdTraceAttrCategoricalConfig extends FilterdAbstractGreenConfig {
 
 	public FilterdTraceAttrCategoricalConfig(XLog log, Filter filterType, String
 			attribute) {
@@ -73,10 +73,6 @@ public class FilterdTraceAttrCategoricalConfig extends FilterdAbstractConfig {
 		//check whether no params are empty if you populate with the component
 		return true;
 	};
-
-	public FilterConfigPanelController getConfigPanel() {
-		return new FilterConfigPanelController("Categorical Trace Attribute Configuration", parameters, this);
-	}
 
 	public boolean checkValidity(XLog log) {
 		return false;

@@ -17,7 +17,7 @@ import org.processmining.filterd.parameters.Parameter;
 import org.processmining.filterd.parameters.ParameterMultipleFromSet;
 import org.processmining.filterd.parameters.ParameterYesNo;
 
-public class FilterdTraceStartEventCategoricalConfig extends FilterdAbstractConfig {	
+public class FilterdTraceStartEventCategoricalConfig extends FilterdAbstractGreenConfig {	
 	
 	public FilterdTraceStartEventCategoricalConfig(XLog log, Filter filterType, String attribute, 
 			List<XEventClassifier> classifiers) {
@@ -68,10 +68,6 @@ public class FilterdTraceStartEventCategoricalConfig extends FilterdAbstractConf
 		//check whether no params are empty if you populate with the component
 		return true;
 	};
-
-	public AbstractFilterConfigPanelController getConfigPanel() {
-		return new NestedFilterConfigPanelController(parameters);
-	}
 
 	public boolean checkValidity(XLog log) {
 		return true;

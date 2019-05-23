@@ -7,16 +7,13 @@ import org.deckfour.xes.model.XLog;
 import org.processmining.filterd.filters.Filter;
 import org.processmining.filterd.gui.AbstractFilterConfigPanelController;
 import org.processmining.filterd.gui.FilterConfigPanelController;
+import org.processmining.filterd.gui.NestedFilterConfigPanelController;
 
-public class FilterdEventAttrCategoricalConfig extends FilterdAbstractConfig{
+public class FilterdEventAttrCategoricalConfig extends FilterdAbstractGreenConfig{
 
 	public FilterdEventAttrCategoricalConfig(XLog log, Filter filterType) {
 		super(log, filterType);
 		// TODO Auto-generated constructor stub
-	}
-
-	public FilterConfigPanelController getConfigPanel() {
-		return new FilterConfigPanelController("Categorical Event Attribute Configuration", parameters, this);
 	}
 
 	public boolean checkValidity(XLog log) {

@@ -8,7 +8,7 @@ import org.processmining.filterd.filters.Filter;
 import org.processmining.filterd.gui.AbstractFilterConfigPanelController;
 import org.processmining.filterd.gui.FilterConfigPanelController;
 
-public class FilterdEventAttrNumericalConfig extends FilterdAbstractConfig {
+public class FilterdEventAttrNumericalConfig extends FilterdAbstractGreenConfig {
 
 	public FilterdEventAttrNumericalConfig(XLog log, Filter filterType) {
 		super(log, filterType);
@@ -20,9 +20,6 @@ public class FilterdEventAttrNumericalConfig extends FilterdAbstractConfig {
 		return true;
 	};
 
-	public FilterConfigPanelController getConfigPanel() {
-		return new FilterConfigPanelController("Numerical Event Attribute Configuration", parameters, this);
-	}
 
 	public boolean checkValidity(XLog log) {
 		// TODO Auto-generated method stub

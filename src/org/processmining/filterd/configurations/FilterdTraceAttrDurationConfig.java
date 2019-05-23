@@ -8,7 +8,7 @@ import org.processmining.filterd.filters.Filter;
 import org.processmining.filterd.gui.FilterConfigPanelController;
 import org.processmining.filterd.parameters.ParameterRangeFromRange;
 
-public class FilterdTraceAttrDurationConfig extends FilterdAbstractConfig {
+public class FilterdTraceAttrDurationConfig extends FilterdAbstractGreenConfig {
 	
 	public FilterdTraceAttrDurationConfig(XLog log, Filter filterType) {
 		super(log, filterType);
@@ -44,12 +44,5 @@ public class FilterdTraceAttrDurationConfig extends FilterdAbstractConfig {
 		return true;
 	}
 
-	public FilterConfigPanelController getConfigPanel() {
-		return new FilterConfigPanelController
-				(
-				"Duration Trace Attribute Configuration", 
-				parameters, this
-				);
-	}
 
 }
