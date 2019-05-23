@@ -1,21 +1,12 @@
 package org.processmining.filterd.configurations;
-import org.processmining.filterd.parameters.Parameter;
-import org.processmining.filterd.parameters.ParameterOneFromSet;
-import org.processmining.filterd.parameters.ParameterRangeFromRange;
-import org.processmining.filterd.parameters.ParameterValueFromRange;
-import org.processmining.filterd.widgets.ParameterOneFromSetController;
-import org.processmining.filterd.widgets.ParameterRangeFromRangeController;
-import org.processmining.filterd.widgets.ParameterValueFromRangeController;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JComponent;
-
 import org.deckfour.xes.model.XLog;
 import org.processmining.filterd.filters.Filter;
-import org.processmining.filterd.gui.AbstractFilterConfigPanelController;
 import org.processmining.filterd.gui.FilterConfigPanelController;
+import org.processmining.filterd.parameters.ParameterOneFromSet;
+import org.processmining.filterd.parameters.ParameterRangeFromRange;
 
 public class FilterdTraceFrequencyConfig extends FilterdAbstractConfig {
 
@@ -31,14 +22,15 @@ public class FilterdTraceFrequencyConfig extends FilterdAbstractConfig {
 		foOptions.add("frequency");
 		foOptions.add("occurrance");
 		
-		ParameterOneFromSet FreqOcc = new ParameterOneFromSet(
-			"FreqOcc", 
-			"Threshold type", 
-			"frequency", 
-			foOptions
+		ParameterOneFromSet frequencyOccurranceParameter = 
+				new ParameterOneFromSet(
+						"FreqOcc", 
+						"Threshold type", 
+						"frequency", 
+						foOptions
 		);
 		
-		parameters.add(FreqOcc);
+		parameters.add(frequencyOccurranceParameter);
 		
 		//initialize the threshold options parameter and add it to the parameters list
 		List<Double> thrOptions = new ArrayList<Double>();
@@ -80,7 +72,7 @@ public class FilterdTraceFrequencyConfig extends FilterdAbstractConfig {
 
 	public FilterConfigPanelController getConfigPanel() {
 		//return a new panel for this configuration with the relevant name and parameters
-		return new FilterConfigPanelController("Filter Trace Frequency Configuration", parameters);
+		return new FilterConfigPanelController("Filter Trace Frequency Configuration", parameters, this);
 	}
 
 	public boolean checkValidity(XLog log) {
