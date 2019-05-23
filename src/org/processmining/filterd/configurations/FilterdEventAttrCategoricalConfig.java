@@ -9,7 +9,7 @@ import org.processmining.filterd.gui.AbstractFilterConfigPanelController;
 import org.processmining.filterd.gui.FilterConfigPanelController;
 import org.processmining.filterd.gui.NestedFilterConfigPanelController;
 
-public class FilterdEventAttrCategoricalConfig extends FilterdAbstractGreenConfig{
+public class FilterdEventAttrCategoricalConfig extends FilterdAbstractReferenceableConfig{
 
 	public FilterdEventAttrCategoricalConfig(XLog log, Filter filterType) {
 		super(log, filterType);

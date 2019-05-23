@@ -8,7 +8,7 @@ import org.processmining.filterd.filters.Filter;
 import org.processmining.filterd.gui.AbstractFilterConfigPanelController;
 import org.processmining.filterd.gui.FilterConfigPanelController;
 
-public class FilterdModifMergeSubsequentCategoricalConfig extends FilterdAbstractGreenConfig {
+public class FilterdModifMergeSubsequentCategoricalConfig extends FilterdAbstractReferenceableConfig {
 
 	public FilterdModifMergeSubsequentCategoricalConfig(XLog log, Filter filterType) {
 		super(log, filterType);

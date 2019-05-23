@@ -8,7 +8,7 @@ import org.processmining.filterd.filters.Filter;
 import org.processmining.filterd.gui.FilterConfigPanelController;
 import org.processmining.filterd.parameters.ParameterRangeFromRange;
 
-public class FilterdTraceAttrDurationConfig extends FilterdAbstractGreenConfig {
+public class FilterdTraceAttrDurationConfig extends FilterdAbstractReferenceableConfig {
 	
 	public FilterdTraceAttrDurationConfig(XLog log, Filter filterType) {
 		super(log, filterType);

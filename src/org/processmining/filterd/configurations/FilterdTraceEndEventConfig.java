@@ -24,9 +24,7 @@ import org.processmining.filterd.widgets.ParameterTextController;
 import org.processmining.filterd.widgets.ParameterValueFromRangeController;
 import org.processmining.filterd.widgets.ParameterYesNoController;
 
-public class FilterdTraceEndEventConfig extends FilterdAbstractConfig implements Referenceable{
-	
-	FilterdAbstractGreenConfig concreteReference;
+public class FilterdTraceEndEventConfig extends FilterdAbstractReferencingConfig {
 
 	public FilterdTraceEndEventConfig(XLog log, Filter filterType) {
 		super(log, filterType);
@@ -142,12 +140,5 @@ public class FilterdTraceEndEventConfig extends FilterdAbstractConfig implements
 		return true;
 	}
 
-	public FilterdAbstractConfig changeReference(ParameterOneFromSetExtendedController controller) {
-		return new FilterdTraceEndEventCategoricalConfig(log, filterType, controller.getValue(), complexClassifiers);
-	}
-
-	public FilterdAbstractGreenConfig getConcreteReference() {
-		return concreteReference;
-	}
 
 }

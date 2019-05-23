@@ -11,9 +11,7 @@ import org.processmining.filterd.filters.Filter;
 import org.processmining.filterd.gui.AbstractFilterConfigPanelController;
 import org.processmining.filterd.gui.FilterConfigPanelController;
 
-public class FilterdTraceTrimConfig extends FilterdAbstractConfig {
-
-	FilterdAbstractConfig concreteReference;
+public class FilterdTraceTrimConfig extends FilterdAbstractReferencingConfig {
 	
 	public FilterdTraceTrimConfig(XLog log, Filter filterType) {
 		super(log, filterType);
@@ -28,7 +26,7 @@ public class FilterdTraceTrimConfig extends FilterdAbstractConfig {
 			if(controller instanceof ParameterOneFromSetExtendedController) {
 				ParameterOneFromSetExtendedController casted = (ParameterOneFromSetExtendedController) controller;
 				concreteReference.populate(casted.getNestedConfigPanel());
-				//this method needs to be in every referencable class
+				//this method needs to be in every referencing class
 				
 			} else if(controller instanceof ParameterYesNoController) {
 				ParameterYesNoController casted = (ParameterYesNoController) controller;

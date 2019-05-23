@@ -17,7 +17,7 @@ import org.processmining.filterd.parameters.Parameter;
 import org.processmining.filterd.parameters.ParameterMultipleFromSet;
 import org.processmining.filterd.parameters.ParameterYesNo;
 
-public class FilterdTraceStartEventCategoricalConfig extends FilterdAbstractGreenConfig {	
+public class FilterdTraceStartEventCategoricalConfig extends FilterdAbstractReferenceableConfig {	
 	
 	public FilterdTraceStartEventCategoricalConfig(XLog log, Filter filterType, String attribute, 
 			List<XEventClassifier> classifiers) {

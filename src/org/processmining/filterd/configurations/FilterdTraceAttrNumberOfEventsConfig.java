@@ -8,7 +8,7 @@ import org.processmining.filterd.filters.Filter;
 import org.processmining.filterd.gui.FilterConfigPanelController;
 import org.processmining.filterd.parameters.ParameterRangeFromRange;
 
-public class FilterdTraceAttrNumberOfEventsConfig extends FilterdAbstractGreenConfig {
+public class FilterdTraceAttrNumberOfEventsConfig extends FilterdAbstractReferenceableConfig {
 
 	public FilterdTraceAttrNumberOfEventsConfig(XLog log, Filter filterType) {
 		super(log, filterType);

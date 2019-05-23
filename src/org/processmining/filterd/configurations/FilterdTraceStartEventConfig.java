@@ -23,10 +23,8 @@ import org.processmining.filterd.widgets.ParameterTextController;
 import org.processmining.filterd.widgets.ParameterValueFromRangeController;
 import org.processmining.filterd.widgets.ParameterYesNoController;
 
+public class FilterdTraceStartEventConfig extends FilterdAbstractReferencingConfig {
 
-public class FilterdTraceStartEventConfig extends FilterdAbstractConfig implements Referenceable {
-	
-	FilterdAbstractGreenConfig concreteReference;
 
 	public FilterdTraceStartEventConfig(XLog log, Filter filterType) {
 		super(log, filterType);
@@ -120,10 +118,6 @@ public class FilterdTraceStartEventConfig extends FilterdAbstractConfig implemen
 	public AbstractFilterConfigPanelController getConfigPanel() {
 		return new FilterConfigPanelController("Trace Start Event Configuration", parameters, this);
 	}
-	
-	public FilterdAbstractGreenConfig getConcreteReference() {
-		return concreteReference;
-	}
 
 	/*
 	 * The candidateLog is invalid if the event attributes list does not 
@@ -140,9 +134,5 @@ public class FilterdTraceStartEventConfig extends FilterdAbstractConfig implemen
 			return false;
 		}	
 		return true;
-	}
-
-	public FilterdAbstractConfig changeReference(ParameterOneFromSetExtendedController controller) {
-		return new FilterdTraceStartEventCategoricalConfig(log, filterType, controller.getValue(), complexClassifiers);	 
 	}
 }

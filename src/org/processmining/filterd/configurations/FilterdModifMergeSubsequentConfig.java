@@ -10,9 +10,7 @@ import java.util.ArrayList;
 import org.deckfour.xes.model.XLog;
 import org.processmining.filterd.filters.Filter;
 
-public class FilterdModifMergeSubsequentConfig extends FilterdAbstractConfig {
-
-	FilterdAbstractConfig concreteReference;
+public class FilterdModifMergeSubsequentConfig extends FilterdAbstractReferencingConfig {
 	
 	public FilterdModifMergeSubsequentConfig(XLog log, Filter filterType) {
 		super(log, filterType);
