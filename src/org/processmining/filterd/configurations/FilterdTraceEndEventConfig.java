@@ -23,16 +23,15 @@ public class FilterdTraceEndEventConfig extends FilterdAbstractConfig {
 		parameters = new ArrayList<Parameter>();
 		complexClassifiers = new ArrayList<>();
 		
-		 // Get global attributes that are passed to the parameter 
-		List<String> globalAttrAndClassifiers = this.computeGlobalAttributes(log);
+		 // Get all the events attributes that are passed to the parameter 
+		List<String> attrAndClassifiers = this.computeAttributes(log);
 		//add the complex classifiers to the list of global attributes 
-		globalAttrAndClassifiers.addAll(computeComplexClassifiers(log));
+		attrAndClassifiers.addAll(computeComplexClassifiers(log));
 		
 		// Create attribute parameter 
 		ParameterOneFromSet attribute = new ParameterOneFromSet("attribute", 
-				"Filter by", globalAttrAndClassifiers.get(0), globalAttrAndClassifiers, true);
+				"Filter by", attrAndClassifiers.get(0), attrAndClassifiers, true);
 
-		
 		
 		//Create selectionType parameter
 		List<String> selectionTypeOptions = new ArrayList<>(Arrays.asList("Filter in", "Filter out"));
@@ -41,7 +40,7 @@ public class FilterdTraceEndEventConfig extends FilterdAbstractConfig {
 		
 		// Create the default concrete reference
 		concreteReference = new FilterdTraceEndEventCategoricalConfig(log, filterType, 
-				globalAttrAndClassifiers.get(0), complexClassifiers);
+				attrAndClassifiers.get(0), complexClassifiers);
 		
 		// Add all parameters to the list of parameters
 		
@@ -122,13 +121,12 @@ public class FilterdTraceEndEventConfig extends FilterdAbstractConfig {
 	
 	@Override
 	public boolean checkValidity(XLog candidateLog) {
-		List<String> globalAttrCandidateLog = new ArrayList<>();
-		for (XAttribute attribute : candidateLog.getGlobalEventAttributes()) {
-			globalAttrCandidateLog.add(attribute.getKey());
-		}
-		List<String> attrs = computeGlobalAttributes(this.getLog());
+		List<String> attrCandidateLog = new ArrayList<>();
+		attrCandidateLog.addAll(computeAttributes(candidateLog));
+		List<String> attrs = computeGlobalAttributes(candidateLog);
+		// to be changed with the selected attribute
 		String attr = attrs.get(0);
-		if (!globalAttrCandidateLog.contains(attr)) {
+		if (!attrCandidateLog.contains(attr)) {
 			return false;
 		}	
 		return true;
