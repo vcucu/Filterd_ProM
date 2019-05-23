@@ -31,7 +31,8 @@ public class ComputationCellModel extends CellModel {
 
 	private ProMCanceller canceller;
 	private XLog log;
-	private List<YLog> eventLogs;
+	private List<YLog> inputLogs;
+	private List<YLog> outputLogs;
 	private ObservableList<FilterButtonModel> filters;
 	private ArrayList<FilterButtonController> filterControllers;
 
@@ -39,7 +40,7 @@ public class ComputationCellModel extends CellModel {
 	public ComputationCellModel(UIPluginContext context, ProMCanceller canceller, List<YLog> eventLogs) {
 			super(context);
 			this.canceller = canceller;
-			this.eventLogs = eventLogs;
+			this.inputLogs = eventLogs;
 			
 			filterControllers = new ArrayList<>();
 
@@ -85,13 +86,25 @@ public class ComputationCellModel extends CellModel {
 		}
 		this.log = log;
 	}
+	
+    public XLog getInputLog() {
+    	return log;
+    }
 
-	public void setXLogs(List<YLog> eventLogs) {
-		this.eventLogs = eventLogs;
+	public void setInputLogs(List<YLog> eventLogs) {
+		this.inputLogs = eventLogs;
 	}
 
-	public List<YLog> getXLogs() {
-		return eventLogs;
+	public List<YLog> getInputLogs() {
+		return inputLogs;
+	}
+	
+	public void setOutputLogs(List<YLog> outputLogs) {
+		this.outputLogs = outputLogs;
+	}
+	
+	public List<YLog> getOutputLogs() {
+		return outputLogs;
 	}
 
 	public void selectFilter(FilterButtonModel model) {
@@ -173,10 +186,5 @@ public class ComputationCellModel extends CellModel {
 		// If the visualizer could not be found, show some text.
 		return new JLabel("Visualizer " + type.getTypeName() + " could not be found.");
 	}
-
-    public XLog getLog() {
-    	return log;
-    }
-
 
 }

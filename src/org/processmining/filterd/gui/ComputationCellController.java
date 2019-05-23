@@ -65,7 +65,7 @@ public class ComputationCellController extends CellController {
 	public void initialize() {
 		ComputationCellModel model = this.getCellModel();
 		// TODO: load event logs in cmbEventLog
-		cmbEventLog.getItems().addAll(model.getXLogs());
+		cmbEventLog.getItems().addAll(model.getInputLogs());
 		//add listeners to the basic model components
 		cellModel.getProperty().addPropertyChangeListener(new CellModelListeners(this));
 
@@ -306,10 +306,10 @@ public class ComputationCellController extends CellController {
 			public FilterdAbstractConfig call(String userSelection) {
 				// TODO: create a new filter config based on the user's selection
 				ComputationCellModel model = (ComputationCellModel) cellModel;
-				FilterdAbstractConfig filterConfig = new FilterdTraceStartEventConfig(model.getLog(), new FilterdTraceStartEventFilter());
+				FilterdAbstractConfig filterConfig = new FilterdTraceStartEventConfig(model.getInputLog(), new FilterdTraceStartEventFilter());
 				filterButtonModel.setFilterConfig(filterConfig);
 				// TODO: set cell status to OUT_OF_DATE
-				return new FilterdTraceStartEventConfig(model.getLog(), new FilterdTraceStartEventFilter());
+				return filterConfig;
 			}
 
 		});
