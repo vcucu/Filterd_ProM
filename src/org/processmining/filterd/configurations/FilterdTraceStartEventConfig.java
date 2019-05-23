@@ -3,7 +3,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.deckfour.xes.model.XAttribute;
 import org.deckfour.xes.model.XLog;
 import org.processmining.filterd.filters.Filter;
 import org.processmining.filterd.gui.AbstractFilterConfigPanelController;
@@ -26,33 +25,33 @@ import org.processmining.filterd.widgets.ParameterYesNoController;
 
 public class FilterdTraceStartEventConfig extends FilterdAbstractReferencingConfig {
 
+
 	public FilterdTraceStartEventConfig(XLog log, Filter filterType) {
 		super(log, filterType);
 		parameters = new ArrayList<Parameter>();
 		complexClassifiers = new ArrayList<>();
 		
-		 // Get global attributes that are passed to the parameter 
-		List<String> globalAttrAndClassifiers = computeGlobalAttributes(log);
+		 // Get all the events attributes that are passed to the parameter 
+		List<String> attrAndClassifiers = computeAttributes(log);
 		//add the complex classifiers to the list of global attributes 
-		globalAttrAndClassifiers.addAll(computeComplexClassifiers(log));
+		attrAndClassifiers.addAll(computeComplexClassifiers(log));
 		
 		// Create attribute parameter, creates reference is true
 		ParameterOneFromSet attribute = new ParameterOneFromSet("attribute", 
-				"Filter by", globalAttrAndClassifiers.get(0), globalAttrAndClassifiers, true);
-		
+				"Filter by", attrAndClassifiers.get(0), attrAndClassifiers, true);
+
 		//Create selectionType parameter
 		List<String> selectionTypeOptions = new ArrayList<>(Arrays.asList("Filter in", "Filter out"));
 		ParameterOneFromSet selectionType = new ParameterOneFromSet("selectionType",
 				"Selection type", selectionTypeOptions.get(0), selectionTypeOptions);	
 		
-		// Create the default concrete reference
-		concreteReference = new FilterdTraceStartEventCategoricalConfig(log, filterType,
-				globalAttrAndClassifiers.get(0), complexClassifiers);
+		
 		
 		// Add all parameters to the list of parameters	
 		parameters.add(attribute);
 		parameters.add(selectionType);
-//		parameters.addAll(concreteReference.getParameters());
+		//parameters.addAll(concreteReference.getParameters());
+
 	}
 	
 	
@@ -118,23 +117,32 @@ public class FilterdTraceStartEventConfig extends FilterdAbstractReferencingConf
 		return new FilterConfigPanelController("Trace Start Event Configuration", parameters, this);
 	}
 	
+<<<<<<< HEAD
 	
+=======
+	public FilterdAbstractGreenConfig getConcreteReference() {
+		return concreteReference;
+	}
+
+>>>>>>> origin/filterd
 	/*
-	 * The candidateLog is invalid if the global attributes list does not 
+	 * The candidateLog is invalid if the event attributes list does not 
 	 * contain the selected attribute.
 	 */
 	@Override
 	public boolean checkValidity(XLog candidateLog) {
-		List<String> globalAttrCandidateLog = new ArrayList<>();
-		for (XAttribute attribute : candidateLog.getGlobalEventAttributes()) {
-			globalAttrCandidateLog.add(attribute.getKey());
-		}
+		List<String> attrCandidateLog = new ArrayList<>();
+		attrCandidateLog.addAll(computeAttributes(candidateLog));
 		List<String> attrs = computeGlobalAttributes(candidateLog);
+		// to be changed with the selected attribute	
 		String attr = attrs.get(0);
-		if (!globalAttrCandidateLog.contains(attr)) {
+		if (!attrCandidateLog.contains(attr)) {
 			return false;
 		}	
 		return true;
 	}
 
+	public FilterdAbstractConfig changeReference(ParameterOneFromSetExtendedController controller) {
+		return new FilterdTraceStartEventCategoricalConfig(log, filterType, controller.getValue(), complexClassifiers);	 
+	}
 }

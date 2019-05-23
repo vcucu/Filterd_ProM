@@ -190,14 +190,14 @@ public class ComputationCellController extends CellController {
 	@FXML
 	public void handleExpandVisualiser() {
 		visualizerPane.setStyle("-fx-background-color: #ff0000; ");
-		if (isExpanded) {
+		if(isExpanded) {
 			//make cell go to default size
 			isExpanded = false;
 			//unbind from window size
 			cell.prefHeightProperty().unbind();
 			//set the PrefHeight to what it is by default
 			cell.setPrefHeight(cell.USE_COMPUTED_SIZE);
-		} else {
+		} else if(!isExpanded && !isConfigurationModalShown){
 			isExpanded = true;
 			//set height of cell to be the size of the 'window'
 			cell.prefHeightProperty()
