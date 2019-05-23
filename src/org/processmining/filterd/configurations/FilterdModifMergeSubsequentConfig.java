@@ -5,8 +5,6 @@ import org.processmining.filterd.parameters.*;
 import org.processmining.filterd.widgets.*;
 
 import java.util.List;
-import java.util.ArrayList;
-
 import org.deckfour.xes.model.XLog;
 import org.processmining.filterd.filters.Filter;
 

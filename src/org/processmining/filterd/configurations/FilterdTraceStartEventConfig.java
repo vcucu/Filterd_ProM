@@ -116,15 +116,7 @@ public class FilterdTraceStartEventConfig extends FilterdAbstractReferencingConf
 	public AbstractFilterConfigPanelController getConfigPanel() {
 		return new FilterConfigPanelController("Trace Start Event Configuration", parameters, this);
 	}
-	
-<<<<<<< HEAD
-	
-=======
-	public FilterdAbstractGreenConfig getConcreteReference() {
-		return concreteReference;
-	}
 
->>>>>>> origin/filterd
 	/*
 	 * The candidateLog is invalid if the event attributes list does not 
 	 * contain the selected attribute.
