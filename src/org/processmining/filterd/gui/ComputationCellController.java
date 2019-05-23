@@ -211,7 +211,7 @@ public class ComputationCellController extends CellController {
 	 */
 	@FXML
 	public void handleExpandVisualiser() {
-		visualizerPane.setStyle("-fx-background-color: #ff0000; ");
+		//visualizerPane.setStyle("-fx-background-color: #ff0000; ");
 		if (isExpanded) {
 			//make cell go to default size
 			isExpanded = false;
@@ -245,7 +245,7 @@ public class ComputationCellController extends CellController {
 			scrollPane.setVisible(isFullScreen);
 			scrollPane.setManaged(isFullScreen);
 			isFullScreen = false;
-		} else {
+		} else if (!isFullScreen && !isConfigurationModalShown) {
 			//notebookVisualiser.setStyle("-fx-background-color: #00ffff; ");
 			//hide the scrollpane containing the list of cells in notebook
 			scrollPane.setVisible(isFullScreen);
