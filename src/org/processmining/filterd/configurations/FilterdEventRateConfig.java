@@ -43,7 +43,7 @@ public class FilterdEventRateConfig extends FilterdAbstractConfig {
 	}
 
 	public FilterConfigPanelController getConfigPanel() {
-		return new FilterConfigPanelController("Event Rate Configuration", parameters);
+		return new FilterConfigPanelController("Event Rate Configuration", parameters, this);
 	}
 	// I did not find any case where a different input log would cause invalidity
 	public boolean checkValidity(XLog candidateLog) {	

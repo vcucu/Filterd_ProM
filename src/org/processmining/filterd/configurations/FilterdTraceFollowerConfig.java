@@ -327,7 +327,7 @@ public class FilterdTraceFollowerConfig extends FilterdAbstractConfig {
 	public FilterConfigPanelController getConfigPanel() {
 		return new FilterConfigPanelController(
 				"Trace Follower Configuration", 
-				parameters);
+				parameters, this);
 	}
 
 	public boolean checkValidity(XLog log) {

@@ -72,7 +72,7 @@ public class FilterdModifMergeSubsequentConfig extends FilterdAbstractConfig {
 	}
 
 	public FilterConfigPanelController getConfigPanel() {
-		return new FilterConfigPanelController("Merge Subsequent Events Configuration", parameters);
+		return new FilterConfigPanelController("Merge Subsequent Events Configuration", parameters, this);
 	}
 	
 	public FilterdAbstractConfig changeReference(ParameterOneFromSetController chosen) {

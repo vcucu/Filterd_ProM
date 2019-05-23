@@ -75,7 +75,7 @@ public class FilterdTraceTrimConfig extends FilterdAbstractConfig {
 	}
 
 	public FilterConfigPanelController getConfigPanel() {
-		return new FilterConfigPanelController("Trace Trim Configuration", parameters);
+		return new FilterConfigPanelController("Trace Trim Configuration", parameters, this);
 	}
 	
 	public FilterdAbstractConfig changeReference(ParameterOneFromSetController chosen) {

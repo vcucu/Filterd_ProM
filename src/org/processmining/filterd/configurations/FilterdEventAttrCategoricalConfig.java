@@ -21,7 +21,7 @@ public class FilterdEventAttrCategoricalConfig extends FilterdAbstractConfig{
 	}
 
 	public FilterConfigPanelController getConfigPanel() {
-		return new FilterConfigPanelController("Categorical Event Attribute Configuration", parameters);
+		return new FilterConfigPanelController("Categorical Event Attribute Configuration", parameters, this);
 	}
 
 	public boolean checkValidity(XLog log) {

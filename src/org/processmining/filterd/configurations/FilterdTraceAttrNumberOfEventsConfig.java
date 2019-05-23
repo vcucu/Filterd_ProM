@@ -76,7 +76,7 @@ public class FilterdTraceAttrNumberOfEventsConfig extends FilterdAbstractConfig 
 	public FilterConfigPanelController getConfigPanel() {
 		return new FilterConfigPanelController(
 				"Filter on events Trace Attribute Configuration", 
-				parameters);
+				parameters, this);
 	}
 
 	public boolean checkValidity(XLog log) {

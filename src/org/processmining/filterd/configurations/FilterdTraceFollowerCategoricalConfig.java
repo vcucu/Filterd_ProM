@@ -21,7 +21,7 @@ public class FilterdTraceFollowerCategoricalConfig extends FilterdAbstractConfig
 	}
 
 	public FilterConfigPanelController getConfigPanel() {
-		return new FilterConfigPanelController("Categorical Trace Follower Configuration", parameters);
+		return new FilterConfigPanelController("Categorical Trace Follower Configuration", parameters, this);
 	}
 
 	public boolean checkValidity(XLog log) {

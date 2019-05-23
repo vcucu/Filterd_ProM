@@ -22,7 +22,7 @@ public class FilterdTracePCLConfig extends FilterdAbstractConfig {
 	}
 
 	public FilterConfigPanelController getConfigPanel() {
-		return new FilterConfigPanelController("Trace PCL Configuration", parameters);
+		return new FilterConfigPanelController("Trace PCL Configuration", parameters, this);
 	}
 
 	public boolean checkValidity(XLog log) {

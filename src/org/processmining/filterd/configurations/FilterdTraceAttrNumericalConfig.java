@@ -81,7 +81,7 @@ public class FilterdTraceAttrNumericalConfig extends FilterdAbstractConfig {
 	}
 
 	public FilterConfigPanelController getConfigPanel() {
-		return new FilterConfigPanelController("Numerical Trace Attribute Configuration", parameters);
+		return new FilterConfigPanelController("Numerical Trace Attribute Configuration", parameters, this);
 	}
 
 	public boolean checkValidity(XLog log) {

@@ -70,7 +70,7 @@ public class FilterdTraceEndEventCategoricalConfig extends FilterdAbstractConfig
 	}
 
 	public FilterConfigPanelController getConfigPanel() {
-		return new FilterConfigPanelController("Categorical Trace End Event Configuration", parameters);
+		return new FilterConfigPanelController("Categorical Trace End Event Configuration", parameters, this);
 	}
 
 	public boolean checkValidity(XLog log) {

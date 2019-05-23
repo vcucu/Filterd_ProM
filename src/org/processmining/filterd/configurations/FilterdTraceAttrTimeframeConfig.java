@@ -216,7 +216,7 @@ public class FilterdTraceAttrTimeframeConfig extends FilterdAbstractConfig {
 		return new FilterConfigPanelController
 				(
 				"Timeframe Trace Attribute Configuration", 
-				parameters
+				parameters, this
 				);
 	}
 

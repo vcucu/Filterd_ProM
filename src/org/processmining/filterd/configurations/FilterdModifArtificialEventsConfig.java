@@ -21,7 +21,7 @@ public class FilterdModifArtificialEventsConfig extends FilterdAbstractConfig {
 	}
 
 	public FilterConfigPanelController getConfigPanel() {
-		return new FilterConfigPanelController("Artificial Events Configuration", parameters);
+		return new FilterConfigPanelController("Artificial Events Configuration", parameters, this);
 	}
 
 	public boolean checkValidity(XLog log) {

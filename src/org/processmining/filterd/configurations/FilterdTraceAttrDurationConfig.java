@@ -48,7 +48,7 @@ public class FilterdTraceAttrDurationConfig extends FilterdAbstractConfig {
 		return new FilterConfigPanelController
 				(
 				"Duration Trace Attribute Configuration", 
-				parameters
+				parameters, this
 				);
 	}
 

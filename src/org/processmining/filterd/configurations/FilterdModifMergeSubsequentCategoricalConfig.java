@@ -21,7 +21,7 @@ public class FilterdModifMergeSubsequentCategoricalConfig extends FilterdAbstrac
 	}
 
 	public FilterConfigPanelController getConfigPanel() {
-		return new FilterConfigPanelController("Merge Subsequent Categorical Events Configuration", parameters);
+		return new FilterConfigPanelController("Merge Subsequent Categorical Events Configuration", parameters, this);
 	}
 
 	public boolean checkValidity(XLog log) {

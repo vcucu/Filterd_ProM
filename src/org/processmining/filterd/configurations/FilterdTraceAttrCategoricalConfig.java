@@ -75,7 +75,7 @@ public class FilterdTraceAttrCategoricalConfig extends FilterdAbstractConfig {
 	}
 
 	public FilterConfigPanelController getConfigPanel() {
-		return new FilterConfigPanelController("Categorical Trace Attribute Configuration", parameters);
+		return new FilterConfigPanelController("Categorical Trace Attribute Configuration", parameters, this);
 	}
 
 	public boolean checkValidity(XLog log) {
