@@ -1,20 +1,11 @@
 package org.processmining.filterd.configurations;
-import org.processmining.filterd.parameters.Parameter;
 import org.processmining.filterd.parameters.ParameterOneFromSet;
 import org.processmining.filterd.parameters.ParameterRangeFromRange;
-import org.processmining.filterd.parameters.ParameterValueFromRange;
-import org.processmining.filterd.widgets.ParameterOneFromSetController;
-import org.processmining.filterd.widgets.ParameterRangeFromRangeController;
-import org.processmining.filterd.widgets.ParameterValueFromRangeController;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JComponent;
-
 import org.deckfour.xes.model.XLog;
 import org.processmining.filterd.filters.Filter;
-import org.processmining.filterd.gui.AbstractFilterConfigPanelController;
 import org.processmining.filterd.gui.FilterConfigPanelController;
 
 public class FilterdTraceFrequencyConfig extends FilterdAbstractConfig {

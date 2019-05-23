@@ -1,18 +1,14 @@
 package org.processmining.filterd.configurations;
-import org.processmining.filterd.parameters.Parameter;
 import org.processmining.filterd.parameters.ParameterOneFromSet;
 import org.processmining.filterd.parameters.ParameterRangeFromRange;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JComponent;
-
 import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
 import org.processmining.filterd.filters.Filter;
-import org.processmining.filterd.gui.AbstractFilterConfigPanelController;
 import org.processmining.filterd.gui.FilterConfigPanelController;
 
 public class FilterdTraceAttrNumericalConfig extends FilterdAbstractReferenceableConfig {

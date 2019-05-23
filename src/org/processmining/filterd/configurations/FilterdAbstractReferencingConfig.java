@@ -34,3 +34,4 @@ public abstract class FilterdAbstractReferencingConfig extends FilterdAbstractCo
 		return concreteReference;
 	}
 }
+
