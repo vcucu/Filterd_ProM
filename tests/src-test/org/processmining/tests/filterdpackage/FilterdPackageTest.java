@@ -1,12 +1,17 @@
 package org.processmining.tests.filterdpackage;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 
 import org.deckfour.xes.in.XUniversalParser;
 import org.deckfour.xes.info.XLogInfo;
 import org.deckfour.xes.info.XLogInfoFactory;
+import org.deckfour.xes.info.impl.XLogInfoImpl;
+import org.deckfour.xes.model.XAttribute;
 import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
@@ -48,6 +53,7 @@ public class FilterdPackageTest extends TestCase {
 
 		return logs.iterator().next();
 	}
+	
 
 	/* Check whether two XLogs are identical. 
 	 * Assumes that both logs are sorted in ascending order by trace ID.
@@ -61,7 +67,8 @@ public class FilterdPackageTest extends TestCase {
 	public boolean equalLog(XLog log1, XLog log2) {
 		XLogInfoFactory factory = new XLogInfoFactory();
 		XLogInfo infoExpected = factory.createLogInfo(log1);
-		XLogInfo infoComputed = factory.createLogInfo(log2);
+		XLogInfo infoComputed = factory.createLogInfo(log2); 
+		
 
 		int tracesExpected = infoExpected.getNumberOfTraces();
 		int tracesComputed = infoComputed.getNumberOfTraces();
@@ -209,19 +216,20 @@ public class FilterdPackageTest extends TestCase {
 		assert equalLog(expected, computed);
 	}
 
+
 	/* Corresponds to test case 6 from test_specification.xlsx.
 	 * See ProM - Log on simple Heuristic.
 	 * Selects traces with end event "ship parcel".
 	 * 
 	 * Result: only case 72.
 	 */
-	@Test
-	public void testEndParcel() throws Throwable {
-		XLog expected = parseLog("test_end_parcel.xes");
-		XLog computed = null; // insert filter operation
-
-		assert equalLog(expected, computed);
-	}
+//	@Test
+//	public void testEndParcel() throws Throwable {
+//		XLog expected = parseLog("test_end_parcel.xes");
+//		XLog computed = null; // insert filter operation
+//
+//		assert equalLog(expected, computed);
+//	}
 
 	/* Corresponds to test case 7 from test_specification.xlsx.
 	 * See ProM - Log on simple Heuristic.
@@ -685,6 +693,23 @@ public class FilterdPackageTest extends TestCase {
 		XLog computed = null; // insert filter operation
 
 		assert equalLog(expected, computed);
+	}
+	
+	@Test
+	public void testing() throws Throwable {
+		XLog log = parseLog("test_event_log_orders.xes");
+		List<XAttribute> globalAttr = new ArrayList<>();
+		XLogInfo logInfo = XLogInfoImpl.create(log);
+		globalAttr = log.getGlobalEventAttributes();
+		
+		Map<String, XAttribute> attributemap = log.getAttributes();
+		Collection<String> attributes = logInfo.getEventAttributeInfo().getAttributeKeys();		
+		for (String a : attributemap.keySet())	{
+			System.out.println("Attribute is " + attributemap.get(a).getKey());
+		}
+		for (String attribute : attributes) {
+			System.out.println("Attribute name: " + attribute );
+		}
 	}
 
 	/* Corresponds to test case 41 from test_specification.xlsx.
