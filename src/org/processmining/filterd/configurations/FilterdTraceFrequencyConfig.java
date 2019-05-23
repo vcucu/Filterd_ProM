@@ -74,13 +74,13 @@ public class FilterdTraceFrequencyConfig extends FilterdAbstractConfig {
 	}
 
 	public boolean canPopulate(FilterConfigPanelController component) {
-		
+		//check whether no params are empty if you populate with the component
 		return true;
-	}
+	};
 
 	public FilterConfigPanelController getConfigPanel() {
 		//return a new panel for this configuration with the relevant name and parameters
-		return new FilterConfigPanelController("Filter Trace Frequency Configuration", parameters);
+		return new FilterConfigPanelController("Filter Trace Frequency Configuration", parameters, this);
 	}
 
 	public boolean checkValidity(XLog log) {

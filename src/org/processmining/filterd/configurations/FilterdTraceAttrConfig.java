@@ -142,7 +142,7 @@ public class FilterdTraceAttrConfig extends FilterdAbstractConfig {
 	public FilterConfigPanelController getConfigPanel() {
 		return new FilterConfigPanelController(
 				"Trace Attribute Configuration", 
-				parameters
+				parameters, this
 				);
 	}
 	

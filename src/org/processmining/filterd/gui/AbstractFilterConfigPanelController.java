@@ -106,6 +106,10 @@ public abstract class AbstractFilterConfigPanelController {
 		}
 	}
 	
+	public List<ParameterController> getControllers() {
+		return controllers;
+	}
+	
 	public VBox getRoot() {
 		return root;
 	}

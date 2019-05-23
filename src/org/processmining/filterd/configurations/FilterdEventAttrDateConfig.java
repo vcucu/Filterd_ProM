@@ -13,7 +13,7 @@ import org.processmining.filterd.parameters.ParameterOneFromSet;
 import org.processmining.filterd.parameters.ParameterRangeFromRange;
 import org.processmining.filterd.parameters.ParameterYesNo;
 
-public class FilterdEventAttrDateConfig extends FilterdAbstractConfig{
+public class FilterdEventAttrDateConfig extends FilterdAbstractGreenConfig{
 
 	private ArrayList<String> times; 
 	private ArrayList<String> defaultPair;
@@ -76,13 +76,10 @@ public class FilterdEventAttrDateConfig extends FilterdAbstractConfig{
 	}
 
 	public boolean canPopulate(FilterConfigPanelController component) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+		//check whether no params are empty if you populate with the component
+		return true;
+	};
 
-	public FilterConfigPanelController getConfigPanel() {
-		return new FilterConfigPanelController("Date Event Attribute Configuration", parameters, this);
-	}
 
 	public boolean checkValidity(XLog log) {
 		ArrayList<LocalDateTime> times = new ArrayList<>();

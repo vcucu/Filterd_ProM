@@ -320,14 +320,14 @@ public class FilterdTraceFollowerConfig extends FilterdAbstractConfig {
 	}
 
 	public boolean canPopulate(FilterConfigPanelController component) {
-		// Can always populate it.
+		//check whether no params are empty if you populate with the component
 		return true;
-	}
+	};
 
 	public FilterConfigPanelController getConfigPanel() {
 		return new FilterConfigPanelController(
 				"Trace Follower Configuration", 
-				parameters);
+				parameters, this);
 	}
 
 	public boolean checkValidity(XLog log) {

@@ -17,12 +17,12 @@ public class FilterdTracePCLConfig extends FilterdAbstractConfig {
 
 
 	public boolean canPopulate(FilterConfigPanelController component) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+		//check whether no params are empty if you populate with the component
+		return true;
+	};
 
 	public FilterConfigPanelController getConfigPanel() {
-		return new FilterConfigPanelController("Trace PCL Configuration", parameters);
+		return new FilterConfigPanelController("Trace PCL Configuration", parameters, this);
 	}
 
 	public boolean checkValidity(XLog log) {

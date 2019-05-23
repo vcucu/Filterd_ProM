@@ -6,7 +6,7 @@ import org.processmining.filterd.filters.Filter;
 import org.processmining.filterd.gui.AbstractFilterConfigPanelController;
 import org.processmining.filterd.gui.FilterConfigPanelController;
 
-public class FilterdEventAttrDurationConfig extends FilterdAbstractConfig{
+public class FilterdEventAttrDurationConfig extends FilterdAbstractGreenConfig{
 
 	public FilterdEventAttrDurationConfig(XLog log, Filter filterType) {
 		super(log, filterType);
@@ -14,13 +14,10 @@ public class FilterdEventAttrDurationConfig extends FilterdAbstractConfig{
 	}
 
 	public boolean canPopulate(FilterConfigPanelController component) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+		//check whether no params are empty if you populate with the component
+		return true;
+	};
 
-	public FilterConfigPanelController getConfigPanel() {
-		return new FilterConfigPanelController("Duration Event Attribute Configuration", parameters);
-	}
 
 	public boolean checkValidity(XLog log) {
 		// TODO Auto-generated method stub

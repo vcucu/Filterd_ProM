@@ -14,9 +14,11 @@ import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
 import org.junit.Test;
 import org.processmining.filterd.filters.FilterdEventAttrFilter;
+import org.processmining.filterd.filters.FilterdTraceSampleFilter;
 import org.processmining.filterd.parameters.Parameter;
 import org.processmining.filterd.parameters.ParameterOneFromSet;
 import org.processmining.filterd.parameters.ParameterRangeFromRange;
+import org.processmining.filterd.parameters.ParameterValueFromRange;
 import org.processmining.filterd.parameters.ParameterYesNo;
 
 import junit.framework.TestCase;
@@ -827,6 +829,35 @@ public class FilterdPackageTest extends TestCase {
 	public void testExtractSample() throws Throwable {
 		XLog expected = originalLog;
 		XLog computed = null; // insert filter operation
+		
+		int numberOfSamples = 5;
+		
+		/* manually instantiate the filter's parameters */
+		List<Parameter> parameters = new ArrayList<>();
+		
+		List<Integer> optionsPair = new ArrayList<Integer>();
+		optionsPair.add(0);
+		optionsPair.add(originalLog.size());
+		
+		System.out.println(
+				"number of original traces is " + originalLog.size()
+				);
+		
+		System.out.println("Taking " + numberOfSamples + " sample traces");
+		
+		ParameterValueFromRange<Integer> numberOfSamplesParameter = 
+				new ParameterValueFromRange<Integer>(
+						"Number of samples", 
+						"Select number of samples", 
+						optionsPair.get(0), 
+						optionsPair);
+		
+		numberOfSamplesParameter.setChosen(numberOfSamples);
+		
+		parameters.add(numberOfSamplesParameter);
+		
+		FilterdTraceSampleFilter filter = new FilterdTraceSampleFilter();
+		computed = filter.filter(null, originalLog, parameters);
 
 		assert containsLog(expected, computed);
 	}

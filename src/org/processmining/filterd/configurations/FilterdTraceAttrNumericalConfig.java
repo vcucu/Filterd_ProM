@@ -15,7 +15,7 @@ import org.processmining.filterd.filters.Filter;
 import org.processmining.filterd.gui.AbstractFilterConfigPanelController;
 import org.processmining.filterd.gui.FilterConfigPanelController;
 
-public class FilterdTraceAttrNumericalConfig extends FilterdAbstractConfig {
+public class FilterdTraceAttrNumericalConfig extends FilterdAbstractGreenConfig {
 
 	public FilterdTraceAttrNumericalConfig(XLog log, Filter filterType,
 			String attribute) {
@@ -80,9 +80,6 @@ public class FilterdTraceAttrNumericalConfig extends FilterdAbstractConfig {
 		return true;
 	}
 
-	public FilterConfigPanelController getConfigPanel() {
-		return new FilterConfigPanelController("Numerical Trace Attribute Configuration", parameters);
-	}
 
 	public boolean checkValidity(XLog log) {
 		// TODO Auto-generated method stub
