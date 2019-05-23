@@ -15,9 +15,9 @@ public abstract class CellController {
 	protected CellModel cellModel;
 	protected VBox cellLayout;
 	
-	@FXML private Region statusBar; // has 8 states, Color x isHidden
-	@FXML private TextField cellName;
-	@FXML private HBox cellBody;
+	@FXML protected Region statusBar; // has 8 states, Color x isHidden
+	@FXML protected TextField cellName;
+	@FXML protected HBox cellBody;
 	
 
 	public CellController(NotebookController controller, CellModel cellModel) {
