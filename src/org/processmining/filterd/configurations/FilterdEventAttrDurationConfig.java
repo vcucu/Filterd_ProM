@@ -1,12 +1,9 @@
 package org.processmining.filterd.configurations;
-import javax.swing.JComponent;
-
 import org.deckfour.xes.model.XLog;
 import org.processmining.filterd.filters.Filter;
-import org.processmining.filterd.gui.AbstractFilterConfigPanelController;
 import org.processmining.filterd.gui.FilterConfigPanelController;
 
-public class FilterdEventAttrDurationConfig extends FilterdAbstractGreenConfig{
+public class FilterdEventAttrDurationConfig extends FilterdAbstractReferenceableConfig{
 
 	public FilterdEventAttrDurationConfig(XLog log, Filter filterType) {
 		super(log, filterType);

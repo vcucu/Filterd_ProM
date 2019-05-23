@@ -13,7 +13,7 @@ import org.processmining.filterd.gui.FilterConfigPanelController;
 import org.processmining.filterd.parameters.ParameterOneFromSet;
 import org.processmining.filterd.parameters.ParameterRangeFromRange;
 
-public class FilterdTraceAttrTimeframeConfig extends FilterdAbstractGreenConfig {
+public class FilterdTraceAttrTimeframeConfig extends FilterdAbstractReferenceableConfig {
 
 	public FilterdTraceAttrTimeframeConfig(XLog log, Filter filterType) {
 		super(log, filterType);

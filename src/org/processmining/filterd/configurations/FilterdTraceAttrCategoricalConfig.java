@@ -1,5 +1,4 @@
 package org.processmining.filterd.configurations;
-import org.processmining.filterd.parameters.Parameter;
 import org.processmining.filterd.parameters.ParameterMultipleFromSet;
 import org.processmining.filterd.parameters.ParameterOneFromSet;
 import org.processmining.filterd.parameters.ParameterYesNo;
@@ -9,16 +8,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.swing.JComponent;
-
 import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
 import org.processmining.filterd.filters.Filter;
-import org.processmining.filterd.gui.AbstractFilterConfigPanelController;
 import org.processmining.filterd.gui.FilterConfigPanelController;
 
-public class FilterdTraceAttrCategoricalConfig extends FilterdAbstractGreenConfig {
+public class FilterdTraceAttrCategoricalConfig extends FilterdAbstractReferenceableConfig {
 
 	public FilterdTraceAttrCategoricalConfig(XLog log, Filter filterType, String
 			attribute) {

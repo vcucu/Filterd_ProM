@@ -12,8 +12,9 @@ import org.processmining.filterd.parameters.Parameter;
 import org.processmining.filterd.parameters.ParameterOneFromSet;
 import org.processmining.filterd.parameters.ParameterRangeFromRange;
 import org.processmining.filterd.parameters.ParameterYesNo;
+import org.processmining.filterd.tools.Toolbox;
 
-public class FilterdEventAttrDateConfig extends FilterdAbstractGreenConfig{
+public class FilterdEventAttrDateConfig extends FilterdAbstractReferenceableConfig{
 
 	private ArrayList<String> times; 
 	private ArrayList<String> defaultPair;
@@ -21,10 +22,12 @@ public class FilterdEventAttrDateConfig extends FilterdAbstractGreenConfig{
 	String defaultOption;
 	ArrayList<String> optionList;
 	ParameterRangeFromRange<String> range;
+	Toolbox toolbox;
 
 	public FilterdEventAttrDateConfig(XLog log, Filter filterType) {
 		super(log, filterType);
 		parameters = new ArrayList<Parameter>();
+		toolbox = Toolbox.getInstance();
 
 		times = new ArrayList<>();
 		defaultPair = new ArrayList<>();
@@ -39,7 +42,7 @@ public class FilterdEventAttrDateConfig extends FilterdAbstractGreenConfig{
 			for (XEvent event : trace) {
 				/* timestamp format YYYY-MM-DDTHH:MM:SS.ssssGMT with GMT = {Z, + , -} */
 				String value = event.getAttributes().get("time:timestamp").toString();
-				LocalDateTime time = synchronizeGMT(value);
+				LocalDateTime time = toolbox.synchronizeGMT(value);
 				times.add(time.toString());
 			}
 		}
@@ -83,13 +86,13 @@ public class FilterdEventAttrDateConfig extends FilterdAbstractGreenConfig{
 
 	public boolean checkValidity(XLog log) {
 		ArrayList<LocalDateTime> times = new ArrayList<>();
-		LocalDateTime lower = synchronizeGMT(range.getChosenPair().get(0));
-		LocalDateTime upper = synchronizeGMT(range.getChosenPair().get(1));
+		LocalDateTime lower = toolbox.synchronizeGMT(range.getChosenPair().get(0));
+		LocalDateTime upper = toolbox.synchronizeGMT(range.getChosenPair().get(1));
 
 		for (XTrace trace : log) {
 			for (XEvent event : trace) {
 				String key = "time:timestamp";
-				LocalDateTime time = synchronizeGMT(event.getAttributes().get(key).toString());
+				LocalDateTime time = toolbox.synchronizeGMT(event.getAttributes().get(key).toString());
 				times.add(time);
 			}
 		}
@@ -107,26 +110,5 @@ public class FilterdEventAttrDateConfig extends FilterdAbstractGreenConfig{
 	}
 
 
-	/* time format assumed to be YYYY-MM-DDThh:mm:ss.SSSZ */
-	private LocalDateTime synchronizeGMT(String time) {
-		LocalDateTime date = LocalDateTime.parse(time.substring(0, 23));
-		int offsetH;
-		int offsetM;
-		
-		if (time.length() > 23) {
-			boolean sign = false;
-			if (time.charAt(23) == '+') sign = true;
-			
-			offsetH = Integer.parseInt(time.substring(24, 26));
-			offsetM = Integer.parseInt(time.substring(27, 29));
-			
-			if (sign) {
-				return date.plusHours(offsetH).plusMinutes(offsetM);
-			} else {
-				return date.minusHours(offsetH).minusMinutes(offsetM);
-			}
-		}
-
-		return date;
-	}
+	
 }

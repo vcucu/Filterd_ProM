@@ -1,14 +1,9 @@
 package org.processmining.filterd.configurations;
-import org.processmining.filterd.parameters.Parameter;
-import java.util.ArrayList;
-import javax.swing.JComponent;
-
 import org.deckfour.xes.model.XLog;
 import org.processmining.filterd.filters.Filter;
-import org.processmining.filterd.gui.AbstractFilterConfigPanelController;
 import org.processmining.filterd.gui.FilterConfigPanelController;
 
-public class FilterdTraceFollowerCategoricalConfig extends FilterdAbstractGreenConfig {
+public class FilterdTraceFollowerCategoricalConfig extends FilterdAbstractReferenceableConfig {
 
 	public FilterdTraceFollowerCategoricalConfig(XLog log, Filter filterType) {
 		super(log, filterType);

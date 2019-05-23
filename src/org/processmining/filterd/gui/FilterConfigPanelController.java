@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.processmining.filterd.configurations.FilterdAbstractConfig;
-import org.processmining.filterd.configurations.Referenceable;
+import org.processmining.filterd.configurations.FilterdAbstractReferencingConfig;
 import org.processmining.filterd.parameters.Parameter;
 import org.processmining.filterd.parameters.ParameterOneFromSet;
 import org.processmining.filterd.widgets.ParameterController;
@@ -46,19 +46,22 @@ public class FilterConfigPanelController extends AbstractFilterConfigPanelContro
 	public void addParameterOneFromSet(ParameterOneFromSet parameter) {
 		ParameterController controller;
 		if(parameter.getCreatesReference()) {
-			if(!(owner instanceof Referenceable)) {
-				throw new IllegalStateException("Filter configuration is not Referenceable, but there is a ParameterOneFromSet that creates a reference.");
+			if(!(owner instanceof FilterdAbstractReferencingConfig)) {
+				throw new IllegalStateException("Filter configuration is not Referencing, but there is a ParameterOneFromSet that creates a reference.");
 			}
-			Referenceable casted = (Referenceable) owner;
+			FilterdAbstractReferencingConfig casted = (FilterdAbstractReferencingConfig) owner;
+			System.out.print("Chosen is: ");
+			System.out.println(parameter.getChosen());
+			System.out.println(parameter.getChosen() == null);
 			controller = new ParameterOneFromSetExtendedController(parameter.getNameDisplayed(), 
 					parameter.getName(),
-					parameter.getDefaultChoice(), 
+					parameter.getChosen() == null ? parameter.getDefaultChoice() : parameter.getChosen(), 
 					parameter.getOptions(),
 					casted);
 		} else {
 			controller = new ParameterOneFromSetController(parameter.getNameDisplayed(), 
 					parameter.getName(),
-					parameter.getDefaultChoice(), 
+					parameter.getChosen() == null ? parameter.getDefaultChoice() : parameter.getChosen(), 
 					parameter.getOptions());
 		}
 		getNextContainer().getChildren().add(controller.getContents());
