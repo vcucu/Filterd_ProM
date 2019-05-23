@@ -54,6 +54,10 @@ public class NotebookController {
  
 	
 
+	public ScrollPane getScrollPane() {
+		return scrollPane;
+	}
+
 	/**
 	 * The constructor which sets the model. Note that the constructor does not
 	 * have access to the @FXML annotated fields as @FXML annotated fields are
