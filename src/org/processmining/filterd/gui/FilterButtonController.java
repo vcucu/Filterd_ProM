@@ -72,6 +72,14 @@ public class FilterButtonController {
 		filterName.setText(value);
 	}
 	
+	public void setFilterLayout(HBox temp) {
+		this.filterLayout = temp;
+	}
+	
+	public HBox getFilterLayout() {
+		return this.filterLayout;
+	}
+	
 	public void showButtons() {
 		for (ImageView button : buttons) {
 			button.setVisible(true);
@@ -88,14 +96,17 @@ public class FilterButtonController {
 
 	@FXML
 	public void selectFilterButton() {
-		if (!model.getSelected()) {
+		if(!model.getSelected()) {
+			controller.hideConfigurationModal();
 			controller.getCellModel().selectFilter(model);
 		}
 	}
 
 	@FXML
 	private void editFilterHandler() {
-		System.out.println("Edit filter handler!");
+		if(this.model.getFilterConfig() != null) {
+			this.controller.showModalFilterConfiguration(this.model.getFilterConfig());
+		}
 	}
 	
 	@FXML

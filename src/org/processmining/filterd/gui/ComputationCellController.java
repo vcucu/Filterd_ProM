@@ -12,6 +12,7 @@ import org.deckfour.xes.model.XLog;
 import org.processmining.filterd.configurations.FilterdAbstractConfig;
 import org.processmining.filterd.configurations.FilterdTraceStartEventConfig;
 import org.processmining.filterd.filters.FilterdTraceStartEventFilter;
+import org.processmining.filterd.gui.ConfigurationModalController.ConfigurationStep;
 import org.processmining.filterd.models.YLog;
 
 import javafx.collections.ListChangeListener;
@@ -47,7 +48,7 @@ public class ComputationCellController extends CellController {
 
 	private SwingNode visualizerSwgNode;
 	private ConfigurationModalController configurationModal;
-	private boolean configurationModalShown;
+	private boolean isConfigurationModalShown;
 
 	@FXML
 	private Rectangle expandButton;
@@ -108,7 +109,7 @@ public class ComputationCellController extends CellController {
 		super(controller, model);
 
 		configurationModal = new ConfigurationModalController(this);
-		configurationModalShown = false;
+		this.isConfigurationModalShown = false;
 
 		isExpanded = false;
 		notebookVisualiser = controller.getNotebookVisualiser();
@@ -117,10 +118,12 @@ public class ComputationCellController extends CellController {
 
 	@FXML
 	public void addFilter() {
-		int index = getCellModel().getFilters().size(); // Index of the new cell, so that we can compute which XLogs are available
-		FilterButtonModel filterModel = new FilterButtonModel(index);
-		getCellModel().addFilterModel(index, filterModel);
-		loadFilter(index, filterModel);
+		if(!this.isConfigurationModalShown || this.configurationModal.getConfigurationStep() != ConfigurationStep.ADD_FILTER) {
+			int index = getCellModel().getFilters().size(); // Index of the new cell, so that we can compute which XLogs are available
+			FilterButtonModel filterModel = new FilterButtonModel(index);
+			getCellModel().addFilterModel(index, filterModel);
+			loadFilter(index, filterModel);
+		}
 	}
 
 	public void loadFilter(int index, FilterButtonModel model) {
@@ -136,6 +139,8 @@ public class ComputationCellController extends CellController {
 			e.printStackTrace();
 		}
 		newController.selectFilterButton();
+		// show the filter list to allow the user to pick which filter she wants to add
+		showModalFilterList(model);
 	}
 
 	public VBox getPanelLayout() {
@@ -239,30 +244,37 @@ public class ComputationCellController extends CellController {
 		});
 	}
 
-	@FXML
-	private void toggleConfigurationModal() {
-		if(configurationModalShown) {
-			hideConfigurationModal();
-		} else {
-			showConfigurationModal();
-		}
-	}
-
 	public void hideConfigurationModal() {
-		visualizerPane.getChildren().clear();
-		// set visualizer as the content
-		if(visualizerSwgNode != null) {
-			visualizerPane.getChildren().add(visualizerSwgNode);
-			// set properties w.r.t. parent node (AnchorPane)
-			visualizerPane.setTopAnchor(visualizerSwgNode, 0.0);
-			visualizerPane.setBottomAnchor(visualizerSwgNode, 0.0);
-			visualizerPane.setLeftAnchor(visualizerSwgNode, 0.0);
-			visualizerPane.setRightAnchor(visualizerSwgNode, 0.0);
+		if(this.isConfigurationModalShown) {
+			ConfigurationStep configurationStep = configurationModal.getConfigurationStep();
+			visualizerPane.getChildren().clear();
+			// set visualizer as the content
+			if(visualizerSwgNode != null) {
+				visualizerPane.getChildren().add(visualizerSwgNode);
+				// set properties w.r.t. parent node (AnchorPane)
+				visualizerPane.setTopAnchor(visualizerSwgNode, 0.0);
+				visualizerPane.setBottomAnchor(visualizerSwgNode, 0.0);
+				visualizerPane.setLeftAnchor(visualizerSwgNode, 0.0);
+				visualizerPane.setRightAnchor(visualizerSwgNode, 0.0);
+			}
+			// if filter selection was cancelled, delete the added button
+			if(configurationStep == ConfigurationStep.ADD_FILTER) {
+				// remove model
+				FilterButtonModel buttonToRemove = getCellModel().getFilters().get(getCellModel().getFilters().size() - 1);
+				getCellModel().removeFilterModel(buttonToRemove);
+				// remove controller
+				FilterButtonController controllerToRemove = getCellModel().getFilterControllers().get(getCellModel().getFilterControllers().size() - 1);
+				getCellModel().removeFilterController(controllerToRemove);
+				getPanelLayout().getChildren().remove(controllerToRemove.getFilterLayout());
+			}			
 		}
-		configurationModalShown = false;
+		this.isConfigurationModalShown = false;
 	}
 
-	private void showConfigurationModal() {
+	public void showModalFilterConfiguration(FilterdAbstractConfig filterConfig) {
+		if(filterConfig == null) {
+			throw new IllegalArgumentException("Fitler configuration cannot be null");
+		}
 		// save current visualizer (TODO: is this needed?)
 		for(int i = 0; i < visualizerPane.getChildren().size(); i++) {
 			if(visualizerPane.getChildren().get(i) instanceof SwingNode) {
@@ -271,6 +283,8 @@ public class ComputationCellController extends CellController {
 			}
 		}
 		visualizerPane.getChildren().clear();
+		// populate filter configuration modal
+		configurationModal.showFilterConfiguration(filterConfig);
 		// get root component of the configuration modal
 		VBox configurationModalRoot = configurationModal.getRoot();
 		visualizerPane.getChildren().add(configurationModalRoot);
@@ -279,20 +293,22 @@ public class ComputationCellController extends CellController {
 		visualizerPane.setBottomAnchor(configurationModalRoot, 0.0);
 		visualizerPane.setLeftAnchor(configurationModalRoot, 0.0);
 		visualizerPane.setRightAnchor(configurationModalRoot, 0.0);
-		configurationModalShown = true;
+		this.isConfigurationModalShown = true;
 	}
 
-	@FXML
-	private void toggleFilterPicker() {
+	public void showModalFilterList(FilterButtonModel filterButtonModel) {
 		visualizerPane.getChildren().clear();
 		List<String> filterOptions = new ArrayList<>();
 		filterOptions.add("Filter 1");
 		filterOptions.add("Filter 2");
 		configurationModal.showFilterList(filterOptions, new Callback<String, FilterdAbstractConfig>() {
 
-			public FilterdAbstractConfig call(String param) {
+			public FilterdAbstractConfig call(String userSelection) {
 				// TODO: create a new filter config based on the user's selection
 				ComputationCellModel model = (ComputationCellModel) cellModel;
+				FilterdAbstractConfig filterConfig = new FilterdTraceStartEventConfig(model.getLog(), new FilterdTraceStartEventFilter());
+				filterButtonModel.setFilterConfig(filterConfig);
+				// TODO: set cell status to OUT_OF_DATE
 				return new FilterdTraceStartEventConfig(model.getLog(), new FilterdTraceStartEventFilter());
 			}
 
@@ -303,6 +319,7 @@ public class ComputationCellController extends CellController {
 		visualizerPane.setBottomAnchor(configurationModalRoot, 0.0);
 		visualizerPane.setLeftAnchor(configurationModalRoot, 0.0);
 		visualizerPane.setRightAnchor(configurationModalRoot, 0.0);
+		this.isConfigurationModalShown = true;
 	}
 	@Override
 	public void show() {
@@ -322,6 +339,10 @@ public class ComputationCellController extends CellController {
 			cell.setPrefHeight(cell.USE_COMPUTED_SIZE);
 		}
 
+	}
+	
+	public ConfigurationModalController getConfigurationModal() {
+		return this.configurationModal;
 	}
 
 }

@@ -27,12 +27,12 @@ public class ConfigurationModalController {
 	private FilterdAbstractConfig filterConfig;
 	private AbstractFilterConfigPanelController currentContentsController;
 	private ComputationCellController parent;
-	private boolean isConfiguringFilter;
+	private ConfigurationStep configurationStep;
 	private Callback<String, FilterdAbstractConfig> filterSelectionCallback;
 	
 	public ConfigurationModalController(ComputationCellController parent) {
 		this.parent = parent;
-		this.isConfiguringFilter = true;
+		this.configurationStep = ConfigurationStep.ADD_FILTER;
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/org/processmining/filterd/gui/fxml/ConfigurationModal.fxml"));
         fxmlLoader.setController(this);
         try {
@@ -57,7 +57,7 @@ public class ConfigurationModalController {
 		contentPane.getChildren().add(list);
 		apply.setText("Next");
 		apply.disableProperty().bind(Bindings.isEmpty(list.getSelectionModel().getSelectedItems())); // disable the button if nothing is selected
-		isConfiguringFilter = false;
+		this.configurationStep = ConfigurationStep.ADD_FILTER;
 	}
 	
 	public void showFilterConfiguration(FilterdAbstractConfig filterConfig) {
@@ -72,25 +72,18 @@ public class ConfigurationModalController {
 		HBox.setHgrow(currentContentsController.getRoot(), Priority.ALWAYS); // make the content 100% of the available width
 		contentPane.getChildren().clear(); // remove anything that may be left over by previous contents
 		contentPane.getChildren().add(currentContentsController.getRoot());
-		isConfiguringFilter = true;
+		this.configurationStep = ConfigurationStep.CONFIGURE_FILTER;
 	}
 	
 	@FXML 
 	private void cancel() {
-		resetModal();
 		parent.hideConfigurationModal();
+		resetModal();
 	}
 	
 	@FXML 
 	private void apply() {
-		if(isConfiguringFilter) {
-			// user is configuring a filter config. -> apply changes if possible
-			FilterConfigPanelController casted = (FilterConfigPanelController) currentContentsController; 
-			if(filterConfig.canPopulate(casted)) {
-				filterConfig.populate(currentContentsController);
-			}
-			parent.hideConfigurationModal();
-		} else {
+		if(this.configurationStep == ConfigurationStep.ADD_FILTER) {
 			// user is picking a filter to use -> move on to the configuration screen
 			if(filterSelectionCallback == null) {
 				throw new IllegalStateException("apply() was called before showFilterList()");
@@ -101,6 +94,14 @@ public class ConfigurationModalController {
 			ListView<String> list = (ListView) contentPane.getChildren().get(0); // cast is checked above
 			String userSelection = list.getSelectionModel().getSelectedItem();
 			showFilterConfiguration(filterSelectionCallback.call(userSelection));
+		} else if(this.configurationStep == ConfigurationStep.CONFIGURE_FILTER) {
+			// user is configuring a filter config. -> apply changes if possible
+			FilterConfigPanelController casted = (FilterConfigPanelController) currentContentsController; 
+			if(filterConfig.canPopulate(casted)) {
+				filterConfig.populate(currentContentsController);
+			}
+			parent.hideConfigurationModal();
+			resetModal();
 		}
 	}
 	
@@ -114,5 +115,14 @@ public class ConfigurationModalController {
 	
 	public VBox getRoot() {
 		return root;
+	}
+	
+	public ConfigurationStep getConfigurationStep() {
+		return this.configurationStep;
+	}
+	
+	enum ConfigurationStep {
+		ADD_FILTER,
+		CONFIGURE_FILTER;
 	}
 }
