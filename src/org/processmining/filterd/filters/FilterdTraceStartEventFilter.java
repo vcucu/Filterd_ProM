@@ -32,7 +32,7 @@ public class FilterdTraceStartEventFilter extends Filter {
 		
 		//initialize the log that will be output
 		filteredLog = this.initializeLog(log);
-		
+	
 		
 		if (selectionType.getChosen().equals("Filter in")) {
 			//Keeping desired attributes in
@@ -40,7 +40,7 @@ public class FilterdTraceStartEventFilter extends Filter {
 				//remove nulls
 				for (XTrace trace : log) {
 					//do not query on empty traces
-					if (trace.isEmpty()) {
+					if (!trace.isEmpty()) {
 						//retrieve the first event
 						XEvent first =  trace.get(0);
 						//retrieve the first value
@@ -54,7 +54,7 @@ public class FilterdTraceStartEventFilter extends Filter {
 				//keep nulls in
 				for (XTrace trace : log) {
 					//do not query on empty traces
-					if (trace.isEmpty()) {
+					if (!trace.isEmpty()) {
 						//retrieve the first event
 						XEvent first =  trace.get(0);
 						//retrieve the first value
