@@ -39,7 +39,7 @@ public class ParameterOneFromSetExtendedController extends ParameterController {
         ObservableList<String> observableList = FXCollections.observableList(list);
         combobox.setItems(observableList);
         combobox.getSelectionModel().select(defaultValue);
-        selectionChanged(); // force the view to update
+        setNestedContent(owner.getConcreteReference());
 	}
 	
 	public String getValue() {

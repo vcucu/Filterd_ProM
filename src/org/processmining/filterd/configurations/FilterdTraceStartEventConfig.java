@@ -26,7 +26,7 @@ import org.processmining.filterd.widgets.ParameterYesNoController;
 
 public class FilterdTraceStartEventConfig extends FilterdAbstractConfig implements Referenceable {
 	
-	FilterdAbstractConfig concreteReference;
+	FilterdAbstractGreenConfig concreteReference;
 
 	public FilterdTraceStartEventConfig(XLog log, Filter filterType) {
 		super(log, filterType);
@@ -66,6 +66,8 @@ public class FilterdTraceStartEventConfig extends FilterdAbstractConfig implemen
 			//all cases assume that the controller has a name corresponding to the parameter name
 			if(controller instanceof ParameterOneFromSetExtendedController) {
 				ParameterOneFromSetExtendedController casted = (ParameterOneFromSetExtendedController) controller;
+				ParameterOneFromSet param = (ParameterOneFromSet) getParameter(controller.getName());
+				param.setChosen(casted.getValue());
 				concreteReference.populate(casted.getNestedConfigPanel());
 				//this method needs to be in every referencable class
 				
@@ -123,6 +125,10 @@ public class FilterdTraceStartEventConfig extends FilterdAbstractConfig implemen
 		concreteReference = new FilterdTraceStartEventCategoricalConfig(log, filterType,
 				controller.getValue(), complexClassifiers);
 
+		return concreteReference;
+	}
+	
+	public FilterdAbstractGreenConfig getConcreteReference() {
 		return concreteReference;
 	}
 	

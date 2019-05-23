@@ -50,15 +50,18 @@ public class FilterConfigPanelController extends AbstractFilterConfigPanelContro
 				throw new IllegalStateException("Filter configuration is not Referenceable, but there is a ParameterOneFromSet that creates a reference.");
 			}
 			Referenceable casted = (Referenceable) owner;
+			System.out.print("Chosen is: ");
+			System.out.println(parameter.getChosen());
+			System.out.println(parameter.getChosen() == null);
 			controller = new ParameterOneFromSetExtendedController(parameter.getNameDisplayed(), 
 					parameter.getName(),
-					parameter.getDefaultChoice(), 
+					parameter.getChosen() == null ? parameter.getDefaultChoice() : parameter.getChosen(), 
 					parameter.getOptions(),
 					casted);
 		} else {
 			controller = new ParameterOneFromSetController(parameter.getNameDisplayed(), 
 					parameter.getName(),
-					parameter.getDefaultChoice(), 
+					parameter.getChosen() == null ? parameter.getDefaultChoice() : parameter.getChosen(), 
 					parameter.getOptions());
 		}
 		getNextContainer().getChildren().add(controller.getContents());
