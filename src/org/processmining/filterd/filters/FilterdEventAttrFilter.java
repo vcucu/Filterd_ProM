@@ -11,6 +11,7 @@ import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
 import org.processmining.filterd.parameters.Parameter;
+import org.processmining.filterd.parameters.ParameterMultipleFromSet;
 import org.processmining.filterd.parameters.ParameterOneFromSet;
 import org.processmining.filterd.parameters.ParameterRangeFromRange;
 import org.processmining.filterd.parameters.ParameterYesNo;
@@ -56,7 +57,53 @@ public class FilterdEventAttrFilter extends Filter {
 		return null;
 	}
 
-	public XLog filterCategorical(PluginContext context, XLog log, List<Parameter> parameters) {return null;}
+	public XLog filterCategorical(PluginContext context, XLog log, List<Parameter> parameters) {
+				
+		// should you remove empty traces
+		ParameterYesNo nullHandling = new ParameterYesNo("nullHandling", 
+				"Remove if no value provided", true);
+		// should you keep events which do not have the specified attribute
+		ParameterYesNo emptyHandling = new ParameterYesNo("emptyHandling", 
+				"Remove if no value provided", true);
+		// filter in or filter out
+		ParameterOneFromSet selectionType = (ParameterOneFromSet) this
+				.getParameter(parameters, "selectionType");
+		ParameterMultipleFromSet desiredValues = (ParameterMultipleFromSet) this
+				.getParameter(parameters, "desiredValues");
+		
+		boolean choice = selectionType.getChosen().contains("Filter in");
+		boolean keepNull = nullHandling.getChosen();
+		boolean keepEmpty = emptyHandling.getChosen();
+		
+		filteredLog = this.initializeLog(log);
+		XFactory factory = XFactoryRegistry.instance().currentDefault();
+		
+		for (XTrace trace: log) {
+			XTrace filteredTrace = factory.createTrace(trace.getAttributes());
+			for (XEvent event : trace) {
+				for(String key: event.getAttributes().keySet()) {
+					String value = event.getAttributes().get(key).toString();
+					boolean add = !choice;
+										
+					if(desiredValues.getChosen().contains(key)) {
+						add = choice;
+					}
+					if (add) {
+						filteredTrace.add(event);
+					}
+
+					if (context != null) {
+						context.getProgress().inc();
+					}
+				}
+				if (!filteredTrace.isEmpty() || keepNull) {
+					filteredLog.add(filteredTrace);
+				}
+			}
+		}
+		
+		return filteredLog;
+	}
 
 	public XLog filterNumerical(PluginContext context, XLog log, List<Parameter> parameters) {return null;}
 
