@@ -2,12 +2,16 @@ package org.processmining.tests.filterdpackage;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.deckfour.xes.model.XLog;
+import org.deckfour.xes.model.XTrace;
 import org.junit.Test;
+import org.processmining.filterd.filters.FilterdTraceFrequencyFilter;
 import org.processmining.filterd.parameters.Parameter;
 import org.processmining.filterd.parameters.ParameterOneFromSet;
 import org.processmining.filterd.parameters.ParameterRangeFromRange;
+import org.processmining.filterd.tools.Toolbox;
 
 /* Test cases for validating the Filter on Frequency AND the
  * Filter on Occurence.
@@ -72,7 +76,7 @@ public class FilterFrequencyOccurenceTest extends FilterdPackageTest{
 						"Threshold type", 
 						"frequency", 
 						foOptions
-		);
+						);
 		
 		frequencyOccurranceParameter.setChosen("occurrance");
 		
@@ -80,9 +84,26 @@ public class FilterFrequencyOccurenceTest extends FilterdPackageTest{
 		//initialize the threshold options parameter and add it to the parameters list
 		List<Double> thrOptions = new ArrayList<Double>();
 		
-		//since the default option is "frequency", it goes from 1% to 100%
-		thrOptions.add((double)1);
-		thrOptions.add((double)4);
+		Map<XTrace, List<Integer>> variantsToTraceIndices = 
+				Toolbox.getVariantsToTraceIndices(originalLog);
+		
+		double smallestNumber = Double.MAX_VALUE;
+		double largestNumber = -Double.MAX_VALUE;
+		
+		for (List<Integer> traces : variantsToTraceIndices.values()) {
+			
+			if (traces.size() < smallestNumber) {
+				smallestNumber = traces.size();
+			}
+			
+			if (traces.size() > largestNumber) {
+				largestNumber = traces.size();
+			}
+			
+		}
+		
+		thrOptions.add(smallestNumber);
+		thrOptions.add(largestNumber);
 		
 		ParameterRangeFromRange<Double> threshold = new ParameterRangeFromRange<Double>(
 				"threshold",
@@ -91,8 +112,11 @@ public class FilterFrequencyOccurenceTest extends FilterdPackageTest{
 				thrOptions
 				);
 		
+		List<Double> chosenOptions = new ArrayList<>();
+		chosenOptions.add(2d);
+		chosenOptions.add(largestNumber);
 		
-		
+		threshold.setChosenPair(chosenOptions);
 		
 		//initialize the filter mode options parameter and add it to the parameters list
 		List<String> fModeOptions = new ArrayList<String>();
@@ -107,10 +131,15 @@ public class FilterFrequencyOccurenceTest extends FilterdPackageTest{
 				fModeOptions
 				);
 		
+		filterInOut.setChosen("in");
+		
 		parameters.add(frequencyOccurranceParameter);
 		parameters.add(threshold);
 		parameters.add(filterInOut);
 		
+		FilterdTraceFrequencyFilter filter = new FilterdTraceFrequencyFilter();
+		
+		computed = filter.filter(null, originalLog, parameters);
 
 		assert equalLog(expected, computed);
 	}

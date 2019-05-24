@@ -3,11 +3,9 @@ import java.util.List;
 
 import org.deckfour.xes.model.XLog;
 import org.processmining.filterd.parameters.Parameter;
-import org.processmining.filterd.tools.Toolbox;
 import org.processmining.framework.plugin.PluginContext;
 
 public abstract class Filter {
-	Toolbox toolbox = Toolbox.getInstance();
 
 	public abstract XLog filter(PluginContext context, XLog log, List<Parameter> parameters);
 	
