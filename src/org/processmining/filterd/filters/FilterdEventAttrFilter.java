@@ -22,20 +22,22 @@ public class FilterdEventAttrFilter extends Filter {
 
 	XLog filteredLog;
 	Toolbox toolbox = Toolbox.getInstance();
-
+	String key;
+	
 	public FilterdEventAttrFilter() {}
 
 	@Override
 	public XLog filter(PluginContext context, XLog log, List<Parameter> parameters) {
 		// TODO Auto-generated method stub this method should just contain a switch for the following 4 methods
 		//that are invisible still :}
+		
 		ParameterOneFromSet attribute = (ParameterOneFromSet) this.getParameter(parameters, "attribute");
-		String key = attribute.getChosen();
+		key = attribute.getChosen();
 		
 		XLogInfo logInfo = XLogInfoImpl.create(log);
 		
 		for (XAttribute a : logInfo.getEventAttributeInfo().getAttributes()) {
-			if (a.equals(key)) {
+			if (a.getKey().equals(key)) {
 				switch(toolbox.getType(a)) {
 					case "Literal":
 						return filterCategorical(context, log, parameters);
@@ -61,17 +63,17 @@ public class FilterdEventAttrFilter extends Filter {
 				
 		// should you remove empty traces
 		ParameterYesNo nullHandling = new ParameterYesNo("nullHandling", 
-				"Remove if no value provided", true);
+				"Keep empty traces", true);
 		// should you keep events which do not have the specified attribute
 		ParameterYesNo emptyHandling = new ParameterYesNo("emptyHandling", 
-				"Remove if no value provided", true);
+				"Keep events without value", true);
 		// filter in or filter out
 		ParameterOneFromSet selectionType = (ParameterOneFromSet) this
 				.getParameter(parameters, "selectionType");
 		ParameterMultipleFromSet desiredValues = (ParameterMultipleFromSet) this
 				.getParameter(parameters, "desiredValues");
 		
-		boolean choice = selectionType.getChosen().contains("Filter in");
+		boolean choice = selectionType.getChosen().equals("Filter in");
 		boolean keepNull = nullHandling.getChosen();
 		boolean keepEmpty = emptyHandling.getChosen();
 		
@@ -81,11 +83,15 @@ public class FilterdEventAttrFilter extends Filter {
 		for (XTrace trace: log) {
 			XTrace filteredTrace = factory.createTrace(trace.getAttributes());
 			for (XEvent event : trace) {
-				for(String key: event.getAttributes().keySet()) {
 					String value = event.getAttributes().get(key).toString();
 					boolean add = !choice;
+								
+					if (!event.getAttributes().containsKey(key)) {
+						if (keepEmpty) filteredTrace.add(event);
+						continue;
+					}
 										
-					if(desiredValues.getChosen().contains(key)) {
+					if(desiredValues.getChosen().contains(value)) {
 						add = choice;
 					}
 					if (add) {
@@ -95,10 +101,9 @@ public class FilterdEventAttrFilter extends Filter {
 					if (context != null) {
 						context.getProgress().inc();
 					}
-				}
-				if (!filteredTrace.isEmpty() || keepNull) {
-					filteredLog.add(filteredTrace);
-				}
+			}
+			if (!filteredTrace.isEmpty() || keepNull) {
+				filteredLog.add(filteredTrace);
 			}
 		}
 		
@@ -109,10 +114,10 @@ public class FilterdEventAttrFilter extends Filter {
 
 	public XLog filterTimestamp(PluginContext context, XLog log, List<Parameter> parameters) {		
 		ParameterYesNo nullHandling = new ParameterYesNo("nullHandling", 
-				"Remove if no value provided", true);
+				"Keep empty traces", true);
 
 		ParameterYesNo emptyHandling = new ParameterYesNo("emptyHandling", 
-				"Remove if no value provided", true);
+				"Keep events with no value", true);
 
 		ParameterOneFromSet selectionType = (ParameterOneFromSet) this
 				.getParameter(parameters, "selectionType");
@@ -132,7 +137,7 @@ public class FilterdEventAttrFilter extends Filter {
 
 		for (XTrace trace : log) {
 			XTrace filteredTrace = factory.createTrace(trace.getAttributes());
-			String key = "time:timestamp";
+			key = "time:timestamp";
 
 			for (XEvent event : trace) {
 				boolean add = !choice;
@@ -168,4 +173,13 @@ public class FilterdEventAttrFilter extends Filter {
 
 		return filteredLog;
 	}
+
+	public String getKey() {
+		return key;
+	}
+
+	public void setKey(String key) {
+		this.key = key;
+	}
+
 }

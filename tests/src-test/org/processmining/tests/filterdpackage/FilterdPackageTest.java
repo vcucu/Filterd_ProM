@@ -70,7 +70,6 @@ public class FilterdPackageTest extends TestCase {
 		int eventsComputed = infoComputed.getNumberOfEvents();
 
 		/* the logs must have the same number of traces and events */
-		System.out.print("Nr of traces = " + tracesExpected + " and computed is " + tracesComputed + "\n");
 		if (tracesExpected != tracesComputed) return false; 
 		if (eventsExpected != eventsComputed) return false;
 

@@ -119,10 +119,10 @@ public class FilterdEventAttrConfig extends FilterdAbstractReferencingConfig {
 			if (a.getKey().equals(key)) {
 				switch(toolbox.getType(a)) {
 					case "Literal":
-						concreteReference = new FilterdEventAttrCategoricalConfig(log, filterType);
+						concreteReference = new FilterdEventAttrCategoricalConfig(log, filterType, a);
 						break;
 					case "Boolean":
-						concreteReference = new FilterdEventAttrCategoricalConfig(log, filterType);
+						concreteReference = new FilterdEventAttrCategoricalConfig(log, filterType, a);
 						break;
 					case "Continuous":
 						concreteReference = new FilterdEventAttrNumericalConfig(log, filterType);
@@ -131,12 +131,12 @@ public class FilterdEventAttrConfig extends FilterdAbstractReferencingConfig {
 						concreteReference = new FilterdEventAttrNumericalConfig(log, filterType);
 						break;
 					case "ID":
-						concreteReference = new FilterdEventAttrCategoricalConfig(log, filterType);
+						concreteReference = new FilterdEventAttrCategoricalConfig(log, filterType, a);
 						break;
 					case "Timestamp":
 						concreteReference = new FilterdEventAttrDateConfig(log, filterType);
 						break;
-					default: concreteReference = new FilterdEventAttrCategoricalConfig(log, filterType);
+					default: concreteReference = new FilterdEventAttrCategoricalConfig(log, filterType, a);
 						break;
 				}
 			}

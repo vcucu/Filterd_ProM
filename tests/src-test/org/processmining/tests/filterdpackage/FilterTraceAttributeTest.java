@@ -25,7 +25,21 @@ public class FilterTraceAttributeTest extends FilterdPackageTest {
 
 		assert equalLog(expected, computed);
 	}
+	
+	/* Corresponds to test case 37 from test_specification.xlsx.
+	 * See Disco Attributes - mandatory traces having at least one event with
+	 * "concept:name" != "archive" and "receive payment"
+	 * 
+	 * Result: each case except case 34.
+	 */
+	@Test
+	public void testAttributesMandatory() throws Throwable {
+		XLog expected = parseLog("event-attributes", "test_attributes_2.xes");
+		XLog computed = null; // insert filter operation
 
+		assert equalLog(expected, computed);
+	}
+	
 	/* Corresponds to test case 24 from test_specification.xlsx.
 	 * See ProM - Filter log on trace attribute values.
 	 * Keep traces with customer = X, Y, Z.
