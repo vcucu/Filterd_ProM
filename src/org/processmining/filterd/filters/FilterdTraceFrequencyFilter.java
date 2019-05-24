@@ -7,15 +7,14 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-import org.deckfour.xes.classification.XEventClassifier;
 import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
 import org.processmining.filterd.parameters.Parameter;
 import org.processmining.filterd.parameters.ParameterOneFromSet;
 import org.processmining.filterd.parameters.ParameterRangeFromRange;
+import org.processmining.filterd.tools.Toolbox;
 import org.processmining.framework.plugin.PluginContext;
 
 public class FilterdTraceFrequencyFilter extends Filter {
@@ -69,27 +68,13 @@ public class FilterdTraceFrequencyFilter extends Filter {
 		
 		// Get parameters set by the user in the configuration panel.
 		ParameterOneFromSet FreqOcc = (ParameterOneFromSet) parameters.get(0);
-		ParameterRangeFromRange<Double> thresholdParameters = (ParameterRangeFromRange<Double>) parameters.get(1);
-		ParameterOneFromSet filterInOut = (ParameterOneFromSet) parameters.get(2);
+		ParameterRangeFromRange<Double> thresholdParameters = 
+				(ParameterRangeFromRange<Double>) parameters.get(1);
+		ParameterOneFromSet filterInOut = 
+				(ParameterOneFromSet) parameters.get(2);
 
 		int lowThreshold;
 		int highThreshold;
-		
-		// Need to get the defining attributes to do the variants.
-		Set<String> classifyingAttributes = new HashSet<>();
-		
-		// Get the classifiers from the log.
-		List<XEventClassifier> classifiers = log.getClassifiers();
-		
-		// Loop over every classifier. 
-		for (XEventClassifier classifier : classifiers) {
-			
-			// Extract every key and add it to the set.
-			for (String key : classifier.getDefiningAttributeKeys()) {
-				classifyingAttributes.add(key);
-			}
-			
-		}
 		
 		// Create collection for traces inside and outside the thresholds set by 
 		// the user.
@@ -102,117 +87,23 @@ public class FilterdTraceFrequencyFilter extends Filter {
 		// Variants of traces are traces with the same order of events and
 		// values for every key except for the time stamp.
 		// Create mapping from variants to trace indices
-		Map<XTrace, List<Integer>> variantsToTraceIndices = new HashMap<>();
+		Map<XTrace, List<Integer>> variantsToTraceIndices = 
+				Toolbox.getVariantsToTraceIndices(clonedLog);
 		
-		// Loop over every trace in the log
-		for (int i = 0; i < log.size(); i++) {
-			
-			// Add first trace because we are certain that there is no
-			// other variant in the hash map since it is empty.
-			if (variantsToTraceIndices.isEmpty()) {
-				
-				// Add it to the mapping as a new entry.
-				List<Integer> indicesList = new ArrayList<>();
-				indicesList.add(i);
-				
-				variantsToTraceIndices.put(log.get(i), indicesList);
-				
-			} else {
-				
-				boolean isDifferentVariant = true;
-				
-				for (XTrace variant : variantsToTraceIndices.keySet()) {
-					
-					if (isSameVariant(
-							log.get(i), 
-							variant, 
-							classifyingAttributes
-							)) {
-						
-						// Add the index of this trace to the mapping of 
-						// the variant we found.
-						variantsToTraceIndices.get(variant).add(i);
-						
-						isDifferentVariant = false;
-						
-						// stop looping over variants since we found one.
-						break;
-					}
-					
-				}
-				
-				// Add this trace because there are no variants pertaining
-				// to this trace.
-				if (isDifferentVariant) {
-					
-					// Add it to the mapping as a new entry.
-					List<Integer> indicesList = new ArrayList<>();
-					indicesList.add(i);
-					
-					variantsToTraceIndices.put(log.get(i), indicesList);
-					
-				}
-
-				
-			}
-			
-			
-		}
 		
 		/// Check the threshold type 
 		// If the user wants to filter based on occurrences.
 		if (FreqOcc.getChosen().contains("occ")) {
 			// The parameters are given as absolute values, 
 			// thus we can simply retrieve them.
-			lowThreshold = thresholdParameters.getOptionsPair().get(0).intValue();
-			highThreshold = thresholdParameters.getOptionsPair().get(1).intValue();
-			
-			
-			
-			// Now we have the mapping from trace variants to all the indices
-			// that have this variant.
-			// Now we filter based on the number traces per variant and see if 
-			// that number is contained within the threshold set by the user.
-			
-			// Loop over the trace variants to get the indices of the traces
-			// with this variant.
-			for (XTrace variant : variantsToTraceIndices.keySet()) {
-				
-				// Get list of trace indices.
-				List<Integer> traceIndices = variantsToTraceIndices
-						.get(variant);
-				
-				// Put it in the hash set of traces within the threshold.
-				if (traceIndices.size() >= lowThreshold 
-						&& traceIndices.size() <= highThreshold) {
-					
-					// Do this for every trace of this variant.
-					for (Integer traceIndex : traceIndices) {
-					
-						tracesInsideThreshold.add(clonedLog.get(traceIndex));
-					
-					}
-					
-				}
-				// Put it in the hash set of traces outside the threshold.
-				else {
-					
-					// Do this for every trace of this variant.
-					for (Integer traceIndex : traceIndices) {
-						
-						tracesOutsideThreshold.add(clonedLog.get(traceIndex));
-					
-					}
-					
-					
-				}
-				
-				
-			}
-			
-			
-			
-			
+			lowThreshold = thresholdParameters
+					.getOptionsPair()
+					.get(0)
+					.intValue();
+			highThreshold = thresholdParameters
+					.getOptionsPair()
+					.get(1)
+					.intValue();
 		}
 		// Else the user wants to filter based on frequency.
 		else {
@@ -273,22 +164,46 @@ public class FilterdTraceFrequencyFilter extends Filter {
 			}
 		}
 		
+		// Now we have the mapping from trace variants to all the indices
+		// that have this variant.
+		// Now we filter based on the number traces per variant and see if 
+		// that number is contained within the threshold set by the user.
 		
-		/*
-		// Loop over every trace.
-		for (XTrace trace : clonedLog) {
-			// Trace is inside thresholds set by user.
-			if (traceOccurrenceMap.get(traceActivitiesMap.get(trace)) < lowThreshold &&
-					traceOccurrenceMap.get(traceActivitiesMap.get(trace)) > highThreshold) {
-				tracesOutsideThreshold.add(trace);
+		// Loop over the trace variants to get the indices of the traces
+		// with this variant.
+		for (XTrace variant : variantsToTraceIndices.keySet()) {
+			
+			// Get list of trace indices.
+			List<Integer> traceIndices = variantsToTraceIndices
+					.get(variant);
+			
+			// Put it in the hash set of traces within the threshold.
+			if (traceIndices.size() >= lowThreshold 
+					&& traceIndices.size() <= highThreshold) {
+				
+				// Do this for every trace of this variant.
+				for (Integer traceIndex : traceIndices) {
+				
+					tracesInsideThreshold.add(clonedLog.get(traceIndex));
+				
+				}
+				
 			}
-			// Trace is outside thresholds.
+			// Put it in the hash set of traces outside the threshold.
 			else {
-				tracesInsideThreshold.add(trace);
+				
+				// Do this for every trace of this variant.
+				for (Integer traceIndex : traceIndices) {
+					
+					tracesOutsideThreshold.add(clonedLog.get(traceIndex));
+				
+				}
+				
+				
 			}
+			
+			
 		}
-		*/
-		
 		
 		/// Check the Filter mode (filter in/out)
 		// If the users wants to filter in the traces
@@ -306,73 +221,6 @@ public class FilterdTraceFrequencyFilter extends Filter {
 		
 		// Return the cloned log where the undesirable traces have been removed.
 		return clonedLog;
-	}
-	
-	private boolean isSameVariant(
-			XTrace firstTrace, 
-			XTrace secondTrace,
-			Set<String> attributes
-			) {
-		
-		if (firstTrace.size() != secondTrace.size()) {
-			return false;
-		}
-		
-		
-		for (int i = 0; i < firstTrace.size(); i++) {
-			
-			if (!(isSameEvent(
-					firstTrace.get(i), 
-					secondTrace.get(i), 
-					attributes)
-					)) {
-				return false;
-			}
-			
-		}
-		
-		
-		return true;
-	}
-	
-	private boolean isSameEvent(
-			XEvent firstEvent, 
-			XEvent secondEvent,
-			Set<String> attributes
-			) {
-		
-		Set<String> firstKeys = firstEvent.getAttributes().keySet();
-		Set<String> secondKeys = secondEvent.getAttributes().keySet();
-		
-		if (firstKeys.size() != secondKeys.size()) {
-			return false;
-		}
-		
-		for (String key : firstKeys) {
-			
-			if (!(secondKeys.contains(key))) {
-				return false;
-			}
-			
-			if (attributes.contains(key)) {
-			
-				String firstValue = firstEvent
-						.getAttributes()
-						.get(key)
-						.toString();
-				String secondValue = secondEvent
-						.getAttributes()
-						.get(key)
-						.toString();
-				
-				if (!(firstValue.equals(secondValue))) {
-					return false;
-				}
-				
-			}
-		}
-		
-		return true;
 	}
 
 }

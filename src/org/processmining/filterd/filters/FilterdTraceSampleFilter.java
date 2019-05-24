@@ -9,10 +9,7 @@ import org.processmining.filterd.parameters.ParameterValueFromRange;
 import org.processmining.framework.plugin.PluginContext;
 
 public class FilterdTraceSampleFilter extends Filter {
-
-	public FilterdTraceSampleFilter() {
-		
-	}
+	public FilterdTraceSampleFilter() {}
 
 	@SuppressWarnings("unchecked")
 	public XLog filter(PluginContext context, XLog log, 
@@ -23,7 +20,7 @@ public class FilterdTraceSampleFilter extends Filter {
 				(ParameterValueFromRange<Integer>) parameters.get(0);	
 		
 		//initialize the log that will be output
-		XLog filteredLog = this.initializeLog(log);
+		XLog filteredLog = toolbox.initializeLog(log);
 		
 		//clone input log, since ProM documentation says filters should not change input logs
 		XLog clonedLog = (XLog) log.clone();

@@ -1,7 +1,13 @@
 package org.processmining.tests.filterdpackage;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.deckfour.xes.model.XLog;
 import org.junit.Test;
+import org.processmining.filterd.parameters.Parameter;
+import org.processmining.filterd.parameters.ParameterOneFromSet;
+import org.processmining.filterd.parameters.ParameterRangeFromRange;
 
 /* Test cases for validating the Filter on Frequency AND the
  * Filter on Occurence.
@@ -50,6 +56,61 @@ public class FilterFrequencyOccurenceTest extends FilterdPackageTest{
 	public void testOutOccurence1() throws Throwable {
 		XLog expected = parseLog("freq-occurence", "test_oout_2.xes");
 		XLog computed = null; // insert filter operation
+		
+		//initialize the configuration's parameters list
+		List<Parameter> parameters = new ArrayList<>();
+		
+		//initialize the threshold type parameter and add it to the parameters list
+		List<String> foOptions = new ArrayList<String>();
+		
+		foOptions.add("frequency");
+		foOptions.add("occurrance");
+		
+		ParameterOneFromSet frequencyOccurranceParameter = 
+				new ParameterOneFromSet(
+						"FreqOcc", 
+						"Threshold type", 
+						"frequency", 
+						foOptions
+		);
+		
+		frequencyOccurranceParameter.setChosen("occurrance");
+		
+		
+		//initialize the threshold options parameter and add it to the parameters list
+		List<Double> thrOptions = new ArrayList<Double>();
+		
+		//since the default option is "frequency", it goes from 1% to 100%
+		thrOptions.add((double)1);
+		thrOptions.add((double)4);
+		
+		ParameterRangeFromRange<Double> threshold = new ParameterRangeFromRange<Double>(
+				"threshold",
+				"Threshold",
+				thrOptions,
+				thrOptions
+				);
+		
+		
+		
+		
+		//initialize the filter mode options parameter and add it to the parameters list
+		List<String> fModeOptions = new ArrayList<String>();
+		
+		fModeOptions.add("in");
+		fModeOptions.add("out");
+		
+		ParameterOneFromSet filterInOut = new ParameterOneFromSet(
+				"filterInOut",
+				"Filter mode",
+				"in",
+				fModeOptions
+				);
+		
+		parameters.add(frequencyOccurranceParameter);
+		parameters.add(threshold);
+		parameters.add(filterInOut);
+		
 
 		assert equalLog(expected, computed);
 	}

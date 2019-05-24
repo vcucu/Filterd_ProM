@@ -21,9 +21,8 @@ import org.processmining.framework.plugin.PluginContext;
 public class FilterdEventAttrFilter extends Filter {
 
 	XLog filteredLog;
-	Toolbox toolbox = Toolbox.getInstance();
 	String key;
-	
+
 	public FilterdEventAttrFilter() {}
 
 	@Override
@@ -38,7 +37,7 @@ public class FilterdEventAttrFilter extends Filter {
 		
 		for (XAttribute a : logInfo.getEventAttributeInfo().getAttributes()) {
 			if (a.getKey().equals(key)) {
-				switch(toolbox.getType(a)) {
+				switch(Toolbox.getType(a)) {
 					case "Literal":
 						return filterCategorical(context, log, parameters);
 					case "Boolean":
@@ -77,7 +76,7 @@ public class FilterdEventAttrFilter extends Filter {
 		boolean keepNull = nullHandling.getChosen();
 		boolean keepEmpty = emptyHandling.getChosen();
 		
-		filteredLog = this.initializeLog(log);
+		filteredLog = Toolbox.initializeLog(log);
 		XFactory factory = XFactoryRegistry.instance().currentDefault();
 		
 		for (XTrace trace: log) {
@@ -110,7 +109,11 @@ public class FilterdEventAttrFilter extends Filter {
 		return filteredLog;
 	}
 
-	public XLog filterNumerical(PluginContext context, XLog log, List<Parameter> parameters) {return null;}
+	public XLog filterNumerical(PluginContext context, XLog log, List<Parameter> parameters) {
+		
+		return null;
+		
+	}
 
 	public XLog filterTimestamp(PluginContext context, XLog log, List<Parameter> parameters) {		
 		ParameterYesNo nullHandling = new ParameterYesNo("nullHandling", 
@@ -129,11 +132,11 @@ public class FilterdEventAttrFilter extends Filter {
 		boolean keepNull = nullHandling.getChosen();
 		boolean keepEmpty = emptyHandling.getChosen();
 
-		filteredLog = this.initializeLog(log);
+		filteredLog = Toolbox.initializeLog(log);
 		XFactory factory = XFactoryRegistry.instance().currentDefault();
 
-		LocalDateTime lower = toolbox.synchronizeGMT(range.getChosenPair().get(0));
-		LocalDateTime upper = toolbox.synchronizeGMT(range.getChosenPair().get(1));
+		LocalDateTime lower = Toolbox.synchronizeGMT(range.getChosenPair().get(0));
+		LocalDateTime upper = Toolbox.synchronizeGMT(range.getChosenPair().get(1));
 
 		for (XTrace trace : log) {
 			XTrace filteredTrace = factory.createTrace(trace.getAttributes());
@@ -151,7 +154,7 @@ public class FilterdEventAttrFilter extends Filter {
 				// check if time has miliseconds, otherwise add it 
 				if (!time.contains(".")) time = time.substring(0, 19) + ".000" + time.substring(19);
 
-				LocalDateTime date = toolbox.synchronizeGMT(time);
+				LocalDateTime date = Toolbox.synchronizeGMT(time);
 
 				if (date.isAfter(lower) && date.isBefore(upper)) {
 					add = choice;
