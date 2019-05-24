@@ -59,9 +59,8 @@ public class FilterdEventAttrFilter extends Filter {
 	}
 
 	public XLog filterCategorical(PluginContext context, XLog log, List<Parameter> parameters) {
-
 		// should you remove empty traces
-		ParameterYesNo nullHandling = new ParameterYesNo("nullHandling", 
+		ParameterYesNo traceHandling = new ParameterYesNo("traceHandling", 
 				"Keep empty traces", true);
 		// should you keep events which do not have the specified attribute
 		ParameterYesNo emptyHandling = new ParameterYesNo("emptyHandling", 
@@ -73,7 +72,7 @@ public class FilterdEventAttrFilter extends Filter {
 				.getParameter(parameters, "desiredValues");
 
 		boolean choice = selectionType.getChosen().equals("Filter in");
-		boolean keepNull = nullHandling.getChosen();
+		boolean keepNull = traceHandling.getChosen();
 		boolean keepEmpty = emptyHandling.getChosen();
 		
 		filteredLog = Toolbox.initializeLog(log);
@@ -165,13 +164,13 @@ public class FilterdEventAttrFilter extends Filter {
 	}
 
 	public XLog filterTimestamp(PluginContext context, XLog log, List<Parameter> parameters) {		
-		ParameterYesNo nullHandling = (ParameterYesNo) this.getParameter(parameters, "nullHandling"); 
+		ParameterYesNo traceHandling = (ParameterYesNo) this.getParameter(parameters, "traceHandling"); 
 		ParameterYesNo emptyHandling = (ParameterYesNo) this.getParameter(parameters, "emptyHandling");
 		ParameterOneFromSet selectionType = (ParameterOneFromSet) this.getParameter(parameters, "selectionType");
 		ParameterRangeFromRange<String> range = (ParameterRangeFromRange<String>) this.getParameter(parameters,"range");
 
 		boolean choice = selectionType.getChosen().contains("Filter in");
-		boolean keepNull = nullHandling.getChosen();
+		boolean keepNull = traceHandling.getChosen();
 		boolean keepEmpty = emptyHandling.getChosen();
 
 		filteredLog = Toolbox.initializeLog(log);

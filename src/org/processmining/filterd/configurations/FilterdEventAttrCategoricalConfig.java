@@ -29,10 +29,10 @@ public class FilterdEventAttrCategoricalConfig extends FilterdAbstractReferencea
 		
 		
 		// should you remove empty traces
-		ParameterYesNo nullHandling = new ParameterYesNo("nullHandling", 
+		ParameterYesNo traceHandling = new ParameterYesNo("traceHandling", 
 				"Keep empty traces", true);
 		// should you keep events which do not have the specified attribute
-		ParameterYesNo emptyHandling = new ParameterYesNo("emptyHandling", 
+		ParameterYesNo eventHandling = new ParameterYesNo("eventHandling", 
 				"Keep events without value", false);
 		// filter in or filter out
 		ParameterOneFromSet selectionType = new ParameterOneFromSet("selectionType",
@@ -53,8 +53,8 @@ public class FilterdEventAttrCategoricalConfig extends FilterdAbstractReferencea
 		ParameterMultipleFromSet desiredValues = new ParameterMultipleFromSet(
 				"desiredValues", "Choose values:", defaultValues, values);
 		
-		parameters.add(nullHandling);
-		parameters.add(emptyHandling);
+		parameters.add(traceHandling);
+		parameters.add(eventHandling);
 		parameters.add(selectionType);
 		parameters.add(desiredValues);
 	}
