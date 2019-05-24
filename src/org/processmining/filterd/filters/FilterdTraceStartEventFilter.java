@@ -31,7 +31,7 @@ public class FilterdTraceStartEventFilter extends Filter {
 		
 		
 		//initialize the log that will be output
-		filteredLog = this.initializeLog(log);
+		filteredLog = toolbox.initializeLog(log);
 	
 		
 		if (selectionType.getChosen().equals("Filter in")) {

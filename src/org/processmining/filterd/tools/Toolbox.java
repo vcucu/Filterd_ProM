@@ -2,7 +2,11 @@ package org.processmining.filterd.tools;
 
 import java.time.LocalDateTime;
 
+import org.deckfour.xes.factory.XFactory;
+import org.deckfour.xes.factory.XFactoryRegistry;
 import org.deckfour.xes.model.XAttribute;
+import org.deckfour.xes.model.XAttributeMap;
+import org.deckfour.xes.model.XLog;
 
 public class Toolbox {
 
@@ -55,5 +59,18 @@ public class Toolbox {
 		}
 
 		return date;
+	}
+	
+
+	
+	public XLog initializeLog(XLog originalLog) {
+		
+		XFactory factory = XFactoryRegistry.instance().currentDefault();
+		XLog filteredLog = factory.createLog((XAttributeMap) originalLog.getAttributes().clone());
+		filteredLog.getClassifiers().addAll(originalLog.getClassifiers());
+		filteredLog.getExtensions().addAll(originalLog.getExtensions());
+		filteredLog.getGlobalTraceAttributes().addAll(originalLog.getGlobalTraceAttributes());
+		filteredLog.getGlobalEventAttributes().addAll(originalLog.getGlobalEventAttributes());
+		return filteredLog;
 	}
 }

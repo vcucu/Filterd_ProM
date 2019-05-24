@@ -16,7 +16,6 @@ public class FilterdTraceEndEventFilter extends Filter {
 	XLog filteredLog;
 	
 	public XLog filter(PluginContext context, XLog log, List<Parameter> parameters) {
-
 		//attribute to be filtered on
 		ParameterOneFromSet attribute = (ParameterOneFromSet)this
 				.getParameter(parameters, "attribute");
@@ -32,7 +31,7 @@ public class FilterdTraceEndEventFilter extends Filter {
 		
 		
 		//initialize the log that will be output
-		filteredLog = this.initializeLog(log);
+		filteredLog = toolbox.initializeLog(log);
 	
 		
 		if (selectionType.getChosen().equals("Filter in")) {

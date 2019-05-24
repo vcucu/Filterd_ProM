@@ -29,7 +29,7 @@ public class FilterdEventRateFilter extends Filter {
 				.getParameter(parameters, "desiredEvents");
 		
 		//initialize the log that will be output
-		filteredLog = this.initializeLog(log);
+		filteredLog = toolbox.initializeLog(log);
 		XFactory factory = XFactoryRegistry.instance().currentDefault();
 		//create the event classes according to the classifier
 		// THE standard classifier IS HARDCODED because I could not pass the classifier 

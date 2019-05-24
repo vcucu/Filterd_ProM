@@ -15,13 +15,11 @@ import org.processmining.filterd.parameters.ParameterMultipleFromSet;
 import org.processmining.filterd.parameters.ParameterOneFromSet;
 import org.processmining.filterd.parameters.ParameterRangeFromRange;
 import org.processmining.filterd.parameters.ParameterYesNo;
-import org.processmining.filterd.tools.Toolbox;
 import org.processmining.framework.plugin.PluginContext;
 
 public class FilterdEventAttrFilter extends Filter {
 
 	XLog filteredLog;
-	Toolbox toolbox = Toolbox.getInstance();
 
 	public FilterdEventAttrFilter() {}
 
@@ -75,7 +73,7 @@ public class FilterdEventAttrFilter extends Filter {
 		boolean keepNull = nullHandling.getChosen();
 		boolean keepEmpty = emptyHandling.getChosen();
 		
-		filteredLog = this.initializeLog(log);
+		filteredLog = toolbox.initializeLog(log);
 		XFactory factory = XFactoryRegistry.instance().currentDefault();
 		
 		for (XTrace trace: log) {
@@ -105,7 +103,11 @@ public class FilterdEventAttrFilter extends Filter {
 		return filteredLog;
 	}
 
-	public XLog filterNumerical(PluginContext context, XLog log, List<Parameter> parameters) {return null;}
+	public XLog filterNumerical(PluginContext context, XLog log, List<Parameter> parameters) {
+		
+		return null;
+		
+	}
 
 	public XLog filterTimestamp(PluginContext context, XLog log, List<Parameter> parameters) {		
 		ParameterYesNo nullHandling = new ParameterYesNo("nullHandling", 
@@ -124,7 +126,7 @@ public class FilterdEventAttrFilter extends Filter {
 		boolean keepNull = nullHandling.getChosen();
 		boolean keepEmpty = emptyHandling.getChosen();
 
-		filteredLog = this.initializeLog(log);
+		filteredLog = toolbox.initializeLog(log);
 		XFactory factory = XFactoryRegistry.instance().currentDefault();
 
 		LocalDateTime lower = toolbox.synchronizeGMT(range.getChosenPair().get(0));
