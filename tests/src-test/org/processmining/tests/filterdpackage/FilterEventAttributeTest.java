@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.deckfour.xes.info.XLogInfo;
-import org.deckfour.xes.info.XLogInfoFactory;
 import org.deckfour.xes.model.XLog;
 import org.junit.Test;
 import org.processmining.filterd.filters.FilterdEventAttrFilter;
@@ -43,11 +41,11 @@ public class FilterEventAttributeTest extends FilterdPackageTest {
 		parameters.add(selectionType);
 		
 		/* remove empty traces */ 
-		ParameterYesNo nullHandling = new ParameterYesNo("", "", true);
+		ParameterYesNo nullHandling = new ParameterYesNo("nullHandling", "", true);
 		nullHandling.setChosen(false);
 		parameters.add(nullHandling);
 		
-		ParameterYesNo emptyHandling = new ParameterYesNo("", "", true);
+		ParameterYesNo emptyHandling = new ParameterYesNo("emptyHandling", "", true);
 		emptyHandling.setChosen(false);
 		parameters.add(emptyHandling);
 		
@@ -84,11 +82,11 @@ public class FilterEventAttributeTest extends FilterdPackageTest {
 		parameters.add(selectionType);
 		
 		/* remove empty traces */ 
-		ParameterYesNo nullHandling = new ParameterYesNo("", "", true);
+		ParameterYesNo nullHandling = new ParameterYesNo("nullHandling", "", true);
 		nullHandling.setChosen(false);
 		parameters.add(nullHandling);
 		
-		ParameterYesNo emptyHandling = new ParameterYesNo("", "", true);
+		ParameterYesNo emptyHandling = new ParameterYesNo("emptyHandling", "", true);
 		emptyHandling.setChosen(false);
 		parameters.add(emptyHandling);
 		
@@ -101,15 +99,6 @@ public class FilterEventAttributeTest extends FilterdPackageTest {
 		FilterdEventAttrFilter filter = new FilterdEventAttrFilter();
 		filter.setKey("lifecycle:transition");
 		XLog computed = filter.filterCategorical(null, originalLog, parameters);
-		XLogInfoFactory factory = new XLogInfoFactory();
-		XLogInfo infoExpected = factory.createLogInfo(expected);
-		XLogInfo infoComputed = factory.createLogInfo(computed);
-		int tracesExpected = infoExpected.getNumberOfTraces();
-		int tracesComputed = infoComputed.getNumberOfTraces();
-		int eventsExpected = infoExpected.getNumberOfEvents();
-		int eventsComputed = infoComputed.getNumberOfEvents();
-		//System.out.print("Nr of traces = " + eventsExpected + " and computed is " + eventsComputed + "\n");
-
 		
 		assert equalLog(expected, computed);
 	}
@@ -124,7 +113,34 @@ public class FilterEventAttributeTest extends FilterdPackageTest {
 	@Test
 	public void testEventAttribute2() throws Throwable {
 		XLog expected = parseLog("event-attribute", "test_event_attribute_delivery_true.xes");
-		XLog computed = null; // insert filter operation
+		/* manually instantiate the filter's parameters */
+		ArrayList<Parameter> parameters = new ArrayList<>();
+		List empty = Collections.EMPTY_LIST;
+
+		
+		ParameterOneFromSet selectionType = new ParameterOneFromSet("selectionType", "", "", empty); 
+		selectionType.setChosen("Filter in");
+		parameters.add(selectionType);
+		
+		/* remove empty traces */ 
+		ParameterYesNo traceHandling = new ParameterYesNo("nullHandling", "", true);
+		traceHandling.setChosen(false);
+		parameters.add(traceHandling);
+		
+		ParameterYesNo eventHandling = new ParameterYesNo("emptyHandling", "", true);
+		eventHandling.setChosen(false);
+		parameters.add(eventHandling);
+		
+		ParameterMultipleFromSet values = new ParameterMultipleFromSet("desiredValues", "", empty, empty);
+		ArrayList<String> chosen = new ArrayList<>();
+		chosen.add("514");
+		chosen.add("623");
+		values.setChosen(chosen);
+		parameters.add(values);
+		
+		FilterdEventAttrFilter filter = new FilterdEventAttrFilter();
+		filter.setKey("delivery");
+		XLog computed = filter.filterCategorical(null, originalLog, parameters);
 
 		assert equalLog(expected, computed);
 	}
@@ -138,7 +154,33 @@ public class FilterEventAttributeTest extends FilterdPackageTest {
 	@Test
 	public void testEventAttribute3() throws Throwable {
 		XLog expected = parseLog("event-attribute", "test_event_attribute_delivery_false.xes");
-		XLog computed = null; // insert filter operation
+		ArrayList<Parameter> parameters = new ArrayList<>();	
+		List empty = Collections.EMPTY_LIST;
+
+		
+		ParameterOneFromSet selectionType = new ParameterOneFromSet("selectionType", "", "", empty); 
+		selectionType.setChosen("Filter in");
+		parameters.add(selectionType);
+		
+		/* remove empty traces */ 
+		ParameterYesNo traceHandling = new ParameterYesNo("nullHandling", "", true);
+		traceHandling.setChosen(false);
+		parameters.add(traceHandling);
+		
+		ParameterYesNo eventHandling = new ParameterYesNo("emptyHandling", "", true);
+		eventHandling.setChosen(true);
+		parameters.add(eventHandling);
+		
+		ParameterMultipleFromSet values = new ParameterMultipleFromSet("desiredValues", "", empty, empty);
+		ArrayList<String> chosen = new ArrayList<>();
+		chosen.add("514");
+		chosen.add("623");
+		values.setChosen(chosen);
+		parameters.add(values);
+		
+		FilterdEventAttrFilter filter = new FilterdEventAttrFilter();
+		filter.setKey("delivery");
+		XLog computed = filter.filterCategorical(null, originalLog, parameters);
 
 		assert equalLog(expected, computed);
 	}
@@ -153,7 +195,32 @@ public class FilterEventAttributeTest extends FilterdPackageTest {
 	@Test
 	public void testEventAttribute4() throws Throwable {
 		XLog expected = parseLog("event-attribute", "test_event_attribute_org.xes");
-		XLog computed = null; // insert filter operation
+		ArrayList<Parameter> parameters = new ArrayList<>();	
+		List empty = Collections.EMPTY_LIST;
+
+		
+		ParameterOneFromSet selectionType = new ParameterOneFromSet("selectionType", "", "", empty); 
+		selectionType.setChosen("Filter in");
+		parameters.add(selectionType);
+		
+		/* remove empty traces */ 
+		ParameterYesNo traceHandling = new ParameterYesNo("nullHandling", "", true);
+		traceHandling.setChosen(false);
+		parameters.add(traceHandling);
+		
+		ParameterYesNo eventHandling = new ParameterYesNo("emptyHandling", "", true);
+		eventHandling.setChosen(true);
+		parameters.add(eventHandling);
+		
+		ParameterMultipleFromSet values = new ParameterMultipleFromSet("desiredValues", "", empty, empty);
+		ArrayList<String> chosen = new ArrayList<>();
+		chosen.add("System");
+		values.setChosen(chosen);
+		parameters.add(values);
+		
+		FilterdEventAttrFilter filter = new FilterdEventAttrFilter();
+		filter.setKey("org:resource");
+		XLog computed = filter.filterCategorical(null, originalLog, parameters);
 
 		assert equalLog(expected, computed);
 	}

@@ -29,12 +29,12 @@ public class FilterdEventAttrFilter extends Filter {
 	public XLog filter(PluginContext context, XLog log, List<Parameter> parameters) {
 		// TODO Auto-generated method stub this method should just contain a switch for the following 4 methods
 		//that are invisible still :}
-		
+
 		ParameterOneFromSet attribute = (ParameterOneFromSet) this.getParameter(parameters, "attribute");
 		key = attribute.getChosen();
-		
+
 		XLogInfo logInfo = XLogInfoImpl.create(log);
-		
+
 		for (XAttribute a : logInfo.getEventAttributeInfo().getAttributes()) {
 			if (a.getKey().equals(key)) {
 				switch(Toolbox.getType(a)) {
@@ -59,67 +59,63 @@ public class FilterdEventAttrFilter extends Filter {
 	}
 
 	public XLog filterCategorical(PluginContext context, XLog log, List<Parameter> parameters) {
-				
+
 		// should you remove empty traces
-		ParameterYesNo nullHandling = new ParameterYesNo("nullHandling", 
-				"Keep empty traces", true);
+		ParameterYesNo traceHandling = (ParameterYesNo) this
+				.getParameter(parameters, "nullHandling");
 		// should you keep events which do not have the specified attribute
-		ParameterYesNo emptyHandling = new ParameterYesNo("emptyHandling", 
-				"Keep events without value", true);
+		ParameterYesNo eventHandling = (ParameterYesNo) this
+				.getParameter(parameters, "emptyHandling");
 		// filter in or filter out
 		ParameterOneFromSet selectionType = (ParameterOneFromSet) this
 				.getParameter(parameters, "selectionType");
 		ParameterMultipleFromSet desiredValues = (ParameterMultipleFromSet) this
 				.getParameter(parameters, "desiredValues");
-		
+
 		boolean choice = selectionType.getChosen().equals("Filter in");
-		boolean keepNull = nullHandling.getChosen();
-		boolean keepEmpty = emptyHandling.getChosen();
-		
+		boolean keepNull = traceHandling.getChosen();
+		boolean keepEmpty = eventHandling.getChosen();
+
 		filteredLog = Toolbox.initializeLog(log);
 		XFactory factory = XFactoryRegistry.instance().currentDefault();
-		
+
 		for (XTrace trace: log) {
 			XTrace filteredTrace = factory.createTrace(trace.getAttributes());
 			for (XEvent event : trace) {
-					String value = event.getAttributes().get(key).toString();
-					boolean add = !choice;
-								
-					if (!event.getAttributes().containsKey(key)) {
-						if (keepEmpty) filteredTrace.add(event);
-						continue;
-					}
-										
-					if(desiredValues.getChosen().contains(value)) {
-						add = choice;
-					}
-					if (add) {
-						filteredTrace.add(event);
-					}
+				if (!event.getAttributes().containsKey(key)) {
+					if (keepEmpty) filteredTrace.add(event);
+					continue;
+				}
+				String value = event.getAttributes().get(key).toString();
+				boolean add = !choice;
 
-					if (context != null) {
-						context.getProgress().inc();
-					}
+				if(desiredValues.getChosen().contains(value)) add = choice;
+			
+				if (add) filteredTrace.add(event);
+
+				if (context != null) {
+					context.getProgress().inc();
+				}
 			}
 			if (!filteredTrace.isEmpty() || keepNull) {
 				filteredLog.add(filteredTrace);
 			}
 		}
-		
+
 		return filteredLog;
 	}
 
 	public XLog filterNumerical(PluginContext context, XLog log, List<Parameter> parameters) {
-		
+
 		return null;
-		
+
 	}
 
 	public XLog filterTimestamp(PluginContext context, XLog log, List<Parameter> parameters) {		
-		ParameterYesNo nullHandling = new ParameterYesNo("nullHandling", 
+		ParameterYesNo traceHandling = new ParameterYesNo("nullHandling", 
 				"Keep empty traces", true);
 
-		ParameterYesNo emptyHandling = new ParameterYesNo("emptyHandling", 
+		ParameterYesNo eventHandling = new ParameterYesNo("emptyHandling", 
 				"Keep events with no value", true);
 
 		ParameterOneFromSet selectionType = (ParameterOneFromSet) this
@@ -129,8 +125,8 @@ public class FilterdEventAttrFilter extends Filter {
 				.getParameter(parameters,"range");
 
 		boolean choice = selectionType.getChosen().contains("Filter in");
-		boolean keepNull = nullHandling.getChosen();
-		boolean keepEmpty = emptyHandling.getChosen();
+		boolean keepNull = traceHandling.getChosen();
+		boolean keepEmpty = eventHandling.getChosen();
 
 		filteredLog = Toolbox.initializeLog(log);
 		XFactory factory = XFactoryRegistry.instance().currentDefault();
