@@ -61,10 +61,10 @@ public class FilterdEventAttrFilter extends Filter {
 	public XLog filterCategorical(PluginContext context, XLog log, List<Parameter> parameters) {
 		// should you remove empty traces
 		ParameterYesNo traceHandling = (ParameterYesNo) this
-				.getParameter(parameters, "nullHandling");
+				.getParameter(parameters, "traceHandling");
 		// should you keep events which do not have the specified attribute
 		ParameterYesNo eventHandling = (ParameterYesNo) this
-				.getParameter(parameters, "emptyHandling");
+				.getParameter(parameters, "eventHandling");
 		// filter in or filter out
 		ParameterOneFromSet selectionType = (ParameterOneFromSet) this
 				.getParameter(parameters, "selectionType");
