@@ -247,9 +247,9 @@ public class NotebookModel {
 	}
 	
 	public List<YLog> getOutputLogsTill(int index) {
+		List<YLog> logs = new ArrayList<>();
+		logs.add(initialInput);
 		if (! (index >= getCells().size() || index < 0)) {
-			List<YLog> logs = new ArrayList<>();
-			logs.add(initialInput);
 			for (int i = 0; i < index; i++) {
 				CellModel gCell = getCells().get(i);
 				if (getCells().get(i) instanceof ComputationCellModel) {
@@ -257,9 +257,8 @@ public class NotebookModel {
 					logs.addAll(cell.getOutputLogs());
 				}
 			}
-			return logs;
 		}
-		return new ArrayList<>();
+		return logs;
 	}
 	
 	
