@@ -69,27 +69,13 @@ public class FilterdTraceFrequencyFilter extends Filter {
 		
 		// Get parameters set by the user in the configuration panel.
 		ParameterOneFromSet FreqOcc = (ParameterOneFromSet) parameters.get(0);
-		ParameterRangeFromRange<Double> thresholdParameters = (ParameterRangeFromRange<Double>) parameters.get(1);
-		ParameterOneFromSet filterInOut = (ParameterOneFromSet) parameters.get(2);
+		ParameterRangeFromRange<Double> thresholdParameters = 
+				(ParameterRangeFromRange<Double>) parameters.get(1);
+		ParameterOneFromSet filterInOut = 
+				(ParameterOneFromSet) parameters.get(2);
 
 		int lowThreshold;
 		int highThreshold;
-		
-		// Need to get the defining attributes to do the variants.
-		Set<String> classifyingAttributes = new HashSet<>();
-		
-		// Get the classifiers from the log.
-		List<XEventClassifier> classifiers = log.getClassifiers();
-		
-		// Loop over every classifier. 
-		for (XEventClassifier classifier : classifiers) {
-			
-			// Extract every key and add it to the set.
-			for (String key : classifier.getDefiningAttributeKeys()) {
-				classifyingAttributes.add(key);
-			}
-			
-		}
 		
 		// Create collection for traces inside and outside the thresholds set by 
 		// the user.
@@ -102,62 +88,9 @@ public class FilterdTraceFrequencyFilter extends Filter {
 		// Variants of traces are traces with the same order of events and
 		// values for every key except for the time stamp.
 		// Create mapping from variants to trace indices
-		Map<XTrace, List<Integer>> variantsToTraceIndices = new HashMap<>();
+		Map<XTrace, List<Integer>> variantsToTraceIndices = 
+				getVariantsToTraceIndices(clonedLog);
 		
-		// Loop over every trace in the log
-		for (int i = 0; i < log.size(); i++) {
-			
-			// Add first trace because we are certain that there is no
-			// other variant in the hash map since it is empty.
-			if (variantsToTraceIndices.isEmpty()) {
-				
-				// Add it to the mapping as a new entry.
-				List<Integer> indicesList = new ArrayList<>();
-				indicesList.add(i);
-				
-				variantsToTraceIndices.put(log.get(i), indicesList);
-				
-			} else {
-				
-				boolean isDifferentVariant = true;
-				
-				for (XTrace variant : variantsToTraceIndices.keySet()) {
-					
-					if (isSameVariant(
-							log.get(i), 
-							variant, 
-							classifyingAttributes
-							)) {
-						
-						// Add the index of this trace to the mapping of 
-						// the variant we found.
-						variantsToTraceIndices.get(variant).add(i);
-						
-						isDifferentVariant = false;
-						
-						// stop looping over variants since we found one.
-						break;
-					}
-					
-				}
-				
-				// Add this trace because there are no variants pertaining
-				// to this trace.
-				if (isDifferentVariant) {
-					
-					// Add it to the mapping as a new entry.
-					List<Integer> indicesList = new ArrayList<>();
-					indicesList.add(i);
-					
-					variantsToTraceIndices.put(log.get(i), indicesList);
-					
-				}
-
-				
-			}
-			
-			
-		}
 		
 		/// Check the threshold type 
 		// If the user wants to filter based on occurrences.
@@ -373,6 +306,91 @@ public class FilterdTraceFrequencyFilter extends Filter {
 		}
 		
 		return true;
+	}
+	
+	private Map<XTrace, List<Integer>> getVariantsToTraceIndices(XLog log) {
+		
+		
+		// Need to get the defining attributes to do the variants.
+		Set<String> classifyingAttributes = new HashSet<>();
+		
+		// Get the classifiers from the log.
+		List<XEventClassifier> classifiers = log.getClassifiers();
+		
+		// Loop over every classifier. 
+		for (XEventClassifier classifier : classifiers) {
+			
+			// Extract every key and add it to the set.
+			for (String key : classifier.getDefiningAttributeKeys()) {
+				classifyingAttributes.add(key);
+			}
+			
+		}
+		
+		// Check variants and see if they occur within both thresholds.
+		
+		// Collect all variants:
+		// Variants of traces are traces with the same order of events and
+		// values for every key except for the time stamp.
+		// Create mapping from variants to trace indices
+		Map<XTrace, List<Integer>> variantsToTraceIndices = new HashMap<>();
+		
+		// Loop over every trace in the log
+		for (int i = 0; i < log.size(); i++) {
+			
+			// Add first trace because we are certain that there is no
+			// other variant in the hash map since it is empty.
+			if (variantsToTraceIndices.isEmpty()) {
+				
+				// Add it to the mapping as a new entry.
+				List<Integer> indicesList = new ArrayList<>();
+				indicesList.add(i);
+				
+				variantsToTraceIndices.put(log.get(i), indicesList);
+				
+			} else {
+				
+				boolean isDifferentVariant = true;
+				
+				for (XTrace variant : variantsToTraceIndices.keySet()) {
+					
+					if (isSameVariant(
+							log.get(i), 
+							variant, 
+							classifyingAttributes
+							)) {
+						
+						// Add the index of this trace to the mapping of 
+						// the variant we found.
+						variantsToTraceIndices.get(variant).add(i);
+						
+						isDifferentVariant = false;
+						
+						// stop looping over variants since we found one.
+						break;
+					}
+					
+				}
+				
+				// Add this trace because there are no variants pertaining
+				// to this trace.
+				if (isDifferentVariant) {
+					
+					// Add it to the mapping as a new entry.
+					List<Integer> indicesList = new ArrayList<>();
+					indicesList.add(i);
+					
+					variantsToTraceIndices.put(log.get(i), indicesList);
+					
+				}
+
+				
+			}
+			
+			
+		}
+		
+		return variantsToTraceIndices;
 	}
 
 }
