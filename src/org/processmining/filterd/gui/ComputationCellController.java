@@ -235,24 +235,21 @@ public class ComputationCellController extends CellController {
 	 * full screen
 	 */
 	@FXML
-	public void handleFullScreen() {
+	public void handleFullScreen() {		
 		if (isFullScreen) {
 			//set visualiserPane as child of corresponding enlarged cell
 			cellBody.getChildren().add(visualizerPane);
 			//remove fullscreen cell child from the notebookVisualiser
 			notebookVisualiser.getChildren().remove(fullScreen);
-			//make the list of cells visible
+			//make the notebook scrollpane and toolbar visible
+			notebookToolbar.setVisible(isFullScreen);
+			notebookToolbar.setManaged(isFullScreen);
 			scrollPane.setVisible(isFullScreen);
 			scrollPane.setManaged(isFullScreen);
 			isFullScreen = false;
 		} else if (!isFullScreen && !isConfigurationModalShown) {
-			//notebookVisualiser.setStyle("-fx-background-color: #00ffff; ");
-			//hide the scrollpane containing the list of cells in notebook
-			scrollPane.setVisible(isFullScreen);
-			scrollPane.setManaged(isFullScreen);
 			//if the fullscreen hasn't been loaded yet then load
 			if (fullScreen == null) {
-				//load the fullScreen fxml
 				FXMLLoader loader = new FXMLLoader(
 						getClass().getResource("/org/processmining/filterd/gui/fxml/FullScreenCell.fxml"));
 				loader.setController(this);
@@ -262,13 +259,15 @@ public class ComputationCellController extends CellController {
 					//fullToolbar.setStyle("-fx-background-color: ##008080; ");
 					fullScreen.setVgrow(visualizerPane, Priority.ALWAYS);
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-			}
+			}			
+			//hide the notebook scrollpane and toolbar
+			notebookToolbar.setVisible(isFullScreen);
+			notebookToolbar.setManaged(isFullScreen);
+			scrollPane.setVisible(isFullScreen);
+			scrollPane.setManaged(isFullScreen);
 			notebookVisualiser.getChildren().add(fullScreen);
-			//add visualiserPane as a child, automatically removed from list of children
-			//of the corresponding Computation cell, must be re-added when undoing fullscreen mode
 			fullScreen.getChildren().add(visualizerPane);
 			notebookVisualiser.setVgrow(fullScreen, Priority.ALWAYS);
 			isFullScreen = true;
