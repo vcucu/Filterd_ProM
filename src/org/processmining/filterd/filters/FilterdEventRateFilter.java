@@ -14,6 +14,7 @@ import org.deckfour.xes.model.XTrace;
 import org.processmining.filterd.parameters.Parameter;
 import org.processmining.filterd.parameters.ParameterMultipleFromSet;
 import org.processmining.filterd.parameters.ParameterOneFromSet;
+import org.processmining.filterd.tools.Toolbox;
 import org.processmining.framework.plugin.PluginContext;
 
 public class FilterdEventRateFilter extends Filter {
@@ -29,7 +30,7 @@ public class FilterdEventRateFilter extends Filter {
 				.getParameter(parameters, "desiredEvents");
 		
 		//initialize the log that will be output
-		filteredLog = toolbox.initializeLog(log);
+		filteredLog = Toolbox.initializeLog(log);
 		XFactory factory = XFactoryRegistry.instance().currentDefault();
 		//create the event classes according to the classifier
 		// THE standard classifier IS HARDCODED because I could not pass the classifier 

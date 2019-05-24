@@ -31,12 +31,10 @@ import org.processmining.filterd.widgets.ParameterYesNoController;
 public class FilterdEventAttrConfig extends FilterdAbstractReferencingConfig {
 
 	Collection<XAttribute> eventAttributes;
-	Toolbox toolbox;
 	
 	public FilterdEventAttrConfig(XLog log, Filter filterType) {
 		super(log, filterType);
 		parameters = new ArrayList<Parameter>();
-		toolbox = Toolbox.getInstance();
 		
 		List<String> attributes = new ArrayList<String>();
 		
@@ -117,7 +115,7 @@ public class FilterdEventAttrConfig extends FilterdAbstractReferencingConfig {
 		
 		for (XAttribute a : eventAttributes) {
 			if (a.getKey().equals(key)) {
-				switch(toolbox.getType(a)) {
+				switch(Toolbox.getType(a)) {
 					case "Literal":
 						concreteReference = new FilterdEventAttrCategoricalConfig(log, filterType, a);
 						break;

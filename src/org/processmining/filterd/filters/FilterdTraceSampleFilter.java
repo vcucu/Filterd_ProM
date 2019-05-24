@@ -6,6 +6,7 @@ import java.util.List;
 import org.deckfour.xes.model.XLog;
 import org.processmining.filterd.parameters.Parameter;
 import org.processmining.filterd.parameters.ParameterValueFromRange;
+import org.processmining.filterd.tools.Toolbox;
 import org.processmining.framework.plugin.PluginContext;
 
 public class FilterdTraceSampleFilter extends Filter {
@@ -20,7 +21,7 @@ public class FilterdTraceSampleFilter extends Filter {
 				(ParameterValueFromRange<Integer>) parameters.get(0);	
 		
 		//initialize the log that will be output
-		XLog filteredLog = toolbox.initializeLog(log);
+		XLog filteredLog = Toolbox.initializeLog(log);
 		
 		//clone input log, since ProM documentation says filters should not change input logs
 		XLog clonedLog = (XLog) log.clone();

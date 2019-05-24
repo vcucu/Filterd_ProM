@@ -8,6 +8,7 @@ import org.processmining.filterd.parameters.Parameter;
 import org.processmining.filterd.parameters.ParameterMultipleFromSet;
 import org.processmining.filterd.parameters.ParameterOneFromSet;
 import org.processmining.filterd.parameters.ParameterYesNo;
+import org.processmining.filterd.tools.Toolbox;
 import org.processmining.framework.plugin.PluginContext;
 
 public class FilterdTraceStartEventFilter extends Filter {
@@ -31,7 +32,7 @@ public class FilterdTraceStartEventFilter extends Filter {
 		
 		
 		//initialize the log that will be output
-		filteredLog = toolbox.initializeLog(log);
+		filteredLog = Toolbox.initializeLog(log);
 	
 		
 		if (selectionType.getChosen().equals("Filter in")) {

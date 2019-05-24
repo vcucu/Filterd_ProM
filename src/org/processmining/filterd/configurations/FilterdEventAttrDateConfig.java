@@ -22,12 +22,10 @@ public class FilterdEventAttrDateConfig extends FilterdAbstractReferenceableConf
 	String defaultOption;
 	ArrayList<String> optionList;
 	ParameterRangeFromRange<String> range;
-	Toolbox toolbox;
 
 	public FilterdEventAttrDateConfig(XLog log, Filter filterType) {
 		super(log, filterType);
 		parameters = new ArrayList<Parameter>();
-		toolbox = Toolbox.getInstance();
 
 		times = new ArrayList<>();
 		defaultPair = new ArrayList<>();
@@ -42,7 +40,7 @@ public class FilterdEventAttrDateConfig extends FilterdAbstractReferenceableConf
 			for (XEvent event : trace) {
 				/* timestamp format YYYY-MM-DDTHH:MM:SS.ssssGMT with GMT = {Z, + , -} */
 				String value = event.getAttributes().get("time:timestamp").toString();
-				LocalDateTime time = toolbox.synchronizeGMT(value);
+				LocalDateTime time =Toolbox.synchronizeGMT(value);
 				times.add(time.toString());
 			}
 		}
@@ -86,13 +84,13 @@ public class FilterdEventAttrDateConfig extends FilterdAbstractReferenceableConf
 
 	public boolean checkValidity(XLog log) {
 		ArrayList<LocalDateTime> times = new ArrayList<>();
-		LocalDateTime lower = toolbox.synchronizeGMT(range.getChosenPair().get(0));
-		LocalDateTime upper = toolbox.synchronizeGMT(range.getChosenPair().get(1));
+		LocalDateTime lower = Toolbox.synchronizeGMT(range.getChosenPair().get(0));
+		LocalDateTime upper = Toolbox.synchronizeGMT(range.getChosenPair().get(1));
 
 		for (XTrace trace : log) {
 			for (XEvent event : trace) {
 				String key = "time:timestamp";
-				LocalDateTime time = toolbox.synchronizeGMT(event.getAttributes().get(key).toString());
+				LocalDateTime time = Toolbox.synchronizeGMT(event.getAttributes().get(key).toString());
 				times.add(time);
 			}
 		}
