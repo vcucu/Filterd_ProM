@@ -241,7 +241,7 @@ public class ComputationCellController extends CellController {
 			cellBody.getChildren().add(visualizerPane);
 			//remove fullscreen cell child from the notebookVisualiser
 			notebookVisualiser.getChildren().remove(fullScreen);
-			//make the list of cells visible 
+			//make the list of cells visible
 			scrollPane.setVisible(isFullScreen);
 			scrollPane.setManaged(isFullScreen);
 			isFullScreen = false;
@@ -252,7 +252,7 @@ public class ComputationCellController extends CellController {
 			scrollPane.setManaged(isFullScreen);
 			//if the fullscreen hasn't been loaded yet then load
 			if (fullScreen == null) {
-				//load the fullScreen fxml 
+				//load the fullScreen fxml
 				FXMLLoader loader = new FXMLLoader(
 						getClass().getResource("/org/processmining/filterd/gui/fxml/FullScreenCell.fxml"));
 				loader.setController(this);
@@ -267,17 +267,12 @@ public class ComputationCellController extends CellController {
 				}
 			}
 			notebookVisualiser.getChildren().add(fullScreen);
-			//add visualiserPane as a child, automatically removed from list of children 
-			//of the corresponding Computation cell, must be re-added when undoing fullscreen mode 
+			//add visualiserPane as a child, automatically removed from list of children
+			//of the corresponding Computation cell, must be re-added when undoing fullscreen mode
 			fullScreen.getChildren().add(visualizerPane);
 			notebookVisualiser.setVgrow(fullScreen, Priority.ALWAYS);
 			isFullScreen = true;
 		}
-	}
-
-	@FXML
-	public void prependCellButtonHandler() {
-		// TODO Add cell above the one that generated this
 	}
 
 	// Set XLog

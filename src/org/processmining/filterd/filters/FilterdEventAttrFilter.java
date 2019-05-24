@@ -21,7 +21,7 @@ import org.processmining.framework.plugin.PluginContext;
 public class FilterdEventAttrFilter extends Filter {
 
 	XLog filteredLog;
-	Toolbox toolbox;
+	Toolbox toolbox = Toolbox.getInstance();
 
 	public FilterdEventAttrFilter() {}
 
@@ -29,7 +29,6 @@ public class FilterdEventAttrFilter extends Filter {
 	public XLog filter(PluginContext context, XLog log, List<Parameter> parameters) {
 		// TODO Auto-generated method stub this method should just contain a switch for the following 4 methods
 		//that are invisible still :}
-		toolbox = Toolbox.getInstance();
 		ParameterOneFromSet attribute = (ParameterOneFromSet) this.getParameter(parameters, "attribute");
 		String key = attribute.getChosen();
 		
@@ -108,8 +107,7 @@ public class FilterdEventAttrFilter extends Filter {
 
 	public XLog filterNumerical(PluginContext context, XLog log, List<Parameter> parameters) {return null;}
 
-	public XLog filterTimestamp(PluginContext context, XLog log, List<Parameter> parameters) {
-
+	public XLog filterTimestamp(PluginContext context, XLog log, List<Parameter> parameters) {		
 		ParameterYesNo nullHandling = new ParameterYesNo("nullHandling", 
 				"Remove if no value provided", true);
 

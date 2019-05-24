@@ -127,7 +127,14 @@
 
 	      <!-- JUnit: test cases to run -->
     	  <sysproperty key="test.testFileRoot" path="${dir.testfiles}"/>
-	      <test name="org.processmining.tests.filterdpackage.FilterdPackageTest" todir="${test.basedir}" />
+	    	<test name="org.processmining.tests.filterdpackage.FilterEndEventsTest" todir="${test.basedir}" />
+	    	<test name="org.processmining.tests.filterdpackage.FilterEventAttributeTest" todir="${test.basedir}" />
+    	  	<test name="org.processmining.tests.filterdpackage.FilterFrequencyOccurenceTest" todir="${test.basedir}" />
+    	  	<test name="org.processmining.tests.filterdpackage.FilterOtherTest" todir="${test.basedir}" />
+    	  	<test name="org.processmining.tests.filterdpackage.FilterStartEventsTest" todir="${test.basedir}" />
+	    	<test name="org.processmining.tests.filterdpackage.FilterTraceAttributeTest" todir="${test.basedir}" />
+	    	<test name="org.processmining.tests.filterdpackage.FilterTraceFollowerTest" todir="${test.basedir}" />
+	    	<test name="org.processmining.tests.filterdpackage.FilterTrimTraceTest" todir="${test.basedir}" />
 	    </junit>
 		
 		<!-- Cobertura: generate HTML coverage report -->

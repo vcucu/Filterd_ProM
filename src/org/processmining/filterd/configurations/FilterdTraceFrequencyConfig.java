@@ -1,12 +1,12 @@
 package org.processmining.filterd.configurations;
-import org.processmining.filterd.parameters.ParameterOneFromSet;
-import org.processmining.filterd.parameters.ParameterRangeFromRange;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.deckfour.xes.model.XLog;
 import org.processmining.filterd.filters.Filter;
 import org.processmining.filterd.gui.FilterConfigPanelController;
+import org.processmining.filterd.parameters.ParameterOneFromSet;
+import org.processmining.filterd.parameters.ParameterRangeFromRange;
 
 public class FilterdTraceFrequencyConfig extends FilterdAbstractConfig {
 
@@ -22,14 +22,15 @@ public class FilterdTraceFrequencyConfig extends FilterdAbstractConfig {
 		foOptions.add("frequency");
 		foOptions.add("occurrance");
 		
-		ParameterOneFromSet FreqOcc = new ParameterOneFromSet(
-			"FreqOcc", 
-			"Threshold type", 
-			"frequency", 
-			foOptions
+		ParameterOneFromSet frequencyOccurranceParameter = 
+				new ParameterOneFromSet(
+						"FreqOcc", 
+						"Threshold type", 
+						"frequency", 
+						foOptions
 		);
 		
-		parameters.add(FreqOcc);
+		parameters.add(frequencyOccurranceParameter);
 		
 		//initialize the threshold options parameter and add it to the parameters list
 		List<Double> thrOptions = new ArrayList<Double>();

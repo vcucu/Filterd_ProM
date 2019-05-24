@@ -27,11 +27,11 @@ public class ParameterValueFromRangeController<N extends Number> extends Paramet
         }
         // set specifics
         label.setText(nameDisplayed);
-        slider.setMin((double) minMaxPair.get(0));
-        slider.setMax((double) minMaxPair.get(1));
+        slider.setMin((Double) minMaxPair.get(0));
+        slider.setMax((Double) minMaxPair.get(1));
         slider.setMinorTickCount(4);
-        slider.setValue((double) defaultValue);
-        double majorTickUnit = ((double) minMaxPair.get(1) - (double) minMaxPair.get(0)) / 4.0;
+        slider.setValue((Double) defaultValue);
+        double majorTickUnit = ((Double) minMaxPair.get(1) - (Double) minMaxPair.get(0)) / 4.0;
         slider.setMajorTickUnit(Math.floor(majorTickUnit));
         if(genericTypeClass.equals(Double.TYPE)) {
         	slider.setBlockIncrement(0.1);

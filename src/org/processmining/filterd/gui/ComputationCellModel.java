@@ -41,6 +41,7 @@ public class ComputationCellModel extends CellModel {
 			super(context);
 			this.canceller = canceller;
 			this.inputLogs = eventLogs;
+			this.outputLogs = new ArrayList<>();
 			
 			filterControllers = new ArrayList<>();
 

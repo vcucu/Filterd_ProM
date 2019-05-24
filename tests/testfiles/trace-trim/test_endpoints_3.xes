@@ -35,6 +35,7 @@
 			<string key="lifecycle:transition" value="complete"/>
 			<date key="time:timestamp" value="2018-12-20T12:10:00.000+01:00"/>
 		</event>
+	</trace>
 	<trace>
 		<string key="concept:name" value="41"/>
 		<string key="customer" value="Z"/>
@@ -58,6 +59,7 @@
 			<string key="lifecycle:transition" value="complete"/>
 			<date key="time:timestamp" value="2018-12-23T23:46:00.000+01:00"/>
 		</event>
+	</trace>
 	<trace>
 		<string key="concept:name" value="56"/>
 		<string key="customer" value="X"/>

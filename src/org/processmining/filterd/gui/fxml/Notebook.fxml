@@ -39,19 +39,10 @@
 			<content>
 				<VBox alignment="CENTER">
 					<children>
-						<VBox fx:id="notebookLayout" alignment="TOP_CENTER" spacing="5.0" VBox.vgrow="ALWAYS" />
+						<VBox fx:id="notebookLayout" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="5.0" VBox.vgrow="ALWAYS" />
+                  <HBox fx:id="addCellHBox" managed="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" visible="false" VBox.vgrow="ALWAYS" alignment="CENTER"/>
 						<!-- managed="false" makes the element not take up space, this option 
 							cannot be set in the scene builder -->
-						<HBox fx:id="addCellModal" alignment="CENTER" managed="false" prefHeight="85.0" prefWidth="400.0" visible="false">
-							<children>
-								<Button fx:id="addComputationCellButton" mnemonicParsing="false" onAction="#addComputationCellButtonHandler" text="Computation Cell" textAlignment="CENTER">
-									<HBox.margin>
-										<Insets right="50.0" />
-									</HBox.margin>
-								</Button>
-								<Button fx:id="addTextCellButton" mnemonicParsing="false" onAction="#addTextCellButtonHandler" text="Text Cell" textAlignment="CENTER" />
-							</children>
-						</HBox>
 						<Button fx:id="appendCellButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#appendCellButtonHandler" text="+" VBox.vgrow="ALWAYS">
 							<VBox.margin>
 								<Insets bottom="20.0" top="30.0" />

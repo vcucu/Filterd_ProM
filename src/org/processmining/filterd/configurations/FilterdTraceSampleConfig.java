@@ -42,7 +42,6 @@ public class FilterdTraceSampleConfig extends FilterdAbstractConfig {
 		//return a new panel for this configuration with the relevant name and parameters
 		return new FilterConfigPanelController(
 				"Filter Trace Sample Configuration", parameters, this);
-		
 	}
 
 

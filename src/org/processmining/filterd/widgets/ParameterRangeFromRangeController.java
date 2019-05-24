@@ -30,12 +30,12 @@ public class ParameterRangeFromRangeController<N extends Number> extends Paramet
         // set specifics
         label.setText(nameDisplayed);
 		slider.setMinorTickCount(4);
-		double majorTickUnit = ((double) minMaxPair.get(1) - (double) minMaxPair.get(0)) / 4.0;
+		double majorTickUnit = ((Double) minMaxPair.get(1) - (Double) minMaxPair.get(0)) / 4.0;
 		slider.setMajorTickUnit(majorTickUnit);
-        slider.setMin((double) minMaxPair.get(0));
-        slider.setMax((double) minMaxPair.get(1));
-        slider.setLowValue((double) defaultValue.get(0));
-        slider.setHighValue((double) defaultValue.get(1));
+        slider.setMin((Double) minMaxPair.get(0));
+        slider.setMax((Double) minMaxPair.get(1));
+        slider.setLowValue((Double) defaultValue.get(0));
+        slider.setHighValue((Double) defaultValue.get(1));
         if(genericTypeClass.equals(Double.TYPE)) {
         	slider.setBlockIncrement(0.1);
         } else if(genericTypeClass.equals(Integer.TYPE)) {
