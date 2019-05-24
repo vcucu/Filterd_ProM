@@ -20,6 +20,7 @@ import javafx.embed.swing.SwingNode;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.ScrollPane;
@@ -39,9 +40,6 @@ public class ComputationCellController extends CellController {
 	private boolean isFullScreen;
 	private VBox notebookVisualiser;
 	private HBox notebookToolbar;
-
-	@FXML
-	private VBox fullScreen;
 
 	@FXML
 	private VBox panelLayout;
@@ -71,9 +69,10 @@ public class ComputationCellController extends CellController {
 	private MenuButton CellSettings;
 	@FXML
 	private Circle prependCellButton;
-
 	@FXML
 	private HBox fullToolbar;
+	@FXML
+	private HBox cellToolbar;
 
 	/**
 	 * Gets executed after the constructor. Has access to the @FXML annotated
@@ -235,41 +234,33 @@ public class ComputationCellController extends CellController {
 	 * full screen
 	 */
 	@FXML
-	public void handleFullScreen() {		
+	public void handleFullScreen() {
 		if (isFullScreen) {
-			//set visualiserPane as child of corresponding enlarged cell
+			//add the toolbar and visualiser to their original cell parent
 			cellBody.getChildren().add(visualizerPane);
-			//remove fullscreen cell child from the notebookVisualiser
-			notebookVisualiser.getChildren().remove(fullScreen);
-			//make the notebook scrollpane and toolbar visible
+			cellToolbar.getChildren().add(cellToolbar.getChildren().size() - 1, fullToolbar);
+			fullToolbar.setPadding(new Insets(0, 0, 0, 0));
+
+			//make the notebook toolbar and scrollpane visible 
 			notebookToolbar.setVisible(isFullScreen);
 			notebookToolbar.setManaged(isFullScreen);
 			scrollPane.setVisible(isFullScreen);
 			scrollPane.setManaged(isFullScreen);
 			isFullScreen = false;
+
 		} else if (!isFullScreen && !isConfigurationModalShown) {
-			//if the fullscreen hasn't been loaded yet then load
-			if (fullScreen == null) {
-				FXMLLoader loader = new FXMLLoader(
-						getClass().getResource("/org/processmining/filterd/gui/fxml/FullScreenCell.fxml"));
-				loader.setController(this);
-				try {
-					fullScreen = (VBox) loader.load();
-					//fullScreen.setStyle("-fx-background-color: #0000ff; ");
-					//fullToolbar.setStyle("-fx-background-color: ##008080; ");
-					fullScreen.setVgrow(visualizerPane, Priority.ALWAYS);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}			
-			//hide the notebook scrollpane and toolbar
+			//make the notebook toolbar and scrollpane invisible
 			notebookToolbar.setVisible(isFullScreen);
 			notebookToolbar.setManaged(isFullScreen);
 			scrollPane.setVisible(isFullScreen);
 			scrollPane.setManaged(isFullScreen);
-			notebookVisualiser.getChildren().add(fullScreen);
-			fullScreen.getChildren().add(visualizerPane);
-			notebookVisualiser.setVgrow(fullScreen, Priority.ALWAYS);
+			//fullToolbar.setStyle("-fx-background-color: #00ffff; ");
+			fullToolbar.setPadding(new Insets(5, 20, 5, 10));
+
+			//add the toolbar and visualiser to the notebook
+			notebookVisualiser.getChildren().add(fullToolbar);
+			notebookVisualiser.getChildren().add(visualizerPane);
+			notebookVisualiser.setVgrow(visualizerPane, Priority.ALWAYS);
 			isFullScreen = true;
 		}
 	}

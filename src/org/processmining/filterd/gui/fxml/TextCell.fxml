@@ -21,7 +21,7 @@
                   <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="35.0" spacing="10.0" VBox.vgrow="ALWAYS">
                      <children>
                         <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                        <TextField fx:id="cellName" alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" onAction="#handleCellName" prefHeight="25.0" text="Cell name" />
+                        <TextField fx:id="cellName" alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" onKeyPressed="#handleCellName" prefHeight="25.0" text="Cell name" />
                         <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
                         <MenuButton mnemonicParsing="false">
                           <items>
@@ -35,7 +35,7 @@
                   </HBox>
                   <HBox fx:id="cellBody" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
                      <children>
-                        <TextArea maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="70.0" HBox.hgrow="ALWAYS" />
+                        <TextArea fx:id="commentField" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="70.0" HBox.hgrow="ALWAYS" />
                      </children>
                      <VBox.margin>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />

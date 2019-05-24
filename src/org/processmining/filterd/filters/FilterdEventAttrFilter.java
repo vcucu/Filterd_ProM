@@ -106,23 +106,65 @@ public class FilterdEventAttrFilter extends Filter {
 	}
 
 	public XLog filterNumerical(PluginContext context, XLog log, List<Parameter> parameters) {
+		// should you remove empty traces
+		ParameterYesNo traceHandling = (ParameterYesNo) this.getParameter(parameters, "traceHandling");
+		// should you keep events which do not have the specified attribute
+		ParameterYesNo eventHandling = (ParameterYesNo) this.getParameter(parameters, "eventHandling");
+		// filter in or filter out
+		ParameterOneFromSet selectionType = (ParameterOneFromSet) this.getParameter(parameters, "selectionType");
+		ParameterOneFromSet parameterType = (ParameterOneFromSet) this.getParameter(parameters, "parameterType");
+		ParameterMultipleFromSet desiredValues = (ParameterMultipleFromSet) this.getParameter(parameters, "desiredValues");
+		ParameterRangeFromRange<String> range = (ParameterRangeFromRange<String>) this.getParameter(parameters,"range");
 
-		return null;
+		boolean choice = selectionType.getChosen().contains("Filter in");
+		boolean selectionChoice = parameterType.getChosen().contains("interval");
+		boolean keepTraces = traceHandling.getChosen();
+		boolean keepEvent = eventHandling.getChosen();
+		String lower = range.getChosenPair().get(0);
+		String upper = range.getChosenPair().get(1);
 
+		filteredLog = Toolbox.initializeLog(log);
+		XFactory factory = XFactoryRegistry.instance().currentDefault();
+
+		for (XTrace trace : log) {
+			XTrace filteredTrace = factory.createTrace(trace.getAttributes());
+
+			for (XEvent event : trace) {
+				boolean add = !choice;
+				
+				/* check if event can be kept if it does not have this attribute */
+				if (!event.getAttributes().containsKey(key)) {
+					if (keepEvent) filteredTrace.add(event);
+					continue;
+				}
+
+				String value = event.getAttributes().get(key).toString();
+
+				/* selection type: range from range */
+				if (selectionChoice) {
+					if (value.compareTo(lower) >= 0 && value.compareTo(upper) <= 0) {
+						add = choice;
+					}
+				} else {
+					/* selection type: multiple from set */
+					if (desiredValues.getChosen().contains(value)) add = choice;
+				}
+
+				if (add) filteredTrace.add(event);
+				if (context != null) context.getProgress().inc();
+			}
+
+			if (!filteredTrace.isEmpty() || keepTraces) filteredLog.add(filteredTrace);
+		}
+
+		return filteredLog;
 	}
 
 	public XLog filterTimestamp(PluginContext context, XLog log, List<Parameter> parameters) {		
-		ParameterYesNo traceHandling = new ParameterYesNo("nullHandling", 
-				"Keep empty traces", true);
-
-		ParameterYesNo eventHandling = new ParameterYesNo("emptyHandling", 
-				"Keep events with no value", true);
-
-		ParameterOneFromSet selectionType = (ParameterOneFromSet) this
-				.getParameter(parameters, "selectionType");
-
-		ParameterRangeFromRange<String> range = (ParameterRangeFromRange<String>) this
-				.getParameter(parameters,"range");
+		ParameterYesNo traceHandling = (ParameterYesNo) this.getParameter(parameters, "nullHandling"); 
+		ParameterYesNo eventHandling = (ParameterYesNo) this.getParameter(parameters, "emptyHandling");
+		ParameterOneFromSet selectionType = (ParameterOneFromSet) this.getParameter(parameters, "selectionType");
+		ParameterRangeFromRange<String> range = (ParameterRangeFromRange<String>) this.getParameter(parameters,"range");
 
 		boolean choice = selectionType.getChosen().contains("Filter in");
 		boolean keepNull = traceHandling.getChosen();

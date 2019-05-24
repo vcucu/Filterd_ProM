@@ -4,6 +4,8 @@ import java.beans.PropertyChangeListener;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
@@ -43,8 +45,12 @@ public abstract class CellController {
 	 * Handler for the cell name. Sets the cell name in the model.
 	 */
 	@FXML 
-	public void handleCellName() {
-		cellModel.setCellName(cellName.getText()); 
+	public void handleCellName(KeyEvent e) {
+		 if (e.getCode() == KeyCode.ENTER) {
+		        //System.out.println("Enter was pressed");
+		        //System.out.println(cellName.getText());
+				cellModel.setCellName(cellName.getText());
+		    }
 	}
 	
 	/**

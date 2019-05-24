@@ -97,11 +97,11 @@ public class FilterdTraceFrequencyFilter extends Filter {
 			// The parameters are given as absolute values, 
 			// thus we can simply retrieve them.
 			lowThreshold = thresholdParameters
-					.getOptionsPair()
+					.getChosenPair()
 					.get(0)
 					.intValue();
 			highThreshold = thresholdParameters
-					.getOptionsPair()
+					.getChosenPair()
 					.get(1)
 					.intValue();
 		}

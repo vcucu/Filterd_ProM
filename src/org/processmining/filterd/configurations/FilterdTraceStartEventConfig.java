@@ -37,6 +37,7 @@ public class FilterdTraceStartEventConfig extends FilterdAbstractReferencingConf
 		attrAndClassifiers.addAll(computeComplexClassifiers(log));
 		
 		// Create attribute parameter, creates reference is true
+		
 		ParameterOneFromSet attribute = new ParameterOneFromSet("attribute", 
 				"Filter by", attrAndClassifiers.get(0), attrAndClassifiers, true);
 
@@ -127,7 +128,7 @@ public class FilterdTraceStartEventConfig extends FilterdAbstractReferencingConf
 	public boolean checkValidity(XLog candidateLog) {
 		List<String> attrCandidateLog = new ArrayList<>();
 		attrCandidateLog.addAll(computeAttributes(candidateLog));
-		List<String> attrs = computeGlobalAttributes(candidateLog);
+		List<String> attrs = computeAttributes(candidateLog);
 		// to be changed with the selected attribute	
 		String attr = attrs.get(0);
 		if (!attrCandidateLog.contains(attr)) {

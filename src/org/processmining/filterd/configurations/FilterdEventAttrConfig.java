@@ -123,10 +123,10 @@ public class FilterdEventAttrConfig extends FilterdAbstractReferencingConfig {
 						concreteReference = new FilterdEventAttrCategoricalConfig(log, filterType, a);
 						break;
 					case "Continuous":
-						concreteReference = new FilterdEventAttrNumericalConfig(log, filterType);
+						concreteReference = new FilterdEventAttrNumericalConfig(log, filterType, a);
 						break;
 					case "Discrete":
-						concreteReference = new FilterdEventAttrNumericalConfig(log, filterType);
+						concreteReference = new FilterdEventAttrNumericalConfig(log, filterType, a);
 						break;
 					case "ID":
 						concreteReference = new FilterdEventAttrCategoricalConfig(log, filterType, a);
@@ -142,7 +142,7 @@ public class FilterdEventAttrConfig extends FilterdAbstractReferencingConfig {
 			break; // attribute found, exit for loop
 		}
 		
-		return null;
+		return concreteReference;
 	}
    
 	public boolean checkValidity(XLog log) {
@@ -151,6 +151,7 @@ public class FilterdEventAttrConfig extends FilterdAbstractReferencingConfig {
 
 	public XLog filter() {
 		// TODO Auto-generated method stub
+		
 		return null;
 	}
 }
