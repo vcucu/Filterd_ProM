@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JComponent;
-import javax.swing.SwingUtilities;
 
 import org.deckfour.uitopia.api.model.ViewType;
 import org.deckfour.xes.model.XLog;
@@ -16,7 +15,6 @@ import org.processmining.filterd.gui.ConfigurationModalController.ConfigurationS
 import org.processmining.filterd.models.YLog;
 
 import javafx.collections.ListChangeListener;
-import javafx.embed.swing.SwingNode;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -46,16 +44,14 @@ public class ComputationCellController extends CellController {
 	@FXML
 	private VBox panelLayout;
 	@FXML
-	private AnchorPane visualizerPane;
-	@FXML
 	private ComboBox<YLog> cmbEventLog;
 	@FXML
 	private ComboBox<ViewType> cmbVisualizers;
 
-	private SwingNode visualizerSwgNode;
 	private ConfigurationModalController configurationModal;
 	private boolean isConfigurationModalShown;
 	private ScrollPane scrollPane;
+
 
 	@FXML
 	private Rectangle expandButton;
@@ -74,7 +70,12 @@ public class ComputationCellController extends CellController {
 
 	@FXML
 	private HBox fullToolbar;
-
+	@FXML
+	private HBox cellBody;
+	
+	private VisualizerPanelController visualizerPanelController;
+	
+	
 	/**
 	 * Gets executed after the constructor. Has access to the @FXML annotated
 	 * fields, thus UI elements can be manipulated here.
@@ -119,6 +120,23 @@ public class ComputationCellController extends CellController {
 				}
 			}
 		});
+		
+		// add the visualizerPanel
+		FXMLLoader loader = new FXMLLoader();
+		loader = new FXMLLoader(getClass().getResource("/org/processmining/filterd/gui/fxml/VisualizerPanel.fxml"));
+		visualizerPanelController = new VisualizerPanelController();
+		loader.setController(visualizerPanelController);
+		try {
+			AnchorPane visualizerPanel = (AnchorPane) loader.load();
+			cellBody.getChildren().add(visualizerPanel);
+			cellBody.setHgrow(visualizerPanel, Priority.ALWAYS);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		
 	}
 
 	//TODO: add controller methods
@@ -236,6 +254,7 @@ public class ComputationCellController extends CellController {
 	 */
 	@FXML
 	public void handleFullScreen() {
+		AnchorPane visualizerPane = visualizerPanelController.getVisualizerPanel();
 		if (isFullScreen) {
 			//set visualiserPane as child of corresponding enlarged cell
 			cellBody.getChildren().add(visualizerPane);
@@ -294,36 +313,15 @@ public class ComputationCellController extends CellController {
 	private synchronized void loadVisualizer(ActionEvent event) {
 		ComputationCellModel model = this.getCellModel();
 		JComponent visualizer = model.getVisualization(cmbVisualizers.getValue());
-		// Add a SwingNode to the Visualizer pane
-		visualizerSwgNode = new SwingNode();
-		visualizerPane.getChildren().add(visualizerSwgNode);
-		// We set the anchors for each side of the swingNode to 0 so it fits itself to the anchorPane and gets resized with the cell.
-		visualizerPane.setTopAnchor(visualizerSwgNode, 0.0);
-		visualizerPane.setBottomAnchor(visualizerSwgNode, 0.0);
-		visualizerPane.setLeftAnchor(visualizerSwgNode, 0.0);
-		visualizerPane.setRightAnchor(visualizerSwgNode, 0.0);
-		// Load Visualizer
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				visualizerSwgNode.setContent(visualizer);
-			}
-		});
+		// set the visualizer to the visualizer panel.
+		visualizerPanelController.setVisualizer(visualizer);
 	}
 
 	public void hideConfigurationModal() {
 		if (this.isConfigurationModalShown) {
 			ConfigurationStep configurationStep = configurationModal.getConfigurationStep();
-			visualizerPane.getChildren().clear();
 			// set visualizer as the content
-			if (visualizerSwgNode != null) {
-				visualizerPane.getChildren().add(visualizerSwgNode);
-				// set properties w.r.t. parent node (AnchorPane)
-				visualizerPane.setTopAnchor(visualizerSwgNode, 0.0);
-				visualizerPane.setBottomAnchor(visualizerSwgNode, 0.0);
-				visualizerPane.setLeftAnchor(visualizerSwgNode, 0.0);
-				visualizerPane.setRightAnchor(visualizerSwgNode, 0.0);
-			}
+			visualizerPanelController.hideModal();
 			// if filter selection was cancelled, delete the added button
 			if (configurationStep == ConfigurationStep.ADD_FILTER) {
 				// remove model
@@ -344,29 +342,15 @@ public class ComputationCellController extends CellController {
 		if (filterConfig == null) {
 			throw new IllegalArgumentException("Fitler configuration cannot be null");
 		}
-		// save current visualizer (TODO: is this needed?)
-		for (int i = 0; i < visualizerPane.getChildren().size(); i++) {
-			if (visualizerPane.getChildren().get(i) instanceof SwingNode) {
-				visualizerSwgNode = (SwingNode) visualizerPane.getChildren().get(i);
-				break;
-			}
-		}
-		visualizerPane.getChildren().clear();
 		// populate filter configuration modal
 		configurationModal.showFilterConfiguration(filterConfig);
 		// get root component of the configuration modal
 		VBox configurationModalRoot = configurationModal.getRoot();
-		visualizerPane.getChildren().add(configurationModalRoot);
-		// set properties w.r.t. parent node (AnchorPane)
-		visualizerPane.setTopAnchor(configurationModalRoot, 0.0);
-		visualizerPane.setBottomAnchor(configurationModalRoot, 0.0);
-		visualizerPane.setLeftAnchor(configurationModalRoot, 0.0);
-		visualizerPane.setRightAnchor(configurationModalRoot, 0.0);
+		visualizerPanelController.showModal(configurationModalRoot);
 		this.isConfigurationModalShown = true;
 	}
 
 	public void showModalFilterList(FilterButtonModel filterButtonModel) {
-		visualizerPane.getChildren().clear();
 		List<String> filterOptions = new ArrayList<>();
 		filterOptions.add("Filter 1");
 		filterOptions.add("Filter 2");
@@ -384,11 +368,7 @@ public class ComputationCellController extends CellController {
 
 		});
 		VBox configurationModalRoot = configurationModal.getRoot();
-		visualizerPane.getChildren().add(configurationModalRoot);
-		visualizerPane.setTopAnchor(configurationModalRoot, 0.0);
-		visualizerPane.setBottomAnchor(configurationModalRoot, 0.0);
-		visualizerPane.setLeftAnchor(configurationModalRoot, 0.0);
-		visualizerPane.setRightAnchor(configurationModalRoot, 0.0);
+		visualizerPanelController.showModal(configurationModalRoot);
 		this.isConfigurationModalShown = true;
 	}
 
