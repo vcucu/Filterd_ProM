@@ -31,7 +31,7 @@ public class FilterdTraceSampleFilter extends Filter {
 		
 		//add the first nrSamples traces from the copied input log to the output log
 		clonedLog.stream()
-		.limit((long) nrSamples.getChosen())
+		.limit(nrSamples.getChosen())
 		.forEach(filteredLog :: add);
 		
 		return filteredLog;
