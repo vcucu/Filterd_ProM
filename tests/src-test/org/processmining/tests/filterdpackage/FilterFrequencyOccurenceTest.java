@@ -81,8 +81,8 @@ public class FilterFrequencyOccurenceTest extends FilterdPackageTest{
 		List<Double> thrOptions = new ArrayList<Double>();
 		
 		//since the default option is "frequency", it goes from 1% to 100%
-		thrOptions.add(1);
-		thrOptions.add(4);
+		thrOptions.add((double)1);
+		thrOptions.add((double)4);
 		
 		ParameterRangeFromRange<Double> threshold = new ParameterRangeFromRange<Double>(
 				"threshold",

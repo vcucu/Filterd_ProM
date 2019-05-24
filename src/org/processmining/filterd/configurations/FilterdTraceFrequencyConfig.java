@@ -30,7 +30,7 @@ public class FilterdTraceFrequencyConfig extends FilterdAbstractConfig {
 						foOptions
 		);
 		
-		parameters.add(frequencyOccurranceParameter);
+		
 		
 		//initialize the threshold options parameter and add it to the parameters list
 		List<Double> thrOptions = new ArrayList<Double>();
@@ -46,7 +46,7 @@ public class FilterdTraceFrequencyConfig extends FilterdAbstractConfig {
 				thrOptions
 				);
 		
-		parameters.add(threshold);
+		
 		
 		//initialize the filter mode options parameter and add it to the parameters list
 		List<String> fModeOptions = new ArrayList<String>();
@@ -61,6 +61,8 @@ public class FilterdTraceFrequencyConfig extends FilterdAbstractConfig {
 				fModeOptions
 				);
 		
+		parameters.add(frequencyOccurranceParameter);
+		parameters.add(threshold);
 		parameters.add(filterInOut);
 				
 	}
