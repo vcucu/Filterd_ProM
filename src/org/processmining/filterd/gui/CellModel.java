@@ -11,7 +11,7 @@ public class CellModel {
 	private CellStatus statusBar;
 	private String cellName;
 	//property used to register property listeners for each bound property
-	private PropertyChangeSupport property;
+	protected PropertyChangeSupport property;
 
 	public CellModel(UIPluginContext context) {
 		this.context = context;
