@@ -41,13 +41,13 @@ public class FilterEventAttributeTest extends FilterdPackageTest {
 		parameters.add(selectionType);
 		
 		/* remove empty traces */ 
-		ParameterYesNo nullHandling = new ParameterYesNo("nullHandling", "", true);
-		nullHandling.setChosen(false);
-		parameters.add(nullHandling);
+		ParameterYesNo traceHandling = new ParameterYesNo("traceHandling", "", true);
+		traceHandling.setChosen(false);
+		parameters.add(traceHandling);
 		
-		ParameterYesNo emptyHandling = new ParameterYesNo("emptyHandling", "", true);
-		emptyHandling.setChosen(false);
-		parameters.add(emptyHandling);
+		ParameterYesNo eventHandling = new ParameterYesNo("eventHandling", "", true);
+		eventHandling.setChosen(false);
+		parameters.add(eventHandling);
 		
 		ParameterMultipleFromSet values = new ParameterMultipleFromSet("desiredValues", "", empty, empty);
 		ArrayList<String> chosen = new ArrayList<>();
@@ -82,13 +82,13 @@ public class FilterEventAttributeTest extends FilterdPackageTest {
 		parameters.add(selectionType);
 		
 		/* remove empty traces */ 
-		ParameterYesNo nullHandling = new ParameterYesNo("nullHandling", "", true);
-		nullHandling.setChosen(false);
-		parameters.add(nullHandling);
+		ParameterYesNo traceHandling = new ParameterYesNo("traceHandling", "", true);
+		traceHandling.setChosen(false);
+		parameters.add(traceHandling);
 		
-		ParameterYesNo emptyHandling = new ParameterYesNo("emptyHandling", "", true);
-		emptyHandling.setChosen(false);
-		parameters.add(emptyHandling);
+		ParameterYesNo eventHandling = new ParameterYesNo("eventHandling", "", true);
+		eventHandling.setChosen(false);
+		parameters.add(eventHandling);
 		
 		ParameterMultipleFromSet values = new ParameterMultipleFromSet("desiredValues", "", empty, empty);
 		ArrayList<String> chosen = new ArrayList<>();
@@ -123,11 +123,11 @@ public class FilterEventAttributeTest extends FilterdPackageTest {
 		parameters.add(selectionType);
 		
 		/* remove empty traces */ 
-		ParameterYesNo traceHandling = new ParameterYesNo("nullHandling", "", true);
+		ParameterYesNo traceHandling = new ParameterYesNo("traceHandling", "", true);
 		traceHandling.setChosen(false);
 		parameters.add(traceHandling);
 		
-		ParameterYesNo eventHandling = new ParameterYesNo("emptyHandling", "", true);
+		ParameterYesNo eventHandling = new ParameterYesNo("eventHandling", "", true);
 		eventHandling.setChosen(false);
 		parameters.add(eventHandling);
 		
@@ -163,11 +163,11 @@ public class FilterEventAttributeTest extends FilterdPackageTest {
 		parameters.add(selectionType);
 		
 		/* remove empty traces */ 
-		ParameterYesNo traceHandling = new ParameterYesNo("nullHandling", "", true);
+		ParameterYesNo traceHandling = new ParameterYesNo("traceHandling", "", true);
 		traceHandling.setChosen(false);
 		parameters.add(traceHandling);
 		
-		ParameterYesNo eventHandling = new ParameterYesNo("emptyHandling", "", true);
+		ParameterYesNo eventHandling = new ParameterYesNo("eventHandling", "", true);
 		eventHandling.setChosen(true);
 		parameters.add(eventHandling);
 		
@@ -204,11 +204,11 @@ public class FilterEventAttributeTest extends FilterdPackageTest {
 		parameters.add(selectionType);
 		
 		/* remove empty traces */ 
-		ParameterYesNo traceHandling = new ParameterYesNo("nullHandling", "", true);
+		ParameterYesNo traceHandling = new ParameterYesNo("traceHandling", "", true);
 		traceHandling.setChosen(false);
 		parameters.add(traceHandling);
 		
-		ParameterYesNo eventHandling = new ParameterYesNo("emptyHandling", "", true);
+		ParameterYesNo eventHandling = new ParameterYesNo("eventHandling", "", true);
 		eventHandling.setChosen(true);
 		parameters.add(eventHandling);
 		
@@ -301,13 +301,13 @@ public class FilterEventAttributeTest extends FilterdPackageTest {
 		parameters.add(selectionType);
 		
 		/* remove empty traces */ 
-		ParameterYesNo nullHandling = new ParameterYesNo("", "", true);
-		nullHandling.setChosen(false);
-		parameters.add(nullHandling);
+		ParameterYesNo traceHandling = new ParameterYesNo("traceHandling", "", true);
+		traceHandling.setChosen(false);
+		parameters.add(traceHandling);
 		
-		ParameterYesNo emptyHandling = new ParameterYesNo("", "", true);
-		emptyHandling.setChosen(false);
-		parameters.add(emptyHandling);
+		ParameterYesNo eventHandling = new ParameterYesNo("eventHandling", "", true);
+		eventHandling.setChosen(false);
+		parameters.add(eventHandling);
 		
 		ParameterRangeFromRange<String> range = new ParameterRangeFromRange<String>("range", "", empty, empty);
 		ArrayList<String> chosen = new ArrayList<>();
@@ -340,13 +340,13 @@ public class FilterEventAttributeTest extends FilterdPackageTest {
 		selectionType.setChosen("Filter out");
 		parameters.add(selectionType);
 		
-		ParameterYesNo nullHandling = new ParameterYesNo("", "", true);
-		nullHandling.setChosen(false);
-		parameters.add(nullHandling);
+		ParameterYesNo traceHandling = new ParameterYesNo("traceHandling", "", true);
+		traceHandling.setChosen(false);
+		parameters.add(traceHandling);
 		
-		ParameterYesNo emptyHandling = new ParameterYesNo("", "", true);
-		emptyHandling.setChosen(false);
-		parameters.add(emptyHandling);
+		ParameterYesNo eventHandling = new ParameterYesNo("eventHandling", "", true);
+		eventHandling.setChosen(false);
+		parameters.add(eventHandling);
 		
 		ParameterRangeFromRange<String> range = new ParameterRangeFromRange<String>("range","", empty, empty);
 		ArrayList<String> chosen = new ArrayList<>();
