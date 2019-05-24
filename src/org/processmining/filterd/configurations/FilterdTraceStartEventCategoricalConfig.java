@@ -42,7 +42,12 @@ public class FilterdTraceStartEventCategoricalConfig extends FilterdAbstractRefe
 		if (isAttribute) {
 			for (XTrace trace : log) {
 				for (XEvent event : trace) {
-					String value = event.getAttributes().get(attribute).toString();
+					String value;
+					if (event.getAttributes().containsKey(attribute)) {
+						value = event.getAttributes().get(attribute).toString();
+					} else {
+						continue;
+					}
 					if (!allValues.contains(value)) {
 						allValues.add(value);
 					}
