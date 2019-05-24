@@ -58,19 +58,19 @@ public class FilterdEventAttrDateConfig extends FilterdAbstractReferenceableConf
 				"Select timeframe", defaultPair, optionsPair);
 
 		// should you remove empty traces
-		ParameterYesNo nullHandling = new ParameterYesNo("nullHandling", 
+		ParameterYesNo traceHandling = new ParameterYesNo("eventHandling", 
 				"Keep empty traces.", true);
 
 		// should you keep events which do not have the specified attribute
-		ParameterYesNo emptyHandling = new ParameterYesNo("emptyHandling", 
+		ParameterYesNo eventHandling = new ParameterYesNo("eventHandling", 
 				"Keep events without value", false);
 
 		// filter in or filter out
 		ParameterOneFromSet selectionType = new ParameterOneFromSet("selectionType",
 				"Select option for filtering", defaultOption, optionList);
 
-		parameters.add(nullHandling);
-		parameters.add(emptyHandling);
+		parameters.add(eventHandling);
+		parameters.add(eventHandling);
 		parameters.add(selectionType);
 		parameters.add(range);
 

@@ -59,7 +59,6 @@ public class FilterdEventAttrFilter extends Filter {
 	}
 
 	public XLog filterCategorical(PluginContext context, XLog log, List<Parameter> parameters) {
-
 		// should you remove empty traces
 		ParameterYesNo traceHandling = (ParameterYesNo) this
 				.getParameter(parameters, "nullHandling");
@@ -161,14 +160,17 @@ public class FilterdEventAttrFilter extends Filter {
 	}
 
 	public XLog filterTimestamp(PluginContext context, XLog log, List<Parameter> parameters) {		
-		ParameterYesNo traceHandling = (ParameterYesNo) this.getParameter(parameters, "nullHandling"); 
-		ParameterYesNo eventHandling = (ParameterYesNo) this.getParameter(parameters, "emptyHandling");
+
+		ParameterYesNo traceHandling = (ParameterYesNo) this.getParameter(parameters, "traceHandling"); 
+		ParameterYesNo eventHandling = (ParameterYesNo) this.getParameter(parameters, "eventHandling");
+
 		ParameterOneFromSet selectionType = (ParameterOneFromSet) this.getParameter(parameters, "selectionType");
 		ParameterRangeFromRange<String> range = (ParameterRangeFromRange<String>) this.getParameter(parameters,"range");
 
 		boolean choice = selectionType.getChosen().contains("Filter in");
 		boolean keepNull = traceHandling.getChosen();
 		boolean keepEmpty = eventHandling.getChosen();
+
 
 		filteredLog = Toolbox.initializeLog(log);
 		XFactory factory = XFactoryRegistry.instance().currentDefault();
