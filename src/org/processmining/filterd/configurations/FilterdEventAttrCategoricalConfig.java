@@ -2,6 +2,7 @@ package org.processmining.filterd.configurations;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.deckfour.xes.model.XAttribute;
 import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
@@ -18,7 +19,7 @@ public class FilterdEventAttrCategoricalConfig extends FilterdAbstractReferencea
 	List<String> defaultValues;
 	
 	
-	public FilterdEventAttrCategoricalConfig(XLog log, Filter filterType) {
+	public FilterdEventAttrCategoricalConfig(XLog log, Filter filterType, XAttribute attrib) {
 		super(log, filterType);
 		parameters = new ArrayList<>();
 		optionList = new ArrayList<>();
@@ -26,12 +27,13 @@ public class FilterdEventAttrCategoricalConfig extends FilterdAbstractReferencea
 		optionList.add("Filter in");
 		optionList.add("Filter out");
 		
+		
 		// should you remove empty traces
 		ParameterYesNo nullHandling = new ParameterYesNo("nullHandling", 
-				"Remove empty traces.", true);
+				"Keep empty traces", true);
 		// should you keep events which do not have the specified attribute
 		ParameterYesNo emptyHandling = new ParameterYesNo("emptyHandling", 
-				"Keep events if attribute not specified.", false);
+				"Keep events without value", false);
 		// filter in or filter out
 		ParameterOneFromSet selectionType = new ParameterOneFromSet("selectionType",
 				"Select option for filtering", optionList.get(0), optionList);
@@ -39,11 +41,9 @@ public class FilterdEventAttrCategoricalConfig extends FilterdAbstractReferencea
 		values = new ArrayList<>();
 		for (XTrace trace: log) {
 			for (XEvent event : trace) {
-				for(String key: event.getAttributes().keySet()) {
-					String value = event.getAttributes().get(key).toString();
-					if(!values.contains(value)) {
-						values.add(value);						
-					}
+				String value = event.getAttributes().get(attrib.getKey()).toString();
+				if(!values.contains(value)) {
+					values.add(value);						
 				}
 			}
 		}

@@ -4,10 +4,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.deckfour.xes.info.XLogInfo;
+import org.deckfour.xes.info.XLogInfoFactory;
 import org.deckfour.xes.model.XLog;
 import org.junit.Test;
 import org.processmining.filterd.filters.FilterdEventAttrFilter;
 import org.processmining.filterd.parameters.Parameter;
+import org.processmining.filterd.parameters.ParameterMultipleFromSet;
 import org.processmining.filterd.parameters.ParameterOneFromSet;
 import org.processmining.filterd.parameters.ParameterRangeFromRange;
 import org.processmining.filterd.parameters.ParameterYesNo;
@@ -29,26 +32,38 @@ public class FilterEventAttributeTest extends FilterdPackageTest {
 	 */
 	@Test
 	public void testAttributesKeep() throws Throwable {
-		XLog expected = parseLog("event-attributes", "test_attributes_1.xes");
-		XLog computed = null; // insert filter operation
 
-		assert equalLog(expected, computed);
-	}
-
-	/* Corresponds to test case 37 from test_specification.xlsx.
-	 * See Disco Attributes - mandatory traces having at least one event with
-	 * "concept:name" != "archive" and "receive payment"
-	 * 
-	 * Result: each case except case 34.
-	 */
-	@Test
-	public void testAttributesMandatory() throws Throwable {
-		XLog expected = parseLog("event-attributes", "test_attributes_2.xes");
-		XLog computed = null; // insert filter operation
-
-		assert equalLog(expected, computed);
-	}
+		XLog expected = parseLog("event-attribute", "test_attributes_1.xes");	
+		
+		List empty = Collections.EMPTY_LIST;
+		/* manually instantiate the filter's parameters */
+		ArrayList<Parameter> parameters = new ArrayList<>();
+		ParameterOneFromSet selectionType = new ParameterOneFromSet("selectionType", "", "", empty); 
+		selectionType.setChosen("Filter out");
+		parameters.add(selectionType);
+		
+		/* remove empty traces */ 
+		ParameterYesNo nullHandling = new ParameterYesNo("", "", true);
+		nullHandling.setChosen(false);
+		parameters.add(nullHandling);
+		
+		ParameterYesNo emptyHandling = new ParameterYesNo("", "", true);
+		emptyHandling.setChosen(false);
+		parameters.add(emptyHandling);
+		
+		ParameterMultipleFromSet values = new ParameterMultipleFromSet("desiredValues", "", empty, empty);
+		ArrayList<String> chosen = new ArrayList<>();
+		chosen.add("ship parcel");
+		values.setChosen(chosen);
+		parameters.add(values);
+		
+		FilterdEventAttrFilter filter = new FilterdEventAttrFilter();
+		filter.setKey("concept:name");
+		XLog computed = filter.filterCategorical(null, originalLog, parameters);
 	
+		assert equalLog(expected, computed);
+	}
+
 	/* Corresponds to test case 19 from test_specification.xlsx.
 	 * See ProM - Project Log onto Events // Filter log on event attribute value.
 	 * Keep events with lifecycle:transition = abort.
@@ -56,10 +71,46 @@ public class FilterEventAttributeTest extends FilterdPackageTest {
 	 * Result: cases 56, 74, 75, 76 - 1 event.
 	 */
 	@Test
-	public void testEventAttribute1() throws Throwable {
+	public void testEventAttributeIn() throws Throwable {
+		
 		XLog expected = parseLog("event-attribute", "test_event_attribute_abort.xes");
-		XLog computed = null; // insert filter operation
+		List empty = Collections.EMPTY_LIST;
+		
+		/* manually instantiate the filter's parameters */
+		ArrayList<Parameter> parameters = new ArrayList<>();
+		
+		ParameterOneFromSet selectionType = new ParameterOneFromSet("selectionType", "", "", empty); 
+		selectionType.setChosen("Filter in");
+		parameters.add(selectionType);
+		
+		/* remove empty traces */ 
+		ParameterYesNo nullHandling = new ParameterYesNo("", "", true);
+		nullHandling.setChosen(false);
+		parameters.add(nullHandling);
+		
+		ParameterYesNo emptyHandling = new ParameterYesNo("", "", true);
+		emptyHandling.setChosen(false);
+		parameters.add(emptyHandling);
+		
+		ParameterMultipleFromSet values = new ParameterMultipleFromSet("desiredValues", "", empty, empty);
+		ArrayList<String> chosen = new ArrayList<>();
+		chosen.add("abort");
+		values.setChosen(chosen);
+		parameters.add(values);
+		
+		FilterdEventAttrFilter filter = new FilterdEventAttrFilter();
+		filter.setKey("lifecycle:transition");
+		XLog computed = filter.filterCategorical(null, originalLog, parameters);
+		XLogInfoFactory factory = new XLogInfoFactory();
+		XLogInfo infoExpected = factory.createLogInfo(expected);
+		XLogInfo infoComputed = factory.createLogInfo(computed);
+		int tracesExpected = infoExpected.getNumberOfTraces();
+		int tracesComputed = infoComputed.getNumberOfTraces();
+		int eventsExpected = infoExpected.getNumberOfEvents();
+		int eventsComputed = infoComputed.getNumberOfEvents();
+		//System.out.print("Nr of traces = " + eventsExpected + " and computed is " + eventsComputed + "\n");
 
+		
 		assert equalLog(expected, computed);
 	}
 
