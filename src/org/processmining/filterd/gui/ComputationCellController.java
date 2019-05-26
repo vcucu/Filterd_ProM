@@ -27,6 +27,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
@@ -34,45 +35,30 @@ import javafx.util.Callback;
 
 public class ComputationCellController extends CellController {
 
-	//TODO: add other FXML attributes
-
 	private boolean isExpanded;
 	private boolean isFullScreen;
+	private boolean isConfigurationModalShown;
+	
 	private VBox notebookVisualiser;
 	private HBox notebookToolbar;
-
-	@FXML
-	private VBox panelLayout;
-	@FXML
-	private AnchorPane visualizerPane;
-	@FXML
-	private ComboBox<YLog> cmbEventLog;
-	@FXML
-	private ComboBox<ViewType> cmbVisualizers;
-
 	private SwingNode visualizerSwgNode;
 	private ConfigurationModalController configurationModal;
-	private boolean isConfigurationModalShown;
+	
 	private ScrollPane scrollPane;
 
-	@FXML
-	private Rectangle expandButton;
-	@FXML
-	private ScrollPane filterPanelScroll;
-	@FXML
-	private VBox cell;
-	@FXML
-	private Rectangle fullScreenButton;
-	@FXML
-	private Circle playButton;
-	@FXML
-	private MenuButton CellSettings;
-	@FXML
-	private Circle prependCellButton;
-	@FXML
-	private HBox fullToolbar;
-	@FXML
-	private HBox cellToolbar;
+	@FXML private VBox panelLayout;
+	@FXML private AnchorPane visualizerPane;
+	@FXML private ComboBox<YLog> cmbEventLog;
+	@FXML private ComboBox<ViewType> cmbVisualizers;
+	@FXML private Rectangle expandButton;
+	@FXML private ScrollPane filterPanelScroll;
+	@FXML private VBox cell;
+	@FXML private Rectangle fullScreenButton;
+	@FXML private Circle playButton;
+	@FXML private MenuButton menuBtnCellSettings;
+	@FXML private Circle prependCellButton;
+	@FXML private HBox fullToolbar;
+	@FXML private HBox cellToolbar;
 
 	/**
 	 * Gets executed after the constructor. Has access to the @FXML annotated
@@ -80,47 +66,22 @@ public class ComputationCellController extends CellController {
 	 */
 	public void initialize() {
 		ComputationCellModel model = this.getCellModel();
-		// TODO: load event logs in cmbEventLog
+		// Load event logs in cmbEventLog and select "Initial input"
 		cmbEventLog.getItems().addAll(model.getInputLogs());
-		//add listeners to the basic model components
+		cmbEventLog.getSelectionModel().selectFirst();
+		setXLog();
+		
+		// Add listeners to the basic model components
 		cellModel.getProperty().addPropertyChangeListener(new CellModelListeners(this));
-
-		getCellModel().getFilters().addListener(new ListChangeListener<FilterButtonModel>() {
-			@Override
-			public void onChanged(Change<? extends FilterButtonModel> change) {
-				while (change.next()) {
-					if (change.wasPermutated()) {
-						for (int i = change.getFrom(); i < change.getTo(); i++) {
-							System.out.printf("ID: %d ----------\n", getCellModel().getFilters().get(i).getIndex());
-							System.out.println("Permuted: " + i + " " + getCellModel().getFilters().get(i));
-						}
-					} else if (change.wasUpdated()) {
-						for (int i = change.getFrom(); i < change.getTo(); i++) {
-							System.out.printf("ID: %d ----------\n", getCellModel().getFilters().get(i).getIndex());
-							System.out.println("Updated: " + i + " " + getCellModel().getFilters().get(i));
-							System.out.println("SELECTED: " + getCellModel().getFilters().get(i).getSelected());
-							getCellModel().getFilterControllers().get(getCellModel().getFilters().get(i).getIndex())
-									.updateFilterButtonView();
-						}
-					} else {
-						for (FilterButtonModel removedFilter : change.getRemoved()) {
-							System.out.printf("ID: %d ----------\n", removedFilter.getIndex());
-							System.out.println("Removed: " + removedFilter);
-						}
-						for (FilterButtonModel addedFilter : change.getAddedSubList()) {
-							System.out.printf("ID: %d ----------\n", addedFilter.getIndex());
-							System.out.println("Added: " + addedFilter);
-						}
-						for (int i = 0; i < getCellModel().getFilters().size(); i++) {
-							getCellModel().getFilters().get(i).setIndex(i);
-						}
-					}
-				}
-			}
-		});
+		// Add listeners for filter buttons
+		addFilterButtonListeners();
+		
+		// Initialize the visualizer
+		visualizerSwgNode = new SwingNode();
+		// Add listener for the ComboBoxes (workaround JavaFX - SwingNode)
+		Utilities.JFXSwingFix(visualizerPane, cmbEventLog, visualizerSwgNode);
+		Utilities.JFXSwingFix(visualizerPane, cmbVisualizers, visualizerSwgNode);
 	}
-
-	//TODO: add controller methods
 
 	public ComputationCellController(NotebookController controller, ComputationCellModel model) {
 		super(controller, model);
@@ -162,6 +123,37 @@ public class ComputationCellController extends CellController {
 		newController.selectFilterButton();
 		// show the filter list to allow the user to pick which filter she wants to add
 		showModalFilterList(model);
+	}
+	
+	private void addFilterButtonListeners() {
+		getCellModel().getFilters().addListener(new ListChangeListener<FilterButtonModel>() {
+			@Override
+			public void onChanged(Change<? extends FilterButtonModel> change) {
+				while (change.next()) {
+					if (change.wasUpdated()) {
+						for (int i = change.getFrom(); i < change.getTo(); i++) {
+							System.out.printf("ID: %d ----------\n", getCellModel().getFilters().get(i).getIndex());
+							System.out.println("Updated: " + i + " " + getCellModel().getFilters().get(i));
+							System.out.println("SELECTED: " + getCellModel().getFilters().get(i).getSelected());
+							getCellModel().getFilterControllers().get(getCellModel().getFilters().get(i).getIndex())
+									.updateFilterButtonView();
+						}
+					} else {
+						for (FilterButtonModel removedFilter : change.getRemoved()) {
+							System.out.printf("ID: %d ----------\n", removedFilter.getIndex());
+							System.out.println("Removed: " + removedFilter);
+						}
+						for (FilterButtonModel addedFilter : change.getAddedSubList()) {
+							System.out.printf("ID: %d ----------\n", addedFilter.getIndex());
+							System.out.println("Added: " + addedFilter);
+						}
+						for (int i = 0; i < getCellModel().getFilters().size(); i++) {
+							getCellModel().getFilters().get(i).setIndex(i);
+						}
+					}
+				}
+			}
+		});
 	}
 
 	public VBox getPanelLayout() {
@@ -267,21 +259,28 @@ public class ComputationCellController extends CellController {
 
 	// Set XLog
 	@FXML
-	public void setXLog(ActionEvent event) {
+	public void setXLog() {
 		ComputationCellModel model = this.getCellModel();
 		XLog eventLog = cmbEventLog.getValue().get();
 		model.setXLog(eventLog);
 		cmbVisualizers.getItems().addAll(model.getVisualizers());
+		cmbVisualizers.getSelectionModel().selectFirst();
 	}
 
 	// Load visualizer
 	@FXML
-	private synchronized void loadVisualizer(ActionEvent event) {
+	private synchronized void loadVisualizer() {
 		ComputationCellModel model = this.getCellModel();
+		if (cmbVisualizers.getValue() == Utilities.dummyViewType) {
+			// Remove visualizer if "None" is selected
+			visualizerPane.getChildren().remove(visualizerSwgNode);
+			return;
+		}
 		JComponent visualizer = model.getVisualization(cmbVisualizers.getValue());
-		// Add a SwingNode to the Visualizer pane
-		visualizerSwgNode = new SwingNode();
-		visualizerPane.getChildren().add(visualizerSwgNode);
+		if (!visualizerPane.getChildren().contains(visualizerSwgNode)) {
+			// Add visualizer if not present 
+			visualizerPane.getChildren().add(visualizerSwgNode);			
+		}
 		// We set the anchors for each side of the swingNode to 0 so it fits itself to the anchorPane and gets resized with the cell.
 		visualizerPane.setTopAnchor(visualizerSwgNode, 0.0);
 		visualizerPane.setBottomAnchor(visualizerSwgNode, 0.0);
@@ -299,16 +298,16 @@ public class ComputationCellController extends CellController {
 	public void hideConfigurationModal() {
 		if (this.isConfigurationModalShown) {
 			ConfigurationStep configurationStep = configurationModal.getConfigurationStep();
-			visualizerPane.getChildren().clear();
+			visualizerPane.getChildren().remove(configurationModal.getRoot());
 			// set visualizer as the content
-			if (visualizerSwgNode != null) {
-				visualizerPane.getChildren().add(visualizerSwgNode);
-				// set properties w.r.t. parent node (AnchorPane)
-				visualizerPane.setTopAnchor(visualizerSwgNode, 0.0);
-				visualizerPane.setBottomAnchor(visualizerSwgNode, 0.0);
-				visualizerPane.setLeftAnchor(visualizerSwgNode, 0.0);
-				visualizerPane.setRightAnchor(visualizerSwgNode, 0.0);
-			}
+			visualizerPane.getChildren().add(visualizerSwgNode);
+			// Enable visualizer combobox
+			cmbVisualizers.setDisable(false);
+			// set properties w.r.t. parent node (AnchorPane)
+			visualizerPane.setTopAnchor(visualizerSwgNode, 0.0);
+			visualizerPane.setBottomAnchor(visualizerSwgNode, 0.0);
+			visualizerPane.setLeftAnchor(visualizerSwgNode, 0.0);
+			visualizerPane.setRightAnchor(visualizerSwgNode, 0.0);
 			// if filter selection was cancelled, delete the added button
 			if (configurationStep == ConfigurationStep.ADD_FILTER) {
 				// remove model
@@ -329,14 +328,10 @@ public class ComputationCellController extends CellController {
 		if (filterConfig == null) {
 			throw new IllegalArgumentException("Fitler configuration cannot be null");
 		}
-		// save current visualizer (TODO: is this needed?)
-		for (int i = 0; i < visualizerPane.getChildren().size(); i++) {
-			if (visualizerPane.getChildren().get(i) instanceof SwingNode) {
-				visualizerSwgNode = (SwingNode) visualizerPane.getChildren().get(i);
-				break;
-			}
-		}
-		visualizerPane.getChildren().clear();
+		// Remove visualizer
+		visualizerPane.getChildren().remove(visualizerSwgNode);
+		// Disable visualizer combobox
+		cmbVisualizers.setDisable(true);
 		// populate filter configuration modal
 		configurationModal.showFilterConfiguration(filterConfig);
 		// get root component of the configuration modal
@@ -351,7 +346,10 @@ public class ComputationCellController extends CellController {
 	}
 
 	public void showModalFilterList(FilterButtonModel filterButtonModel) {
-		visualizerPane.getChildren().clear();
+		// Remove visualizer
+		visualizerPane.getChildren().remove(visualizerSwgNode);
+		// Disable visualizer combobox
+		cmbVisualizers.setDisable(true);
 		List<String> filterOptions = new ArrayList<>();
 		filterOptions.add("Filter 1");
 		filterOptions.add("Filter 2");
@@ -392,7 +390,7 @@ public class ComputationCellController extends CellController {
 		if (isExpanded) {
 			cell.prefHeightProperty().unbind();
 			//set the PrefHeight to what it is by default
-			cell.setPrefHeight(cell.USE_COMPUTED_SIZE);
+			cell.setPrefHeight(Region.USE_COMPUTED_SIZE);
 		}
 	}
 

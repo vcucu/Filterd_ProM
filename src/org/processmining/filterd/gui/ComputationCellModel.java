@@ -7,6 +7,10 @@ import java.util.Set;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 
+import org.deckfour.uitopia.api.model.Author;
+import org.deckfour.uitopia.api.model.Resource;
+import org.deckfour.uitopia.api.model.ResourceType;
+import org.deckfour.uitopia.api.model.View;
 import org.deckfour.uitopia.api.model.ViewType;
 import org.deckfour.xes.model.XLog;
 import org.processmining.contexts.uitopia.UIPluginContext;
@@ -119,6 +123,7 @@ public class ComputationCellModel extends CellModel {
 	// LET OP! Log must be set first.
     public List<ViewType> getVisualizers() {
     	List<ViewType> visualizers = new ArrayList<ViewType>();
+    	visualizers.add(Utilities.dummyViewType);
     	UIPluginContext context = getContext();
 		// Get the necessary managers
 		ProMViewManager vm = ProMViewManager.initialize(context.getGlobalContext()); // Get current view manager

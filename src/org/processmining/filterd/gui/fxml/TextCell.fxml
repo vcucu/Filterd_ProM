@@ -23,7 +23,7 @@
                         <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
                         <TextField fx:id="cellName" alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" onKeyPressed="#handleCellName" prefHeight="25.0" text="Cell name" />
                         <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                        <MenuButton mnemonicParsing="false">
+                        <MenuButton fx:id="menuBtnCellSettings" mnemonicParsing="false">
                           <items>
                             <MenuItem mnemonicParsing="false" onAction="#removeCell" text="Remove Cell" />
                           </items>
