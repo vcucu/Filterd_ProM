@@ -21,7 +21,7 @@ public class FilterStartEventsTest extends FilterdPackageTest{
 	public FilterStartEventsTest() throws Exception {
 		super();	
 	}
-
+	
 	/* Corresponds to test case 2 from test_specification.xlsx.
 	 * See ProM - Log on simple Heuristic.
 	 * Selects traces with start event "receive order".
@@ -560,8 +560,50 @@ public class FilterStartEventsTest extends FilterdPackageTest{
 		XLog computed = filter.filter(null, originalLog, parameters);	
 		assert equalLog(expected, computed);
 	}
+	
+
+	@Test
+	public void testStartClassifier_empty() throws Throwable {
+		XLog expected = parseLog("start-events", "test_start_classifier_empty.xes");
+		XLog original = parseLog("start-events", "test_start_classifier_empty.xes");
+		List empty = Collections.EMPTY_LIST;
+		List<String> oneElement = new ArrayList<>();
+		/*manually instantiate the filter's parameters*/
+		ArrayList<Parameter> parameters = new ArrayList<>();
+
+		ParameterOneFromSet attribute = new ParameterOneFromSet("attribute", "", "", empty);
+		attribute.setChosen("MXML Legacy Classifier");
+
+
+		ParameterMultipleFromSet desiredEvents = new ParameterMultipleFromSet("desiredEvents",
+				"Select start values", empty, empty);
+		List<String> list = new ArrayList<>();
+		list.add("register request+");
+		desiredEvents.setChosen(list);
+
+		//Create nullHandling parameter
+		ParameterYesNo eventHandling = new ParameterYesNo("eventHandling", "", false);
+		eventHandling.setChosen(true);
+		ParameterYesNo traceHandling = new ParameterYesNo("traceHandling", "", true);
+		traceHandling.setChosen(true);
+
+		ParameterOneFromSet selectionType = new ParameterOneFromSet("selectionType", "", "", empty);
+		selectionType.setChosen("Filter in");
+
+		parameters.add(attribute);
+		parameters.add(selectionType);
+		parameters.add(desiredEvents);
+		parameters.add(eventHandling);
+		parameters.add(traceHandling);
+
+		//instantiate the filter class
+		FilterdTraceStartEventFilter filter = new FilterdTraceStartEventFilter();
+		XLog computed = filter.filter(null, original, parameters);	
+		assert equalLog(expected, computed);
+	}
 
 	/*//========== NOT ADDED IN UTP ============ */
+	
 
 	public static void main(String[] args) {
 		junit.textui.TestRunner.run(FilterStartEventsTest.class);

@@ -83,22 +83,20 @@ public class FilterdPackageTest extends TestCase {
 			XTrace trace1 = expected.get(i);
 			XTrace trace2 = computed.get(i);
 
-			if (trace1.getAttributes().get("concept:name").equals(trace2.getAttributes().get("concept:name")) 
-					&& trace1.getAttributes().get("customer").equals(trace2.getAttributes().get("customer"))){
-				for (int j = 0; j < trace1.size(); j++) {
-					XEvent event1 = trace1.get(j);
-					XEvent event2 = trace2.get(j);
-					/* check whether the traces have the same events */
-					if (!event1.getAttributes().equals(event2.getAttributes())) {
-						System.out.println("Events do not have the same attributes");
-						return false;
-					}
-				}
-			} else {
-				System.out.println("Not the same traces");
+			if (!(trace1.getAttributes().entrySet().equals(trace2.getAttributes().entrySet()))) {
+				System.out.println("Traces do not have the same attributes.");
 				return false;
 			}
-
+			
+			for (int j = 0; j < trace1.size(); j++) {
+				XEvent event1 = trace1.get(j);
+				XEvent event2 = trace2.get(j);
+				/* check whether the traces have the same events */
+				if (!event1.getAttributes().entrySet().equals(event2.getAttributes().entrySet())) {
+					System.out.println("Events do not have the same attributes");
+					return false;
+				}
+			}
 		}
 
 		return true;
