@@ -14,8 +14,9 @@ import org.processmining.filterd.parameters.ParameterRangeFromRange;
 import org.processmining.filterd.tools.Toolbox;
 
 /* Test cases for validating the Filter on Frequency AND the
- * Filter on Occurence.
- * Test files xes location: /tests/testfiles/freq-occurence/ */
+ * Filter on Occurrence.
+ * Test files xes location: /tests/testfiles/freq-occurence/*
+ */
 public class FilterFrequencyOccurenceTest extends FilterdPackageTest{
 	
 	public FilterFrequencyOccurenceTest() throws Exception {
@@ -124,7 +125,7 @@ public class FilterFrequencyOccurenceTest extends FilterdPackageTest{
 	}
 
 	/* Corresponds to test case 15 from test_specification.xlsx.
-	 * See ProM - Filter Out Low Occurence Traces.
+	 * See ProM - Filter Out Low Occurrence Traces.
 	 * Threshold 2.
 	 * 
 	 * Result: cases 41, 56, 73, 74, 75, 76.
