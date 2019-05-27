@@ -32,7 +32,14 @@ public class FilterFrequencyOccurenceTest extends FilterdPackageTest{
 	public void testInFrequency1() throws Throwable {
 		XLog expected = parseLog("freq-occurence", "test_fin_50.xes");
 		XLog computed = null; // insert filter operation
+		
+		FilterdTraceFrequencyFilter filter = new FilterdTraceFrequencyFilter();
+		
+		List<Parameter> parameters = getParametersForTest(50d, 100d, "frequency", "in");
+		
+		computed = filter.filter(null, originalLog, parameters);
 
+		assert equalLog(expected, computed);
 		assert equalLog(expected, computed);
 	}
 
@@ -46,24 +53,70 @@ public class FilterFrequencyOccurenceTest extends FilterdPackageTest{
 	public void testInFrequency2() throws Throwable {
 		XLog expected = parseLog("freq-occurence", "test_fin_25.xes");
 		XLog computed = null; // insert filter operation
+		
+		FilterdTraceFrequencyFilter filter = new FilterdTraceFrequencyFilter();
+		
+		List<Parameter> parameters = getParametersForTest(75d, 100d, "frequency", "int");
+		
+		computed = filter.filter(null, originalLog, parameters);
+
+		assert equalLog(expected, computed);
+	}
+	
+	/* Corresponds to test case 17 from test_specification.xlsx.
+	 * See ProM - Filter Out Low Frequency Traces.
+	 * Threshold 5%.
+	 * 
+	 * Result: original log.
+	 */
+	@Test
+	public void testOutFrequency1() throws Throwable {
+		XLog expected = parseLog("freq-occurence", "test_fout_5.xes");
+		XLog computed = null; // insert filter operation
+		
+		FilterdTraceFrequencyFilter filter = new FilterdTraceFrequencyFilter();
+		
+		List<Parameter> parameters = getParametersForTest(0, 5d, "frequency", "out");
+		
+		computed = filter.filter(null, originalLog, parameters);
+
+		assert equalLog(expected, computed);
+	}
+
+	/* Corresponds to test case 18 from test_specification.xlsx.
+	 * See ProM - Filter Out Low Frequency Traces.
+	 * Threshold 25%.
+	 * 
+	 * Result: cases 41, 56, 73, 74, 75, 76.
+	 */
+	@Test
+	public void testOutFrequency2() throws Throwable {
+		XLog expected = parseLog("freq-occurence", "test_fout_25.xes");
+		XLog computed = null; // insert filter operation
+		
+		FilterdTraceFrequencyFilter filter = new FilterdTraceFrequencyFilter();
+		
+		List<Parameter> parameters = getParametersForTest(0, 25d, "frequency", "out");
+		
+		computed = filter.filter(null, originalLog, parameters);
 
 		assert equalLog(expected, computed);
 	}
 
 	/* Corresponds to test case 15 from test_specification.xlsx.
 	 * See ProM - Filter Out Low Occurence Traces.
-	 * Threshold 2.
+	 * Threshold 2 - max.
 	 * 
 	 * Result: cases 41, 56, 73, 74, 75, 76.
 	 */
 	@Test
-	public void testOutOccurence1() throws Throwable {
+	public void testInOccurence1() throws Throwable {
 		XLog expected = parseLog("freq-occurence", "test_oout_2.xes");
 		XLog computed = null; // insert filter operation
 		
 		FilterdTraceFrequencyFilter filter = new FilterdTraceFrequencyFilter();
 		
-		List<Parameter> parameters = getOccurenceParameters(2d, 4d);
+		List<Parameter> parameters = getParametersForTest(2d, 4d, "occurrance", "in");
 		
 		computed = filter.filter(null, originalLog, parameters);
 
@@ -71,27 +124,67 @@ public class FilterFrequencyOccurenceTest extends FilterdPackageTest{
 	}
 
 	/* Corresponds to test case 16 from test_specification.xlsx.
-	 * See ProM - Filter Out Low Occurence Traces.
-	 * Threshold 3.
+	 * See ProM - Filter Out Low Occurrence Traces.
+	 * Threshold 3 - max.
 	 * 
 	 * Result: cases 56, 74, 75, 76.
 	 */
 	@Test
-	public void testOutOccurence2() throws Throwable {
+	public void testInOccurence2() throws Throwable {
 		XLog expected = parseLog("freq-occurence", "test_oout_3.xes");
 		XLog computed = null; // insert filter operation
 		
 		FilterdTraceFrequencyFilter filter = new FilterdTraceFrequencyFilter();
 		
-		List<Parameter> parameters = getOccurenceParameters(3d, 4d);
+		List<Parameter> parameters = getParametersForTest(3d, 4d, "occurrance", "in");
 		
 		computed = filter.filter(null, originalLog, parameters);
 
 		assert equalLog(expected, computed);
 	}
 	
-	private List<Parameter> getOccurenceParameters(double lowThreshold, 
-			double highThreshold) {
+	/* Corresponds to test case 16 from test_specification.xlsx.
+	 * See ProM - Filter in variants occurring only twice.
+	 * Threshold 2 - 2.
+	 * 
+	 * Result: cases 41, 73 
+	 */
+	@Test
+	public void testInOccurence3() throws Throwable {
+		XLog expected = parseLog("freq-occurence", "test_oout2-2.xes");
+		XLog computed = null; // insert filter operation
+		
+		FilterdTraceFrequencyFilter filter = new FilterdTraceFrequencyFilter();
+		
+		List<Parameter> parameters = getParametersForTest(2d, 2d, "occurrence", "in");
+		
+		computed = filter.filter(null, originalLog, parameters);
+
+		assert equalLog(expected, computed);
+	}
+	
+	/* Corresponds to test case 16 from test_specification.xlsx.
+	 * See ProM - Filter out high occurrence traces.
+	 * Threshold 3 - max.
+	 * 
+	 * Result: cases 34, 35, 41, 72, 73
+	 */
+	@Test
+	public void testOutOccurence4() throws Throwable {
+		XLog expected = parseLog("freq-occurence", "test_oout3-max.xes");
+		XLog computed = null; // insert filter operation
+		
+		FilterdTraceFrequencyFilter filter = new FilterdTraceFrequencyFilter();
+		
+		List<Parameter> parameters = getParametersForTest(3d, 4d, "occurrance", "out");
+		
+		computed = filter.filter(null, originalLog, parameters);
+
+		assert equalLog(expected, computed);
+	}
+	
+	private List<Parameter> getParametersForTest(double lowThreshold, 
+			double highThreshold, String chosenMethod, String inOrOut) {
 		
 		//initialize the configuration's parameters list
 		List<Parameter> parameters = new ArrayList<>();
@@ -110,7 +203,7 @@ public class FilterFrequencyOccurenceTest extends FilterdPackageTest{
 						foOptions
 						);
 		
-		frequencyOccurranceParameter.setChosen("occurrance");
+		frequencyOccurranceParameter.setChosen(chosenMethod);
 		
 		
 		//initialize the threshold options parameter and add it to the parameters list
@@ -163,41 +256,13 @@ public class FilterFrequencyOccurenceTest extends FilterdPackageTest{
 				fModeOptions
 				);
 		
-		filterInOut.setChosen("in");
+		filterInOut.setChosen(inOrOut);
 		
 		parameters.add(frequencyOccurranceParameter);
 		parameters.add(threshold);
 		parameters.add(filterInOut);
 		
 		return parameters;
-	}
-
-	/* Corresponds to test case 17 from test_specification.xlsx.
-	 * See ProM - Filter Out Low Frequency Traces.
-	 * Threshold 5%.
-	 * 
-	 * Result: original log.
-	 */
-	@Test
-	public void testOutFrequency1() throws Throwable {
-		XLog expected = parseLog("freq-occurence", "test_fout_5.xes");
-		XLog computed = null; // insert filter operation
-
-		assert equalLog(expected, computed);
-	}
-
-	/* Corresponds to test case 18 from test_specification.xlsx.
-	 * See ProM - Filter Out Low Frequency Traces.
-	 * Threshold 25%.
-	 * 
-	 * Result: cases 41, 56, 73, 74, 75, 76.
-	 */
-	@Test
-	public void testOutFrequency2() throws Throwable {
-		XLog expected = parseLog("freq-occurence", "test_fout_25.xes");
-		XLog computed = null; // insert filter operation
-
-		assert equalLog(expected, computed);
 	}
 
 	public static void main(String[] args) {
