@@ -53,7 +53,7 @@
  <!--<<<<<<< Updated upstream
                         <ScrollPane fx:id="filterPanelScroll" fitToWidth="true" hbarPolicy="NEVER" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" prefWidth="245.0" HBox.hgrow="ALWAYS">
 =======-->  
-                        <ScrollPane fx:id="filterPanelScroll" fitToWidth="true" hbarPolicy="NEVER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="390.0" prefWidth="245.0" HBox.hgrow="ALWAYS">
+                        <ScrollPane fx:id="filterPanelScroll" cacheShape="false" fitToWidth="true" hbarPolicy="NEVER" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="390.0" prefWidth="245.0" HBox.hgrow="ALWAYS">
  <!-->>>>>>> Stashed changes, unsure which one to keep-->  
                            <content>
                               <VBox fx:id="filtersVBox" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity">
