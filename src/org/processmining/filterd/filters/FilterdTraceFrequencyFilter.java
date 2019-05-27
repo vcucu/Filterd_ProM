@@ -111,8 +111,8 @@ public class FilterdTraceFrequencyFilter extends Filter {
 			// Get the percentages the user wants
 			// E.g. [40, 60] means the user wants the traces from 40% until 60% of the log
 			// ordered by frequency.
-			lowThreshold = (thresholdParameters.getOptionsPair().get(0).intValue() * clonedLog.size()) / 100;
-			highThreshold = (thresholdParameters.getOptionsPair().get(1).intValue() * clonedLog.size()) / 100;
+			lowThreshold = (thresholdParameters.getChosenPair().get(0).intValue() * clonedLog.size()) / 100;
+			highThreshold = (thresholdParameters.getChosenPair().get(1).intValue() * clonedLog.size()) / 100;
 			
 			/// Calculate which number of trace occurrence represents 
 			/// with the percentage of the lower threshold.
@@ -126,7 +126,7 @@ public class FilterdTraceFrequencyFilter extends Filter {
 			 * counted so far make up for X% of the log, 
 			 * where X = thresholdParameters.getOptionsPair().get(0).
 			 */
-			lowThreshold = (index == -1 ? 0 : occurrences.get(index)) + 1;
+			lowThreshold = (index == -1 ? 0 : occurrences.get(index));
 			/*
 			 * If we take all traces that occur fewer than threshold times, 
 			 * we cover at least X% of the log.
@@ -151,7 +151,9 @@ public class FilterdTraceFrequencyFilter extends Filter {
 			 * cover more than X% if the log, 
 			 * where X = thresholdParameters.getOptionsPair().get(1).
 			 */
-			highThreshold = occurrences.get(index);
+			highThreshold = (index == -1 ? 0 : occurrences.get(index));
+			
+			
 			/*
 			 * If we take all traces that occur at least as many times as threshold
 			 * times, we cover at least X% of the log.
