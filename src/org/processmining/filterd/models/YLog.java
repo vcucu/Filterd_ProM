@@ -4,26 +4,42 @@ import org.deckfour.xes.model.XLog;
 
 public class YLog {
 	
-	private final XLog log;
+	private XLog log;
 	private String name;	// Name of the XLog (for visualization
-	private final boolean isOutput;	// Is the XLog the output of some cell or filter?
+	private boolean isOutput;	// Is the XLog the output of some cell or filter?
 	private int outputOf;	// Number of the cell/filter that generated the XLog
+	private int id;
 	
-	public YLog(org.deckfour.xes.model.XLog log, String name) {
-		this.log = log;
+//	public YLog(org.deckfour.xes.model.XLog log, String name) {
+//		this.log = log;
+//		this.name = name;
+//		this.isOutput = false;
+//	}
+//	
+//	public YLog(org.deckfour.xes.model.XLog log, String name, int outputOf) {
+//		this.log = log;
+//		this.name = name;
+//		this.isOutput = true;
+//		this.outputOf = outputOf;
+//	}
+	
+	public YLog(int id, String name) {
+		this.id = id;
 		this.name = name;
-		this.isOutput = false;
 	}
 	
-	public YLog(org.deckfour.xes.model.XLog log, String name, int outputOf) {
-		this.log = log;
+	public YLog(int id, String name, XLog log) {
+		this.id = id;
 		this.name = name;
-		this.isOutput = true;
-		this.outputOf = outputOf;
+		this.log = log;
 	}
 
 	public org.deckfour.xes.model.XLog get() {
 		return log;
+	}
+	
+	public void setLog(XLog log) {
+		this.log = log;
 	}
 	
 	public void setName(String name) {

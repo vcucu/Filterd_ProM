@@ -18,6 +18,8 @@ import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
 
 public class Toolbox {
+	
+	private static int id = -1; // first ID will be 0
 
 	public static String getType(XAttribute attribute) {
 		String type = attribute.getClass().getSimpleName();
@@ -227,6 +229,11 @@ public class Toolbox {
 		}
 		
 		return true;
+	}
+	
+	public static int getNextId() {
+		id++;
+		return id;
 	}
 
 }

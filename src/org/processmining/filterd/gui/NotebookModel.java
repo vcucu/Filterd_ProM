@@ -2,6 +2,7 @@ package org.processmining.filterd.gui;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.deckfour.xes.model.XLog;
 import org.processmining.contexts.uitopia.UIContext;
@@ -9,6 +10,7 @@ import org.processmining.contexts.uitopia.UIPluginContext;
 import org.processmining.contexts.uitopia.hub.ProMResourceManager;
 import org.processmining.contexts.uitopia.hub.ProMViewManager;
 import org.processmining.filterd.models.YLog;
+import org.processmining.filterd.tools.Toolbox;
 import org.processmining.framework.plugin.ProMCanceller;
 
 import javafx.collections.FXCollections;
@@ -54,7 +56,7 @@ public class NotebookModel {
 	 */
 	public NotebookModel(UIPluginContext context, XLog log, ProMCanceller canceller) {
 		this.promContext = context;
-		this.initialInput = new YLog(log, "Initial input");
+		this.initialInput = new YLog(Toolbox.getNextId(), "Initial input", log);
 		this.promCanceller = canceller; 
 		this.cells = FXCollections.observableArrayList();
 
@@ -249,7 +251,7 @@ public class NotebookModel {
 	public List<YLog> getOutputLogsTill(int index) {
 		List<YLog> logs = new ArrayList<>();
 		logs.add(initialInput);
-		if (! (index >= getCells().size() || index < 0)) {
+		if (index >= 0 && index < getCells().size() + 1) {
 			for (int i = 0; i < index; i++) {
 				CellModel gCell = getCells().get(i);
 				if (getCells().get(i) instanceof ComputationCellModel) {
@@ -259,6 +261,17 @@ public class NotebookModel {
 			}
 		}
 		return logs;
+	}
+	
+	public void compute() {
+		List<ComputationCellModel> computeList = cells
+				.stream()
+				.filter(c -> c instanceof ComputationCellModel) // use only computation cells
+				.map(c -> (ComputationCellModel) c) // cast to computation cell model
+				.collect(Collectors.toList()); // transform steam to list
+		for(ComputationCellModel cellModel : computeList) {
+			cellModel.compute();
+		}
 	}
 	
 	

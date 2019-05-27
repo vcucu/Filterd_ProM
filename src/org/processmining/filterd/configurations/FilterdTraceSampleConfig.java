@@ -52,6 +52,9 @@ public class FilterdTraceSampleConfig extends FilterdAbstractConfig {
 	public boolean checkValidity(XLog log) {
 		// The log is valid for this configuration 
 		// if its size is bigger than the sample size
+		if(parameters == null) {
+			return true;
+		}
 		return log.size() >= ((ParameterValueFromRange<Integer>)
 				(parameters.get(0))).getChosen();
 	}

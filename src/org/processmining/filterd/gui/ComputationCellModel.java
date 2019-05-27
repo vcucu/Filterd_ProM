@@ -7,10 +7,6 @@ import java.util.Set;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 
-import org.deckfour.uitopia.api.model.Author;
-import org.deckfour.uitopia.api.model.Resource;
-import org.deckfour.uitopia.api.model.ResourceType;
-import org.deckfour.uitopia.api.model.View;
 import org.deckfour.uitopia.api.model.ViewType;
 import org.deckfour.xes.model.XLog;
 import org.processmining.contexts.uitopia.UIPluginContext;
@@ -20,6 +16,7 @@ import org.processmining.contexts.uitopia.hub.ProMResourceManager;
 import org.processmining.contexts.uitopia.hub.ProMViewManager;
 import org.processmining.filterd.models.YLog;
 import org.processmining.filterd.plugins.FilterdVisualizer;
+import org.processmining.filterd.tools.Toolbox;
 import org.processmining.framework.plugin.PluginParameterBinding;
 import org.processmining.framework.plugin.ProMCanceller;
 import org.processmining.framework.plugin.annotations.Plugin;
@@ -34,18 +31,18 @@ import javafx.util.Callback;
 public class ComputationCellModel extends CellModel {
 
 	private ProMCanceller canceller;
-	private XLog log;
+	private YLog inputLog;
 	private List<YLog> inputLogs;
 	private List<YLog> outputLogs;
 	private ObservableList<FilterButtonModel> filters;
 	private ArrayList<FilterButtonController> filterControllers;
-
 
 	public ComputationCellModel(UIPluginContext context, ProMCanceller canceller, List<YLog> eventLogs) {
 			super(context);
 			this.canceller = canceller;
 			this.inputLogs = eventLogs;
 			this.outputLogs = new ArrayList<>();
+			outputLogs.add(new YLog(Toolbox.getNextId(), getCellName() + " output log"));
 			
 			filterControllers = new ArrayList<>();
 
@@ -85,15 +82,15 @@ public class ComputationCellModel extends CellModel {
 		this.filterControllers.remove(controller);
 	}
 
-	public void setXLog(XLog log) {
+	public void setInputLog(YLog log) {
 		if(log == null) {
 			throw new IllegalArgumentException("Log cannot be null!");
 		}
-		this.log = log;
+		this.inputLog = log;
 	}
 	
-    public XLog getInputLog() {
-    	return log;
+    public YLog getInputLog() {
+    	return this.inputLog;
     }
 
 	public void setInputLogs(List<YLog> eventLogs) {
@@ -129,7 +126,7 @@ public class ComputationCellModel extends CellModel {
 		ProMViewManager vm = ProMViewManager.initialize(context.getGlobalContext()); // Get current view manager
 		ProMResourceManager rm = ProMResourceManager.initialize(context.getGlobalContext()); // Get current resource manager
 		// Get the possible visualizers for the input event log.
-		List<ViewType> logViewTypes = vm.getViewTypes(rm.getResourceForInstance(log));
+		List<ViewType> logViewTypes = vm.getViewTypes(rm.getResourceForInstance(inputLog.get()));
 		// Add all visualizer (except this one).
 		for (ViewType type : logViewTypes) {
 			if (!type.getTypeName().equals(FilterdVisualizer.NAME)) {
@@ -144,9 +141,9 @@ public class ComputationCellModel extends CellModel {
     	UIPluginContext context = getContext();
 		// Get all log visualizers.
 		Set<Pair<Integer, PluginParameterBinding>> logVisualizers = PluginManagerImpl.getInstance().find(
-				Visualizer.class, JComponent.class, context.getPluginContextType(), true, false, false, log.getClass());
+				Visualizer.class, JComponent.class, context.getPluginContextType(), true, false, false, inputLog.get().getClass());
 		logVisualizers.addAll(PluginManagerImpl.getInstance().find(Visualizer.class, JComponent.class,
-				context.getPluginContextType(), true, false, false, log.getClass(), canceller.getClass()));
+				context.getPluginContextType(), true, false, false, inputLog.get().getClass(), canceller.getClass()));
 		// Check all log visualizers for the visualizer name.
 		for (Pair<Integer, PluginParameterBinding> logVisualizer : logVisualizers) {
 			// Get the visualizer name.
@@ -172,7 +169,7 @@ public class ComputationCellModel extends CellModel {
 						// Let the user know which plug-in we're invoking. This name should match the name of the plug-in.
 						System.out.println("[Visualizerd] Calling plug-in " + pluginName + " w/ canceller to visualize log");
 						return context.tryToFindOrConstructFirstNamedObject(JComponent.class, pluginName, null, null,
-								log, new ProMCanceller() {
+								inputLog.get(), new ProMCanceller() {
 									public boolean isCancelled() {
 										// TODO Auto-generated method stub
 										return false;
@@ -181,7 +178,7 @@ public class ComputationCellModel extends CellModel {
 						// Let the user know which plug-in we're invoking. This name should match the name of the plug-in.
 						System.out.println("[Visualizerd] Calling plug-in " + pluginName + " w/o canceller to visualize log");
 						return context.tryToFindOrConstructFirstNamedObject(JComponent.class, pluginName, null, null,
-								log);
+								inputLog.get());
 					}
 				} catch (Exception ex) {
 					// Message if visualizer fails for whatever reason.
@@ -192,5 +189,25 @@ public class ComputationCellModel extends CellModel {
 		// If the visualizer could not be found, show some text.
 		return new JLabel("Visualizer " + type.getTypeName() + " could not be found.");
 	}
-
+    
+    public void compute() {
+    	XLog inputOutput = this.inputLog.get();
+    	if(inputOutput == null) {
+    		throw new IllegalStateException("Input log is null. "
+    				+ "Cell has been requested to be computed, but its upstream cells have not been computed yet.");
+    	}
+    	for(FilterButtonModel filter : filters) {
+    		try {
+    			filter.compute();
+    			inputOutput = filter.getOutputLog().get();
+    		} catch(InvalidConfigurationException e) {
+    			FilterButtonModel model = e.getFilterButtonModel();
+    			FilterButtonController controller = filterControllers.get(model.getIndex());
+    			// TODO: set controller as invalid
+    		} catch(Exception e) {
+    			// if any other exception occurs, throw it
+    			throw e;
+    		}
+    	}
+    }
 }

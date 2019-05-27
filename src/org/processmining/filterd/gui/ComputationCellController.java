@@ -8,9 +8,12 @@ import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 
 import org.deckfour.uitopia.api.model.ViewType;
-import org.deckfour.xes.model.XLog;
 import org.processmining.filterd.configurations.FilterdAbstractConfig;
+import org.processmining.filterd.configurations.FilterdTraceFrequencyConfig;
+import org.processmining.filterd.configurations.FilterdTraceSampleConfig;
 import org.processmining.filterd.configurations.FilterdTraceStartEventConfig;
+import org.processmining.filterd.filters.FilterdTraceFrequencyFilter;
+import org.processmining.filterd.filters.FilterdTraceSampleFilter;
 import org.processmining.filterd.filters.FilterdTraceStartEventFilter;
 import org.processmining.filterd.gui.ConfigurationModalController.ConfigurationStep;
 import org.processmining.filterd.models.YLog;
@@ -106,7 +109,23 @@ public class ComputationCellController extends CellController {
 		if (!this.isConfigurationModalShown
 				|| this.configurationModal.getConfigurationStep() != ConfigurationStep.ADD_FILTER) {
 			int index = getCellModel().getFilters().size(); // Index of the new cell, so that we can compute which XLogs are available
-			FilterButtonModel filterModel = new FilterButtonModel(index);
+			// each filter's input log is the output log of the previous filter (except for the first filter which always gets the cell's input log)
+			YLog inputLog;
+			if(index == 0) {
+				inputLog = getCellModel().getInputLog();
+				if(inputLog.get() == null) {
+					throw new IllegalStateException("Cannot create filters if the input log for the cell is not selected.");
+				}
+			} else {
+				inputLog = getCellModel().getFilters().get(index - 1).getOutputLog();
+			}
+			FilterButtonModel filterModel = new FilterButtonModel(index, inputLog);
+			// set cell output to be the output of the last filter (the filter we just created)
+			List<YLog> outputLogs = getCellModel().getOutputLogs();
+			outputLogs.clear();
+			YLog outputLog = filterModel.getOutputLog();
+			outputLog.setName(getCellModel().getCellName() + " output log");
+			outputLogs.add(outputLog);
 			getCellModel().addFilterModel(index, filterModel);
 			loadFilter(index, filterModel);
 		}
@@ -266,8 +285,8 @@ public class ComputationCellController extends CellController {
 	@FXML
 	public void setXLog() {
 		ComputationCellModel model = this.getCellModel();
-		XLog eventLog = cmbEventLog.getValue().get();
-		model.setXLog(eventLog);
+		YLog eventLog = cmbEventLog.getValue();
+		model.setInputLog(eventLog);
 		cmbVisualizers.getItems().addAll(model.getVisualizers());
 		cmbVisualizers.getSelectionModel().selectFirst();
 	}
@@ -356,17 +375,35 @@ public class ComputationCellController extends CellController {
 		// Disable visualizer combobox
 		cmbVisualizers.setDisable(true);
 		List<String> filterOptions = new ArrayList<>();
-		filterOptions.add("Filter 1");
-		filterOptions.add("Filter 2");
+		filterOptions.add("Trace Start Event Filter");
+		filterOptions.add("Trace Frequency");
+		filterOptions.add("Trace Sample");
 		configurationModal.showFilterList(filterOptions, new Callback<String, FilterdAbstractConfig>() {
 
 			public FilterdAbstractConfig call(String userSelection) {
-				// TODO: create a new filter config based on the user's selection
 				ComputationCellModel model = (ComputationCellModel) cellModel;
-				FilterdAbstractConfig filterConfig = new FilterdTraceStartEventConfig(model.getInputLog(),
-						new FilterdTraceStartEventFilter());
-				filterButtonModel.setFilterConfig(filterConfig);
+				if(model.getInputLog().get() == null) {
+					throw new IllegalStateException("No input log selected");
+				}
+				FilterdAbstractConfig filterConfig;
+				switch(userSelection) {
+					case "Trace Start Event Filter":
+						filterConfig = new FilterdTraceStartEventConfig(model.getInputLog().get(),
+								new FilterdTraceStartEventFilter());
+						break;
+					case "Trace Frequency":
+						filterConfig = new FilterdTraceFrequencyConfig(model.getInputLog().get(),
+								new FilterdTraceFrequencyFilter());
+						break;
+					case "Trace Sample":
+						filterConfig = new FilterdTraceSampleConfig(model.getInputLog().get(),
+								new FilterdTraceSampleFilter());
+						break;
+					default:
+						throw new IllegalArgumentException("Unsupported filter selected");
+				}
 				// TODO: set cell status to OUT_OF_DATE
+				filterButtonModel.setFilterConfig(filterConfig);
 				return filterConfig;
 			}
 

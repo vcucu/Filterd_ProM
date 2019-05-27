@@ -50,9 +50,6 @@ public class FilterConfigPanelController extends AbstractFilterConfigPanelContro
 				throw new IllegalStateException("Filter configuration is not Referencing, but there is a ParameterOneFromSet that creates a reference.");
 			}
 			FilterdAbstractReferencingConfig casted = (FilterdAbstractReferencingConfig) owner;
-			System.out.print("Chosen is: ");
-			System.out.println(parameter.getChosen());
-			System.out.println(parameter.getChosen() == null);
 			controller = new ParameterOneFromSetExtendedController(parameter.getNameDisplayed(), 
 					parameter.getName(),
 					parameter.getChosen() == null ? parameter.getDefaultChoice() : parameter.getChosen(), 

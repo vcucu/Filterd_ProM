@@ -88,6 +88,9 @@ public class FilterdTraceFrequencyConfig extends FilterdAbstractConfig {
 		// If the threshold type is "occurrence" and the currently selected 
 		// threshold is higher than the log's size, then the configuration is 
 		// not valid for that log.
+		if(parameters == null) {
+			return true;
+		}
 		if (((ParameterOneFromSet) parameters.get(0))
 				.getChosen()
 				.contains("occ")) {

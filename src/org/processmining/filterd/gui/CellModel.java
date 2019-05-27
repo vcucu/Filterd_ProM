@@ -18,6 +18,7 @@ public class CellModel {
 		//adding property to register all change listeners to all bounded properties of the model
 		this.property = new PropertyChangeSupport(this);
 		isHidden = false;
+		setCellName("Cell #" + Integer.toString((int) (Math.random() * 900 + 100))); // assign an initial name to the cell
 	}
 
 	public boolean isHidden() {
