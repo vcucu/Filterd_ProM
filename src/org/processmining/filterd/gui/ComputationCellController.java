@@ -17,7 +17,6 @@ import org.processmining.filterd.models.YLog;
 
 import javafx.collections.ListChangeListener;
 import javafx.embed.swing.SwingNode;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -53,6 +52,7 @@ public class ComputationCellController extends CellController {
 	@FXML private Rectangle expandButton;
 	@FXML private ScrollPane filterPanelScroll;
 	@FXML private VBox cell;
+	@FXML private HBox cellBody;
 	@FXML private Rectangle fullScreenButton;
 	@FXML private Circle playButton;
 	@FXML private MenuButton menuBtnCellSettings;
@@ -81,7 +81,12 @@ public class ComputationCellController extends CellController {
 		// Add listener for the ComboBoxes (workaround JavaFX - SwingNode)
 		Utilities.JFXSwingFix(visualizerPane, cmbEventLog, visualizerSwgNode);
 		Utilities.JFXSwingFix(visualizerPane, cmbVisualizers, visualizerSwgNode);
+		// bind cellBody width to cellContent width so the visualizations scale properly
+		cellBody.maxWidthProperty().bind(controller.getScene().widthProperty().subtract(64));
 	}
+	
+	
+	
 
 	public ComputationCellController(NotebookController controller, ComputationCellModel model) {
 		super(controller, model);

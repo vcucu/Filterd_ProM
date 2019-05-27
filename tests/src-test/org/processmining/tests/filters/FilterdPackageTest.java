@@ -1,4 +1,4 @@
-package org.processmining.tests.filterdpackage;
+package org.processmining.tests.filters;
 import java.io.File;
 import java.util.Collection;
 import java.util.Collections;
@@ -29,8 +29,8 @@ import junit.framework.TestCase;
 
 
 public class FilterdPackageTest extends TestCase {
-	XUniversalParser parser;
-	XLog originalLog; // original log file;
+	public XUniversalParser parser;
+	public XLog originalLog; // original log file;
 
 	public FilterdPackageTest() throws Exception {
 		this.parser = new XUniversalParser();

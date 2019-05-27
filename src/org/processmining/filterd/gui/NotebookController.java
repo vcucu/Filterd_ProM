@@ -5,6 +5,7 @@ import java.io.IOException;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.HBox;
@@ -243,6 +244,14 @@ public class NotebookController {
 	 */
 	public NotebookModel getModel() {
 		return model;
+	}
+	
+	/**
+	 * Returns the scene of the notebook visualizer.
+	 * @return The scene of the notebook visualizer.
+	 */
+	public Scene getScene() {
+		return notebookVisualiser.getScene();
 	}
 
 	/**

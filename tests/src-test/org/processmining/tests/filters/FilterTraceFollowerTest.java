@@ -1,4 +1,4 @@
-package org.processmining.tests.filterdpackage;
+package org.processmining.tests.filters;
 
 import org.deckfour.xes.model.XLog;
 import org.junit.Test;
