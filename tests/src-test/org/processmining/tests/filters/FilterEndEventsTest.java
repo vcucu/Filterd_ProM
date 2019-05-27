@@ -1,4 +1,4 @@
-package org.processmining.tests.filterdpackage;
+package org.processmining.tests.filters;
 
 import java.util.ArrayList;
 import java.util.Collections;
