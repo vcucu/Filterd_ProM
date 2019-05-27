@@ -18,6 +18,10 @@ import org.processmining.filterd.parameters.ParameterYesNo;
 import org.processmining.framework.plugin.PluginContext;
 
 public class FilterdTraceAttrFilter extends Filter {
+	
+	public FilterdTraceAttrFilter() {
+		
+	}
 
 	public XLog filter(PluginContext context, 
 			XLog log, 
