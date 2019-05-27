@@ -23,9 +23,14 @@ public class FilterdTraceFrequencyFilter extends Filter {
 		
 	}
 
-	public XLog filter(PluginContext context, XLog log, List<Parameter> parameters) {
+	public XLog filter(
+			PluginContext context, 
+			XLog log, 
+			List<Parameter> parameters
+			) {
 				
-		//clone input log, since ProM documentation says filters should not change input logs
+		// Clone input log, since ProM documentation says filters should not 
+		// change input logs
 		XLog clonedLog = (XLog) log.clone();
 		
 		
@@ -33,10 +38,13 @@ public class FilterdTraceFrequencyFilter extends Filter {
 		 * Map from XTrace -> List<String>.
 		 * The trace to the the class identity of every event in that trace.
 		 * Map from List<String> -> Integer.
-		 * The class identity of every event in that trace to the occurrence of every trace.
+		 * The class identity of every event in that trace to the occurrence of 
+		 * every trace.
 		 */
-		final Map<List<String>, Integer> traceOccurrenceMap = new HashMap<List<String>, Integer>();
-		final Map<XTrace, List<String>> traceActivitiesMap = new HashMap<XTrace, List<String>>();
+		final Map<List<String>, Integer> traceOccurrenceMap = 
+				new HashMap<List<String>, Integer>();
+		final Map<XTrace, List<String>> traceActivitiesMap = 
+				new HashMap<XTrace, List<String>>();
 		
 		// Loop over every trace in the log.
 		for (XTrace trace : clonedLog) {
@@ -46,7 +54,10 @@ public class FilterdTraceFrequencyFilter extends Filter {
 			
 			// Loop over every event in this trace.
 			for (XEvent event : trace) {
-				activities.add(log.getClassifiers().get(0).getClassIdentity(event));
+				activities
+				.add(
+						log.getClassifiers().get(0).getClassIdentity(event)
+					);
 			}
 			
 			// Add it to the trace -> class identity mapping.
@@ -55,7 +66,8 @@ public class FilterdTraceFrequencyFilter extends Filter {
 			// Count the occurrences of every trace
 			// and add it to the class identity -> occurrences mapping.
 			if (traceOccurrenceMap.keySet().contains(activities)) {
-				traceOccurrenceMap.put(activities, traceOccurrenceMap.get(activities) + 1);
+				traceOccurrenceMap
+				.put(activities, traceOccurrenceMap.get(activities) + 1);
 			} else {
 				traceOccurrenceMap.put(activities, 1);
 			}
@@ -63,7 +75,8 @@ public class FilterdTraceFrequencyFilter extends Filter {
 		}
 		
 		// Get the occurrences of every trace variant.
-		List<Integer> occurrences = new ArrayList<Integer>(traceOccurrenceMap.values());
+		List<Integer> occurrences = 
+				new ArrayList<Integer>(traceOccurrenceMap.values());
 		Collections.sort(occurrences);
 		
 		// Get parameters set by the user in the configuration panel.
@@ -111,8 +124,14 @@ public class FilterdTraceFrequencyFilter extends Filter {
 			// Get the percentages the user wants
 			// E.g. [40, 60] means the user wants the traces from 40% until 60% of the log
 			// ordered by frequency.
-			lowThreshold = (thresholdParameters.getChosenPair().get(0).intValue() * clonedLog.size()) / 100;
-			highThreshold = (thresholdParameters.getChosenPair().get(1).intValue() * clonedLog.size()) / 100;
+			lowThreshold = (thresholdParameters
+					.getChosenPair()
+					.get(0)
+					.intValue() * clonedLog.size()) / 100;
+			highThreshold = (thresholdParameters
+					.getChosenPair()
+					.get(1)
+					.intValue() * clonedLog.size()) / 100;
 			
 			/// Calculate which number of trace occurrence represents 
 			/// with the percentage of the lower threshold.
@@ -134,7 +153,8 @@ public class FilterdTraceFrequencyFilter extends Filter {
 			
 			if (lowThreshold == occurrences.get(occurrences.size() - 1) + 1) {
 				/*
-				 * We're about to remove all traces. That seems to be undesirable.
+				 * We're about to remove all traces. That seems to be 
+				 * undesirable.
 				 */
 				lowThreshold--;
 			}
@@ -147,7 +167,8 @@ public class FilterdTraceFrequencyFilter extends Filter {
 				sum += occurrences.get(++index);
 			}
 			/*
-			 * The 'traces' occurrences[index]...occurrences[occurrences.size()-1]
+			 * The 'traces' 
+			 * occurrences[index]...occurrences[occurrences.size()-1]
 			 * cover more than X% if the log, 
 			 * where X = thresholdParameters.getOptionsPair().get(1).
 			 */
@@ -155,12 +176,13 @@ public class FilterdTraceFrequencyFilter extends Filter {
 			
 			
 			/*
-			 * If we take all traces that occur at least as many times as threshold
-			 * times, we cover at least X% of the log.
+			 * If we take all traces that occur at least as many times as 
+			 * threshold times, we cover at least X% of the log.
 			 */
 			if (highThreshold == occurrences.get(occurrences.size() - 1) + 1) {
 				/*
-				 * We're about to remove all traces. That seems to be undesirable.
+				 * We're about to remove all traces. That seems to be 
+				 * undesirable.
 				 */
 				highThreshold--;
 			}
