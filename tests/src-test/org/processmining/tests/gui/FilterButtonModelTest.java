@@ -5,6 +5,7 @@ import org.processmining.filterd.configurations.FilterdAbstractConfig;
 import org.processmining.filterd.configurations.FilterdTraceStartEventConfig;
 import org.processmining.filterd.filters.FilterdTraceStartEventFilter;
 import org.processmining.filterd.gui.FilterButtonModel;
+import org.processmining.filterd.models.YLog;
 import org.processmining.tests.filters.FilterdPackageTest;
 
 import javafx.beans.property.BooleanProperty;
@@ -20,8 +21,10 @@ public class FilterButtonModelTest extends FilterdPackageTest {
 
 	@Test
 	public void testNewFilterButtonModel() throws Throwable {
+		// Create new YLog
+		YLog initialLog = new YLog(0, "Original Log", originalLog);
 		// Create new filter button instance
-		FilterButtonModel filter = new FilterButtonModel(0);
+		FilterButtonModel filter = new FilterButtonModel(0, initialLog);
 		// Check the filter button was created 
 		assertTrue(filter instanceof FilterButtonModel);
 		// Check the filter button is not null
@@ -36,8 +39,10 @@ public class FilterButtonModelTest extends FilterdPackageTest {
 	
 	@Test
 	public void testNameProperty() {
+		// Create new YLog
+		YLog initialLog = new YLog(0, "Original Log", originalLog);
 		// Create new filter button instance
-		FilterButtonModel filter = new FilterButtonModel(0);
+		FilterButtonModel filter = new FilterButtonModel(0, initialLog);
 		// Set a new filter button name
 		filter.setName("Filterd");
 		// Get the new filter button name
@@ -50,8 +55,10 @@ public class FilterButtonModelTest extends FilterdPackageTest {
 	
 	@Test
 	public void testIndexProperty() {
+		// Create new YLog
+		YLog initialLog = new YLog(0, "Original Log", originalLog);
 		// Create new filter button instance
-		FilterButtonModel filter = new FilterButtonModel(0);
+		FilterButtonModel filter = new FilterButtonModel(0, initialLog);
 		// Set a new filter button index
 		filter.setIndex(10);
 		// Get the filter button index
@@ -64,8 +71,10 @@ public class FilterButtonModelTest extends FilterdPackageTest {
 	
 	@Test
 	public void testSelectedProperty() {
+		// Create new YLog
+		YLog initialLog = new YLog(0, "Original Log", originalLog);
 		// Create new filter button instance
-		FilterButtonModel filter = new FilterButtonModel(0);
+		FilterButtonModel filter = new FilterButtonModel(0, initialLog);
 		// Set a new filter button selected variable
 		filter.setSelected(true);
 		// Get the filter button selected variable
@@ -78,8 +87,10 @@ public class FilterButtonModelTest extends FilterdPackageTest {
 	
 	@Test
 	public void testFilterButtonConfig() {
+		// Create new YLog
+		YLog initialLog = new YLog(0, "Original Log", originalLog);
 		// Create new filter button instance
-		FilterButtonModel filter = new FilterButtonModel(0);
+		FilterButtonModel filter = new FilterButtonModel(0, initialLog);
 		// Create new abstract filter configuration
 		FilterdAbstractConfig config = new FilterdTraceStartEventConfig(originalLog,
 				new FilterdTraceStartEventFilter());

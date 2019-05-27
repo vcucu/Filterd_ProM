@@ -22,7 +22,8 @@ public class ComputationCellModelTest extends FilterdPackageTest {
 	public void testNewComputationCellModel() {
 		// Create new list of input logs for the computation cell
 		List<YLog> logs = new ArrayList<>();
-		YLog initialLog = new YLog(originalLog, "Original Log");
+		// Create new YLog
+		YLog initialLog = new YLog(0, "Original Log", originalLog);
 		logs.add(initialLog);
 		// Create new computation cell model instance
 		ComputationCellModel cell = new ComputationCellModel(null, null, logs);
@@ -33,16 +34,18 @@ public class ComputationCellModelTest extends FilterdPackageTest {
 		// Check the list of input logs was properly initialized
 		assertTrue(logs.equals(inputLogs));
 		// Check the output list is empty
-		assertTrue(cell.getOutputLogs().equals(new ArrayList<>()));
+		assertEquals(cell.getOutputLogs().size(), 1);
 	}
 	
 	@Test
 	public void testFiltersList() {
 		// Create new computation cell model instance
 		ComputationCellModel cell = new ComputationCellModel(null, null, new ArrayList<>());
+		// Create new YLog
+		YLog initialLog = new YLog(0, "Original Log", originalLog);
 		
 		// Create new filter button model (to be added to the computation cell filter panel)
-		FilterButtonModel model = new FilterButtonModel(0);
+		FilterButtonModel model = new FilterButtonModel(0, initialLog);
 		
 		// Add model to the filter models list
 		cell.addFilterModel(0, model);
@@ -60,9 +63,11 @@ public class ComputationCellModelTest extends FilterdPackageTest {
 	public void testFilterControllerList() {
 		// Create new computation cell model instance
 		ComputationCellModel cell = new ComputationCellModel(null, null, new ArrayList<>());
+		// Create new YLog
+		YLog initialLog = new YLog(0, "Original Log", originalLog);
 		
 		// Create new filter button model (to be added to the computation cell filter panel)
-		FilterButtonModel model = new FilterButtonModel(0);
+		FilterButtonModel model = new FilterButtonModel(0, initialLog);
 		FilterButtonController controller = new FilterButtonController(null, model);
 		
 		// Add model to the filter models list
@@ -81,17 +86,20 @@ public class ComputationCellModelTest extends FilterdPackageTest {
 	public void testXLog() {
 		// Create new computation cell model
 		ComputationCellModel cell = new ComputationCellModel(null, null, new ArrayList<>());
+		// Create new YLog
+		YLog initialLog = new YLog(0, "Original Log", originalLog);
 		// Set a new new log for the cell
-		cell.setXLog(originalLog);
+		cell.setInputLog(initialLog);
 		// Check that the new log was properly set
-		assertTrue(equalLog(originalLog, cell.getInputLog()));
+		assertTrue(equalLog(originalLog, cell.getInputLog().get()));
 	}
 	
 	@Test
 	public void testInputLogs() {
 		// Create new list of input logs for the computation cell
 		List<YLog> logs = new ArrayList<>();
-		YLog initialLog = new YLog(originalLog, "Original Log");
+		// Create new YLog
+		YLog initialLog = new YLog(0, "Original Log", originalLog);
 		logs.add(initialLog);
 		// Create new computation cell model instance
 		ComputationCellModel cell = new ComputationCellModel(null, null, logs);
@@ -107,7 +115,8 @@ public class ComputationCellModelTest extends FilterdPackageTest {
 	public void testOutputLogs() {
 		// Create new list of input logs for the computation cell
 		List<YLog> logs = new ArrayList<>();
-		YLog initialLog = new YLog(originalLog, "Original Log");
+		// Create new YLog
+		YLog initialLog = new YLog(0, "Original Log", originalLog);
 		logs.add(initialLog);
 		// Create new computation cell model instance
 		ComputationCellModel cell = new ComputationCellModel(null, null, logs);
@@ -123,10 +132,12 @@ public class ComputationCellModelTest extends FilterdPackageTest {
 	public void testSelectFilterButton() {
 		// Create new computation cell model instance
 		ComputationCellModel cell = new ComputationCellModel(null, null, new ArrayList<>());
+		// Create new YLog
+		YLog initialLog = new YLog(0, "Original Log", originalLog);
 		
 		// Create new filter button models (to be added to the computation cell filter panel)
-		FilterButtonModel model0 = new FilterButtonModel(0);
-		FilterButtonModel model1 = new FilterButtonModel(1);
+		FilterButtonModel model0 = new FilterButtonModel(0, initialLog);
+		FilterButtonModel model1 = new FilterButtonModel(1, initialLog);
 		
 		// Add models to the filter models list
 		cell.addFilterModel(0, model0);
@@ -155,7 +166,9 @@ public class ComputationCellModelTest extends FilterdPackageTest {
 		try {
 			// Create new computation cell model instance
 			ComputationCellModel cell = new ComputationCellModel(null, null, new ArrayList<>());
-			cell.setXLog(originalLog);
+			// Create new YLog
+			YLog initialLog = new YLog(0, "Original Log", originalLog);
+			cell.setInputLog(initialLog);
 			List<ViewType> visualizers = cell.getVisualizers();
 			fail("NullPointerException was NOT thrown!");
 		} catch (Throwable expected) {
