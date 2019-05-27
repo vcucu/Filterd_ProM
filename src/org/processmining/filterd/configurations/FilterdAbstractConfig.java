@@ -1,13 +1,8 @@
 package org.processmining.filterd.configurations;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.deckfour.xes.classification.XEventClassifier;
 import org.deckfour.xes.extension.XExtension;
-import org.deckfour.xes.info.XLogInfo;
-import org.deckfour.xes.info.impl.XLogInfoImpl;
-import org.deckfour.xes.model.XAttribute;
 import org.deckfour.xes.model.XLog;
 import org.processmining.filterd.filters.Filter;
 import org.processmining.filterd.gui.AbstractFilterConfigPanelController;
@@ -36,8 +31,6 @@ public abstract class FilterdAbstractConfig {
 	protected boolean isValid;
 	protected XEventClassifier classifier;
 	protected List<XExtension> standardExtensions;
-
-	protected List<XEventClassifier> complexClassifiers; // classifiers which are based on two or more attributes
 	protected boolean isAttribute; // checks whether selected string is attribute or complex classifier
 
 	public FilterdAbstractConfig(XLog log, Filter filterType ) {
@@ -66,55 +59,7 @@ public abstract class FilterdAbstractConfig {
 	public XLog getLog() {
 		return log;
 	}
-	/**
-	 * Computes the list of global attributes of the log events
-	 * @param log the log to be interrogated
-	 * @return the list of names of the events global attributes
-	 */
-	public List<String> computeGlobalAttributes(XLog log) {
-		List<String> globalAttr = new ArrayList<>();
-		if(log.getGlobalEventAttributes() != null) {
-			for (XAttribute attribute : log.getGlobalEventAttributes()) {
-				globalAttr.add(attribute.getKey());
-			}
-		}
-		return globalAttr;
-	}
 	
-	
-	/**
-	 * Computes the list of all attributes of all events in the log
-	 * @param log the log to be interrogated
-	 * @return the list of names of the events' attributes
-	 */
-	public List<String> computeAttributes(XLog log) {
-		XLogInfo logInfo = XLogInfoImpl.create(log);
-		List<String> attributes = new ArrayList<>();
-		Collection<String> attributes_collection =  logInfo.getEventAttributeInfo().getAttributeKeys();	
-		attributes.addAll(attributes_collection);
-		return attributes;
-	}
-	
-	/**
-	 * Computes the list of complex classifiers for the current log.
-	 * They are computed both as a list of strings as well as a list of XEventClassifiers.
-	 * @param log the log to be interrogated
-	 * @return the list of names of the complex classifiers
-	 */
-	public List<String> computeComplexClassifiers(XLog log) {
-		List<String> classifiers = new ArrayList<>();
-		XLogInfo logInfo = XLogInfoImpl.create(log);
-		Collection<XEventClassifier> compatibleClassifiers = logInfo.getEventClassifiers();
-		for (XEventClassifier c : compatibleClassifiers) {
-			String[] usedAttributes = c.getDefiningAttributeKeys();
-			if (usedAttributes.length > 1) {
-				classifiers.add(c.name());
-				complexClassifiers.add(c);
-			}
-		}
-		
-		return classifiers;
-	}
 	
     /**
      * Setter for the {@log} attribute.

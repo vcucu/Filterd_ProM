@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.deckfour.xes.classification.XEventClassifier;
 import org.deckfour.xes.model.XLog;
 import org.processmining.filterd.filters.Filter;
 import org.processmining.filterd.gui.AbstractFilterConfigPanelController;
@@ -14,6 +15,7 @@ import org.processmining.filterd.parameters.ParameterRangeFromRange;
 import org.processmining.filterd.parameters.ParameterText;
 import org.processmining.filterd.parameters.ParameterValueFromRange;
 import org.processmining.filterd.parameters.ParameterYesNo;
+import org.processmining.filterd.tools.Toolbox;
 import org.processmining.filterd.widgets.ParameterController;
 import org.processmining.filterd.widgets.ParameterMultipleFromSetController;
 import org.processmining.filterd.widgets.ParameterOneFromSetController;
@@ -29,12 +31,12 @@ public class FilterdTraceStartEventConfig extends FilterdAbstractReferencingConf
 	public FilterdTraceStartEventConfig(XLog log, Filter filterType) {
 		super(log, filterType);
 		parameters = new ArrayList<Parameter>();
-		complexClassifiers = new ArrayList<>();
+		List<XEventClassifier> complexClassifiers = Toolbox.computeComplexClassifiers(log);
 		
 		 // Get all the events attributes that are passed to the parameter 
-		List<String> attrAndClassifiers = computeAttributes(log);
+		List<String> attrAndClassifiers = Toolbox.computeAttributes(log);
 		//add the complex classifiers to the list of global attributes 
-		attrAndClassifiers.addAll(computeComplexClassifiers(log));
+		attrAndClassifiers.addAll(Toolbox.getClassifiersName(complexClassifiers));
 		
 		// Create attribute parameter, creates reference is true
 		
@@ -127,8 +129,8 @@ public class FilterdTraceStartEventConfig extends FilterdAbstractReferencingConf
 	@Override
 	public boolean checkValidity(XLog candidateLog) {
 		List<String> attrCandidateLog = new ArrayList<>();
-		attrCandidateLog.addAll(computeAttributes(candidateLog));
-		List<String> attrs = computeAttributes(candidateLog);
+		attrCandidateLog.addAll(Toolbox.computeAttributes(candidateLog));
+		List<String> attrs = Toolbox.computeAttributes(candidateLog);
 		// to be changed with the selected attribute	
 		String attr = attrs.get(0);
 		if (!attrCandidateLog.contains(attr)) {

@@ -69,7 +69,7 @@ public class FilterdEventAttrDateConfig extends FilterdAbstractReferenceableConf
 		ParameterOneFromSet selectionType = new ParameterOneFromSet("selectionType",
 				"Select option for filtering", defaultOption, optionList);
 
-		parameters.add(eventHandling);
+		parameters.add(traceHandling);
 		parameters.add(eventHandling);
 		parameters.add(selectionType);
 		parameters.add(range);
