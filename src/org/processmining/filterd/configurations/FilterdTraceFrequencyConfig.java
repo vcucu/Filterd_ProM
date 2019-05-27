@@ -16,7 +16,8 @@ public class FilterdTraceFrequencyConfig extends FilterdAbstractConfig {
 		//initialize the configuration's parameters list
 		parameters = new ArrayList<>();
 		
-		//initialize the threshold type parameter and add it to the parameters list
+		// Initialize the threshold type parameter and add it to the parameters 
+		// list
 		List<String> foOptions = new ArrayList<String>();
 		
 		foOptions.add("frequency");
@@ -27,19 +28,20 @@ public class FilterdTraceFrequencyConfig extends FilterdAbstractConfig {
 						"FreqOcc", 
 						"Threshold type", 
 						"frequency", 
-						foOptions
-		);
+						foOptions);
 		
 		
 		
-		//initialize the threshold options parameter and add it to the parameters list
+		// Initialize the threshold options parameter and add it to the 
+		// parameters list
 		List<Double> thrOptions = new ArrayList<Double>();
 		
 		//since the default option is "frequency", it goes from 1% to 100%
 		thrOptions.add(1d);
 		thrOptions.add(100d);
 		
-		ParameterRangeFromRange<Double> threshold = new ParameterRangeFromRange<Double>(
+		ParameterRangeFromRange<Double> threshold = 
+				new ParameterRangeFromRange<Double>(
 				"threshold",
 				"Threshold",
 				thrOptions,
@@ -48,7 +50,8 @@ public class FilterdTraceFrequencyConfig extends FilterdAbstractConfig {
 		
 		
 		
-		//initialize the filter mode options parameter and add it to the parameters list
+		// Initialize the filter mode options parameter and add it to the 
+		// parameters list
 		List<String> fModeOptions = new ArrayList<String>();
 		
 		fModeOptions.add("in");
@@ -73,20 +76,29 @@ public class FilterdTraceFrequencyConfig extends FilterdAbstractConfig {
 	};
 
 	public FilterConfigPanelController getConfigPanel() {
-		//return a new panel for this configuration with the relevant name and parameters
-		return new FilterConfigPanelController("Filter Trace Frequency Configuration", parameters, this);
+		// Return a new panel for this configuration with the relevant name and 
+		// parameters.
+		return new FilterConfigPanelController(
+				"Filter Trace Frequency Configuration", 
+				parameters, 
+				this);
 	}
 
 	public boolean checkValidity(XLog log) {
-		//if the threshold type is "occurrence" and the currently selected threshold is higher than  
-		//the log's size, then the configuration is not valid for that log
-		if(((ParameterOneFromSet)parameters.get(0)).getChosen().contains("occ") && 
-				 ((ParameterRangeFromRange<Double>)parameters.get(1)).getChosenPair().get(1).intValue() > log.size()) {
+		// If the threshold type is "occurrence" and the currently selected 
+		// threshold is higher than the log's size, then the configuration is 
+		// not valid for that log.
+		if (((ParameterOneFromSet) parameters.get(0))
+				.getChosen()
+				.contains("occ")) {
+			if (((ParameterRangeFromRange<Double>) parameters.get(1))
+				.getChosenPair()
+				.get(1)
+				.intValue() > log.size()) {
 				return false;
+			}
 		}
-		else {
-			return true;
-		}
+		return true;
 	}
 
 }

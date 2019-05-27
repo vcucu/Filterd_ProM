@@ -37,9 +37,25 @@ public class FilterdTraceStartEventCategoricalConfig extends FilterdAbstractRefe
 			}
 		}
 		
+		
+		// Create desiredEvents parameter	
+		ParameterMultipleFromSet desiredEvents = new ParameterMultipleFromSet("desiredEvents",
+				"Select start values", allValues, allValues);
+		
+		// Should you keep empty traces
+		ParameterYesNo traceHandling = new ParameterYesNo("traceHandling", 
+				"Keep empty traces.", false);
+		
+		parameters.add(desiredEvents);
+		parameters.add(traceHandling);
+		
 		// none of the complex classifiers matched the selected values, therefore the 
 		// selected string is a global attribute
 		if (isAttribute) {
+			// should you keep events which do not have the specified attribute
+			ParameterYesNo eventHandling = new ParameterYesNo("eventHandling", 
+					"Keep events if attribute not specified.", false);
+			parameters.add(eventHandling);
 			for (XTrace trace : log) {
 				for (XEvent event : trace) {
 					String value;
@@ -53,18 +69,7 @@ public class FilterdTraceStartEventCategoricalConfig extends FilterdAbstractRefe
 					}
 				}
 			}
-		}		
-				
-		// Create desiredEvents parameter	
-		ParameterMultipleFromSet desiredEvents = new ParameterMultipleFromSet("desiredEvents",
-				"Select start values", allValues, allValues);
-		
-		//Create nullHandling parameter
-		ParameterYesNo nullHandling = new ParameterYesNo("nullHandling", 
-				"Remove if no value provided", true);
-		
-		parameters.add(desiredEvents);
-		parameters.add(nullHandling);
+		}
 	}
 
 	public boolean canPopulate(FilterConfigPanelController component) {

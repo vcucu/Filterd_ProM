@@ -1,7 +1,14 @@
 package org.processmining.tests.filters;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.deckfour.xes.model.XAttributeMap;
 import org.deckfour.xes.model.XLog;
 import org.junit.Test;
+import org.processmining.filterd.filters.FilterdTraceAttrFilter;
+import org.processmining.filterd.parameters.Parameter;
+import org.processmining.filterd.parameters.ParameterOneFromSet;
 
 /* Test cases for validating the Filter on Trace Attributes.
  * Test files xes location: /tests/testfiles/trace-attribute/ */
@@ -22,6 +29,14 @@ public class FilterTraceAttributeTest extends FilterdPackageTest {
 	public void testTraceAttribute1() throws Throwable {
 		XLog expected = parseLog("trace-attribute", "test_trace_attribute_name.xes");
 		XLog computed = null; // insert filter operation
+		
+		FilterdTraceAttrFilter filter = new FilterdTraceAttrFilter();
+		
+		List<Parameter> parameters = getParameters("concept:name");
+		
+		XAttributeMap mapping = originalLog.get(0).getAttributes();
+		
+		computed = filter.filter(null, originalLog, parameters);
 
 		assert equalLog(expected, computed);
 	}
@@ -138,6 +153,31 @@ public class FilterTraceAttributeTest extends FilterdPackageTest {
 		XLog computed = null; // insert filter operation
 
 		assert equalLog(expected, computed);
+	}
+	
+	private List<Parameter> getParameters(
+			String attribute
+			) {
+		
+		// Initialize the configuration's parameters list.
+		List<Parameter> parameters = new ArrayList<>();
+		
+		List<String> attributes = new ArrayList<>();
+		attributes.add(attribute);
+		
+		// Create the parameter for selecting the attribute.
+		ParameterOneFromSet attributeSelector = 
+				new ParameterOneFromSet(
+						"Attribute", 
+						"Select attribute", 
+						attributes.get(0), 
+						attributes);
+		
+		
+		
+		parameters.add(attributeSelector);
+		
+		return parameters;
 	}
 
 	public static void main(String[] args) {
