@@ -32,7 +32,14 @@ public class FilterFrequencyOccurenceTest extends FilterdPackageTest{
 	public void testInFrequency1() throws Throwable {
 		XLog expected = parseLog("freq-occurence", "test_fin_50.xes");
 		XLog computed = null; // insert filter operation
+		
+		FilterdTraceFrequencyFilter filter = new FilterdTraceFrequencyFilter();
+		
+		List<Parameter> parameters = getOccurenceParameters(50d, 100d, "frequency", "in");
+		
+		computed = filter.filter(null, originalLog, parameters);
 
+		assert equalLog(expected, computed);
 		assert equalLog(expected, computed);
 	}
 
