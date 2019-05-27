@@ -276,7 +276,32 @@ public class FilterEventAttributeTest extends FilterdPackageTest {
 	@Test
 	public void testNameRemove() throws Throwable {
 		XLog expected = parseLog("event-attribute", "test_event_name_remove.xes");
-		XLog computed = null; // insert filter operation
+		ArrayList<Parameter> parameters = new ArrayList<>();	
+		List empty = Collections.EMPTY_LIST;
+
+		
+		ParameterOneFromSet selectionType = new ParameterOneFromSet("selectionType", "", "", empty); 
+		selectionType.setChosen("Filter out");
+		parameters.add(selectionType);
+		
+		/* remove empty traces */ 
+		ParameterYesNo traceHandling = new ParameterYesNo("traceHandling", "", true);
+		traceHandling.setChosen(false);
+		parameters.add(traceHandling);
+		
+		ParameterYesNo eventHandling = new ParameterYesNo("eventHandling", "", true);
+		eventHandling.setChosen(false);
+		parameters.add(eventHandling);
+		
+		ParameterMultipleFromSet values = new ParameterMultipleFromSet("desiredValues", "", empty, empty);
+		ArrayList<String> chosen = new ArrayList<>();
+		chosen.add("pack order");
+		values.setChosen(chosen);
+		parameters.add(values);
+		
+		FilterdEventAttrFilter filter = new FilterdEventAttrFilter();
+		filter.setKey("concept:name");
+		XLog computed = filter.filterCategorical(null, originalLog, parameters);
 
 		assert equalLog(expected, computed);
 	}
