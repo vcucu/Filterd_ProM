@@ -84,6 +84,10 @@ public class FilterdEventAttrDateConfig extends FilterdAbstractReferenceableConf
 
 	public boolean checkValidity(XLog log) {
 		ArrayList<LocalDateTime> times = new ArrayList<>();
+		
+		//check whether the parameters haven't been populated yet
+		if(range.getChosenPair().isEmpty()) return true;
+		
 		LocalDateTime lower = Toolbox.synchronizeGMT(range.getChosenPair().get(0));
 		LocalDateTime upper = Toolbox.synchronizeGMT(range.getChosenPair().get(1));
 
