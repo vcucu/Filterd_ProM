@@ -92,8 +92,8 @@ public class FilterdTraceAttrFilter extends Filter {
 				clonedLog = filterCategorical(clonedLog, 
 						(ParameterYesNo) parameters.get(2), 
 						(ParameterOneFromSet) parameters.get(3), 
-						(ParameterOneFromSet) parameters.get(4), 
-						(ParameterMultipleFromSet) parameters.get(5));
+						(ParameterOneFromSet) parameters.get(0), 
+						(ParameterMultipleFromSet) parameters.get(4));
 				break;
 			}
 			case "Numerical": {
@@ -184,10 +184,11 @@ public class FilterdTraceAttrFilter extends Filter {
 					}
 				}
 			//remove the trace if it's not okay
+			
+			}
 			if (!ok) {
 				clonedLog.remove(trace);
 				}
-			}
 		}
 		return clonedLog;
 		

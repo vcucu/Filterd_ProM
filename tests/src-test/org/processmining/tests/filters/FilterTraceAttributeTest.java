@@ -1,6 +1,7 @@
 package org.processmining.tests.filters;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.deckfour.xes.model.XAttributeMap;
@@ -8,7 +9,9 @@ import org.deckfour.xes.model.XLog;
 import org.junit.Test;
 import org.processmining.filterd.filters.FilterdTraceAttrFilter;
 import org.processmining.filterd.parameters.Parameter;
+import org.processmining.filterd.parameters.ParameterMultipleFromSet;
 import org.processmining.filterd.parameters.ParameterOneFromSet;
+import org.processmining.filterd.parameters.ParameterYesNo;
 
 /* Test cases for validating the Filter on Trace Attributes.
  * Test files xes location: /tests/testfiles/trace-attribute/ */
@@ -32,7 +35,11 @@ public class FilterTraceAttributeTest extends FilterdPackageTest {
 		
 		FilterdTraceAttrFilter filter = new FilterdTraceAttrFilter();
 		
-		List<Parameter> parameters = getParameters("concept:name");
+		List<Parameter> parameters = getParametersCategorical("concept:name","Categorical",
+				false,
+				"Mandatory",
+				Arrays.asList("Bob")
+				);
 		
 		XAttributeMap mapping = originalLog.get(0).getAttributes();
 		
@@ -155,8 +162,12 @@ public class FilterTraceAttributeTest extends FilterdPackageTest {
 		assert equalLog(expected, computed);
 	}
 	
-	private List<Parameter> getParameters(
-			String attribute
+	private List<Parameter> getParametersCategorical(
+			String attribute,
+			String attributeType,
+			boolean nullHandling,
+			String selectionType,
+			List<String> chosenValues
 			) {
 		
 		// Initialize the configuration's parameters list.
@@ -173,10 +184,55 @@ public class FilterTraceAttributeTest extends FilterdPackageTest {
 						attributes.get(0), 
 						attributes);
 		
+		attributeSelector.setChosen(attribute);
 		
+		// Create the array list for selecting the type of attribute the user
+				// has selected.
+				List<String> attributeTypeList = new ArrayList<String>();
+				attributeTypeList.add("Categorical");		
+				attributeTypeList.add("Numerical");
+				attributeTypeList.add("Timeframe");
+				attributeTypeList.add("Duration");
+				attributeTypeList.add("Filter on events");
+				
+				// Create the parameter for selecting the type of attribute.
+				ParameterOneFromSet attributeTypeSelector = 
+						new ParameterOneFromSet(
+								"Attribute type", 
+								"Select attribute type", 
+								attributeTypeList.get(0), 
+								attributeTypeList);
+				
+				attributeTypeSelector.setChosen(attributeType);
+			
+				ParameterYesNo nullHandlingParam = new ParameterYesNo("nullHandling",
+						"Null handling:",
+						true);
+				nullHandlingParam.setChosen(nullHandling);
+				List<String> selectionTypeOptions = new ArrayList<>();
+				selectionTypeOptions.add("Mandatory");
+				selectionTypeOptions.add("Forbidden");
+				
+				ParameterOneFromSet selectionTypeParam = new ParameterOneFromSet("selectionType",
+					"Selection type:",
+					"Mandatory",
+					selectionTypeOptions);
+				selectionTypeParam.setChosen(selectionType);
+				
+				ParameterMultipleFromSet desiredValuesParam = new ParameterMultipleFromSet(
+						"desiredValues",
+						"Desired values:",
+						chosenValues,
+						chosenValues
+					);
+				
+				desiredValuesParam.setChosen(chosenValues);
 		
 		parameters.add(attributeSelector);
-		
+		parameters.add(attributeTypeSelector);
+		parameters.add(nullHandlingParam);
+		parameters.add(selectionTypeParam);
+		parameters.add(desiredValuesParam);
 		return parameters;
 	}
 
