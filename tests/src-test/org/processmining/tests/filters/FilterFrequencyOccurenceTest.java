@@ -1,16 +1,20 @@
 package org.processmining.tests.filters;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
 import org.junit.Test;
+import org.processmining.filterd.filters.FilterdEventRateFilter;
 import org.processmining.filterd.filters.FilterdTraceFrequencyFilter;
 import org.processmining.filterd.parameters.Parameter;
+import org.processmining.filterd.parameters.ParameterMultipleFromSet;
 import org.processmining.filterd.parameters.ParameterOneFromSet;
 import org.processmining.filterd.parameters.ParameterRangeFromRange;
+import org.processmining.filterd.parameters.ParameterValueFromRange;
 import org.processmining.filterd.tools.Toolbox;
 
 /* Test cases for validating the Filter on Frequency AND the
@@ -21,6 +25,41 @@ public class FilterFrequencyOccurenceTest extends FilterdPackageTest{
 	
 	public FilterFrequencyOccurenceTest() throws Exception {
 		super();
+	}
+	
+	/*
+	 * Corresponds to test case 12 from test_specification.xlsx
+	 * Threshold =  80
+	 * Rate  = frequency
+	 * Selection type = Filter in
+	 * Result: remove events where pack order is complete/aborted/resume/suspend
+	 */
+	@Test
+	public void testEventRate() throws Throwable {
+		XLog expected = parseLog("freq-occurence", "test_event_rate_80.xes");
+		XLog computed = null;
+		List empty = Collections.EMPTY_LIST;
+		List<Parameter> parameters = new ArrayList<>();
+		
+		ParameterOneFromSet rate = new ParameterOneFromSet("rate", "", "Frequency", empty);
+		ParameterValueFromRange threshold = new ParameterValueFromRange("threshold", "", 80, empty);
+		ParameterOneFromSet selectionType = new 
+				ParameterOneFromSet("selectionType", "", "Filter in", empty);
+		ParameterMultipleFromSet desiredEvents = new 
+				ParameterMultipleFromSet("desiredEvents","", empty, empty);
+		
+		rate.setChosen("Frequency");
+		threshold.setChosen(80);
+		selectionType.setChosen("Filter in");
+		
+		parameters.add(rate);
+		parameters.add(threshold);
+		parameters.add(selectionType);
+		parameters.add(desiredEvents);
+		
+		FilterdEventRateFilter filter = new FilterdEventRateFilter();
+		computed = filter.filter(null, originalLog, parameters);
+		assert equalLog(expected, computed);
 	}
 	
 	/* Corresponds to test case 13 from test_specification.xlsx.
