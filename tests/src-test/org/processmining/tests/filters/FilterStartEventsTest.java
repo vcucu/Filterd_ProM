@@ -17,11 +17,11 @@ import org.processmining.filterd.parameters.ParameterYesNo;
 /* Test cases for validating the Filter on Start Event Attributes.
  * Test files xes location: /tests/testfiles/start-events/ */
 public class FilterStartEventsTest extends FilterdPackageTest{
-	
+
 	public FilterStartEventsTest() throws Exception {
 		super();	
 	}
-	
+
 	/* Corresponds to test case 2 from test_specification.xlsx.
 	 * See ProM - Log on simple Heuristic.
 	 * Selects traces with start event "receive order".
@@ -32,32 +32,38 @@ public class FilterStartEventsTest extends FilterdPackageTest{
 	public void testStartOrder() throws Throwable {
 		XLog expected = parseLog("start-events", "test_start_order.xes");
 		List empty = Collections.EMPTY_LIST;
-		
+
 		/*manually instantiate the filter's parameters*/
 		ArrayList<Parameter> parameters = new ArrayList<>();
-		
+
 		ParameterOneFromSet attribute = new ParameterOneFromSet("attribute", "", "", empty);
 		attribute.setChosen("concept:name");
-		
+
 		ParameterOneFromSet selectionType = new ParameterOneFromSet("selectionType", "", "", empty);
 		selectionType.setChosen("Filter in");
-		
+
 		ParameterMultipleFromSet desiredEvents = new ParameterMultipleFromSet("desiredEvents",
 				"Select start values", empty, empty);
 		List<String> list = new ArrayList<>();
 		list.add("receive order");
 		desiredEvents.setChosen(list);
-			
-		//Create nullHandling parameter
-		ParameterYesNo nullHandling = new ParameterYesNo("nullHandling", 
-				"Remove if no value provided", true);
-		nullHandling.setChosen(true);
-		
+
+		//Create empty events parameter
+		ParameterYesNo eventHandling = new ParameterYesNo("eventHandling", 
+				"", true);
+		eventHandling.setChosen(true);
+
+		//Create empty traces parameter
+		ParameterYesNo traceHandling = new ParameterYesNo("traceHandling", 
+				"empty traces", true);
+		traceHandling.setChosen(true);
+
 		parameters.add(attribute);
 		parameters.add(selectionType);
 		parameters.add(desiredEvents);
-		parameters.add(nullHandling);
-		
+		parameters.add(eventHandling);
+		parameters.add(traceHandling);
+
 		//instantiate the filter class
 		FilterdTraceStartEventFilter filter = new FilterdTraceStartEventFilter();
 		XLog computed = filter.filter(null, originalLog, parameters);	
@@ -77,29 +83,35 @@ public class FilterStartEventsTest extends FilterdPackageTest{
 
 		/*manually instantiate the filter's parameters*/
 		ArrayList<Parameter> parameters = new ArrayList<>();
-		
+
 		ParameterOneFromSet attribute = new ParameterOneFromSet("attribute", "", "", empty);
 		attribute.setChosen("concept:name");
-		
+
 		ParameterOneFromSet selectionType = new ParameterOneFromSet("selectionType", "", "", empty);
 		selectionType.setChosen("Filter in");
-		
+
 		ParameterMultipleFromSet desiredEvents = new ParameterMultipleFromSet("desiredEvents",
 				"Select start values", empty, empty);
 		List<String> list = new ArrayList<>();
 		list.add("receive payment");
 		desiredEvents.setChosen(list);
-			
-		//Create nullHandling parameter
-		ParameterYesNo nullHandling = new ParameterYesNo("nullHandling", 
-				"Remove if no value provided", true);
-		nullHandling.setChosen(true);
-		
+
+		//Create empty events parameter
+		ParameterYesNo eventHandling = new ParameterYesNo("eventHandling", 
+				"", true);
+		eventHandling.setChosen(true);
+
+		//Create empty traces parameter
+		ParameterYesNo traceHandling = new ParameterYesNo("traceHandling", 
+				"empty traces", true);
+		traceHandling.setChosen(true);
+
 		parameters.add(attribute);
 		parameters.add(selectionType);
 		parameters.add(desiredEvents);
-		parameters.add(nullHandling);
-		
+		parameters.add(eventHandling);
+		parameters.add(traceHandling);
+
 		//instantiate filter class
 		FilterdTraceStartEventFilter filter = new FilterdTraceStartEventFilter();
 		XLog computed = filter.filter(null, originalLog, parameters);
@@ -119,9 +131,9 @@ public class FilterStartEventsTest extends FilterdPackageTest{
 
 		assert equalLog(expected, computed);
 	}
-	
+
 	/*========== NOT ADDED IN UTP ============ */
-	
+
 	/*
 	 * eventHandling = TRUE
 	 * traceHandling = TRUE
@@ -134,42 +146,42 @@ public class FilterStartEventsTest extends FilterdPackageTest{
 	public void testStartClassifier_111() throws Throwable{
 		XLog expected = parseLog("start-events", "test_start_event_classifier_111.xes");
 		List empty = Collections.EMPTY_LIST;
-		
+
 		/*manually instantiate the filter's parameters*/
 		ArrayList<Parameter> parameters = new ArrayList<>();
-		
+
 		ParameterOneFromSet attribute = new ParameterOneFromSet("attribute", "", "", empty);
 		attribute.setChosen("MXML Legacy Classifier");
-		
+
 		ParameterYesNo traceHandling = new ParameterYesNo("traceHandling", "", true);
 		traceHandling.setChosen(true);
-		
+
 		ParameterOneFromSet selectionType = new ParameterOneFromSet("selectionType", "", "", empty);
 		selectionType.setChosen("Filter in");
-		
+
 		ParameterMultipleFromSet desiredEvents = new ParameterMultipleFromSet("desiredEvents",
 				"Select start values", empty, empty);
 		List<String> list = new ArrayList<>();
 		list.add("receive order+complete");
 		desiredEvents.setChosen(list);
-			
+
 		//Create nullHandling parameter
 		ParameterYesNo eventHandling = new ParameterYesNo("nullHandling", 
 				"Remove if no value provided", true);
 		eventHandling.setChosen(true);
-		
+
 		parameters.add(attribute);
 		parameters.add(selectionType);
 		parameters.add(desiredEvents);
 		parameters.add(eventHandling);
 		parameters.add(traceHandling);
-		
+
 		//instantiate the filter class
 		FilterdTraceStartEventFilter filter = new FilterdTraceStartEventFilter();
 		XLog computed = filter.filter(null, originalLog, parameters);	
 		assert equalLog(expected, computed);
 	}
-	
+
 	/*
 	 * eventHandling = FALSE
 	 * traceHandling = FALSE
@@ -185,38 +197,38 @@ public class FilterStartEventsTest extends FilterdPackageTest{
 		List<String> oneElement = new ArrayList<>();
 		/*manually instantiate the filter's parameters*/
 		ArrayList<Parameter> parameters = new ArrayList<>();
-		
+
 		ParameterOneFromSet attribute = new ParameterOneFromSet("attribute", "", "", empty);
 		attribute.setChosen("delivery");
-		
+
 		ParameterYesNo traceHandling = new ParameterYesNo("traceHandling", "", false);
 		traceHandling.setChosen(false);
-		
+
 		ParameterOneFromSet selectionType = new ParameterOneFromSet("selectionType", "", "", empty);
 		selectionType.setChosen("Filter out");
-		
+
 		ParameterMultipleFromSet desiredEvents = new ParameterMultipleFromSet("desiredEvents",
 				"Select start values", empty, empty);
 		List<String> list = new ArrayList<>();
 		list.add("432");
 		desiredEvents.setChosen(list);
-			
+
 		//Create nullHandling parameter
 		ParameterYesNo eventHandling = new ParameterYesNo("eventHandling", "", false);
-		eventHandling.setChosen(true);
-		
+		eventHandling.setChosen(false);
+
 		parameters.add(attribute);
 		parameters.add(selectionType);
 		parameters.add(desiredEvents);
 		parameters.add(eventHandling);
 		parameters.add(traceHandling);
-		
+
 		//instantiate the filter class
 		FilterdTraceStartEventFilter filter = new FilterdTraceStartEventFilter();
 		XLog computed = filter.filter(null, originalLog, parameters);	
 		assert equalLog(expected, computed);
 	}
-	
+
 	/*
 	 * eventHandling = FALSE
 	 * traceHandling = FALSE
@@ -232,40 +244,40 @@ public class FilterStartEventsTest extends FilterdPackageTest{
 		List<String> oneElement = new ArrayList<>();
 		/*manually instantiate the filter's parameters*/
 		ArrayList<Parameter> parameters = new ArrayList<>();
-		
+
 		ParameterOneFromSet attribute = new ParameterOneFromSet("attribute", "", "", empty);
 		attribute.setChosen("delivery");
-		
+
 		ParameterYesNo traceHandling = new ParameterYesNo("traceHandling", "", false);
 		traceHandling.setChosen(false);
 
-		
+
 		ParameterOneFromSet selectionType = new ParameterOneFromSet("selectionType", "", "", empty);
 		selectionType.setChosen("Filter in");
-		
+
 		ParameterMultipleFromSet desiredEvents = new ParameterMultipleFromSet("desiredEvents",
 				"Select start values", empty, empty);
 		List<String> list = new ArrayList<>();
 		list.add("432");
 		desiredEvents.setChosen(list);
-			
+
 		//Create nullHandling parameter
 		ParameterYesNo eventHandling = new ParameterYesNo("eventHandling", "", false);
-		eventHandling.setChosen(true);
-		
+		eventHandling.setChosen(false);
+
 		parameters.add(attribute);
 		parameters.add(selectionType);
 		parameters.add(desiredEvents);
 		parameters.add(eventHandling);
 		parameters.add(traceHandling);
-		
+
 		//instantiate the filter class
 		FilterdTraceStartEventFilter filter = new FilterdTraceStartEventFilter();
 		XLog computed = filter.filter(null, originalLog, parameters);	
 		assert equalLog(expected, computed);
 	}
-	
-	
+
+
 	/*
 	 * eventHandling = FALSE
 	 * traceHandling = TRUE
@@ -281,45 +293,45 @@ public class FilterStartEventsTest extends FilterdPackageTest{
 		List<String> oneElement = new ArrayList<>();
 		/*manually instantiate the filter's parameters*/
 		ArrayList<Parameter> parameters = new ArrayList<>();
-		
+
 		ParameterOneFromSet attribute = new ParameterOneFromSet("attribute", "", "", empty);
 		attribute.setChosen("delivery");
-		
+
 		ParameterYesNo traceHandling = new ParameterYesNo("traceHandling", "", true);
 		traceHandling.setChosen(true);
-		
+
 		ParameterOneFromSet selectionType = new ParameterOneFromSet("selectionType", "", "", empty);
 		selectionType.setChosen("Filter out");
-		
+
 		ParameterMultipleFromSet desiredEvents = new ParameterMultipleFromSet("desiredEvents",
 				"Select start values", empty, empty);
 		List<String> list = new ArrayList<>();
 		list.add("432");
 		desiredEvents.setChosen(list);
-			
+
 		//Create nullHandling parameter
 		ParameterYesNo eventHandling = new ParameterYesNo("eventHandling", "", false);
-		eventHandling.setChosen(true);
-		
+		eventHandling.setChosen(false);
+
 		parameters.add(attribute);
 		parameters.add(selectionType);
 		parameters.add(desiredEvents);
 		parameters.add(eventHandling);
 		parameters.add(traceHandling);
-		
+
 		//instantiate the filter class
 		FilterdTraceStartEventFilter filter = new FilterdTraceStartEventFilter();
 		XLog computed = filter.filter(null, originalLog, parameters);	
 		assert equalLog(expected, computed);
 	}
-	
+
 	/*
 	 * eventHandling = FALSE
 	 * traceHandling = TRUE
 	 * selectionType = Filter in
 	 * Selects traces with start event "delivery", value = 423
 	 * 
-	 * Result: original log
+	 * Result: empty log
 	 */
 	@Test
 	public void testStartAttribute_011() throws Throwable{
@@ -328,38 +340,38 @@ public class FilterStartEventsTest extends FilterdPackageTest{
 		List<String> oneElement = new ArrayList<>();
 		/*manually instantiate the filter's parameters*/
 		ArrayList<Parameter> parameters = new ArrayList<>();
-		
+
 		ParameterOneFromSet attribute = new ParameterOneFromSet("attribute", "", "", empty);
 		attribute.setChosen("delivery");
-	
-		
+
+
 		ParameterMultipleFromSet desiredEvents = new ParameterMultipleFromSet("desiredEvents",
 				"Select start values", empty, empty);
 		List<String> list = new ArrayList<>();
 		list.add("432");
 		desiredEvents.setChosen(list);
-			
+
 		//Create nullHandling parameter
 		ParameterYesNo eventHandling = new ParameterYesNo("eventHandling", "", false);
-		eventHandling.setChosen(true);
+		eventHandling.setChosen(false);
 		ParameterYesNo traceHandling = new ParameterYesNo("traceHandling", "", true);
 		traceHandling.setChosen(true);
 
 		ParameterOneFromSet selectionType = new ParameterOneFromSet("selectionType", "", "", empty);
 		selectionType.setChosen("Filter in");
-		
+
 		parameters.add(attribute);
 		parameters.add(selectionType);
 		parameters.add(desiredEvents);
 		parameters.add(eventHandling);
 		parameters.add(traceHandling);
-		
+
 		//instantiate the filter class
 		FilterdTraceStartEventFilter filter = new FilterdTraceStartEventFilter();
 		XLog computed = filter.filter(null, originalLog, parameters);	
 		assert equalLog(expected, computed);
 	}
-	
+
 	/*
 	 * eventHandling = TRUE
 	 * traceHandling = FALSE
@@ -375,17 +387,17 @@ public class FilterStartEventsTest extends FilterdPackageTest{
 		List<String> oneElement = new ArrayList<>();
 		/*manually instantiate the filter's parameters*/
 		ArrayList<Parameter> parameters = new ArrayList<>();
-		
+
 		ParameterOneFromSet attribute = new ParameterOneFromSet("attribute", "", "", empty);
 		attribute.setChosen("delivery");
-	
-		
+
+
 		ParameterMultipleFromSet desiredEvents = new ParameterMultipleFromSet("desiredEvents",
 				"Select start values", empty, empty);
 		List<String> list = new ArrayList<>();
 		list.add("432");
 		desiredEvents.setChosen(list);
-			
+
 		//Create nullHandling parameter
 		ParameterYesNo eventHandling = new ParameterYesNo("eventHandling", "", false);
 		eventHandling.setChosen(true);
@@ -394,20 +406,20 @@ public class FilterStartEventsTest extends FilterdPackageTest{
 
 		ParameterOneFromSet selectionType = new ParameterOneFromSet("selectionType", "", "", empty);
 		selectionType.setChosen("Filter out");
-		
+
 		parameters.add(attribute);
 		parameters.add(selectionType);
 		parameters.add(desiredEvents);
 		parameters.add(eventHandling);
 		parameters.add(traceHandling);
-		
+
 		//instantiate the filter class
 		FilterdTraceStartEventFilter filter = new FilterdTraceStartEventFilter();
 		XLog computed = filter.filter(null, originalLog, parameters);	
 		assert equalLog(expected, computed);
 	}
-	
-	
+
+
 	/*
 	 * eventHandling = TRUE
 	 * traceHandling = TRUE
@@ -423,17 +435,17 @@ public class FilterStartEventsTest extends FilterdPackageTest{
 		List<String> oneElement = new ArrayList<>();
 		/*manually instantiate the filter's parameters*/
 		ArrayList<Parameter> parameters = new ArrayList<>();
-		
+
 		ParameterOneFromSet attribute = new ParameterOneFromSet("attribute", "", "", empty);
 		attribute.setChosen("delivery");
-	
-		
+
+
 		ParameterMultipleFromSet desiredEvents = new ParameterMultipleFromSet("desiredEvents",
 				"Select start values", empty, empty);
 		List<String> list = new ArrayList<>();
 		list.add("432");
 		desiredEvents.setChosen(list);
-			
+
 		//Create nullHandling parameter
 		ParameterYesNo eventHandling = new ParameterYesNo("eventHandling", "", false);
 		eventHandling.setChosen(true);
@@ -442,19 +454,19 @@ public class FilterStartEventsTest extends FilterdPackageTest{
 
 		ParameterOneFromSet selectionType = new ParameterOneFromSet("selectionType", "", "", empty);
 		selectionType.setChosen("Filter out");
-		
+
 		parameters.add(attribute);
 		parameters.add(selectionType);
 		parameters.add(desiredEvents);
 		parameters.add(eventHandling);
 		parameters.add(traceHandling);
-		
+
 		//instantiate the filter class
 		FilterdTraceStartEventFilter filter = new FilterdTraceStartEventFilter();
 		XLog computed = filter.filter(null, originalLog, parameters);	
 		assert equalLog(expected, computed);
 	}
-	
+
 	/*
 	 * eventHandling = TRUE
 	 * traceHandling = FALSE
@@ -470,17 +482,17 @@ public class FilterStartEventsTest extends FilterdPackageTest{
 		List<String> oneElement = new ArrayList<>();
 		/*manually instantiate the filter's parameters*/
 		ArrayList<Parameter> parameters = new ArrayList<>();
-		
+
 		ParameterOneFromSet attribute = new ParameterOneFromSet("attribute", "", "", empty);
 		attribute.setChosen("delivery");
-	
-		
+
+
 		ParameterMultipleFromSet desiredEvents = new ParameterMultipleFromSet("desiredEvents",
 				"Select start values", empty, empty);
 		List<String> list = new ArrayList<>();
 		list.add("432");
 		desiredEvents.setChosen(list);
-			
+
 		//Create nullHandling parameter
 		ParameterYesNo eventHandling = new ParameterYesNo("eventHandling", "", false);
 		eventHandling.setChosen(true);
@@ -489,19 +501,19 @@ public class FilterStartEventsTest extends FilterdPackageTest{
 
 		ParameterOneFromSet selectionType = new ParameterOneFromSet("selectionType", "", "", empty);
 		selectionType.setChosen("Filter in");
-		
+
 		parameters.add(attribute);
 		parameters.add(selectionType);
 		parameters.add(desiredEvents);
 		parameters.add(eventHandling);
 		parameters.add(traceHandling);
-		
+
 		//instantiate the filter class
 		FilterdTraceStartEventFilter filter = new FilterdTraceStartEventFilter();
 		XLog computed = filter.filter(null, originalLog, parameters);	
 		assert equalLog(expected, computed);
 	}
-	
+
 	/*
 	 * eventHandling = TRUE
 	 * traceHandling = TRUE
@@ -517,17 +529,17 @@ public class FilterStartEventsTest extends FilterdPackageTest{
 		List<String> oneElement = new ArrayList<>();
 		/*manually instantiate the filter's parameters*/
 		ArrayList<Parameter> parameters = new ArrayList<>();
-		
+
 		ParameterOneFromSet attribute = new ParameterOneFromSet("attribute", "", "", empty);
 		attribute.setChosen("delivery");
-	
-		
+
+
 		ParameterMultipleFromSet desiredEvents = new ParameterMultipleFromSet("desiredEvents",
 				"Select start values", empty, empty);
 		List<String> list = new ArrayList<>();
 		list.add("432");
 		desiredEvents.setChosen(list);
-			
+
 		//Create nullHandling parameter
 		ParameterYesNo eventHandling = new ParameterYesNo("eventHandling", "", false);
 		eventHandling.setChosen(true);
@@ -536,19 +548,19 @@ public class FilterStartEventsTest extends FilterdPackageTest{
 
 		ParameterOneFromSet selectionType = new ParameterOneFromSet("selectionType", "", "", empty);
 		selectionType.setChosen("Filter in");
-		
+
 		parameters.add(attribute);
 		parameters.add(selectionType);
 		parameters.add(desiredEvents);
 		parameters.add(eventHandling);
 		parameters.add(traceHandling);
-		
+
 		//instantiate the filter class
 		FilterdTraceStartEventFilter filter = new FilterdTraceStartEventFilter();
 		XLog computed = filter.filter(null, originalLog, parameters);	
 		assert equalLog(expected, computed);
 	}
-	
+
 	/*//========== NOT ADDED IN UTP ============ */
 
 	public static void main(String[] args) {

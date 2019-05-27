@@ -18,4 +18,418 @@
 	<classifier name="Event Name" keys="concept:name"/>
 	<classifier name="(Event Name AND Lifecycle transition)" keys="concept:name lifecycle:transition"/>
 	<string key="concept:name" value="Order Process Test Log"/>
+	<trace>
+		<string key="concept:name" value="34"/>
+		<string key="customer" value="X"/>
+		<event>
+			<string key="org:resource" value="System"/>
+			<string key="concept:name" value="receive payment"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2018-12-21T07:23:00.000+01:00"/>
+		</event>
+		<event>
+			<string key="org:resource" value="Diana"/>
+			<string key="concept:name" value="archive"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2018-12-21T07:36:00.000+01:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="35"/>
+		<string key="customer" value="Y"/>
+		<event>
+			<string key="org:resource" value="System"/>
+			<string key="concept:name" value="receive order"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2018-12-20T11:02:00.000+01:00"/>
+		</event>
+		<event>
+			<string key="org:resource" value="Alice"/>
+			<string key="concept:name" value="pack order"/>
+			<string key="lifecycle:transition" value="start"/>
+			<date key="time:timestamp" value="2018-12-20T12:09:00.000+01:00"/>
+		</event>
+		<event>
+			<string key="delivery" value="432"/>
+			<string key="item" value="Walkman"/>
+			<string key="org:resource" value="Bob"/>
+			<string key="concept:name" value="add item"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2018-12-20T12:10:00.000+01:00"/>
+		</event>
+		<event>
+			<string key="delivery" value="432"/>
+			<string key="item" value="Gameboy"/>
+			<string key="org:resource" value="Bob"/>
+			<string key="concept:name" value="add item"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2018-12-20T12:10:00.000+01:00"/>
+		</event>
+		<event>
+			<string key="delivery" value="432"/>
+			<string key="org:resource" value="Charles"/>
+			<string key="concept:name" value="ship parcel"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2018-12-20T12:15:00.000+01:00"/>
+		</event>
+		<event>
+			<string key="org:resource" value="Alice"/>
+			<string key="concept:name" value="pack order"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2018-12-20T16:00:00.000+01:00"/>
+		</event>
+		<event>
+			<string key="org:resource" value="System"/>
+			<string key="concept:name" value="receive payment"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2018-12-22T07:23:00.000+01:00"/>
+		</event>
+		<event>
+			<string key="org:resource" value="Diana"/>
+			<string key="concept:name" value="archive"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2018-12-22T07:24:00.000+01:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="41"/>
+		<string key="customer" value="Z"/>
+		<event>
+			<string key="org:resource" value="Ellen"/>
+			<string key="concept:name" value="receive order"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2018-12-20T11:03:00.000+01:00"/>
+		</event>
+		<event>
+			<string key="org:resource" value="Bob"/>
+			<string key="concept:name" value="pack order"/>
+			<string key="lifecycle:transition" value="start"/>
+			<date key="time:timestamp" value="2018-12-23T23:11:00.000+01:00"/>
+		</event>
+		<event>
+			<string key="delivery" value="514"/>
+			<string key="item" value="VHS Player"/>
+			<string key="org:resource" value="Bob"/>
+			<string key="concept:name" value="add item"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2018-12-23T23:46:00.000+01:00"/>
+		</event>
+		<event>
+			<string key="delivery" value="514"/>
+			<string key="org:resource" value="Ellen"/>
+			<string key="concept:name" value="ship parcel"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2018-12-23T23:49:00.000+01:00"/>
+		</event>
+		<event>
+			<string key="delivery" value="623"/>
+			<string key="item" value="Gameboy"/>
+			<string key="org:resource" value="Bob"/>
+			<string key="concept:name" value="add item"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2018-12-23T23:51:00.000+01:00"/>
+		</event>
+		<event>
+			<string key="delivery" value="514"/>
+			<string key="org:resource" value="Bob"/>
+			<string key="concept:name" value="ship parcel"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2018-12-23T23:59:00.000+01:00"/>
+		</event>
+		<event>
+			<string key="org:resource" value="Alice"/>
+			<string key="concept:name" value="pack order"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2018-12-27T09:01:00.000+01:00"/>
+		</event>
+		<event>
+			<string key="org:resource" value="Alice"/>
+			<string key="concept:name" value="archive"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2018-12-27T09:02:00.000+01:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="56"/>
+		<string key="customer" value="X"/>
+		<event>
+			<string key="org:resource" value="System"/>
+			<string key="concept:name" value="receive order"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2018-12-20T11:04:00.000+01:00"/>
+		</event>
+		<event>
+			<string key="org:resource" value="Bob"/>
+			<string key="concept:name" value="pack order"/>
+			<string key="lifecycle:transition" value="start"/>
+			<date key="time:timestamp" value="2018-12-20T11:12:00.000+01:00"/>
+		</event>
+		<event>
+			<string key="org:resource" value="System"/>
+			<string key="concept:name" value="receive payment"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2018-12-21T09:06:00.000+01:00"/>
+		</event>
+		<event>
+			<string key="delivery" value="623"/>
+			<string key="item" value="Walkman"/>
+			<string key="org:resource" value="Alice"/>
+			<string key="concept:name" value="add item"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2018-12-21T09:17:00.000+01:00"/>
+		</event>
+		<event>
+			<string key="org:resource" value="Charles"/>
+			<string key="concept:name" value="pack order"/>
+			<string key="lifecycle:transition" value="abort"/>
+			<date key="time:timestamp" value="2018-12-21T09:23:00.000+01:00"/>
+		</event>
+		<event>
+			<string key="org:resource" value="Diana"/>
+			<string key="concept:name" value="archive"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2018-12-21T10:15:00.000+01:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="72"/>
+		<string key="customer" value="U"/>
+		<event>
+			<string key="org:resource" value="Charles"/>
+			<string key="concept:name" value="receive order"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2018-12-20T11:05:00.000+01:00"/>
+		</event>
+		<event>
+			<string key="org:resource" value="Alice"/>
+			<string key="concept:name" value="pack order"/>
+			<string key="lifecycle:transition" value="start"/>
+			<date key="time:timestamp" value="2018-12-20T14:05:00.000+01:00"/>
+		</event>
+		<event>
+			<string key="delivery" value="775"/>
+			<string key="item" value="VHS Player"/>
+			<string key="org:resource" value="Alice"/>
+			<string key="concept:name" value="add item"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2018-12-20T14:08:00.000+01:00"/>
+		</event>
+		<event>
+			<string key="org:resource" value="Diana"/>
+			<string key="concept:name" value="pack order"/>
+			<string key="lifecycle:transition" value="suspend"/>
+			<date key="time:timestamp" value="2018-12-20T14:10:00.000+01:00"/>
+		</event>
+		<event>
+			<string key="org:resource" value="Diana"/>
+			<string key="concept:name" value="receive payment"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2018-12-22T03:36:00.000+01:00"/>
+		</event>
+		<event>
+			<string key="org:resource" value="Alice"/>
+			<string key="concept:name" value="pack order"/>
+			<string key="lifecycle:transition" value="resume"/>
+			<date key="time:timestamp" value="2018-12-22T08:05:00.000+01:00"/>
+		</event>
+		<event>
+			<string key="delivery" value="775"/>
+			<string key="item" value="VHS Tapes"/>
+			<string key="org:resource" value="Alice"/>
+			<string key="concept:name" value="add item"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2018-12-22T08:07:00.000+01:00"/>
+		</event>
+		<event>
+			<string key="delivery" value="775"/>
+			<string key="org:resource" value="Charles"/>
+			<string key="concept:name" value="ship parcel"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2018-12-22T09:01:00.000+01:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="73"/>
+		<string key="customer" value="V"/>
+		<event>
+			<string key="org:resource" value="Ellen"/>
+			<string key="concept:name" value="receive order"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2018-12-28T11:05:00.000+01:00"/>
+		</event>
+		<event>
+			<string key="org:resource" value="Bob"/>
+			<string key="concept:name" value="pack order"/>
+			<string key="lifecycle:transition" value="start"/>
+			<date key="time:timestamp" value="2018-12-28T12:20:00.000+01:00"/>
+		</event>
+		<event>
+			<string key="delivery" value="123"/>
+			<string key="item" value="VHS Player"/>
+			<string key="org:resource" value="Bob"/>
+			<string key="concept:name" value="add item"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2018-12-28T12:25:00.000+01:00"/>
+		</event>
+		<event>
+			<string key="delivery" value="123"/>
+			<string key="org:resource" value="Ellen"/>
+			<string key="concept:name" value="ship parcel"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2018-12-28T13:51:00.000+01:00"/>
+		</event>
+		<event>
+			<string key="delivery" value="123"/>
+			<string key="item" value="Gameboy"/>
+			<string key="org:resource" value="Bob"/>
+			<string key="concept:name" value="add item"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2018-12-28T14:08:00.000+01:00"/>
+		</event>
+		<event>
+			<string key="delivery" value="123"/>
+			<string key="org:resource" value="Bob"/>
+			<string key="concept:name" value="ship parcel"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2018-12-28T16:00:00.000+01:00"/>
+		</event>
+		<event>
+			<string key="org:resource" value="Alice"/>
+			<string key="concept:name" value="pack order"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2018-12-28T17:05:00.000+01:00"/>
+		</event>
+		<event>
+			<string key="org:resource" value="Alice"/>
+			<string key="concept:name" value="archive"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2018-12-28T17:12:00.000+01:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="74"/>
+		<string key="customer" value="X"/>
+		<event>
+			<string key="org:resource" value="System"/>
+			<string key="concept:name" value="receive order"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2018-12-29T11:04:00.000+01:00"/>
+		</event>
+		<event>
+			<string key="org:resource" value="Bob"/>
+			<string key="concept:name" value="pack order"/>
+			<string key="lifecycle:transition" value="start"/>
+			<date key="time:timestamp" value="2018-12-29T11:14:00.000+01:00"/>
+		</event>
+		<event>
+			<string key="org:resource" value="System"/>
+			<string key="concept:name" value="receive payment"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2018-12-30T08:20:00.000+01:00"/>
+		</event>
+		<event>
+			<string key="delivery" value="624"/>
+			<string key="item" value="Walkman"/>
+			<string key="org:resource" value="Alice"/>
+			<string key="concept:name" value="add item"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2018-12-30T09:12:00.000+01:00"/>
+		</event>
+		<event>
+			<string key="org:resource" value="Charles"/>
+			<string key="concept:name" value="pack order"/>
+			<string key="lifecycle:transition" value="abort"/>
+			<date key="time:timestamp" value="2018-12-30T09:22:00.000+01:00"/>
+		</event>
+		<event>
+			<string key="org:resource" value="Diana"/>
+			<string key="concept:name" value="archive"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2018-12-30T10:07:00.000+01:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="75"/>
+		<string key="customer" value="Z"/>
+		<event>
+			<string key="org:resource" value="System"/>
+			<string key="concept:name" value="receive order"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2018-12-29T12:25:00.000+01:00"/>
+		</event>
+		<event>
+			<string key="org:resource" value="Bob"/>
+			<string key="concept:name" value="pack order"/>
+			<string key="lifecycle:transition" value="start"/>
+			<date key="time:timestamp" value="2018-12-29T12:35:00.000+01:00"/>
+		</event>
+		<event>
+			<string key="org:resource" value="System"/>
+			<string key="concept:name" value="receive payment"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2018-12-29T15:41:00.000+01:00"/>
+		</event>
+		<event>
+			<string key="delivery" value="625"/>
+			<string key="item" value="Walkman"/>
+			<string key="org:resource" value="Alice"/>
+			<string key="concept:name" value="add item"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2018-12-29T16:33:00.000+01:00"/>
+		</event>
+		<event>
+			<string key="org:resource" value="Charles"/>
+			<string key="concept:name" value="pack order"/>
+			<string key="lifecycle:transition" value="abort"/>
+			<date key="time:timestamp" value="2018-12-29T16:43:00.000+01:00"/>
+		</event>
+		<event>
+			<string key="org:resource" value="Diana"/>
+			<string key="concept:name" value="archive"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2018-12-29T17:28:00.000+01:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="76"/>
+		<string key="customer" value="W"/>
+		<event>
+			<string key="org:resource" value="System"/>
+			<string key="concept:name" value="receive order"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2019-01-05T08:15:00.000+01:00"/>
+		</event>
+		<event>
+			<string key="org:resource" value="Bob"/>
+			<string key="concept:name" value="pack order"/>
+			<string key="lifecycle:transition" value="start"/>
+			<date key="time:timestamp" value="2019-01-05T08:25:00.000+01:00"/>
+		</event>
+		<event>
+			<string key="org:resource" value="System"/>
+			<string key="concept:name" value="receive payment"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2019-01-05T15:31:00.000+01:00"/>
+		</event>
+		<event>
+			<string key="delivery" value="623"/>
+			<string key="item" value="Walkman"/>
+			<string key="org:resource" value="Alice"/>
+			<string key="concept:name" value="add item"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2019-01-05T16:23:00.000+01:00"/>
+		</event>
+		<event>
+			<string key="org:resource" value="Charles"/>
+			<string key="concept:name" value="pack order"/>
+			<string key="lifecycle:transition" value="abort"/>
+			<date key="time:timestamp" value="2019-01-05T16:33:00.000+01:00"/>
+		</event>
+		<event>
+			<string key="org:resource" value="Diana"/>
+			<string key="concept:name" value="archive"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2019-01-05T17:18:00.000+01:00"/>
+		</event>
+	</trace>
 </log>
