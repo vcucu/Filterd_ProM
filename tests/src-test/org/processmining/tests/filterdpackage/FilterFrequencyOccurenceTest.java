@@ -53,6 +53,12 @@ public class FilterFrequencyOccurenceTest extends FilterdPackageTest{
 	public void testInFrequency2() throws Throwable {
 		XLog expected = parseLog("freq-occurence", "test_fin_25.xes");
 		XLog computed = null; // insert filter operation
+		
+		FilterdTraceFrequencyFilter filter = new FilterdTraceFrequencyFilter();
+		
+		List<Parameter> parameters = getOccurenceParameters(75d, 100d, "frequency", "int");
+		
+		computed = filter.filter(null, originalLog, parameters);
 
 		assert equalLog(expected, computed);
 	}
@@ -167,6 +173,12 @@ public class FilterFrequencyOccurenceTest extends FilterdPackageTest{
 	public void testOutFrequency2() throws Throwable {
 		XLog expected = parseLog("freq-occurence", "test_fout_25.xes");
 		XLog computed = null; // insert filter operation
+		
+		FilterdTraceFrequencyFilter filter = new FilterdTraceFrequencyFilter();
+		
+		List<Parameter> parameters = getOccurenceParameters(0, 25d, "frequency", "out");
+		
+		computed = filter.filter(null, originalLog, parameters);
 
 		assert equalLog(expected, computed);
 	}
