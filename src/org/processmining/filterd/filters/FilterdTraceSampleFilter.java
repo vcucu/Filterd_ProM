@@ -16,20 +16,23 @@ public class FilterdTraceSampleFilter extends Filter {
 	public XLog filter(PluginContext context, XLog log, 
 			List<Parameter> parameters) {
 	
-		//get value of threshold parameter (i.e. the desired number of samples)
+		// Get value of threshold parameter (i.e. the desired number of 
+		// samples).
 		ParameterValueFromRange<Integer> nrSamples = 
 				(ParameterValueFromRange<Integer>) parameters.get(0);	
 		
-		//initialize the log that will be output
+		// Initialize the log that will be output.
 		XLog filteredLog = Toolbox.initializeLog(log);
 		
-		//clone input log, since ProM documentation says filters should not change input logs
+		// Clone input log, since ProM documentation says filters should not 
+		// change input logs
 		XLog clonedLog = (XLog) log.clone();
 		
 		//shuffle the copied input log to assure randomness
 		Collections.shuffle(clonedLog);
 		
-		//add the first nrSamples traces from the copied input log to the output log
+		// Add the first nrSamples traces from the copied input log to the 
+		// output log.
 		clonedLog.stream()
 		.limit(nrSamples.getChosen())
 		.forEach(filteredLog :: add);
