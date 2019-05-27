@@ -47,7 +47,7 @@ public class FilterdPackageTest extends TestCase {
 
 		return logs.iterator().next();
 	}
-	
+
 
 	/* Check whether two XLogs are identical. 
 	 * Assumes that both logs are sorted in ascending order by trace ID.
@@ -70,8 +70,14 @@ public class FilterdPackageTest extends TestCase {
 		int eventsComputed = infoComputed.getNumberOfEvents();
 
 		/* the logs must have the same number of traces and events */
-		if (tracesExpected != tracesComputed) return false; 
-		if (eventsExpected != eventsComputed) return false;
+		if (tracesExpected != tracesComputed) {
+			System.out.println("traces expected " + tracesExpected + " traces computed " + tracesComputed); 
+			return false; 
+		}
+		if (eventsExpected != eventsComputed) {
+			System.out.println("traces expected " + tracesExpected + " traces computed " + tracesComputed);
+			return false;
+		}
 
 		for (int i = 0; i < expected.size(); i++) {
 			XTrace trace1 = expected.get(i);

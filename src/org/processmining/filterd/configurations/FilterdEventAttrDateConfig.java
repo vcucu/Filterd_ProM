@@ -69,7 +69,7 @@ public class FilterdEventAttrDateConfig extends FilterdAbstractReferenceableConf
 		ParameterOneFromSet selectionType = new ParameterOneFromSet("selectionType",
 				"Select option for filtering", defaultOption, optionList);
 
-		parameters.add(eventHandling);
+		parameters.add(traceHandling);
 		parameters.add(eventHandling);
 		parameters.add(selectionType);
 		parameters.add(range);
@@ -84,6 +84,10 @@ public class FilterdEventAttrDateConfig extends FilterdAbstractReferenceableConf
 
 	public boolean checkValidity(XLog log) {
 		ArrayList<LocalDateTime> times = new ArrayList<>();
+		
+		//check whether the parameters haven't been populated yet
+		if(range.getChosenPair().isEmpty()) return true;
+		
 		LocalDateTime lower = Toolbox.synchronizeGMT(range.getChosenPair().get(0));
 		LocalDateTime upper = Toolbox.synchronizeGMT(range.getChosenPair().get(1));
 

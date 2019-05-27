@@ -2,6 +2,7 @@ package org.processmining.filterd.tools;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -11,6 +12,8 @@ import java.util.Set;
 import org.deckfour.xes.classification.XEventClassifier;
 import org.deckfour.xes.factory.XFactory;
 import org.deckfour.xes.factory.XFactoryRegistry;
+import org.deckfour.xes.info.XLogInfo;
+import org.deckfour.xes.info.impl.XLogInfoImpl;
 import org.deckfour.xes.model.XAttribute;
 import org.deckfour.xes.model.XAttributeMap;
 import org.deckfour.xes.model.XEvent;
@@ -20,6 +23,76 @@ import org.deckfour.xes.model.XTrace;
 public class Toolbox {
 	
 	private static int id = -1; // first ID will be 0
+	
+	/**
+	 * Computes the list of complex classifiers for the current log.
+	 * They are computed both as a list of strings as well as a list of XEventClassifiers.
+	 * @param log the log to be interrogated
+	 * @return the list of names of the complex classifiers
+	 */
+	public static List<XEventClassifier> computeComplexClassifiers(XLog log) {
+		List<XEventClassifier> classifiers = new ArrayList<>();
+		XLogInfo logInfo = XLogInfoImpl.create(log);
+		Collection<XEventClassifier> compatibleClassifiers = logInfo.getEventClassifiers();
+		for (XEventClassifier c : compatibleClassifiers) {
+			String[] usedAttributes = c.getDefiningAttributeKeys();
+			if (usedAttributes.length > 1) {
+				classifiers.add(c);
+				
+			}
+		}
+		
+		return classifiers;
+	}
+	
+	public static List<String> getClassifiersName(List<XEventClassifier> classifiers){
+		List<String> names = new ArrayList<>();
+		for (XEventClassifier c : classifiers) {
+			names.add(c.name());
+		}
+		return names;
+	}
+
+	public static XEventClassifier computeClassifier(XLog log, String name) {
+		XLogInfo logInfo = XLogInfoImpl.create(log);
+		Collection<XEventClassifier> compatibleClassifiers = logInfo.getEventClassifiers();
+		for (XEventClassifier c : compatibleClassifiers) {
+			String[] usedAttributes = c.getDefiningAttributeKeys();
+			if (c.name().equals(name)) {
+				return c;
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * Computes the list of global attributes of the log events
+	 * @param log the log to be interrogated
+	 * @return the list of names of the events global attributes
+	 */
+	public static List<String> computeGlobalAttributes(XLog log) {
+		List<String> globalAttr = new ArrayList<>();
+		if(log.getGlobalEventAttributes() != null) {
+			for (XAttribute attribute : log.getGlobalEventAttributes()) {
+				globalAttr.add(attribute.getKey());
+			}
+		}
+		return globalAttr;
+	}
+	
+	
+	/**
+	 * Computes the list of all attributes of all events in the log
+	 * @param log the log to be interrogated
+	 * @return the list of names of the events' attributes
+	 */
+	public static List<String> computeAttributes(XLog log) {
+		XLogInfo logInfo = XLogInfoImpl.create(log);
+		List<String> attributes = new ArrayList<>();
+		Collection<String> attributes_collection =  logInfo.getEventAttributeInfo().getAttributeKeys();	
+		attributes.addAll(attributes_collection);
+		return attributes;
+	}
 
 	public static String getType(XAttribute attribute) {
 		String type = attribute.getClass().getSimpleName();

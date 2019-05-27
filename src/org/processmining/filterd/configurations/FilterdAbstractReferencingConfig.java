@@ -4,6 +4,7 @@ import org.deckfour.xes.model.XLog;
 import org.processmining.filterd.filters.Filter;
 import org.processmining.filterd.gui.AbstractFilterConfigPanelController;
 import org.processmining.filterd.gui.FilterConfigPanelController;
+import org.processmining.filterd.tools.Toolbox;
 import org.processmining.filterd.widgets.ParameterOneFromSetExtendedController;
 
 public abstract class FilterdAbstractReferencingConfig extends FilterdAbstractConfig {
@@ -26,7 +27,7 @@ public abstract class FilterdAbstractReferencingConfig extends FilterdAbstractCo
 
 	public FilterdAbstractConfig changeReference(ParameterOneFromSetExtendedController controller) {
 		concreteReference = new FilterdTraceStartEventCategoricalConfig(log, filterType,
-				controller.getValue(), complexClassifiers);
+				controller.getValue(), Toolbox.computeComplexClassifiers(log));
 		return concreteReference;
 	}
 	
