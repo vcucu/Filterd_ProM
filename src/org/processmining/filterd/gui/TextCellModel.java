@@ -19,5 +19,9 @@ public class TextCellModel extends CellModel{
 		this.comment = comment;
 		property.firePropertyChange("setComment", oldState, comment);
 	}
-
+	
+	public String getComment() {
+		return comment;
+	}
+	
 }
