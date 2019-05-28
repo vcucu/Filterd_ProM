@@ -145,4 +145,11 @@ public class FilterdTraceStartEventConfig extends FilterdAbstractReferencingConf
 				
 		return true;
 	}
+
+
+	@Override
+	public FilterdAbstractConfig changeReference(ParameterOneFromSetExtendedController controller) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

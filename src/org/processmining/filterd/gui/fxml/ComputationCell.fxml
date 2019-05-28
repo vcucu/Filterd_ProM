@@ -37,7 +37,9 @@
                         </HBox>
                         <MenuButton fx:id="menuBtnCellSettings" mnemonicParsing="false">
                           <items>
-                            <MenuItem mnemonicParsing="false" onAction="#removeCell" text="Remove Cell" />
+                          	<MenuItem mnemonicParsing="false" onAction="#moveUp" text="Move up" />
+                          	<MenuItem mnemonicParsing="false" onAction="#moveDown" text="Move down" />
+                            <MenuItem mnemonicParsing="false" onAction="#remove" text="Remove Cell" />
                           </items>
                         </MenuButton>
                      </children>

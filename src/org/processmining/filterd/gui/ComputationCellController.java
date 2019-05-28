@@ -10,9 +10,11 @@ import javax.swing.SwingUtilities;
 import org.deckfour.uitopia.api.model.ViewType;
 import org.processmining.filterd.configurations.FilterdAbstractConfig;
 import org.processmining.filterd.configurations.FilterdTraceFrequencyConfig;
+import org.processmining.filterd.configurations.FilterdTracePerformanceConfig;
 import org.processmining.filterd.configurations.FilterdTraceSampleConfig;
 import org.processmining.filterd.configurations.FilterdTraceStartEventConfig;
 import org.processmining.filterd.filters.FilterdTraceFrequencyFilter;
+import org.processmining.filterd.filters.FilterdTracePerformanceFilter;
 import org.processmining.filterd.filters.FilterdTraceSampleFilter;
 import org.processmining.filterd.filters.FilterdTraceStartEventFilter;
 import org.processmining.filterd.gui.ConfigurationModalController.ConfigurationStep;
@@ -82,9 +84,10 @@ public class ComputationCellController extends CellController {
 		
 		// Initialize the visualizer
 		visualizerSwgNode = new SwingNode();
-		// Add listener for the ComboBoxes (workaround JavaFX - SwingNode)
+		// Add listener for the ComboBoxes and the MenuButton (workaround JavaFX - SwingNode)
 		Utilities.JFXSwingFix(visualizerPane, cmbEventLog, visualizerSwgNode);
 		Utilities.JFXSwingFix(visualizerPane, cmbVisualizers, visualizerSwgNode);
+		Utilities.JFXSwingFix(visualizerPane, menuBtnCellSettings, visualizerSwgNode);
 		// bind cellBody width to cellContent width so the visualizations scale properly
 		cellBody.maxWidthProperty().bind(controller.getScene().widthProperty().subtract(64));
 	}
@@ -100,8 +103,8 @@ public class ComputationCellController extends CellController {
 
 		isExpanded = false;
 		isFullScreen = false;
-		notebookVisualiser = controller.getNotebookVisualiser();
-		notebookToolbar = controller.getNotebookToolbar();
+		notebookVisualiser = controller.getNotebookLayout();
+		notebookToolbar = controller.getToolbarLayout();
 		scrollPane = controller.getScrollPane();
 	}
 
@@ -120,7 +123,7 @@ public class ComputationCellController extends CellController {
 			} else {
 				inputLog = getCellModel().getFilters().get(index - 1).getOutputLog();
 			}
-			FilterButtonModel filterModel = new FilterButtonModel(index, inputLog);
+			FilterButtonModel filterModel = new FilterButtonModel(index, inputLog, index);
 			// set cell output to be the output of the last filter (the filter we just created)
 			List<YLog> outputLogs = getCellModel().getOutputLogs();
 			outputLogs.clear();
@@ -137,11 +140,10 @@ public class ComputationCellController extends CellController {
 				getClass().getResource("/org/processmining/filterd/gui/fxml/FilterButton.fxml"));
 		FilterButtonController newController = new FilterButtonController(this, model);
 		loader.setController(newController);
-		getCellModel().addFilterController(index, newController);
 		try {
 			HBox newPanelLayout = (HBox) loader.load();
 			panelLayout.getChildren().add(index, newPanelLayout);
-			newController.setCellLayout(newPanelLayout);
+			newController.setFilterLayout(newPanelLayout);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -160,18 +162,20 @@ public class ComputationCellController extends CellController {
 							System.out.printf("ID: %d ----------\n", getCellModel().getFilters().get(i).getIndex());
 							System.out.println("Updated: " + i + " " + getCellModel().getFilters().get(i));
 							System.out.println("SELECTED: " + getCellModel().getFilters().get(i).getSelected());
-							getCellModel().getFilterControllers().get(getCellModel().getFilters().get(i).getIndex())
-									.updateFilterButtonView();
+							// Do something
 						}
 					} else {
 						for (FilterButtonModel removedFilter : change.getRemoved()) {
 							System.out.printf("ID: %d ----------\n", removedFilter.getIndex());
 							System.out.println("Removed: " + removedFilter);
+							// Do something
 						}
 						for (FilterButtonModel addedFilter : change.getAddedSubList()) {
 							System.out.printf("ID: %d ----------\n", addedFilter.getIndex());
 							System.out.println("Added: " + addedFilter);
+							// Do something
 						}
+						// Update indices
 						for (int i = 0; i < getCellModel().getFilters().size(); i++) {
 							getCellModel().getFilters().get(i).setIndex(i);
 						}
@@ -179,6 +183,12 @@ public class ComputationCellController extends CellController {
 				}
 			}
 		});
+	}
+	
+	public void removeFilter(FilterButtonModel filter) {
+		int index = filter.getIndex();
+		getCellModel().removeFilter(filter); // Removes the cell from the model
+		panelLayout.getChildren().remove(index);	// Removes the layout
 	}
 
 	public VBox getPanelLayout() {
@@ -335,15 +345,10 @@ public class ComputationCellController extends CellController {
 			visualizerPane.setRightAnchor(visualizerSwgNode, 0.0);
 			// if filter selection was cancelled, delete the added button
 			if (configurationStep == ConfigurationStep.ADD_FILTER) {
-				// remove model
+				// remove FilterButton
 				FilterButtonModel buttonToRemove = getCellModel().getFilters()
 						.get(getCellModel().getFilters().size() - 1);
-				getCellModel().removeFilterModel(buttonToRemove);
-				// remove controller
-				FilterButtonController controllerToRemove = getCellModel().getFilterControllers()
-						.get(getCellModel().getFilterControllers().size() - 1);
-				getCellModel().removeFilterController(controllerToRemove);
-				getPanelLayout().getChildren().remove(controllerToRemove.getFilterLayout());
+				removeFilter(buttonToRemove);
 			}
 		}
 		this.isConfigurationModalShown = false;
@@ -410,6 +415,14 @@ public class ComputationCellController extends CellController {
 						try {
 							filterConfig = new FilterdTraceSampleConfig(model.getInputLog().get(),
 									new FilterdTraceSampleFilter());
+						} catch (EmptyLogException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					case "Trace Performance":
+						try {
+							filterConfig = new FilterdTracePerformanceConfig(model.getInputLog().get(),
+									new FilterdTracePerformanceFilter());
 						} catch (EmptyLogException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();

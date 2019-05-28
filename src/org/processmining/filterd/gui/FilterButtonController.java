@@ -15,23 +15,17 @@ public class FilterButtonController {
 	private FilterButtonModel model;
 	private ArrayList<ImageView> buttons;
 	
-	@FXML
-	private Label filterName;
-	@FXML 
-	private HBox filterLayout;
-	@FXML
-	private ImageView editButton;
-	@FXML
-	private ImageView removeButton;
-	@FXML
-	private ImageView moveUpButton;
-	@FXML
-	private ImageView moveDownButton;
+	@FXML private Label filterName;
+	@FXML private HBox filterLayout;
+	@FXML private ImageView editButton;
+	@FXML private ImageView removeButton;
+	@FXML private ImageView moveUpButton;
+	@FXML private ImageView moveDownButton;
 	
 	public FilterButtonController(ComputationCellController controller, FilterButtonModel model) {
 		this.controller = controller;
 		this.model = model;
-		this.buttons = new ArrayList<>();
+		this.buttons = new ArrayList<>(); 
 	}
 	
 	public void initialize() {
@@ -40,12 +34,24 @@ public class FilterButtonController {
 		buttons.add(moveUpButton);
 		buttons.add(moveDownButton);
 		
-		updateFilterButtonView();
+		// Bind properties with components
+		bindProperties();
 	}
 	
-	public void updateFilterButtonView() {
-		filterName.setText(model.getName());
-		if (model.getSelected()) {
+	private void bindProperties() {
+		// Name
+		filterName.textProperty().bind(model.getNameProperty());
+		
+		// Selected property 
+		model.getSelectedProperty().addListener(
+				(observable, oldvalue, newvalue) ->
+				setSelected(newvalue)
+		);
+		
+	}
+	
+	private void setSelected(boolean selected) {
+		if (selected) {
 			showButtons();
 		} else {
 			hideButtons();
@@ -56,7 +62,7 @@ public class FilterButtonController {
 		return layout;
 	}
 
-	public void setCellLayout(Pane layout) {
+	public void setFilterLayout(Pane layout) {
 		this.layout = layout;
 	}
 
@@ -104,6 +110,7 @@ public class FilterButtonController {
 
 	@FXML
 	private void editFilterHandler() {
+		selectFilterButton();
 		if(this.model.getFilterConfig() != null) {
 			this.controller.showModalFilterConfiguration(this.model.getFilterConfig());
 		}
@@ -111,16 +118,14 @@ public class FilterButtonController {
 	
 	@FXML
 	public void removeFilterHandler() {
-		controller.getPanelLayout().getChildren().remove(filterLayout);
-		controller.getCellModel().removeFilterModel(model);
-		controller.getCellModel().removeFilterController(this);
+		controller.removeFilter(model);
 	}
 	
 	@FXML
 	private void moveUpFilterHandler() {
 		int index = model.getIndex();
 		if (index > 0) {
-			moveFilterButton(index - 1);
+			move(index - 1);
 		}
 	}
 	
@@ -128,19 +133,18 @@ public class FilterButtonController {
 	private void moveDownFilterHandler() {
 		int index = model.getIndex();
 		if (index < controller.getCellModel().getFilters().size() - 1) {
-			moveFilterButton(index + 1);
+			move(index + 1);
 		}
 	}
 	
-	private void moveFilterButton(int index) {
+	private void move(int index) {
+		// Remove layout
 		controller.getPanelLayout().getChildren().remove(filterLayout);
-		
+		// Remove model
 		controller.getCellModel().getFilters().remove(model);
-		controller.getCellModel().getFilterControllers().remove(this);
-		
-		controller.getCellModel().addFilterModel(index, model);
-		controller.getCellModel().addFilterController(index, this);
-		
+		// Add model at new position
+		controller.getCellModel().getFilters().add(index, model);
+		// Add layout at new position
 		controller.getPanelLayout().getChildren().add(index, filterLayout);
 	}
 }

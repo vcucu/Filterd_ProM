@@ -9,7 +9,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
 /**
@@ -25,32 +24,18 @@ public class NotebookController {
 	 * variables containing the (important) UI elements so they can be
 	 * interacted with in the code.
 	 */
-	@FXML
-	private Button autoButton;
-	@FXML
-	private Button manualButton;
-	@FXML
-	private Button computeButton;
-	@FXML
-	private Button exportButton;
-	@FXML
-	private ScrollPane scrollPane;
-	@FXML
-	private VBox notebookLayout;
-	@FXML
-	private Button appendCellButton;
-	@FXML
-	private HBox addCellHBox;
-	@FXML
-	private Button addComputationCellButton;
-	@FXML
-	private Button addTextCellButton;
-	@FXML
-	private Pane configurationModal; // I'm not sure where this configuraitonModal is for? - Ewoud
-	@FXML
-	private VBox notebookVisualiser;
-	@FXML 
-	private HBox notebookToolbar;
+	@FXML private Button autoButton;
+	@FXML private Button manualButton;
+	@FXML private Button computeButton;
+	@FXML private Button exportButton;
+	@FXML private ScrollPane scrollPane;
+	@FXML private VBox cellsLayout;
+	@FXML private Button appendCellButton;
+	@FXML private HBox addCellHBox;
+	@FXML private Button addComputationCellButton;
+	@FXML private Button addTextCellButton;
+	@FXML private VBox notebookLayout;
+	@FXML private HBox toolbarLayout;
 	
  
 	
@@ -71,40 +56,27 @@ public class NotebookController {
 		this.model = model;
 	}
 
-	public VBox getNotebookVisualiser() {
-		return notebookVisualiser;
+	public VBox getNotebookLayout() {
+		return notebookLayout;
+	}
+	
+	public VBox getCellsLayout() {
+		return cellsLayout;
 	}
 
-	public HBox getNotebookToolbar() {
-		return notebookToolbar;
+	public HBox getToolbarLayout() {
+		return toolbarLayout;
 	}
-
 
 	/**
 	 * Gets executed after the constructor. Has access to the @FXML annotated
 	 * fields, thus UI elements can be manipulated here.
 	 */
 	public void initialize() {	
-		// Add listener cells from observable list
-		model.getCells().addListener(new ListChangeListener<CellModel>() {
-			@Override
-	        public void onChanged(Change<? extends CellModel> change) {
-				while(change.next()) {
-		            if (change.wasAdded()) {
-		            	// Add cell to the view
-		            	int index = change.getFrom();
-		            	CellModel cell = model.getCells().get(index);
-		            	loadCell(cell);
-		            } else if (change.wasRemoved()) {
-		            	// Delete cell from the view
-		            	int index = change.getFrom();
-		            	notebookLayout.getChildren().remove(index);
-		            }
-				}
-			}
-		});
-
-		// Initialize AddCelModal
+		// Add cell listener 
+		cellListeners();
+		
+		// Initialize AddCellModal
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/processmining/filterd/gui/fxml/AddCell.fxml"));
 			loader.setController(new AddCellController());
@@ -113,6 +85,38 @@ public class NotebookController {
 			e.printStackTrace();
 		}
 		
+	}
+	
+	private void cellListeners() {
+		model.getCells().addListener(new ListChangeListener<CellModel>() {
+			@Override
+			public void onChanged(Change<? extends CellModel> change) {
+				while (change.next()) {
+					if (change.wasUpdated()) {
+						for (int i = change.getFrom(); i < change.getTo(); i++) {
+							System.out.printf("ID: %d ----------\n", model.getCells().get(i).getIndex());
+							System.out.println("Updated: " + i + " " + model.getCells().get(i));
+							// Do something
+						}
+					} else {
+						for (CellModel removedCell : change.getRemoved()) {
+							System.out.printf("ID: %d ----------\n", removedCell.getIndex());
+							System.out.println("Removed: " + removedCell);
+							// Do something
+						}
+						for (CellModel addedCell : change.getAddedSubList()) {
+							System.out.printf("ID: %d ----------\n", addedCell.getIndex());
+							System.out.println("Added: " + addedCell);
+							// Do something
+						}
+						// Update indices
+						for (int i = 0; i < model.getCells().size(); i++) {
+							model.getCells().get(i).setIndex(i);
+						}
+					}
+				}
+			}
+		});
 	}
 
 	/**
@@ -187,24 +191,26 @@ public class NotebookController {
 	 * Creates a new ComputationCell model and adds it to the observable list.
 	 */
 	public void addComputationCell(int index) {
-		ComputationCellModel cellModel = new ComputationCellModel(model.getPromContext(), model.getPromCanceller(),
+		ComputationCellModel cellModel = new ComputationCellModel(model.getPromContext(), index, model.getPromCanceller(),
 				model.getOutputLogsTill(index));
 		model.addCell(index, cellModel);
+		loadCell(cellModel);
 	}
 
 	/**
 	 * Creates a new TextCell model and adds it to the observable list.
 	 */
 	public void addTextCell(int index) {
-		TextCellModel cellModel = new TextCellModel(model.getPromContext());
+		TextCellModel cellModel = new TextCellModel(model.getPromContext(), index);
 		model.addCell(index, cellModel);
+		loadCell(cellModel);
 	}
 
 	/**
 	 * Given a cell model, this method creates a corresponding controller and
 	 * adds it the notebook UI.
 	 */
-	public void loadCell(CellModel cell) {
+	private void loadCell(CellModel cell) {
 		FXMLLoader loader = new FXMLLoader();
 		CellController newController;
 		if (cell.getClass().isAssignableFrom(ComputationCellModel.class)) {
@@ -220,12 +226,14 @@ public class NotebookController {
 		VBox newCellLayout;
 		try {
 			newCellLayout = (VBox) loader.load();
-			notebookLayout.getChildren().add(newCellLayout);
+			cellsLayout.getChildren().add(cell.getIndex(), newCellLayout);
 			newController.setCellLayout(newCellLayout);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
+	
+	
 
 	/**
 	 * Removes the input {@code cell} from the notebook model. Removal from the UI should happen through an actionListener.
@@ -234,7 +242,9 @@ public class NotebookController {
 	 *            the cell to remove from the notebook.
 	 */
 	public void removeCell(CellModel cell) {
-		model.removeCell(cell); // removes the cell from the model
+		int index = cell.getIndex();
+		model.removeCell(cell); // Removes the cell from the model
+		cellsLayout.getChildren().remove(index);	// Removes the layout
 	}
 
 	/**
@@ -251,7 +261,7 @@ public class NotebookController {
 	 * @return The scene of the notebook visualizer.
 	 */
 	public Scene getScene() {
-		return notebookVisualiser.getScene();
+		return notebookLayout.getScene();
 	}
 
 	/**
@@ -261,17 +271,18 @@ public class NotebookController {
 		addCellHBox.setVisible(false); // makes the content of the modal (HBox) invisible.
 		addCellHBox.setManaged(false); // makes the modal (HBox) take up no space. This option is note available in the
 										// Scene Builder.
-		notebookLayout.getChildren().remove(addCellHBox);
+		cellsLayout.getChildren().remove(addCellHBox);
 	}
 
 	/**
 	 * Make the add cell modal appear.
 	 */
-	public void showAddCellModal(int index) {
+	// Do NOT make this public! - Omar
+	private void showAddCellModal(int index) {
 		addCellHBox.setVisible(true); // makes the content of the modal (HBox) visible.
 		addCellHBox.setManaged(true); // makes the modal (HBox) take up space. This option is note available in the
 										// Scene Builder.
-		notebookLayout.getChildren().add(index, addCellHBox);
+		cellsLayout.getChildren().add(index, addCellHBox);
 	}
 	
 	/**
@@ -279,12 +290,17 @@ public class NotebookController {
 	 */
 	public void toggleAddCellModal(int index) {
 		boolean isVisible = addCellHBox.isVisible();
-		boolean indexOf = (index == notebookLayout.getChildrenUnmodifiable().indexOf(addCellHBox));
-		if (isVisible) {
-			hideAddCellModal();
-		}
-		if (!indexOf) {
+		boolean sameIndex = (index == cellsLayout.getChildrenUnmodifiable().indexOf(addCellHBox));
+		if (!isVisible) {
 			showAddCellModal(index);
+		} else {
+			// It's visible
+			if (sameIndex) {
+				hideAddCellModal();
+			} else {
+				hideAddCellModal();
+				showAddCellModal(index);
+			}
 		}
 	}
 
@@ -296,7 +312,7 @@ public class NotebookController {
 		 */
 		@FXML
 		private void addComputationCellButtonHandler() {
-			int index = notebookLayout.getChildrenUnmodifiable().indexOf(addCellHBox);
+			int index = cellsLayout.getChildrenUnmodifiable().indexOf(addCellHBox);
 			hideAddCellModal();
 			addComputationCell(index);
 		}
@@ -307,7 +323,7 @@ public class NotebookController {
 		 */
 		@FXML
 		private void addTextCellButtonHandler() {
-			int index = notebookLayout.getChildrenUnmodifiable().indexOf(addCellHBox);
+			int index = cellsLayout.getChildrenUnmodifiable().indexOf(addCellHBox);
 			hideAddCellModal();
 			addTextCell(index);
 		}

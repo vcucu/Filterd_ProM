@@ -32,7 +32,7 @@ public class FilterTracePerformanceTest extends FilterdPackageTest {
 		List<Parameter> parameters = getTestParameters(
 				"filter on duration", 
 				86400000, 
-				Double.POSITIVE_INFINITY);
+				Integer.MAX_VALUE);
 		
 		computed = filter.filter(null, originalLog, parameters);
 
@@ -65,8 +65,8 @@ public class FilterTracePerformanceTest extends FilterdPackageTest {
 	
 	private List<Parameter> getTestParameters(
 			String chosenOption,
-			double lowThreshold,
-			double highThreshold) {
+			int lowThreshold,
+			int highThreshold) {
 		
 		// Create performance options parameter and set the option to duration
 		// as default.
@@ -79,8 +79,8 @@ public class FilterTracePerformanceTest extends FilterdPackageTest {
 		
 		// Use duration as default because this is also set in the performance
 		// options parameter.
-		ParameterRangeFromRange<Double> valueParameter = 
-				new ParameterRangeFromRange<Double>(
+		ParameterRangeFromRange<Integer> valueParameter = 
+				new ParameterRangeFromRange<Integer>(
 						"threshold", 
 						"Select the threshold", 
 						Arrays.asList(lowThreshold, highThreshold), 

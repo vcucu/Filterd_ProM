@@ -1,5 +1,6 @@
 package org.processmining.filterd.configurations;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -10,11 +11,18 @@ import org.processmining.filterd.gui.FilterConfigPanelController;
 import org.processmining.filterd.parameters.ParameterOneFromSet;
 import org.processmining.filterd.parameters.ParameterRangeFromRange;
 import org.processmining.filterd.tools.Toolbox;
+import org.processmining.filterd.widgets.ParameterController;
+import org.processmining.filterd.widgets.ParameterOneFromSetController;
+import org.processmining.filterd.widgets.ParameterRangeFromRangeController;
+
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.scene.control.ComboBox;
 
 public class FilterdTracePerformanceConfig extends FilterdAbstractConfig {
 	
-	List<Double> minAndMaxDuration;
-	List<Double> minAndMaxEvents;
+	List<Integer> minAndMaxDuration;
+	List<Integer> minAndMaxEvents;
 	
 	public FilterdTracePerformanceConfig(XLog log, Filter filterType) {
 		super(log, filterType);
@@ -36,8 +44,8 @@ public class FilterdTracePerformanceConfig extends FilterdAbstractConfig {
 
 		// Use duration as default because this is also set in the performance
 		// options parameter.
-		ParameterRangeFromRange<Double> valueParameter = 
-				new ParameterRangeFromRange<Double>(
+		ParameterRangeFromRange<Integer> valueParameter = 
+				new ParameterRangeFromRange<Integer>(
 						"threshold", 
 						"Select the threshold", 
 						minAndMaxDuration, 
@@ -55,12 +63,65 @@ public class FilterdTracePerformanceConfig extends FilterdAbstractConfig {
 
 	public boolean canPopulate(FilterConfigPanelController component) {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	public AbstractFilterConfigPanelController getConfigPanel() {
-		// TODO Auto-generated method stub
-		return null;
+		FilterConfigPanelController filterConfigPanel = new FilterConfigPanelController(
+				"Filter Trace Performance Configuration", 
+				parameters, 
+				this);
+		for(ParameterController parameter : filterConfigPanel.getControllers()) {
+			if (parameter.getName().equals("performanceOptions")) {
+				ParameterOneFromSetController casted = (ParameterOneFromSetController) parameter;
+				ComboBox<String> comboBox = casted.getComboBox();
+				comboBox.valueProperty().addListener(new ChangeListener<String>() {
+					@Override 
+					public void changed(ObservableValue ov, String oldValue, String newValue) {
+						
+						for (ParameterController changingParameter : filterConfigPanel.getControllers()) {
+							
+							if (changingParameter.getName().equals("threshold")) {
+								
+								ParameterRangeFromRangeController<Integer> castedChanging = 
+										(ParameterRangeFromRangeController<Integer>) changingParameter;
+								
+								if (newValue.equals("filter on duration")) {
+									List<Integer> defaultValue = new ArrayList<>();
+									defaultValue.add(minAndMaxDuration.get(0));
+									defaultValue.add(minAndMaxDuration.get(1));
+									List<Integer> minMaxPair = new ArrayList<>();
+									minMaxPair.add(minAndMaxDuration.get(0));
+									minMaxPair.add(minAndMaxDuration.get(1));
+									castedChanging.setSliderConfig(defaultValue, minMaxPair);
+									
+									ParameterRangeFromRange<Integer> castedParameter = (ParameterRangeFromRange<Integer>) getParameter("threshold");
+									castedParameter.setDefaultPair(defaultValue);
+									castedParameter.setOptionsPair(minMaxPair);
+								} else {
+									castedChanging.setSliderConfig(minAndMaxEvents, minAndMaxEvents);
+									
+									ParameterRangeFromRange<Integer> castedParameter = (ParameterRangeFromRange<Integer>) getParameter("threshold");
+									castedParameter.setDefaultPair(minAndMaxEvents);
+									castedParameter.setOptionsPair(minAndMaxEvents);
+								}
+								
+							}
+							
+						}
+						
+			        }
+				});
+			}
+			if(parameter.getName().equals("threshold")) {
+				ParameterRangeFromRangeController<Integer> casted = (ParameterRangeFromRangeController<Integer>) parameter;
+				ParameterRangeFromRange<Integer> castedParameter = (ParameterRangeFromRange<Integer>) getParameter("threshold");
+				casted.setSliderConfig(castedParameter.getChosenPair().size() == 0 ? 
+						castedParameter.getDefaultPair() : 
+						castedParameter.getChosenPair(), castedParameter.getOptionsPair());
+			}
+		}
+		return filterConfigPanel;
 	}
 
 }

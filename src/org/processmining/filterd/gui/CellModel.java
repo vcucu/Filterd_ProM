@@ -10,13 +10,15 @@ public class CellModel {
 	private UIPluginContext context;
 	private CellStatus statusBar;
 	private String cellName;
+	private int index;
 	//property used to register property listeners for each bound property
 	protected PropertyChangeSupport property;
 
-	public CellModel(UIPluginContext context) {
+	public CellModel(UIPluginContext context, int index) {
 		this.context = context;
 		//adding property to register all change listeners to all bounded properties of the model
 		this.property = new PropertyChangeSupport(this);
+		this.index = index;
 		isHidden = false;
 		setCellName("Cell #" + Integer.toString((int) (Math.random() * 900 + 100))); // assign an initial name to the cell
 	}
@@ -65,5 +67,13 @@ public class CellModel {
 
 	public UIPluginContext getContext() {
 		return context;
+	}
+
+	public int getIndex() {
+		return index;
+	}
+
+	public void setIndex(int index) {
+		this.index = index;
 	}
 }

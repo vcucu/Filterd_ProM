@@ -391,10 +391,10 @@ public class Toolbox {
 		return id;
 	}
 	
-public static List<Double> getMinAnMaxDuration(XLog log) {
+public static List<Integer> getMinAnMaxDuration(XLog log) {
 		
-		double minDuration = Double.MAX_VALUE;
-		double maxDuration = -Double.MAX_VALUE;
+		int minDuration = Integer.MAX_VALUE;
+		int maxDuration = -Integer.MAX_VALUE;
 		
 		for (XTrace trace : log) {
 			
@@ -415,7 +415,7 @@ public static List<Double> getMinAnMaxDuration(XLog log) {
 			LocalDateTime endTime = synchronizeGMT(lastEventTime);
 			
 			Duration traceDuration = Duration.between(startTime, endTime);
-			double totalMillis = traceDuration.toMillis();
+			int totalMillis = (int) traceDuration.toMillis();
 			
 			if (totalMillis < minDuration) {
 				minDuration = totalMillis;
@@ -430,10 +430,10 @@ public static List<Double> getMinAnMaxDuration(XLog log) {
 		return Arrays.asList(minDuration, maxDuration);
 	}
 	
-	public static List<Double> getminAdnMaxEventSize(XLog log) {
+	public static List<Integer> getminAdnMaxEventSize(XLog log) {
 		
-		double minEventSize = Double.MAX_VALUE;
-		double maxEventSize = -Double.MAX_VALUE;
+		int minEventSize = Integer.MAX_VALUE;
+		int maxEventSize = -Integer.MAX_VALUE;
 		
 		for (XTrace trace : log) {
 			

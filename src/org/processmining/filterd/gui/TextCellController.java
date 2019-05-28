@@ -4,14 +4,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 
 public class TextCellController extends CellController {
-	NotebookController controller;
-	TextCellModel cell;
-	@FXML
-	private TextArea commentField;
-
-	//TODO: add other FXML attributes
-
-	//TODO: add controller methods
+	
+	@FXML private TextArea commentField;
 
 	public TextCellController(NotebookController controller, TextCellModel cell) {
 		super(controller, cell);
@@ -26,10 +20,21 @@ public class TextCellController extends CellController {
 	 */
 	@FXML
 	public void handleComment() {
-		cell.setComment(commentField.getText());
+		getCellModel().setComment(commentField.getText());
 	}
 	
 	public void changeComment(String comment) {
 		commentField.setText(comment);
+	}
+	
+	/**
+	 * Gets the cell model of the current cell. This method is overridden so it
+	 * returns an object of type TextCellModel, this prevents us from
+	 * having to cast the returned object to TextCellModel every single
+	 * time it is called.
+	 */
+	@Override
+	public TextCellModel getCellModel() {
+		return (TextCellModel) super.getCellModel();
 	}
 }

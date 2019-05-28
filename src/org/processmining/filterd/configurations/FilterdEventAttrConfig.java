@@ -110,7 +110,7 @@ public class FilterdEventAttrConfig extends FilterdAbstractReferencingConfig {
 		return new FilterConfigPanelController("Event Attribute Configuration", parameters, this);
 	}
 	
-	public FilterdAbstractConfig changeReference(ParameterOneFromSetController chosen) {
+	public FilterdAbstractConfig changeReference(ParameterOneFromSetExtendedController chosen) {
 		String key = chosen.getValue();
 		
 		for (XAttribute a : eventAttributes) {

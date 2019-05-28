@@ -8,9 +8,9 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="notebookVisualiser" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" stylesheets="@../css/Notebook.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+<VBox fx:id="notebookLayout" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" stylesheets="@../css/Notebook.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
 	<children>
-		<HBox fx:id="notebookToolbar" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="51.0">
+		<HBox fx:id="toolbarLayout" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="51.0">
 			<children>
 				<Button fx:id="autoButton" mnemonicParsing="false" onAction="#autoButtonHandler" text="Auto">
 					<HBox.margin>
@@ -39,8 +39,8 @@
 			<content>
 				<VBox alignment="CENTER">
 					<children>
-						<VBox fx:id="notebookLayout" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="5.0" VBox.vgrow="ALWAYS" />
-                  <HBox fx:id="addCellHBox" managed="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" visible="false" VBox.vgrow="ALWAYS" alignment="CENTER"/>
+						<VBox fx:id="cellsLayout" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="5.0" VBox.vgrow="ALWAYS" />
+                  <HBox fx:id="addCellHBox" alignment="CENTER" managed="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" visible="false" VBox.vgrow="ALWAYS" />
 						<!-- managed="false" makes the element not take up space, this option 
 							cannot be set in the scene builder -->
 						<Button fx:id="appendCellButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#appendCellButtonHandler" text="+" VBox.vgrow="ALWAYS">
