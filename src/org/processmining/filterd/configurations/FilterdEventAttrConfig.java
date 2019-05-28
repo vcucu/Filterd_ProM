@@ -50,6 +50,33 @@ public class FilterdEventAttrConfig extends FilterdAbstractReferencingConfig {
 			"Filter by", attributes.get(0), attributes, true);
 
 		parameters.add(attribute);
+		
+		for (XAttribute a : eventAttributes) {
+			if (a.getKey().equals(attributes.get(0))) {
+				switch(Toolbox.getType(a)) {
+					case "Literal":
+						concreteReference = new FilterdEventAttrCategoricalConfig(log, filterType, a);
+						break;
+					case "Boolean":
+						concreteReference = new FilterdEventAttrCategoricalConfig(log, filterType, a);
+						break;
+					case "Continuous":
+						concreteReference = new FilterdEventAttrNumericalConfig(log, filterType, a);
+						break;
+					case "Discrete":
+						concreteReference = new FilterdEventAttrNumericalConfig(log, filterType, a);
+						break;
+					case "ID":
+						concreteReference = new FilterdEventAttrCategoricalConfig(log, filterType, a);
+						break;
+					case "Timestamp":
+						concreteReference = new FilterdEventAttrDateConfig(log, filterType);
+						break;
+					default: concreteReference = new FilterdEventAttrCategoricalConfig(log, filterType, a);
+						break;
+				}
+			}
+		}
 	}
 
 	@Override
@@ -138,20 +165,13 @@ public class FilterdEventAttrConfig extends FilterdAbstractReferencingConfig {
 						break;
 				}
 			}
-			
-			break; // attribute found, exit for loop
 		}
 		
 		return concreteReference;
 	}
    
 	public boolean checkValidity(XLog log) {
+		if (concreteReference == null) return true;
 		return concreteReference.checkValidity(log);
-	}
-
-	public XLog filter() {
-		// TODO Auto-generated method stub
-		
-		return null;
 	}
 }

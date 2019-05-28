@@ -95,7 +95,7 @@ public class ParameterRangeFromRangeController<N extends Number> extends Paramet
             highValueLabel.setText(df.format((Double) defaultValue.get(1)));
         } else if(genericTypeClass.equals(Integer.TYPE)) {
         	double majorTickUnit = (minMaxPair.get(1).doubleValue() - minMaxPair.get(0).doubleValue()) / 4.0;
-        	majorTickUnit = Math.floor(majorTickUnit);
+        	majorTickUnit = Math.max(1, Math.floor(majorTickUnit)); //unit must be > 0
     		slider.setMajorTickUnit(majorTickUnit);
             slider.setMin(minMaxPair.get(0).doubleValue());
             slider.setMax(minMaxPair.get(1).doubleValue());

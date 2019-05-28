@@ -28,6 +28,8 @@ public class FilterdEventAttrFilter extends Filter {
 	public XLog filter(XLog log, List<Parameter> parameters) {
 		// TODO Auto-generated method stub this method should just contain a switch for the following 4 methods
 		//that are invisible still :}
+		
+		System.out.println("i apply");
 
 		ParameterOneFromSet attribute = (ParameterOneFromSet) this.getParameter(parameters, "attribute");
 		key = attribute.getChosen();
@@ -108,14 +110,14 @@ public class FilterdEventAttrFilter extends Filter {
 		ParameterOneFromSet selectionType = (ParameterOneFromSet) this.getParameter(parameters, "selectionType");
 		ParameterOneFromSet parameterType = (ParameterOneFromSet) this.getParameter(parameters, "parameterType");
 		ParameterMultipleFromSet desiredValues = (ParameterMultipleFromSet) this.getParameter(parameters, "desiredValues");
-		ParameterRangeFromRange<String> range = (ParameterRangeFromRange<String>) this.getParameter(parameters,"range");
+		ParameterRangeFromRange<Integer> range = (ParameterRangeFromRange<Integer>) this.getParameter(parameters,"range");
 
 		boolean choice = selectionType.getChosen().contains("Filter in");
 		boolean selectionChoice = parameterType.getChosen().contains("interval");
 		boolean keepTraces = traceHandling.getChosen();
 		boolean keepEvent = eventHandling.getChosen();
-		String lower = range.getChosenPair().get(0);
-		String upper = range.getChosenPair().get(1);
+		int lower = range.getChosenPair().get(0);
+		int upper = range.getChosenPair().get(1);
 
 		filteredLog = Toolbox.initializeLog(log);
 		XFactory factory = XFactoryRegistry.instance().currentDefault();
@@ -132,16 +134,17 @@ public class FilterdEventAttrFilter extends Filter {
 					continue;
 				}
 
-				String value = event.getAttributes().get(key).toString();
+				int value = Integer.parseInt(event.getAttributes().get(key).toString());
 
 				/* selection type: range from range */
 				if (selectionChoice) {
-					if (value.compareTo(lower) >= 0 && value.compareTo(upper) <= 0) {
+					if (value >= lower && value <= upper) {
+						System.out.println("event with " + value);
 						add = choice;
 					}
 				} else {
 					/* selection type: multiple from set */
-					if (desiredValues.getChosen().contains(value)) add = choice;
+					if (desiredValues.getChosen().contains(Integer.toString(value))) add = choice;
 				}
 				if (!filteredTrace.isEmpty() || keepTraces) filteredLog.add(filteredTrace);
 			}

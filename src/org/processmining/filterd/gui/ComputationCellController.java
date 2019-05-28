@@ -9,10 +9,12 @@ import javax.swing.SwingUtilities;
 
 import org.deckfour.uitopia.api.model.ViewType;
 import org.processmining.filterd.configurations.FilterdAbstractConfig;
+import org.processmining.filterd.configurations.FilterdEventAttrConfig;
 import org.processmining.filterd.configurations.FilterdTraceFrequencyConfig;
 import org.processmining.filterd.configurations.FilterdTracePerformanceConfig;
 import org.processmining.filterd.configurations.FilterdTraceSampleConfig;
 import org.processmining.filterd.configurations.FilterdTraceStartEventConfig;
+import org.processmining.filterd.filters.FilterdEventAttrFilter;
 import org.processmining.filterd.filters.FilterdTraceFrequencyFilter;
 import org.processmining.filterd.filters.FilterdTracePerformanceFilter;
 import org.processmining.filterd.filters.FilterdTraceSampleFilter;
@@ -43,12 +45,12 @@ public class ComputationCellController extends CellController {
 	private boolean isExpanded;
 	private boolean isFullScreen;
 	private boolean isConfigurationModalShown;
-	
+
 	private VBox notebookVisualiser;
 	private HBox notebookToolbar;
 	private SwingNode visualizerSwgNode;
 	private ConfigurationModalController configurationModal;
-	
+
 	private ScrollPane scrollPane;
 
 	@FXML private VBox panelLayout;
@@ -76,12 +78,12 @@ public class ComputationCellController extends CellController {
 		cmbEventLog.getItems().addAll(model.getInputLogs());
 		cmbEventLog.getSelectionModel().selectFirst();
 		setXLog();
-		
+
 		// Add listeners to the basic model components
 		cellModel.getProperty().addPropertyChangeListener(new CellModelListeners(this));
 		// Add listeners for filter buttons
 		addFilterButtonListeners();
-		
+
 		// Initialize the visualizer
 		visualizerSwgNode = new SwingNode();
 		// Add listener for the ComboBoxes and the MenuButton (workaround JavaFX - SwingNode)
@@ -91,9 +93,9 @@ public class ComputationCellController extends CellController {
 		// bind cellBody width to cellContent width so the visualizations scale properly
 		cellBody.maxWidthProperty().bind(controller.getScene().widthProperty().subtract(64));
 	}
-	
-	
-	
+
+
+
 
 	public ComputationCellController(NotebookController controller, ComputationCellModel model) {
 		super(controller, model);
@@ -151,7 +153,7 @@ public class ComputationCellController extends CellController {
 		// show the filter list to allow the user to pick which filter she wants to add
 		showModalFilterList(model);
 	}
-	
+
 	private void addFilterButtonListeners() {
 		getCellModel().getFilters().addListener(new ListChangeListener<FilterButtonModel>() {
 			@Override
@@ -184,7 +186,7 @@ public class ComputationCellController extends CellController {
 			}
 		});
 	}
-	
+
 	public void removeFilter(FilterButtonModel filter) {
 		int index = filter.getIndex();
 		getCellModel().removeFilter(filter); // Removes the cell from the model
@@ -249,7 +251,7 @@ public class ComputationCellController extends CellController {
 			isExpanded = true;
 			//set height of cell to be the size of the 'window'
 			cell.prefHeightProperty()
-					.bind(notebookVisualiser.heightProperty().subtract(notebookToolbar.heightProperty()));
+			.bind(notebookVisualiser.heightProperty().subtract(notebookToolbar.heightProperty()));
 		}
 		//extend visualizerPane over the filter pane
 		filterPanelScroll.setVisible(!isExpanded);
@@ -385,6 +387,8 @@ public class ComputationCellController extends CellController {
 		filterOptions.add("Trace Frequency");
 		filterOptions.add("Trace Sample");
 		filterOptions.add("Trace Performance");
+		filterOptions.add("Event Attributes");
+
 		configurationModal.showFilterList(filterOptions, new Callback<String, FilterdAbstractConfig>() {
 
 			public FilterdAbstractConfig call(String userSelection) {
@@ -420,10 +424,20 @@ public class ComputationCellController extends CellController {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
+						break;
 					case "Trace Performance":
 						try {
 							filterConfig = new FilterdTracePerformanceConfig(model.getInputLog().get(),
 									new FilterdTracePerformanceFilter());
+						} catch (EmptyLogException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						break;
+					case "Event Attributes":
+						try {
+							filterConfig = new FilterdEventAttrConfig(model.getInputLog().get(),
+									new FilterdEventAttrFilter());
 						} catch (EmptyLogException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -452,7 +466,7 @@ public class ComputationCellController extends CellController {
 		super.show();
 		if (isExpanded) {
 			cell.prefHeightProperty()
-					.bind(notebookVisualiser.heightProperty().subtract(notebookToolbar.heightProperty()));
+			.bind(notebookVisualiser.heightProperty().subtract(notebookToolbar.heightProperty()));
 		}
 	}
 
