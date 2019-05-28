@@ -110,6 +110,7 @@ public class FilterButtonController {
 
 	@FXML
 	private void editFilterHandler() {
+		selectFilterButton();
 		if(this.model.getFilterConfig() != null) {
 			this.controller.showModalFilterConfiguration(this.model.getFilterConfig());
 		}

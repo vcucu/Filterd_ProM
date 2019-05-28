@@ -115,8 +115,7 @@ public abstract class CellController {
 	
 	@FXML
 	public void prependCellButtonHandler() {
-		CellModel model = getCellModel();
-		int index = controller.getModel().getCells().indexOf(model);
+		int index = getCellModel().getIndex();
 		controller.toggleAddCellModal(index);
 	}
 	
@@ -131,12 +130,14 @@ public abstract class CellController {
 	@FXML
 	private void moveDown() {
 		int index = getCellModel().getIndex();
-		if (index < controller.getCellsLayout().getChildren().size() - 1) {
+		if (index < controller.getModel().getCells().size() - 1) {
 			move(index + 1);
 		}
 	}
 	
 	private void move(int index) {
+		// Hide AddCell modal
+		controller.hideAddCellModal();
 		// Remove layout
 		controller.getCellsLayout().getChildren().remove(cellLayout);
 		// Remove model

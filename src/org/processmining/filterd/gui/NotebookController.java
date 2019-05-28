@@ -1,7 +1,6 @@
 package org.processmining.filterd.gui;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
@@ -75,9 +74,9 @@ public class NotebookController {
 	 */
 	public void initialize() {	
 		// Add cell listener 
-		addCellListeners();
+		cellListeners();
 		
-		// Initialize AddCelModal
+		// Initialize AddCellModal
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/processmining/filterd/gui/fxml/AddCell.fxml"));
 			loader.setController(new AddCellController());
@@ -88,7 +87,7 @@ public class NotebookController {
 		
 	}
 	
-	private void addCellListeners() {
+	private void cellListeners() {
 		model.getCells().addListener(new ListChangeListener<CellModel>() {
 			@Override
 			public void onChanged(Change<? extends CellModel> change) {
@@ -227,7 +226,7 @@ public class NotebookController {
 		VBox newCellLayout;
 		try {
 			newCellLayout = (VBox) loader.load();
-			cellsLayout.getChildren().add(newCellLayout);
+			cellsLayout.getChildren().add(cell.getIndex(), newCellLayout);
 			newController.setCellLayout(newCellLayout);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -278,7 +277,8 @@ public class NotebookController {
 	/**
 	 * Make the add cell modal appear.
 	 */
-	public void showAddCellModal(int index) {
+	// Do NOT make this public! - Omar
+	private void showAddCellModal(int index) {
 		addCellHBox.setVisible(true); // makes the content of the modal (HBox) visible.
 		addCellHBox.setManaged(true); // makes the modal (HBox) take up space. This option is note available in the
 										// Scene Builder.
@@ -290,12 +290,17 @@ public class NotebookController {
 	 */
 	public void toggleAddCellModal(int index) {
 		boolean isVisible = addCellHBox.isVisible();
-		boolean indexOf = (index == cellsLayout.getChildrenUnmodifiable().indexOf(addCellHBox));
-		if (isVisible) {
-			hideAddCellModal();
-		}
-		if (!indexOf) {
+		boolean sameIndex = (index == cellsLayout.getChildrenUnmodifiable().indexOf(addCellHBox));
+		if (!isVisible) {
 			showAddCellModal(index);
+		} else {
+			// It's visible
+			if (sameIndex) {
+				hideAddCellModal();
+			} else {
+				hideAddCellModal();
+				showAddCellModal(index);
+			}
 		}
 	}
 
