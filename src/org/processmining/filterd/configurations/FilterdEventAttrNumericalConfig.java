@@ -20,14 +20,9 @@ public class FilterdEventAttrNumericalConfig extends FilterdAbstractReferenceabl
 	public FilterdEventAttrNumericalConfig(XLog log, Filter filterType, XAttribute numerical) {
 		super(log, filterType);
 		this.numerical = numerical; 
-		initParameters();
-		
-	}
-
-	private void initParameters() {
 		parameters = new ArrayList<Parameter>();
-		ArrayList<String> defaultPair = new ArrayList<>();
-		ArrayList<String> optionsPair = new ArrayList<>();
+		ArrayList<Integer> defaultPair = new ArrayList<>();
+		ArrayList<Integer> optionsPair = new ArrayList<>();
 
 		String defaultSelect = "Choose different values.";
 		ArrayList<String> selectList = new ArrayList<>();
@@ -62,18 +57,17 @@ public class FilterdEventAttrNumericalConfig extends FilterdAbstractReferenceabl
 			}
 		}
 		
-		// TO DO: cant have default null
 		Collections.sort(values);
 		ParameterMultipleFromSet desiredValues = new ParameterMultipleFromSet(
 				"desiredValues", "Choose values:", values, values);
 		
-		defaultPair.add(values.get(0));
-		defaultPair.add(values.get(values.size() - 1));
-		optionsPair.add(values.get(0));
-		optionsPair.add(values.get(values.size() - 1));
+		defaultPair.add(Integer.parseInt(values.get(0)));
+		defaultPair.add(Integer.parseInt(values.get(values.size() - 1)));
+		optionsPair.add(Integer.parseInt(values.get(0)));
+		optionsPair.add(Integer.parseInt(values.get(values.size() - 1)));
 		// slider values parameter
-		ParameterRangeFromRange<String> range = new ParameterRangeFromRange<>("range",
-				"Select interval to choose from.", defaultPair, optionsPair);
+		ParameterRangeFromRange<Integer> range = new ParameterRangeFromRange<>("range",
+				"Select interval to choose from.", defaultPair, optionsPair, Integer.TYPE);
 		
 		parameters.add(selectionType);
 		parameters.add(traceHandling);
@@ -81,6 +75,7 @@ public class FilterdEventAttrNumericalConfig extends FilterdAbstractReferenceabl
 		parameters.add(parameterType);
 		parameters.add(desiredValues);
 		parameters.add(range);
+		
 	}
 
 	public boolean canPopulate(FilterConfigPanelController component) {
