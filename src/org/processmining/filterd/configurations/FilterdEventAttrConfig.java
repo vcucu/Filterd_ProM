@@ -174,10 +174,4 @@ public class FilterdEventAttrConfig extends FilterdAbstractReferencingConfig {
 		if (concreteReference == null) return true;
 		return concreteReference.checkValidity(log);
 	}
-
-	public XLog filter() {
-		// TODO Auto-generated method stub
-		
-		return null;
-	}
 }

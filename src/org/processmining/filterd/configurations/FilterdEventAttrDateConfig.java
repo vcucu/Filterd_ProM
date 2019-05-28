@@ -106,12 +106,4 @@ public class FilterdEventAttrDateConfig extends FilterdAbstractReferenceableConf
 		 * and there exists time:timestamp attributes */
 		return times.size() != 0 &&  lower.isAfter(times.get(0)) && upper.isBefore(times.get(times.size()-1));
 	}
-
-	public XLog filter() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	
 }

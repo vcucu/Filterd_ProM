@@ -68,11 +68,5 @@ public class FilterdEventAttrCategoricalConfig extends FilterdAbstractReferencea
 	public boolean canPopulate(FilterConfigPanelController component) {
 		//check whether no params are empty if you populate with the component
 		return true;
-	};
-
-	public XLog filter() {
-		// TODO Auto-generated method stub
-		return null;
 	}
-
 }

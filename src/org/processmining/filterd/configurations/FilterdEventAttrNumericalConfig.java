@@ -88,10 +88,4 @@ public class FilterdEventAttrNumericalConfig extends FilterdAbstractReferenceabl
 		// TODO Auto-generated method stub
 		return false;
 	}
-
-	public XLog filter() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }
