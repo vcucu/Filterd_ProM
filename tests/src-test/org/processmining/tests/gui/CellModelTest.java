@@ -14,7 +14,7 @@ public class CellModelTest extends TestCase {
 	@Test
 	public void testNewCellModel() {
 		// Create new cell model instance
-		CellModel cell = new CellModel(null);
+		CellModel cell = new CellModel(null, 0);
 		// Get the property change support of the newly created cell
 		PropertyChangeSupport property = cell.getProperty();
 		// Check if the property change support variable was initialized properly
@@ -26,7 +26,7 @@ public class CellModelTest extends TestCase {
 	@Test
 	public void testHiddenProperty() {
 		// Create new cell model instance
-		CellModel cell = new CellModel(null);
+		CellModel cell = new CellModel(null, 0);
 		// Set a new value for the cell model hidden variable
 		cell.setHidden(true);
 		// Get the value for the cell model hidden variable
@@ -37,7 +37,7 @@ public class CellModelTest extends TestCase {
 	@Test
 	public void testCellStatusBar() {
 		// Create new cell model instance
-		CellModel cell = new CellModel(null);
+		CellModel cell = new CellModel(null, 0);
 		// Set a new value for the cell status bar
 		cell.setStatusBar(CellStatus.IDLE);
 		// Get the value of the cell status bar
@@ -56,7 +56,7 @@ public class CellModelTest extends TestCase {
 	@Test
 	public void testCellName() {
 		// Create new cell model instance
-		CellModel cell = new CellModel(null);
+		CellModel cell = new CellModel(null, 0);
 		// Set a new value for the cell name
 		cell.setCellName("Filterd");
 		// Get the value of the cell name
@@ -68,11 +68,26 @@ public class CellModelTest extends TestCase {
 	@Test
 	public void testCellContext() {
 		// Create new cell model instance
-		CellModel cell = new CellModel(null);
+		CellModel cell = new CellModel(null, 0);
 		// Get the UIPluginContext of the cell model
 		UIPluginContext context = cell.getContext();
 		// Check the cell context is set to null
 		assertTrue(context == null);
+	}
+	
+	@Test
+	public void testCellIndex() {
+		// Create new cell model instance
+		CellModel cell = new CellModel(null, 0);
+		// Get the index of the newly created cell
+		int index = cell.getIndex();
+		// Check the index is properly set
+		assertEquals(index, 0);
+		
+		// Set the index to a new value
+		cell.setIndex(10);
+		// Check the index was properly set
+		assertEquals(cell.getIndex(), 10);
 	}
 
 }

@@ -66,7 +66,7 @@ public class FilterStartEventsTest extends FilterdPackageTest{
 
 		//instantiate the filter class
 		FilterdTraceStartEventFilter filter = new FilterdTraceStartEventFilter();
-		XLog computed = filter.filter(null, originalLog, parameters);	
+		XLog computed = filter.filter(originalLog, parameters);	
 		assert equalLog(expected, computed);
 	}
 
@@ -114,7 +114,7 @@ public class FilterStartEventsTest extends FilterdPackageTest{
 
 		//instantiate filter class
 		FilterdTraceStartEventFilter filter = new FilterdTraceStartEventFilter();
-		XLog computed = filter.filter(null, originalLog, parameters);
+		XLog computed = filter.filter(originalLog, parameters);
 		assert equalLog(expected, computed);
 	}
 
@@ -178,7 +178,7 @@ public class FilterStartEventsTest extends FilterdPackageTest{
 
 		//instantiate the filter class
 		FilterdTraceStartEventFilter filter = new FilterdTraceStartEventFilter();
-		XLog computed = filter.filter(null, originalLog, parameters);	
+		XLog computed = filter.filter(originalLog, parameters);	
 		assert equalLog(expected, computed);
 	}
 
@@ -225,7 +225,7 @@ public class FilterStartEventsTest extends FilterdPackageTest{
 
 		//instantiate the filter class
 		FilterdTraceStartEventFilter filter = new FilterdTraceStartEventFilter();
-		XLog computed = filter.filter(null, originalLog, parameters);	
+		XLog computed = filter.filter(originalLog, parameters);	
 		assert equalLog(expected, computed);
 	}
 
@@ -273,7 +273,7 @@ public class FilterStartEventsTest extends FilterdPackageTest{
 
 		//instantiate the filter class
 		FilterdTraceStartEventFilter filter = new FilterdTraceStartEventFilter();
-		XLog computed = filter.filter(null, originalLog, parameters);	
+		XLog computed = filter.filter(originalLog, parameters);	
 		assert equalLog(expected, computed);
 	}
 
@@ -321,7 +321,7 @@ public class FilterStartEventsTest extends FilterdPackageTest{
 
 		//instantiate the filter class
 		FilterdTraceStartEventFilter filter = new FilterdTraceStartEventFilter();
-		XLog computed = filter.filter(null, originalLog, parameters);	
+		XLog computed = filter.filter(originalLog, parameters);	
 		assert equalLog(expected, computed);
 	}
 
@@ -368,7 +368,7 @@ public class FilterStartEventsTest extends FilterdPackageTest{
 
 		//instantiate the filter class
 		FilterdTraceStartEventFilter filter = new FilterdTraceStartEventFilter();
-		XLog computed = filter.filter(null, originalLog, parameters);	
+		XLog computed = filter.filter(originalLog, parameters);	
 		assert equalLog(expected, computed);
 	}
 
@@ -415,7 +415,7 @@ public class FilterStartEventsTest extends FilterdPackageTest{
 
 		//instantiate the filter class
 		FilterdTraceStartEventFilter filter = new FilterdTraceStartEventFilter();
-		XLog computed = filter.filter(null, originalLog, parameters);	
+		XLog computed = filter.filter(originalLog, parameters);	
 		assert equalLog(expected, computed);
 	}
 
@@ -463,7 +463,7 @@ public class FilterStartEventsTest extends FilterdPackageTest{
 
 		//instantiate the filter class
 		FilterdTraceStartEventFilter filter = new FilterdTraceStartEventFilter();
-		XLog computed = filter.filter(null, originalLog, parameters);	
+		XLog computed = filter.filter(originalLog, parameters);	
 		assert equalLog(expected, computed);
 	}
 
@@ -509,7 +509,7 @@ public class FilterStartEventsTest extends FilterdPackageTest{
 
 		//instantiate the filter class
 		FilterdTraceStartEventFilter filter = new FilterdTraceStartEventFilter();
-		XLog computed = filter.filter(null, originalLog, parameters);	
+		XLog computed = filter.filter(originalLog, parameters);	
 		assert equalLog(expected, computed);
 	}
 
@@ -556,7 +556,7 @@ public class FilterStartEventsTest extends FilterdPackageTest{
 
 		//instantiate the filter class
 		FilterdTraceStartEventFilter filter = new FilterdTraceStartEventFilter();
-		XLog computed = filter.filter(null, originalLog, parameters);	
+		XLog computed = filter.filter(originalLog, parameters);	
 		assert equalLog(expected, computed);
 	}
 	
@@ -597,7 +597,7 @@ public class FilterStartEventsTest extends FilterdPackageTest{
 
 		//instantiate the filter class
 		FilterdTraceStartEventFilter filter = new FilterdTraceStartEventFilter();
-		XLog computed = filter.filter(null, original, parameters);	
+		XLog computed = filter.filter(original, parameters);	
 		assert equalLog(expected, computed);
 	}
 

@@ -112,6 +112,16 @@ public class NotebookModel {
 	public YLog getInitialInput() {
 		return initialInput;
 	}
+	
+	/**
+	 * Set the initial event log for the notebook.
+	 * 
+	 * @param log
+	 * 			The event log the notebook is initialized with.
+	 */
+	public void setInitialInput(YLog log) {
+		this.initialInput = log;
+	}
 
 	/**
 	 * Returns the list of all cells currently in the notebook.

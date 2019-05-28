@@ -12,13 +12,12 @@ import org.processmining.filterd.parameters.ParameterMultipleFromSet;
 import org.processmining.filterd.parameters.ParameterOneFromSet;
 import org.processmining.filterd.parameters.ParameterYesNo;
 import org.processmining.filterd.tools.Toolbox;
-import org.processmining.framework.plugin.PluginContext;
 
 public class FilterdTraceStartEventFilter extends Filter {
 
 	XLog filteredLog;
 
-	public XLog filter(PluginContext context, XLog log, List<Parameter> parameters) {
+	public XLog filter(XLog log, List<Parameter> parameters) {
 
 		//attribute to be filtered on
 		ParameterOneFromSet attribute = (ParameterOneFromSet)this

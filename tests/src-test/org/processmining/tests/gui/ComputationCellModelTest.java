@@ -5,10 +5,13 @@ import java.util.List;
 
 import org.deckfour.uitopia.api.model.ViewType;
 import org.junit.Test;
+import org.processmining.filterd.configurations.FilterdAbstractConfig;
+import org.processmining.filterd.configurations.FilterdTraceSampleConfig;
+import org.processmining.filterd.filters.FilterdTraceSampleFilter;
 import org.processmining.filterd.gui.ComputationCellModel;
-import org.processmining.filterd.gui.FilterButtonController;
 import org.processmining.filterd.gui.FilterButtonModel;
 import org.processmining.filterd.models.YLog;
+import org.processmining.filterd.parameters.ParameterValueFromRange;
 import org.processmining.tests.filters.FilterdPackageTest;
 
 public class ComputationCellModelTest extends FilterdPackageTest {
@@ -26,7 +29,7 @@ public class ComputationCellModelTest extends FilterdPackageTest {
 		YLog initialLog = new YLog(0, "Original Log", originalLog);
 		logs.add(initialLog);
 		// Create new computation cell model instance
-		ComputationCellModel cell = new ComputationCellModel(null, null, logs);
+		ComputationCellModel cell = new ComputationCellModel(null, 0, null, logs);
 		// Check that the computation cell model was properly created
 		assertTrue(cell instanceof ComputationCellModel);
 		// Get the list of input logs
@@ -40,7 +43,7 @@ public class ComputationCellModelTest extends FilterdPackageTest {
 	@Test
 	public void testFiltersList() {
 		// Create new computation cell model instance
-		ComputationCellModel cell = new ComputationCellModel(null, null, new ArrayList<>());
+		ComputationCellModel cell = new ComputationCellModel(null, 0, null, new ArrayList<>());
 		// Create new YLog
 		YLog initialLog = new YLog(0, "Original Log", originalLog);
 		
@@ -54,44 +57,35 @@ public class ComputationCellModelTest extends FilterdPackageTest {
 		assertTrue(cell.getFilters().get(0).equals(model));
 		
 		// Remove model from filter list
-		cell.removeFilterModel(model);
+		cell.removeFilter(model);
 		// Check the filter models list was properly updated
 		assertEquals(cell.getFilters().size(), 0);
 	}
 	
 	@Test
-	public void testFilterControllerList() {
-		// Create new computation cell model instance
-		ComputationCellModel cell = new ComputationCellModel(null, null, new ArrayList<>());
-		// Create new YLog
-		YLog initialLog = new YLog(0, "Original Log", originalLog);
-		
-		// Create new filter button model (to be added to the computation cell filter panel)
-		FilterButtonModel model = new FilterButtonModel(0, initialLog);
-		FilterButtonController controller = new FilterButtonController(null, model);
-		
-		// Add model to the filter models list
-		cell.addFilterController(0, controller);
-		// Check the filter models list was properly updated
-		assertEquals(cell.getFilterControllers().size(), 1);
-		assertTrue(cell.getFilterControllers().get(0).equals(controller));
-		
-		// Remove model from filter list
-		cell.removeFilterController(controller);
-		// Check the filter models list was properly updated
-		assertEquals(cell.getFilterControllers().size(), 0);
-	}
-	
-	@Test
-	public void testXLog() {
+	public void testInputLog() {
 		// Create new computation cell model
-		ComputationCellModel cell = new ComputationCellModel(null, null, new ArrayList<>());
+		ComputationCellModel cell = new ComputationCellModel(null, 0, null, new ArrayList<>());
 		// Create new YLog
 		YLog initialLog = new YLog(0, "Original Log", originalLog);
 		// Set a new new log for the cell
 		cell.setInputLog(initialLog);
 		// Check that the new log was properly set
 		assertTrue(equalLog(originalLog, cell.getInputLog().get()));
+	}
+	
+	@Test
+	public void testNullInputLog() {
+		try {
+			// Create new computation cell model
+			ComputationCellModel cell = new ComputationCellModel(null, 0, null, new ArrayList<>());
+			// Create new null YLog (to be passed to the computation cell)
+			YLog initialLog = null;
+			// Set a new log for the cell
+			cell.setInputLog(initialLog);
+		} catch (Throwable expected) {
+			assertEquals(IllegalArgumentException.class, expected.getClass());
+		}
 	}
 	
 	@Test
@@ -102,7 +96,7 @@ public class ComputationCellModelTest extends FilterdPackageTest {
 		YLog initialLog = new YLog(0, "Original Log", originalLog);
 		logs.add(initialLog);
 		// Create new computation cell model instance
-		ComputationCellModel cell = new ComputationCellModel(null, null, logs);
+		ComputationCellModel cell = new ComputationCellModel(null, 0, null, logs);
 		// Set a new input log list
 		cell.setInputLogs(logs);
 		// Get the newly set input log list
@@ -119,7 +113,7 @@ public class ComputationCellModelTest extends FilterdPackageTest {
 		YLog initialLog = new YLog(0, "Original Log", originalLog);
 		logs.add(initialLog);
 		// Create new computation cell model instance
-		ComputationCellModel cell = new ComputationCellModel(null, null, logs);
+		ComputationCellModel cell = new ComputationCellModel(null, 0, null, logs);
 		// Set a new input log list
 		cell.setOutputLogs(logs);
 		// Get the newly set input log list
@@ -131,7 +125,7 @@ public class ComputationCellModelTest extends FilterdPackageTest {
 	@Test
 	public void testSelectFilterButton() {
 		// Create new computation cell model instance
-		ComputationCellModel cell = new ComputationCellModel(null, null, new ArrayList<>());
+		ComputationCellModel cell = new ComputationCellModel(null, 0, null, new ArrayList<>());
 		// Create new YLog
 		YLog initialLog = new YLog(0, "Original Log", originalLog);
 		
@@ -165,7 +159,7 @@ public class ComputationCellModelTest extends FilterdPackageTest {
 	public void testGetVisualizers() {
 		try {
 			// Create new computation cell model instance
-			ComputationCellModel cell = new ComputationCellModel(null, null, new ArrayList<>());
+			ComputationCellModel cell = new ComputationCellModel(null, 0, null, new ArrayList<>());
 			// Create new YLog
 			YLog initialLog = new YLog(0, "Original Log", originalLog);
 			cell.setInputLog(initialLog);
@@ -174,5 +168,37 @@ public class ComputationCellModelTest extends FilterdPackageTest {
 		} catch (Throwable expected) {
 			assertEquals(NullPointerException.class, expected.getClass());
 		}
+	}
+	
+	@Test
+	public void testComputationCellCompute() {
+		// Create new computation cell model instance
+		ComputationCellModel cell = new ComputationCellModel(null, 0, null, new ArrayList<>());
+		// Create new YLog
+		YLog initialLog = new YLog(0, "Original Log", originalLog);
+		// Set the initial log for the computation cell
+		cell.setInputLog(initialLog);
+		
+		// Create new filter button models
+		FilterButtonModel model0 = new FilterButtonModel(0, initialLog);
+		FilterButtonModel model1 = new FilterButtonModel(1, initialLog);
+		
+		// Add filter buttons to the computation cell filter list
+		cell.addFilterModel(0, model0);
+		cell.addFilterModel(1, model1);
+		
+		// Add filter configurations to the filter buttons
+		FilterdAbstractConfig config = new FilterdTraceSampleConfig(initialLog.get(),
+				new FilterdTraceSampleFilter());
+		// Set the filter configuration parameters
+		((ParameterValueFromRange<Integer>) config.getParameters().get(0)).setChosen(2);
+		// Set filter configurations for the filter buttons
+		model0.setFilterConfig(config);
+		model1.setFilterConfig(config);
+		
+		// Compute the cell's output
+		cell.compute();
+		// Check that the computation was successful
+		assertTrue(true);
 	}
 }

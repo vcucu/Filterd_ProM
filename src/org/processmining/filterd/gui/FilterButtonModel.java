@@ -19,7 +19,7 @@ public class FilterButtonModel {
 	private YLog inputLog;
 	private YLog outputLog;
 	
-	public FilterButtonModel(int value, YLog inputLog, int index) {
+	public FilterButtonModel(int index, YLog inputLog) {
 		String filterName = "Filter #" + Integer.toString((int) (Math.random() * 900 + 100));
 		name = new SimpleStringProperty(filterName);
 		selected = new SimpleBooleanProperty(false);
@@ -87,7 +87,7 @@ public class FilterButtonModel {
 		filterConfig.setLog(inputLog.get());
 		if(filterConfig.isValid()) {
 			// compute
-			XLog output = filterConfig.filter(null);
+			XLog output = filterConfig.filter();
 			outputLog.setLog(output);
 		} else {
 			// throw exception to notify the user that the computation could not be completed

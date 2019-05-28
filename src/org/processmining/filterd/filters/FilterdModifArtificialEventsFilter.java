@@ -4,11 +4,10 @@ import java.util.List;
 
 import org.deckfour.xes.model.XLog;
 import org.processmining.filterd.parameters.Parameter;
-import org.processmining.framework.plugin.PluginContext;
 
 public class FilterdModifArtificialEventsFilter extends Filter {
 
-	public XLog filter(PluginContext context, XLog log, List<Parameter> parameters) {
+	public XLog filter(XLog log, List<Parameter> parameters) {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -7,14 +7,12 @@ import org.deckfour.xes.model.XLog;
 import org.processmining.filterd.parameters.Parameter;
 import org.processmining.filterd.parameters.ParameterValueFromRange;
 import org.processmining.filterd.tools.Toolbox;
-import org.processmining.framework.plugin.PluginContext;
 
 public class FilterdTraceSampleFilter extends Filter {
 	public FilterdTraceSampleFilter() {}
 
 	@SuppressWarnings("unchecked")
-	public XLog filter(PluginContext context, XLog log, 
-			List<Parameter> parameters) {
+	public XLog filter(XLog log, List<Parameter> parameters) {
 	
 		// Get value of threshold parameter (i.e. the desired number of 
 		// samples).

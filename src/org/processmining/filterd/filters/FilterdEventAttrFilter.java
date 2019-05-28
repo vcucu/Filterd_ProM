@@ -16,7 +16,6 @@ import org.processmining.filterd.parameters.ParameterOneFromSet;
 import org.processmining.filterd.parameters.ParameterRangeFromRange;
 import org.processmining.filterd.parameters.ParameterYesNo;
 import org.processmining.filterd.tools.Toolbox;
-import org.processmining.framework.plugin.PluginContext;
 
 public class FilterdEventAttrFilter extends Filter {
 
@@ -26,7 +25,7 @@ public class FilterdEventAttrFilter extends Filter {
 	public FilterdEventAttrFilter() {}
 
 	@Override
-	public XLog filter(PluginContext context, XLog log, List<Parameter> parameters) {
+	public XLog filter(XLog log, List<Parameter> parameters) {
 		// TODO Auto-generated method stub this method should just contain a switch for the following 4 methods
 		//that are invisible still :}
 		
@@ -41,18 +40,18 @@ public class FilterdEventAttrFilter extends Filter {
 			if (a.getKey().equals(key)) {
 				switch(Toolbox.getType(a)) {
 					case "Literal":
-						return filterCategorical(context, log, parameters);
+						return filterCategorical(log, parameters);
 					case "Boolean":
-						return filterCategorical(context, log, parameters);
+						return filterCategorical(log, parameters);
 					case "Continuous":
-						return filterNumerical(context, log, parameters);
+						return filterNumerical(log, parameters);
 					case "Discrete":
-						return filterNumerical(context, log, parameters);
+						return filterNumerical(log, parameters);
 					case "ID":
-						return filterCategorical(context, log, parameters);
+						return filterCategorical(log, parameters);
 					case "Timestamp":
-						return filterTimestamp(context, log, parameters);
-					default: return filterCategorical(context, log, parameters);	
+						return filterTimestamp(log, parameters);
+					default: return filterCategorical(log, parameters);	
 				}
 			}
 		}
@@ -60,7 +59,7 @@ public class FilterdEventAttrFilter extends Filter {
 		return null;
 	}
 
-	public XLog filterCategorical(PluginContext context, XLog log, List<Parameter> parameters) {
+	public XLog filterCategorical(XLog log, List<Parameter> parameters) {
 		// should you remove empty traces
 		ParameterYesNo traceHandling = (ParameterYesNo) this
 				.getParameter(parameters, "traceHandling");
@@ -91,12 +90,8 @@ public class FilterdEventAttrFilter extends Filter {
 				boolean add = !choice;
 
 				if(desiredValues.getChosen().contains(value)) add = choice;
-			
-				if (add) filteredTrace.add(event);
 
-				if (context != null) {
-					context.getProgress().inc();
-				}
+				if (add) filteredTrace.add(event);
 			}
 			if (!filteredTrace.isEmpty() || keepNull) {
 				filteredLog.add(filteredTrace);
@@ -106,7 +101,7 @@ public class FilterdEventAttrFilter extends Filter {
 		return filteredLog;
 	}
 
-	public XLog filterNumerical(PluginContext context, XLog log, List<Parameter> parameters) {
+	public XLog filterNumerical(XLog log, List<Parameter> parameters) {
 		// should you remove empty traces
 		ParameterYesNo traceHandling = (ParameterYesNo) this.getParameter(parameters, "traceHandling");
 		// should you keep events which do not have the specified attribute
@@ -132,7 +127,7 @@ public class FilterdEventAttrFilter extends Filter {
 
 			for (XEvent event : trace) {
 				boolean add = !choice;
-				
+
 				/* check if event can be kept if it does not have this attribute */
 				if (!event.getAttributes().containsKey(key)) {
 					if (keepEvent) filteredTrace.add(event);
@@ -151,18 +146,13 @@ public class FilterdEventAttrFilter extends Filter {
 					/* selection type: multiple from set */
 					if (desiredValues.getChosen().contains(Integer.toString(value))) add = choice;
 				}
-
-				if (add) filteredTrace.add(event);
-				if (context != null) context.getProgress().inc();
+				if (!filteredTrace.isEmpty() || keepTraces) filteredLog.add(filteredTrace);
 			}
-
-			if (!filteredTrace.isEmpty() || keepTraces) filteredLog.add(filteredTrace);
 		}
-
 		return filteredLog;
 	}
 
-	public XLog filterTimestamp(PluginContext context, XLog log, List<Parameter> parameters) {		
+	public XLog filterTimestamp(XLog log, List<Parameter> parameters) {		
 
 		ParameterYesNo traceHandling = (ParameterYesNo) this.getParameter(parameters, "traceHandling"); 
 		ParameterYesNo eventHandling = (ParameterYesNo) this.getParameter(parameters, "eventHandling");
@@ -202,10 +192,6 @@ public class FilterdEventAttrFilter extends Filter {
 
 				if (add) {
 					filteredTrace.add(event);
-				}
-
-				if (context != null) {
-					context.getProgress().inc();
 				}
 			}
 

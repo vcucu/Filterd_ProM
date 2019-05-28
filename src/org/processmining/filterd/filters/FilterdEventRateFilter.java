@@ -16,14 +16,13 @@ import org.processmining.filterd.parameters.ParameterMultipleFromSet;
 import org.processmining.filterd.parameters.ParameterOneFromSet;
 import org.processmining.filterd.parameters.ParameterValueFromRange;
 import org.processmining.filterd.tools.Toolbox;
-import org.processmining.framework.plugin.PluginContext;
 
 public class FilterdEventRateFilter extends Filter {
 
 	XLog filteredLog;
 	
 	
-	public XLog filter(PluginContext context, XLog log, List<Parameter> parameters) {
+	public XLog filter(XLog log, List<Parameter> parameters) {
 		
 		/*create the event classes according to the classifier */	
 		XLogInfo logInfo = XLogInfoImpl.create(log, XLogInfoImpl.STANDARD_CLASSIFIER);

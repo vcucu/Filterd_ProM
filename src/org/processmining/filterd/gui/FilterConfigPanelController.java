@@ -25,6 +25,10 @@ public class FilterConfigPanelController extends AbstractFilterConfigPanelContro
 	private boolean placeInLeftPane;
 	private FilterdAbstractConfig owner;
 	
+	public FilterConfigPanelController() {
+		controllers = new ArrayList<>();
+	}
+	
 	public FilterConfigPanelController(String title, List<Parameter> parameters, FilterdAbstractConfig owner) {
 		placeInLeftPane = true;
 		controllers = new ArrayList<>();

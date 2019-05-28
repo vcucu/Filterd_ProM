@@ -2,14 +2,17 @@ package org.processmining.tests.gui;
 
 import org.junit.Test;
 import org.processmining.filterd.configurations.FilterdAbstractConfig;
+import org.processmining.filterd.configurations.FilterdTraceSampleConfig;
 import org.processmining.filterd.configurations.FilterdTraceStartEventConfig;
+import org.processmining.filterd.filters.FilterdTraceSampleFilter;
 import org.processmining.filterd.filters.FilterdTraceStartEventFilter;
 import org.processmining.filterd.gui.FilterButtonModel;
+import org.processmining.filterd.gui.InvalidConfigurationException;
 import org.processmining.filterd.models.YLog;
+import org.processmining.filterd.parameters.ParameterValueFromRange;
 import org.processmining.tests.filters.FilterdPackageTest;
 
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.StringProperty;
 
 public class FilterButtonModelTest extends FilterdPackageTest {
@@ -65,8 +68,6 @@ public class FilterButtonModelTest extends FilterdPackageTest {
 		int index = filter.getIndex();
 		// Check the filter button index
 		assertTrue(index == 10);
-		// Check the type of the index property is properly returned
-		assertTrue(filter.indexProperty() instanceof IntegerProperty);
 	}
 	
 	@Test
@@ -102,7 +103,38 @@ public class FilterButtonModelTest extends FilterdPackageTest {
 		assertTrue(filter.getFilterConfig() instanceof FilterdAbstractConfig);
 	}
 	
-	public static void main(String[] args) {
-		junit.textui.TestRunner.run(FilterButtonModelTest.class);
+	@Test
+	public void testFilterButtonOutputLog() {
+		// Create new YLog
+		YLog initialLog = new YLog(0, "Original Log", originalLog);
+		// Create new filter button instance
+		FilterButtonModel filter = new FilterButtonModel(0, initialLog);
+		// Get the output log of the filter button
+		YLog outputLog = filter.getOutputLog();
+		// Check the output log is not null
+		assertTrue(outputLog != null);
+	}
+	
+	@Test
+	public void testFilterButtonComputeIllegalStateException() {
+		// Create new YLog
+		YLog initialLog = new YLog(0, "Original Log", originalLog);
+		// Create new filter button instance
+		FilterButtonModel filter = new FilterButtonModel(0, initialLog);
+		// Create new configuration for the button instance
+		FilterdAbstractConfig config = new FilterdTraceSampleConfig(initialLog.get(),
+				new FilterdTraceSampleFilter());
+		// Set the filter configuration parameters
+		((ParameterValueFromRange<Integer>) config.getParameters().get(0)).setChosen(initialLog.get().size()+5);
+		// Set the configuration for the filter button
+		filter.setFilterConfig(config);
+		
+		try {
+			// Compute the cell's output
+			filter.compute();
+			fail("InvalidConfigurationException was NOT thrown!");
+		} catch (Throwable exception) {
+			assertEquals(InvalidConfigurationException.class, exception.getClass());
+		}
 	}
 }

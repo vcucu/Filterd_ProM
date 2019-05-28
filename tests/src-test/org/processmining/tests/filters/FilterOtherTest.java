@@ -84,7 +84,7 @@ public class FilterOtherTest extends FilterdPackageTest {
 		parameters.add(numberOfSamplesParameter);
 		
 		FilterdTraceSampleFilter filter = new FilterdTraceSampleFilter();
-		computed = filter.filter(null, originalLog, parameters);
+		computed = filter.filter(originalLog, parameters);
 
 		assert containsLog(expected, computed);
 	}

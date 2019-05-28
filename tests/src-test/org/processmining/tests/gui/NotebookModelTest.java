@@ -80,9 +80,9 @@ public class NotebookModelTest extends FilterdPackageTest {
 		// Create new notebook model instance
 		NotebookModel model = new NotebookModel();
 		// Create new computation cell model
-		ComputationCellModel computationCell = new ComputationCellModel(null, null, new ArrayList<>());
+		ComputationCellModel computationCell = new ComputationCellModel(null, 0, null, new ArrayList<>());
 		// Create new text cell model
-		TextCellModel textCell = new TextCellModel(null);
+		TextCellModel textCell = new TextCellModel(null, 0);
 		// Add newly created cells to the notebook model (method #1)
 		model.addCell(computationCell);
 		// Add newly created cells to the notebook model (method #2)
@@ -92,8 +92,8 @@ public class NotebookModelTest extends FilterdPackageTest {
 		
 		// Add new cells to the notebook via list
 		ArrayList<CellModel> newCells = new ArrayList<>();
-		ComputationCellModel computationCell1 = new ComputationCellModel(null, null, new ArrayList<>());
-		TextCellModel textCell1 = new TextCellModel(null);
+		ComputationCellModel computationCell1 = new ComputationCellModel(null, 0, null, new ArrayList<>());
+		TextCellModel textCell1 = new TextCellModel(null, 0);
 		// Add cells to the array list
 		newCells.add(computationCell1);
 		newCells.add(textCell1);
@@ -115,9 +115,9 @@ public class NotebookModelTest extends FilterdPackageTest {
 		// Create new notebook model instance
 		NotebookModel model = new NotebookModel();
 		// Create new computation cell model
-		ComputationCellModel computationCell = new ComputationCellModel(null, null, new ArrayList<>());
+		ComputationCellModel computationCell = new ComputationCellModel(null, 0, null, new ArrayList<>());
 		// Create new text cell model
-		TextCellModel textCell = new TextCellModel(null);
+		TextCellModel textCell = new TextCellModel(null, 0);
 		// Add newly created cells to the notebook model (method #1)
 		model.addCell(computationCell);
 		// Add newly created cells to the notebook model (method #2)
@@ -137,8 +137,8 @@ public class NotebookModelTest extends FilterdPackageTest {
 		
 		// Add new cells to the notebook via list
 		ArrayList<CellModel> newCells = new ArrayList<>();
-		ComputationCellModel computationCell1 = new ComputationCellModel(null, null, new ArrayList<>());
-		TextCellModel textCell1 = new TextCellModel(null);
+		ComputationCellModel computationCell1 = new ComputationCellModel(null, 0, null, new ArrayList<>());
+		TextCellModel textCell1 = new TextCellModel(null, 0);
 		// Add cells to the array list
 		newCells.add(computationCell1);
 		newCells.add(textCell1);
@@ -181,5 +181,21 @@ public class NotebookModelTest extends FilterdPackageTest {
 		List<YLog> logs = model.getOutputLogsTill(0);
 		// Check the logs list that is returned (should only be the initial log)
 		assertEquals(logs.size(), 1);
+	}
+	
+	@Test
+	public void testNotebookGetInitialInput() {
+		// Create new notebook model instance
+		NotebookModel model = new NotebookModel();
+		// Create new YLog
+		YLog initialLog = new YLog(0, "Original Log", originalLog);
+		// Set the initial input log for the notebook
+		model.setInitialInput(initialLog);
+		// Check the initial input log was properly set
+		assertTrue(model.getInitialInput() != null);
+		// Get the initial input log of the notebook
+		YLog log = model.getInitialInput();
+		// Check the log was properly set
+		assertTrue(equalLog(log.get(), originalLog));
 	}
 }
