@@ -7,6 +7,12 @@ import org.processmining.filterd.filters.Filter;
 import org.processmining.filterd.gui.FilterConfigPanelController;
 import org.processmining.filterd.parameters.ParameterOneFromSet;
 import org.processmining.filterd.parameters.ParameterRangeFromRange;
+import org.processmining.filterd.widgets.ParameterController;
+import org.processmining.filterd.widgets.ParameterOneFromSetController;
+
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.scene.control.ComboBox;
 
 public class FilterdTraceFrequencyConfig extends FilterdAbstractConfig {
 
@@ -78,10 +84,22 @@ public class FilterdTraceFrequencyConfig extends FilterdAbstractConfig {
 	public FilterConfigPanelController getConfigPanel() {
 		// Return a new panel for this configuration with the relevant name and 
 		// parameters.
-		return new FilterConfigPanelController(
+		FilterConfigPanelController filterConfigPanel = new FilterConfigPanelController(
 				"Filter Trace Frequency Configuration", 
 				parameters, 
 				this);
+		for(ParameterController parameter : filterConfigPanel.getControllers()) {
+			if(parameter.getName().equals("FreqOcc")) {
+				ParameterOneFromSetController casted = (ParameterOneFromSetController) parameter;
+				ComboBox<String> comboBox = casted.getComboBox();
+				comboBox.valueProperty().addListener(new ChangeListener<String>() {
+					@Override 
+					public void changed(ObservableValue ov, String oldValue, String newValue) {
+			        }
+				});
+			}
+		}
+		return filterConfigPanel;
 	}
 
 	public boolean checkValidity(XLog log) {
