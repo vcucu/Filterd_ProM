@@ -86,7 +86,6 @@ public class FilterdTraceFrequencyConfig extends FilterdAbstractConfig {
 		// Initialize the filter mode options parameter and add it to the 
 		// parameters list
 		List<String> fModeOptions = new ArrayList<String>();
-		
 		fModeOptions.add("in");
 		fModeOptions.add("out");
 		

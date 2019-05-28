@@ -40,4 +40,10 @@ public class ParameterMultipleFromSetController extends ParameterController {
 	public List<String> getValue() {
 		return list.getSelectionModel().getSelectedItems();
 	}
+	
+	public void setSelected(List<String> selection) {
+		for (String option : selection) {
+			list.getSelectionModel().select(option);
+		}
+	}
 }
