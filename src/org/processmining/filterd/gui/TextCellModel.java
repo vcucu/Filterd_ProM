@@ -6,8 +6,8 @@ public class TextCellModel extends CellModel{
 	
 	private String comment; 
 
-	public TextCellModel(UIPluginContext context) {
-		super(context);
+	public TextCellModel(UIPluginContext context, int index) {
+		super(context, index);
 	}
 	
 	/**

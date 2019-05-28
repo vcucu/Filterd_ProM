@@ -6,26 +6,24 @@ import org.processmining.filterd.models.YLog;
 import org.processmining.filterd.tools.Toolbox;
 
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 public class FilterButtonModel {
 	
 	private StringProperty name;
-	private IntegerProperty index;
+	private int index;
 	private BooleanProperty selected;
 	private FilterdAbstractConfig filterConfig;
 	private YLog inputLog;
 	private YLog outputLog;
 	
-	public FilterButtonModel(int value, YLog inputLog) {
+	public FilterButtonModel(int value, YLog inputLog, int index) {
 		String filterName = "Filter #" + Integer.toString((int) (Math.random() * 900 + 100));
 		name = new SimpleStringProperty(filterName);
 		selected = new SimpleBooleanProperty(false);
-		index = new SimpleIntegerProperty(value);
+		this.index = index;
 		this.inputLog = inputLog;
 		this.outputLog = new YLog(Toolbox.getNextId(), filterName + " output log", inputLog.get());
 	}
@@ -47,15 +45,11 @@ public class FilterButtonModel {
 	}
 
 	public int getIndex() {
-		return index.get();
+		return index;
 	}
 
-	public void setIndex(int value) {
-		this.index.set(value);
-	}
-	
-	public IntegerProperty indexProperty() {
-		return index;
+	public void setIndex(int index) {
+		this.index = index;
 	}
 
 	public boolean getSelected() {

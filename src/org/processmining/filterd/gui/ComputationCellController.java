@@ -81,9 +81,10 @@ public class ComputationCellController extends CellController {
 		
 		// Initialize the visualizer
 		visualizerSwgNode = new SwingNode();
-		// Add listener for the ComboBoxes (workaround JavaFX - SwingNode)
+		// Add listener for the ComboBoxes and the MenuButton (workaround JavaFX - SwingNode)
 		Utilities.JFXSwingFix(visualizerPane, cmbEventLog, visualizerSwgNode);
 		Utilities.JFXSwingFix(visualizerPane, cmbVisualizers, visualizerSwgNode);
+		Utilities.JFXSwingFix(visualizerPane, menuBtnCellSettings, visualizerSwgNode);
 		// bind cellBody width to cellContent width so the visualizations scale properly
 		cellBody.maxWidthProperty().bind(controller.getScene().widthProperty().subtract(64));
 	}
@@ -99,8 +100,8 @@ public class ComputationCellController extends CellController {
 
 		isExpanded = false;
 		isFullScreen = false;
-		notebookVisualiser = controller.getNotebookVisualiser();
-		notebookToolbar = controller.getNotebookToolbar();
+		notebookVisualiser = controller.getNotebookLayout();
+		notebookToolbar = controller.getToolbarLayout();
 		scrollPane = controller.getScrollPane();
 	}
 
@@ -119,7 +120,7 @@ public class ComputationCellController extends CellController {
 			} else {
 				inputLog = getCellModel().getFilters().get(index - 1).getOutputLog();
 			}
-			FilterButtonModel filterModel = new FilterButtonModel(index, inputLog);
+			FilterButtonModel filterModel = new FilterButtonModel(index, inputLog, index);
 			// set cell output to be the output of the last filter (the filter we just created)
 			List<YLog> outputLogs = getCellModel().getOutputLogs();
 			outputLogs.clear();
@@ -140,7 +141,7 @@ public class ComputationCellController extends CellController {
 		try {
 			HBox newPanelLayout = (HBox) loader.load();
 			panelLayout.getChildren().add(index, newPanelLayout);
-			newController.setCellLayout(newPanelLayout);
+			newController.setFilterLayout(newPanelLayout);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

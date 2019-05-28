@@ -37,25 +37,21 @@ public class ComputationCellModel extends CellModel {
 	private ObservableList<FilterButtonModel> filters;
 	private ArrayList<FilterButtonController> filterControllers;
 
-	public ComputationCellModel(UIPluginContext context, ProMCanceller canceller, List<YLog> eventLogs) {
-			super(context);
-			this.canceller = canceller;
-			this.inputLogs = eventLogs;
-			this.outputLogs = new ArrayList<>();
-			outputLogs.add(new YLog(Toolbox.getNextId(), getCellName() + " output log"));
-			
-			filterControllers = new ArrayList<>();
+	public ComputationCellModel(UIPluginContext context, int index, ProMCanceller canceller, List<YLog> eventLogs) {
+		super(context, index);
+		this.canceller = canceller;
+		this.inputLogs = eventLogs;
+		this.outputLogs = new ArrayList<>();
+		outputLogs.add(new YLog(Toolbox.getNextId(), getCellName() + " output log"));
 
-			filters = FXCollections.observableArrayList(//);
-					new Callback<FilterButtonModel, Observable[]>() {
-						@Override
-						public Observable[] call(FilterButtonModel temp) {
-							return new Observable[] {
-									temp.nameProperty(),
-									temp.selectedProperty()
-							};
-						}
-					});
+		filterControllers = new ArrayList<>();
+
+		filters = FXCollections.observableArrayList(new Callback<FilterButtonModel, Observable[]>() {
+			@Override
+			public Observable[] call(FilterButtonModel temp) {
+				return new Observable[] { temp.nameProperty(), temp.selectedProperty() };
+			}
+		});
 	}
 
 	public ObservableList<FilterButtonModel> getFilters() {

@@ -27,11 +27,10 @@ public abstract class CellController {
 		this.cellModel = cellModel;
 	}
 
-	//	public void intialize() {
-	//		//add PropertyChangeListeners for each of cell model properties
-	//		cellModel.getProperty().addPropertyChangeListener(new CellModelListeners(this));
-	//
-	//	}
+//	public void intialize() {
+//		// add PropertyChangeListeners for each of cell model properties
+//		cellModel.getProperty().addPropertyChangeListener(new CellModelListeners(this));
+//	}
 
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
 		cellModel.getProperty().addPropertyChangeListener(listener);
@@ -57,7 +56,7 @@ public abstract class CellController {
 	 * Removes the current cell (model) from the notebook model.
 	 */
 	@FXML
-	public void removeCell() {
+	public void remove() {
 		getNotebookController().removeCell(getCellModel());
 	}
 	
@@ -119,6 +118,36 @@ public abstract class CellController {
 		CellModel model = getCellModel();
 		int index = controller.getModel().getCells().indexOf(model);
 		controller.toggleAddCellModal(index);
+	}
+	
+	@FXML
+	private void moveUp() {
+		int index = getCellModel().getIndex();
+		if (index > 0) {
+			move(index - 1);
+		}
+	}
+	
+	@FXML
+	private void moveDown() {
+		int index = getCellModel().getIndex();
+		if (index < controller.getCellsLayout().getChildren().size() - 1) {
+			move(index + 1);
+		}
+	}
+	
+	private void move(int index) {
+		CellModel model = getCellModel();
+		
+		controller.getCellsLayout().getChildren().remove(cellLayout);
+		
+		controller.getModel().getCells().remove(model);
+//		controller.getCellControllers().remove(this);
+		
+		controller.getModel().getCells().add(index, model);
+//		controller.getCellModel().addFilterController(index, this);
+		
+		controller.getCellsLayout().getChildren().add(index, cellLayout);
 	}
 
 	public void show() {

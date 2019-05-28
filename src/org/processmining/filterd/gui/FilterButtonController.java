@@ -56,7 +56,7 @@ public class FilterButtonController {
 		return layout;
 	}
 
-	public void setCellLayout(Pane layout) {
+	public void setFilterLayout(Pane layout) {
 		this.layout = layout;
 	}
 
@@ -120,7 +120,7 @@ public class FilterButtonController {
 	private void moveUpFilterHandler() {
 		int index = model.getIndex();
 		if (index > 0) {
-			moveFilterButton(index - 1);
+			move(index - 1);
 		}
 	}
 	
@@ -128,11 +128,11 @@ public class FilterButtonController {
 	private void moveDownFilterHandler() {
 		int index = model.getIndex();
 		if (index < controller.getCellModel().getFilters().size() - 1) {
-			moveFilterButton(index + 1);
+			move(index + 1);
 		}
 	}
 	
-	private void moveFilterButton(int index) {
+	private void move(int index) {
 		controller.getPanelLayout().getChildren().remove(filterLayout);
 		
 		controller.getCellModel().getFilters().remove(model);
