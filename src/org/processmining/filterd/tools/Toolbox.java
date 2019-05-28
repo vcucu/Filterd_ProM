@@ -118,6 +118,10 @@ public class Toolbox {
 	
 	/* time format assumed to be YYYY-MM-DDThh:mm:ss.SSSZ */
 	public static LocalDateTime synchronizeGMT(String time) {
+		// check if time has milliseconds, otherwise add it 
+		if (!time.contains(".")) { 
+			time = time.substring(0, 19) + ".000" + time.substring(19);
+		}
 		LocalDateTime date = LocalDateTime.parse(time.substring(0, 23));
 		int offsetH;
 		int offsetM;
@@ -335,7 +339,7 @@ public static List<Double> getMinAnMaxDuration(XLog log) {
 			LocalDateTime endTime = synchronizeGMT(lastEventTime);
 			
 			Duration traceDuration = Duration.between(startTime, endTime);
-			double totalMillis = (double) traceDuration.toMillis();
+			double totalMillis = traceDuration.toMillis();
 			
 			if (totalMillis < minDuration) {
 				minDuration = totalMillis;
