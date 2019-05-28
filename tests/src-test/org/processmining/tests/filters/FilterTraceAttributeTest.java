@@ -38,7 +38,7 @@ public class FilterTraceAttributeTest extends FilterdPackageTest {
 		List<Parameter> parameters = getParametersCategorical("concept:name","Categorical",
 				false,
 				"Mandatory",
-				Arrays.asList("Bob")
+				Arrays.asList("41", "56", "76")
 				);
 		
 		XAttributeMap mapping = originalLog.get(0).getAttributes();
