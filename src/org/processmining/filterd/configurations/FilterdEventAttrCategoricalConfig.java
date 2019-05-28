@@ -41,6 +41,7 @@ public class FilterdEventAttrCategoricalConfig extends FilterdAbstractReferencea
 		values = new ArrayList<>();
 		for (XTrace trace: log) {
 			for (XEvent event : trace) {
+				if (!event.getAttributes().containsKey(attrib.getKey())) continue;
 				String value = event.getAttributes().get(attrib.getKey()).toString();
 				if(!values.contains(value)) {
 					values.add(value);						

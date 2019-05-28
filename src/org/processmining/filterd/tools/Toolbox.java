@@ -1,7 +1,9 @@
 package org.processmining.filterd.tools;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -116,6 +118,10 @@ public class Toolbox {
 	
 	/* time format assumed to be YYYY-MM-DDThh:mm:ss.SSSZ */
 	public static LocalDateTime synchronizeGMT(String time) {
+		// check if time has milliseconds, otherwise add it 
+		if (!time.contains(".")) { 
+			time = time.substring(0, 19) + ".000" + time.substring(19);
+		}
 		LocalDateTime date = LocalDateTime.parse(time.substring(0, 23));
 		int offsetH;
 		int offsetM;
@@ -307,6 +313,65 @@ public class Toolbox {
 	public static int getNextId() {
 		id++;
 		return id;
+	}
+	
+public static List<Double> getMinAnMaxDuration(XLog log) {
+		
+		double minDuration = Double.MAX_VALUE;
+		double maxDuration = -Double.MAX_VALUE;
+		
+		for (XTrace trace : log) {
+			
+			// Use first and last event to calculate the total duration of
+			// the trace.
+			String firstEventTime = trace
+					.get(0)
+					.getAttributes()
+					.get("time:timestamp")
+					.toString();
+			String lastEventTime = trace
+					.get(trace.size())
+					.getAttributes()
+					.get("time:timestamp")
+					.toString();
+			
+			LocalDateTime startTime = synchronizeGMT(firstEventTime);
+			LocalDateTime endTime = synchronizeGMT(lastEventTime);
+			
+			Duration traceDuration = Duration.between(startTime, endTime);
+			double totalMillis = traceDuration.toMillis();
+			
+			if (totalMillis < minDuration) {
+				minDuration = totalMillis;
+			}
+			
+			if (totalMillis > maxDuration) {
+				maxDuration = totalMillis;
+			}
+			
+		}
+		
+		return Arrays.asList(minDuration, maxDuration);
+	}
+	
+	public static List<Double> getminAdnMaxEventSize(XLog log) {
+		
+		double minEventSize = Double.MAX_VALUE;
+		double maxEventSize = -Double.MAX_VALUE;
+		
+		for (XTrace trace : log) {
+			
+			if (trace.size() < minEventSize) {
+				minEventSize = trace.size();
+			}
+			
+			if (trace.size() > maxEventSize) {
+				maxEventSize = trace.size();
+			}
+			
+		}
+		
+		return Arrays.asList(minEventSize, maxEventSize);
 	}
 
 }

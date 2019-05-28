@@ -33,6 +33,10 @@ public class ParameterOneFromSetController extends ParameterController {
         combobox.getSelectionModel().select(defaultValue);
 	}
 	
+	public ComboBox<String> getComboBox() {
+		return this.combobox;
+	}
+	
 	public String getValue() {
 		return combobox.getSelectionModel().getSelectedItem();
 	}

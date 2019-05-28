@@ -45,6 +45,10 @@ public class ParameterRangeFromRangeController<N extends Number> extends Paramet
         }
 	}
 	
+	public RangeSlider getSlider() {
+		return this.slider;
+	}
+	
 	public List<N> getValue() {
 		List<N> value = new ArrayList<>();
 		if(genericTypeClass.equals(Double.TYPE)) {

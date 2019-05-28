@@ -38,10 +38,8 @@ public class FilterTraceAttributeTest extends FilterdPackageTest {
 		List<Parameter> parameters = getParametersCategorical("concept:name","Categorical",
 				false,
 				"Mandatory",
-				Arrays.asList("Bob")
+				Arrays.asList("41", "56", "76")
 				);
-		
-		XAttributeMap mapping = originalLog.get(0).getAttributes();
 		
 		computed = filter.filter(null, originalLog, parameters);
 
@@ -130,33 +128,6 @@ public class FilterTraceAttributeTest extends FilterdPackageTest {
 	@Test
 	public void testTimeframeIntersect() throws Throwable {
 		XLog expected = parseLog("trace-attribute", "test_timeframe_2.xes");
-		XLog computed = null; // insert filter operation
-
-		assert equalLog(expected, computed);
-	}
-	
-	/* Corresponds to test case 34 from test_specification.xlsx.
-	 * See Disco Performance - duration of min 24-hours - max inf.
-	 * 
-	 * Result: cases 35, 41, 72.
-	 */
-	@Test
-	public void testPerformanceDuration() throws Throwable {
-		XLog expected = parseLog("trace-attribute", "test_performance_1.xes");
-		XLog computed = null; // insert filter operation
-
-		assert equalLog(expected, computed);
-	}
-
-	/* Corresponds to test case 35 from test_specification.xlsx.
-	 * See Disco Endpoints - number of events: min 3 events - max 6 events.
-	 * See ProM - Filter log by attributes = "Select traces from log".
-	 * 
-	 * Result: cases 56, 74, 75, 76.
-	 */
-	@Test
-	public void testPerformanceEvents() throws Throwable {
-		XLog expected = parseLog("trace-attribute", "test_performance_2.xes");
 		XLog computed = null; // insert filter operation
 
 		assert equalLog(expected, computed);
