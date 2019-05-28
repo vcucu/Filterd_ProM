@@ -39,7 +39,7 @@ public class FilterdTraceFrequencyConfig extends FilterdAbstractConfig {
 				new ParameterOneFromSet(
 						"FreqOcc", 
 						"Threshold type", 
-						"frequency", 
+						foOptions.get(0), 
 						foOptions);
 		
 		Map<XTrace, List<Integer>> variantsToTraceIndices = 
