@@ -54,6 +54,10 @@ public class YLog {
 	public String toString() {
 		return name;
 	}
+	
+	public boolean isEmpty() {
+		return log.isEmpty();
+	}
 
 	public int getCellOutput() {
 		if (isOutput) {

@@ -4,6 +4,7 @@ package org.processmining.filterd.plugins;
 import java.io.IOException;
 
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 
 import org.deckfour.xes.model.XLog;
 import org.processmining.contexts.uitopia.UIPluginContext;
@@ -35,6 +36,10 @@ public class FilterdVisualizer {
 	@Visualizer(name = "Filterd Visualizer", pack = "Filterd")
 	public JComponent visualize(final UIPluginContext context, final XLog log, final ProMCanceller canceller) {
 
+		if (log.isEmpty()) {
+			return new JLabel("The " + NAME + " doesn't support emply XLogs.");
+		}
+		
 		model = new NotebookModel(context, log, canceller);
 		controller = new NotebookController(model);
 		
