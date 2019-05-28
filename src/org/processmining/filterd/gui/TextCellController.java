@@ -13,14 +13,7 @@ public class TextCellController extends CellController {
 
 	public void initialize() {
 		cellModel.getProperty().addPropertyChangeListener(new CellModelListeners(this));
-	}
-	
-	/**
-	 * Handle saving of the comment from the text area in model
-	 */
-	@FXML
-	public void handleComment() {
-		getCellModel().setComment(commentField.getText());
+		commentField.textProperty().bindBidirectional(getCellModel().getCommentProperty()); // bind the text in de UI to its variable counterpart
 	}
 	
 	public void changeComment(String comment) {
