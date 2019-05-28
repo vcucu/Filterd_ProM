@@ -57,7 +57,7 @@ public class FilterTracePerformanceTest extends FilterdPackageTest {
 				0, 
 				86400000);
 		
-		computed = filter.filter(null, originalLog, parameters);
+		computed = filter.filter(originalLog, parameters);
 
 		assert equalLog(expected, computed);
 	}
@@ -105,7 +105,7 @@ public class FilterTracePerformanceTest extends FilterdPackageTest {
 				2, 
 				2);
 		
-		computed = filter.filter(null, originalLog, parameters);
+		computed = filter.filter(originalLog, parameters);
 
 		assert equalLog(expected, computed);
 	}
