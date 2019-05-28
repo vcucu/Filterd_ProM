@@ -41,8 +41,6 @@ public class FilterTraceAttributeTest extends FilterdPackageTest {
 				Arrays.asList("41", "56", "76")
 				);
 		
-		XAttributeMap mapping = originalLog.get(0).getAttributes();
-		
 		computed = filter.filter(null, originalLog, parameters);
 
 		assert equalLog(expected, computed);

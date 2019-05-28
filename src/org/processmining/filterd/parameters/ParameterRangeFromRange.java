@@ -14,7 +14,7 @@ public class ParameterRangeFromRange<T> extends Parameter  {
 		super(name, nameDisplayed);
 		this.defaultPair = defaultPair;
 		this.optionsPair = optionsPair;
-		this.chosenPair = new ArrayList<T>();
+		this.chosenPair = defaultPair;
 		this.genericTypeClass = (Class<T>) Double.TYPE;
 	}
 	
@@ -22,6 +22,7 @@ public class ParameterRangeFromRange<T> extends Parameter  {
 		super(name, nameDisplayed);
 		this.defaultPair = defaultPair;
 		this.optionsPair = optionsPair;
+		this.chosenPair = defaultPair;
 		this.genericTypeClass = genericTypeClass;
 	}
 	
