@@ -7,6 +7,10 @@ import org.processmining.filterd.parameters.Parameter;
 import org.processmining.framework.plugin.PluginContext;
 
 public class FilterdTracePerformanceFilter extends Filter {
+	
+	public FilterdTracePerformanceFilter() {
+		
+	}
 
 	public XLog filter(
 			PluginContext context, 

@@ -1,7 +1,14 @@
 package org.processmining.tests.filters;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.deckfour.xes.model.XLog;
 import org.junit.Test;
+import org.processmining.filterd.filters.FilterdTracePerformanceFilter;
+import org.processmining.filterd.parameters.Parameter;
+import org.processmining.filterd.parameters.ParameterOneFromSet;
+import org.processmining.filterd.parameters.ParameterRangeFromRange;
 
 public class FilterTracePerformanceTest extends FilterdPackageTest {
 
@@ -18,6 +25,16 @@ public class FilterTracePerformanceTest extends FilterdPackageTest {
 	public void testPerformanceDuration() throws Throwable {
 		XLog expected = parseLog("trace-attribute", "test_performance_1.xes");
 		XLog computed = null; // insert filter operation
+		
+		FilterdTracePerformanceFilter filter = 
+				new FilterdTracePerformanceFilter();
+		
+		List<Parameter> parameters = getTestParameters(
+				"filter on duration", 
+				86400000, 
+				Double.POSITIVE_INFINITY);
+		
+		computed = filter.filter(null, originalLog, parameters);
 
 		assert equalLog(expected, computed);
 	}
@@ -32,8 +49,44 @@ public class FilterTracePerformanceTest extends FilterdPackageTest {
 	public void testPerformanceEvents() throws Throwable {
 		XLog expected = parseLog("trace-attribute", "test_performance_2.xes");
 		XLog computed = null; // insert filter operation
+		
+		FilterdTracePerformanceFilter filter = 
+				new FilterdTracePerformanceFilter();
+		
+		List<Parameter> parameters = getTestParameters(
+				"filter on number of events", 
+				3, 
+				6);
+		
+		computed = filter.filter(null, originalLog, parameters);
 
 		assert equalLog(expected, computed);
+	}
+	
+	private List<Parameter> getTestParameters(
+			String chosenOption,
+			double lowThreshold,
+			double highThreshold) {
+		
+		// Create performance options parameter and set the option to duration
+		// as default.
+		ParameterOneFromSet performanceOptionsParameter = 
+				new ParameterOneFromSet(
+						"performanceOptions", 
+						"Select performance option", 
+						chosenOption, 
+						Arrays.asList(chosenOption));
+		
+		// Use duration as default because this is also set in the performance
+		// options parameter.
+		ParameterRangeFromRange<Double> valueParameter = 
+				new ParameterRangeFromRange<Double>(
+						"threshold", 
+						"Select the threshold", 
+						Arrays.asList(lowThreshold, highThreshold), 
+						Arrays.asList(lowThreshold, highThreshold));
+		
+		return Arrays.asList(performanceOptionsParameter, valueParameter);
 	}
 	
 
