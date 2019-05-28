@@ -27,6 +27,7 @@ public class FilterdTracePerformanceConfig extends FilterdAbstractConfig {
 	public FilterdTracePerformanceConfig(XLog log, Filter filterType) {
 		super(log, filterType);
 		
+		parameters = new ArrayList<>();
 		// Initialize members based on the log.
 		minAndMaxDuration = Toolbox.getMinAnMaxDuration(log);
 		minAndMaxEvents = Toolbox.getminAdnMaxEventSize(log);
@@ -49,7 +50,8 @@ public class FilterdTracePerformanceConfig extends FilterdAbstractConfig {
 						"threshold", 
 						"Select the threshold", 
 						minAndMaxDuration, 
-						minAndMaxDuration);
+						minAndMaxDuration,
+						Integer.TYPE);
 		
 		// Add the created parameters.
 		parameters.add(performanceOptionsParameter);
