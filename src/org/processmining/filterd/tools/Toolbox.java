@@ -51,7 +51,12 @@ public class Toolbox {
 		
 		return classifiers;
 	}
-	
+	/**
+	 * Returns the name of the classifier when passed a classifier object
+	 * 
+	 * @param classifiers
+	 * @return the name of the @param classifier
+	 */
 	public static List<String> getClassifiersName(List<XEventClassifier> classifiers){
 		List<String> names = new ArrayList<>();
 		for (XEventClassifier c : classifiers) {
@@ -59,6 +64,38 @@ public class Toolbox {
 		}
 		return names;
 	}
+	
+	/**
+	 * Computes the sizes of the event classes with the lowest and 
+	 * highest absolute occurrence, respectively
+	 * 
+	 * @param log the log to be interrogated
+	 * @param classifier based on which we generate the event classes
+	 * @return the size of the event classes which contain the lowest 
+	 * and highest number of events, respectively
+	 */
+	public static List<Integer> getMaxOccurrence(XLog log, XEventClassifier classifier) {
+		List<Integer> minAndMax = new ArrayList<>();
+		XLogInfo logInfo = XLogInfoImpl.create(log);
+		XEventClasses eventClasses = logInfo.getEventClasses(classifier);
+		TreeSet<Integer> eventSizes = new TreeSet<Integer>();
+		
+		for (XEventClass event : eventClasses.getClasses()) {
+			eventSizes.add(event.size());
+		}
+		minAndMax.add(eventSizes.first());
+		minAndMax.add(eventSizes.last());
+		return minAndMax;
+	}
+	
+	/**
+	 * Computes the corresponding XEventClassifier object when given 
+	 * a log and the name of a classifier
+	 * 
+	 * @param log
+	 * @param name the name of the classifier object
+	 * @return XEventClassifier object with name being @param name
+	 */
 
 	public static XEventClassifier computeClassifier(XLog log, String name) {
 		XLogInfo logInfo = XLogInfoImpl.create(log);
@@ -71,7 +108,6 @@ public class Toolbox {
 		}
 		return null;
 	}
-	
 	
 	
 	/**
