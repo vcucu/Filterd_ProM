@@ -22,7 +22,6 @@ import org.processmining.filterd.widgets.ParameterRangeFromRangeController;
 import org.processmining.filterd.widgets.ParameterTextController;
 import org.processmining.filterd.widgets.ParameterValueFromRangeController;
 import org.processmining.filterd.widgets.ParameterYesNoController;
-import org.processmining.framework.plugin.PluginContext;
 
 public abstract class FilterdAbstractConfig {
 	
@@ -194,7 +193,7 @@ public abstract class FilterdAbstractConfig {
 	 * @param context the PluginContext
 	 * @return the filtered log
 	 */
-	public XLog filter(PluginContext context) {
-		return filterType.filter(context, log, parameters);
-	};
+	public XLog filter() {
+		return filterType.filter(log, parameters);
+	}
 }

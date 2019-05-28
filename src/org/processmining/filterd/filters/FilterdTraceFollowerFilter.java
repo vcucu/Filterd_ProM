@@ -5,13 +5,12 @@ import java.util.List;
 import org.deckfour.xes.model.XLog;
 import org.processmining.filterd.parameters.Parameter;
 import org.processmining.filterd.parameters.ParameterOneFromSet;
-import org.processmining.filterd.parameters.ParameterYesNo;
-import org.processmining.framework.plugin.PluginContext;
-import org.processmining.filterd.parameters.ParameterRangeFromRange;;
+import org.processmining.filterd.parameters.ParameterRangeFromRange;
+import org.processmining.filterd.parameters.ParameterYesNo;;
 
 public class FilterdTraceFollowerFilter extends Filter {
 
-	public XLog filter(PluginContext context, XLog log, List<Parameter> parameters) {
+	public XLog filter(XLog log, List<Parameter> parameters) {
 		// clone input log, since ProM documentation says filters should not 
 		// change input logs
 		XLog clonedLog = (XLog) log.clone();

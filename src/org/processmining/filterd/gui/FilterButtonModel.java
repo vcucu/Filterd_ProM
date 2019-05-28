@@ -87,7 +87,7 @@ public class FilterButtonModel {
 		filterConfig.setLog(inputLog.get());
 		if(filterConfig.isValid()) {
 			// compute
-			XLog output = filterConfig.filter(null);
+			XLog output = filterConfig.filter();
 			outputLog.setLog(output);
 		} else {
 			// throw exception to notify the user that the computation could not be completed

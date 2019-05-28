@@ -16,7 +16,6 @@ import org.processmining.filterd.parameters.ParameterMultipleFromSet;
 import org.processmining.filterd.parameters.ParameterOneFromSet;
 import org.processmining.filterd.parameters.ParameterRangeFromRange;
 import org.processmining.filterd.parameters.ParameterYesNo;
-import org.processmining.framework.plugin.PluginContext;
 
 public class FilterdTraceAttrFilter extends Filter {
 	
@@ -24,9 +23,7 @@ public class FilterdTraceAttrFilter extends Filter {
 		
 	}
 
-	public XLog filter(PluginContext context, 
-			XLog log, 
-			List<Parameter> parameters) {
+	public XLog filter(XLog log, List<Parameter> parameters) {
 						
 		// clone input log, since ProM documentation says filters should not 
 		// change input logs
