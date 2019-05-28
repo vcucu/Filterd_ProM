@@ -25,11 +25,13 @@ public abstract class FilterdAbstractReferencingConfig extends FilterdAbstractCo
 	@Override
 	public abstract AbstractFilterConfigPanelController getConfigPanel() ;
 
-	public FilterdAbstractConfig changeReference(ParameterOneFromSetExtendedController controller) {
+	public abstract FilterdAbstractConfig changeReference(ParameterOneFromSetExtendedController controller);
+	
+	/*public FilterdAbstractConfig changeReference(ParameterOneFromSetExtendedController controller) {
 		concreteReference = new FilterdTraceStartEventCategoricalConfig(log, filterType,
 				controller.getValue(), Toolbox.computeComplexClassifiers(log));
 		return concreteReference;
-	}
+	}*/
 	
 	public FilterdAbstractReferenceableConfig getConcreteReference() {
 		return concreteReference;

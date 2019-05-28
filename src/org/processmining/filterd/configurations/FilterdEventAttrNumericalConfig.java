@@ -65,7 +65,7 @@ public class FilterdEventAttrNumericalConfig extends FilterdAbstractReferenceabl
 		// TO DO: cant have default null
 		Collections.sort(values);
 		ParameterMultipleFromSet desiredValues = new ParameterMultipleFromSet(
-				"desiredValues", "Choose values:", new ArrayList<String>(), values);
+				"desiredValues", "Choose values:", values, values);
 		
 		defaultPair.add(values.get(0));
 		defaultPair.add(values.get(values.size() - 1));

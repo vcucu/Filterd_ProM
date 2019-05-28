@@ -13,6 +13,7 @@ public class ParameterOneFromSet extends Parameter  {
 		super(name, nameDisplayed);
 		this.defaultChoice = defaultChoice;
 		this.options = options;
+		this.chosen = defaultChoice;
 		this.createsReference = false;
 	}
 	
@@ -21,6 +22,7 @@ public class ParameterOneFromSet extends Parameter  {
 		super(name, nameDisplayed);
 		this.defaultChoice = defaultChoice;
 		this.options = options;
+		this.chosen = defaultChoice;
 		this.createsReference = createsReference;
 	}
 	

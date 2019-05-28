@@ -71,10 +71,6 @@ public class FilterdModifMergeSubsequentConfig extends FilterdAbstractReferencin
 		return new FilterConfigPanelController("Merge Subsequent Events Configuration", parameters, this);
 	}
 	
-	public FilterdAbstractConfig changeReference(ParameterOneFromSetController chosen) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	public boolean checkValidity(XLog log) {
 		// TODO Auto-generated method stub
@@ -85,5 +81,13 @@ public class FilterdModifMergeSubsequentConfig extends FilterdAbstractReferencin
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public FilterdAbstractConfig changeReference(ParameterOneFromSetExtendedController controller) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
 
 }

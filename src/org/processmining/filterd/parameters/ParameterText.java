@@ -8,6 +8,7 @@ public class ParameterText extends Parameter {
 	public ParameterText(String name, String nameDisplayed, String defaultChoice) {
 		super(name, nameDisplayed);
 		this.defaultChoice = defaultChoice;
+		this.chosen = defaultChoice;
 	}
 	public String getDefaultChoice() {
 		return defaultChoice;

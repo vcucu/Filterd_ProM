@@ -3,6 +3,7 @@ package org.processmining.filterd.filters;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import org.deckfour.xes.model.XAttribute;
@@ -132,62 +133,52 @@ public class FilterdTraceAttrFilter extends Filter {
 		
 		//for each trace in the log, first assume that the trace should not
 		//be removed
-		for(XTrace trace : clonedLog) {
+		
+		Iterator it = clonedLog.iterator();
+		
+		while(it.hasNext()) {
 			boolean ok = true;
-			
-			//for each event in the trace check if its attribute has one of the
+			XTrace trace = (XTrace) it.next();
+			//for each trace in the log check if its attribute has one of the
 			//chosen values
-			for(XEvent event : trace) {
-				XAttributeMap eventAttributes = event.getAttributes();
-				//if the attribute value is null and we don't want to handle
-				//null values, just move on to the next event
-				
-				if (!nullHandling.getChosen() && 
-						eventAttributes.get(attribute.getChosen()) == null) {
-					continue;
-				}
-				else {
-					
-					
-					if (selectionType.getChosen().equals("Mandatory")) {
-						
-						/*
-						 *if the attribute value of one event
-						 *is not one of the selected values,
-						 *then the whole trace should be removed 
-						 *and we don't care
-						 *about the rest of its events
-						 *
-						 */
-					if (!satisfies(eventAttributes, attribute.getChosen(),
+			
+			XAttributeMap traceAttributes = trace.getAttributes();
+			
+			//if the attribute value is null and we don't want to handle
+			//null values, just move on to the next trace
+			
+			if (!nullHandling.getChosen() && 
+					traceAttributes.get(attribute.getChosen()) == null) {
+				continue;
+			}
+			else {
+				if (selectionType.getChosen().equals("Mandatory")) {
+					/*
+					 *if the attribute value of one trace
+					 *is not one of the selected values,
+					 *then the  trace should be removed 
+					*/
+					if (!satisfies(traceAttributes, attribute.getChosen(),
 							desiredValues.getChosen())) {
 						ok = false;
-						break;
-						}
-					}
-					else {
-						
-						/*
-						 *if the attribute value of one event
-						 *is one of the selected values,
-						 *then the whole trace should be removed 
-						 *and we don't care
-						 *about the rest of its events
-						 *
-						 */
-					
-						if (satisfies(eventAttributes, attribute.getChosen(),
-								desiredValues.getChosen())) {
-							ok = false;
-							break;
-						}
 					}
 				}
-			//remove the trace if it's not okay
-			
+					else {
+						/*
+						 *if the attribute value of one trace
+						 *is one of the selected values,
+						 *then the whole trace should be removed 
+						 */
+						if (satisfies(traceAttributes, attribute.getChosen(),
+								desiredValues.getChosen())) {
+							ok = false;
+						}
+					}
 			}
+			
+			//remove the trace if it's not okay
 			if (!ok) {
-				clonedLog.remove(trace);
+				it.remove();
 				}
 		}
 		return clonedLog;

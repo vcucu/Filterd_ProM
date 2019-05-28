@@ -1,20 +1,26 @@
 package org.processmining.filterd.configurations;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.deckfour.xes.model.XLog;
+import org.deckfour.xes.model.XTrace;
 import org.processmining.filterd.filters.Filter;
 import org.processmining.filterd.gui.FilterConfigPanelController;
 import org.processmining.filterd.parameters.ParameterOneFromSet;
 import org.processmining.filterd.parameters.ParameterRangeFromRange;
+import org.processmining.filterd.tools.Toolbox;
 import org.processmining.filterd.widgets.ParameterController;
 import org.processmining.filterd.widgets.ParameterOneFromSetController;
+import org.processmining.filterd.widgets.ParameterRangeFromRangeController;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.ComboBox;
 
 public class FilterdTraceFrequencyConfig extends FilterdAbstractConfig {
+	
+	private List<Double> logMinAndMaxSize;
 
 	public FilterdTraceFrequencyConfig(XLog log, Filter filterType) {
 		super(log, filterType);
@@ -33,17 +39,37 @@ public class FilterdTraceFrequencyConfig extends FilterdAbstractConfig {
 				new ParameterOneFromSet(
 						"FreqOcc", 
 						"Threshold type", 
-						"frequency", 
+						foOptions.get(0), 
 						foOptions);
 		
+		Map<XTrace, List<Integer>> variantsToTraceIndices = 
+				Toolbox.getVariantsToTraceIndices(log);
 		
+		double minOccurrence = Double.MAX_VALUE;
+		double maxOccurrence = -Double.MAX_VALUE;
+		
+		for (List<Integer> list : variantsToTraceIndices.values()) {
+			
+			if (list.size() < minOccurrence) {
+				minOccurrence = list.size();
+			}
+			
+			if (list.size() > maxOccurrence) {
+				maxOccurrence = list.size();
+			}
+			
+		}
+		
+		logMinAndMaxSize = new ArrayList<>();
+		logMinAndMaxSize.add(minOccurrence);
+		logMinAndMaxSize.add(maxOccurrence);
 		
 		// Initialize the threshold options parameter and add it to the 
 		// parameters list
-		List<Double> thrOptions = new ArrayList<Double>();
+		List<Double> thrOptions = new ArrayList<>();
 		
 		//since the default option is "frequency", it goes from 1% to 100%
-		thrOptions.add(1d);
+		thrOptions.add(0d);
 		thrOptions.add(100d);
 		
 		ParameterRangeFromRange<Double> threshold = 
@@ -89,14 +115,53 @@ public class FilterdTraceFrequencyConfig extends FilterdAbstractConfig {
 				parameters, 
 				this);
 		for(ParameterController parameter : filterConfigPanel.getControllers()) {
-			if(parameter.getName().equals("FreqOcc")) {
+			if (parameter.getName().equals("FreqOcc")) {
 				ParameterOneFromSetController casted = (ParameterOneFromSetController) parameter;
 				ComboBox<String> comboBox = casted.getComboBox();
 				comboBox.valueProperty().addListener(new ChangeListener<String>() {
 					@Override 
 					public void changed(ObservableValue ov, String oldValue, String newValue) {
+						
+						for (ParameterController changingParameter : filterConfigPanel.getControllers()) {
+							
+							if (changingParameter.getName().equals("threshold")) {
+								
+								ParameterRangeFromRangeController<Double> castedChanging = 
+										(ParameterRangeFromRangeController<Double>) changingParameter;
+								
+								if (newValue.equals("frequency")) {
+									List<Double> defaultValue = new ArrayList<>();
+									defaultValue.add(0.0);
+									defaultValue.add(100.0);
+									List<Double> minMaxPair = new ArrayList<>();
+									minMaxPair.add(0.0);
+									minMaxPair.add(100.0);
+									castedChanging.setSliderConfig(defaultValue, minMaxPair);
+									
+									ParameterRangeFromRange<Double> castedParameter = (ParameterRangeFromRange<Double>) getParameter("threshold");
+									castedParameter.setDefaultPair(defaultValue);
+									castedParameter.setOptionsPair(minMaxPair);
+								} else {
+									castedChanging.setSliderConfig(logMinAndMaxSize, logMinAndMaxSize);
+									
+									ParameterRangeFromRange<Double> castedParameter = (ParameterRangeFromRange<Double>) getParameter("threshold");
+									castedParameter.setDefaultPair(logMinAndMaxSize);
+									castedParameter.setOptionsPair(logMinAndMaxSize);
+								}
+								
+							}
+							
+						}
+						
 			        }
 				});
+			}
+			if(parameter.getName().equals("threshold")) {
+				ParameterRangeFromRangeController<Double> casted = (ParameterRangeFromRangeController<Double>) parameter;
+				ParameterRangeFromRange<Double> castedParameter = (ParameterRangeFromRange<Double>) getParameter("threshold");
+				casted.setSliderConfig(castedParameter.getChosenPair().size() == 0 ? 
+						castedParameter.getDefaultPair() : 
+						castedParameter.getChosenPair(), castedParameter.getOptionsPair());
 			}
 		}
 		return filterConfigPanel;

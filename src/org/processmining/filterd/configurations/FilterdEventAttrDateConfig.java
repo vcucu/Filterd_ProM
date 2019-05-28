@@ -39,6 +39,7 @@ public class FilterdEventAttrDateConfig extends FilterdAbstractReferenceableConf
 		for (XTrace trace: log) {
 			for (XEvent event : trace) {
 				/* timestamp format YYYY-MM-DDTHH:MM:SS.ssssGMT with GMT = {Z, + , -} */
+				if (!event.getAttributes().containsKey("time:timestamp")) continue;
 				String value = event.getAttributes().get("time:timestamp").toString();
 				LocalDateTime time =Toolbox.synchronizeGMT(value);
 				times.add(time.toString());

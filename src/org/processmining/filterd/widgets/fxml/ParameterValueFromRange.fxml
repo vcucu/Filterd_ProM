@@ -9,24 +9,35 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+<VBox xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
          <children>
             <GridPane HBox.hgrow="ALWAYS">
               <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="200.0" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="200.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="280.0" percentWidth="70.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="120.0" percentWidth="30.0" />
               </columnConstraints>
               <rowConstraints>
                 <RowConstraints maxHeight="1.7976931348623157E308" minHeight="25.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Slider fx:id="slider" maxWidth="1.7976931348623157E308" showTickLabels="true" GridPane.hgrow="ALWAYS" />
-                  <VBox GridPane.columnIndex="1" GridPane.hgrow="ALWAYS">
+                  <HBox>
+                     <children>
+                        <Slider fx:id="slider" maxWidth="1.7976931348623157E308" showTickLabels="true" HBox.hgrow="ALWAYS" />
+                        <Label fx:id="valueLabel" alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" prefWidth="50.0" text="10.99" />
+                     </children>
+                     <GridPane.margin>
+                        <Insets right="5.0" />
+                     </GridPane.margin>
+                  </HBox>
+                  <VBox maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS">
                      <children>
                         <Label fx:id="label" alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="ParameterValueFromRange" VBox.vgrow="ALWAYS" />
                      </children>
+                     <GridPane.margin>
+                        <Insets left="5.0" />
+                     </GridPane.margin>
                   </VBox>
                </children>
             </GridPane>

@@ -128,6 +128,7 @@ public class FilterdTraceStartEventConfig extends FilterdAbstractReferencingConf
 	 */
 	@Override
 	public boolean checkValidity(XLog candidateLog) {
+		
 		List<String> attrCandidateLog = new ArrayList<>();
 		attrCandidateLog.addAll(Toolbox.computeAttributes(candidateLog));
 		List<String> attrs = Toolbox.computeAttributes(candidateLog);
@@ -135,7 +136,20 @@ public class FilterdTraceStartEventConfig extends FilterdAbstractReferencingConf
 		String attr = attrs.get(0);
 		if (!attrCandidateLog.contains(attr)) {
 			return false;
-		}	
+		}
+		
+		if (parameters == null) {
+			return true;
+		}
+			
+				
 		return true;
+	}
+
+
+	@Override
+	public FilterdAbstractConfig changeReference(ParameterOneFromSetExtendedController controller) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

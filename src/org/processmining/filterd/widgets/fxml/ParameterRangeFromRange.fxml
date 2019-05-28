@@ -15,19 +15,36 @@
          <children>
             <GridPane maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS">
               <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="200.0" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="200.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="280.0" percentWidth="70.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="120.0" percentWidth="30.0" />
               </columnConstraints>
               <rowConstraints>
                 <RowConstraints minHeight="25.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <RangeSlider fx:id="slider" blockIncrement="1.0" highValue="75.0" lowValue="25.0" max="100.0" maxWidth="200.0" showTickLabels="true" GridPane.hgrow="ALWAYS" />
                   <VBox maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS">
                      <children>
-                        <Label fx:id="label" alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="ParameterRangeFromRange" VBox.vgrow="ALWAYS" />
+                        <Label fx:id="label" alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="ParameterRangeFromRange" VBox.vgrow="ALWAYS">
+                           <VBox.margin>
+                              <Insets left="5.0" />
+                           </VBox.margin></Label>
                      </children>
                   </VBox>
+                  <HBox>
+                     <children>
+                        <Label fx:id="lowValueLabel" maxHeight="1.7976931348623157E308" prefWidth="50.0" text="10.99">
+                           <HBox.margin>
+                              <Insets right="5.0" />
+                           </HBox.margin>
+                        </Label>
+                        <RangeSlider fx:id="slider" blockIncrement="1.0" highValue="75.0" lowValue="25.0" max="100.0" maxWidth="1.7976931348623157E308" showTickLabels="true" HBox.hgrow="ALWAYS" />
+                        <Label fx:id="highValueLabel" alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" prefWidth="50.0" text="15.99">
+                           <HBox.margin>
+                              <Insets left="5.0" right="5.0" />
+                           </HBox.margin>
+                        </Label>
+                     </children>
+                  </HBox>
                </children>
             </GridPane>
          </children>

@@ -16,6 +16,7 @@ import org.processmining.contexts.uitopia.hub.ProMResourceManager;
 import org.processmining.contexts.uitopia.hub.ProMViewManager;
 import org.processmining.filterd.models.YLog;
 import org.processmining.filterd.plugins.FilterdVisualizer;
+import org.processmining.filterd.tools.EmptyLogException;
 import org.processmining.filterd.tools.Toolbox;
 import org.processmining.framework.plugin.PluginParameterBinding;
 import org.processmining.framework.plugin.ProMCanceller;
@@ -185,6 +186,8 @@ public class ComputationCellModel extends CellModel {
     			FilterButtonModel model = e.getFilterButtonModel();
 //    			FilterButtonController controller = filterControllers.get(model.getIndex());
     			// TODO: set controller as invalid
+    		} catch(EmptyLogException e) {
+    			// TODO: handle this
     		} catch(Exception e) {
     			// if any other exception occurs, throw it
     			throw e;
