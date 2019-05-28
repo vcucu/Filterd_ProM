@@ -125,7 +125,7 @@ public class ComputationCellController extends CellController {
 			} else {
 				inputLog = getCellModel().getFilters().get(index - 1).getOutputLog();
 			}
-			FilterButtonModel filterModel = new FilterButtonModel(index, inputLog, index);
+			FilterButtonModel filterModel = new FilterButtonModel(index, inputLog);
 			// set cell output to be the output of the last filter (the filter we just created)
 			List<YLog> outputLogs = getCellModel().getOutputLogs();
 			outputLogs.clear();

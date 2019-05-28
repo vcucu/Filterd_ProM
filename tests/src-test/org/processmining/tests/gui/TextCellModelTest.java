@@ -10,7 +10,7 @@ public class TextCellModelTest extends TestCase {
 	@Test
 	public void testNewTextCellModel() {
 		// Create new text cell model
-		TextCellModel cell = new TextCellModel(null);
+		TextCellModel cell = new TextCellModel(null, 0);
 		// Check that the new text cell model was created
 		assertTrue(cell != null);
 		assertTrue(cell instanceof TextCellModel);
@@ -19,7 +19,7 @@ public class TextCellModelTest extends TestCase {
 	@Test
 	public void testCommentProperty() {
 		// Create new text cell model
-		TextCellModel cell = new TextCellModel(null);
+		TextCellModel cell = new TextCellModel(null, 0);
 		// Set the new text cell model comment
 		cell.setComment("Filterd");
 		// Get the cell model comment
