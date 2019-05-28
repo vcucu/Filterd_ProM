@@ -13,6 +13,7 @@ import org.processmining.filterd.filters.Filter;
 import org.processmining.filterd.gui.FilterConfigPanelController;
 import org.processmining.filterd.parameters.Parameter;
 import org.processmining.filterd.parameters.ParameterMultipleFromSet;
+import org.processmining.filterd.parameters.ParameterValueFromRange;
 import org.processmining.filterd.parameters.ParameterYesNo;
 
 public class FilterdTraceStartEventCategoricalConfig extends FilterdAbstractReferenceableConfig {	
@@ -46,8 +47,15 @@ public class FilterdTraceStartEventCategoricalConfig extends FilterdAbstractRefe
 		ParameterYesNo traceHandling = new ParameterYesNo("traceHandling", 
 				"Keep empty traces.", false);
 		
+		List<Integer> optionsPair = new ArrayList<>();
+		optionsPair.add(0);
+		optionsPair.add(100);
+		ParameterValueFromRange<Integer> threshold = new ParameterValueFromRange<Integer>(
+				"Frequency threshold", "threshold", 100, optionsPair, Integer.TYPE);
+		
 		parameters.add(desiredEvents);
 		parameters.add(traceHandling);
+		parameters.add(threshold);
 		
 		// none of the complex classifiers matched the selected values, therefore the 
 		// selected string is a global attribute
