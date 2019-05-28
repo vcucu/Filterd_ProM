@@ -64,7 +64,7 @@ public class FilterFrequencyOccurenceTest extends FilterdPackageTest{
 		parameters.add(desiredEvents);
 		
 		FilterdEventRateFilter filter = new FilterdEventRateFilter();
-		computed = filter.filter(null, originalLog, parameters);
+		computed = filter.filter(originalLog, parameters);
 		assert equalLog(expected, computed);
 	}
 	
@@ -105,7 +105,7 @@ public class FilterFrequencyOccurenceTest extends FilterdPackageTest{
 		parameters.add(desiredEvents);
 		
 		FilterdEventRateFilter filter = new FilterdEventRateFilter();
-		computed = filter.filter(null, originalLog, parameters);
+		computed = filter.filter(originalLog, parameters);
 		
 		assert equalLog(expected, computed);
 	}
@@ -131,7 +131,7 @@ public class FilterFrequencyOccurenceTest extends FilterdPackageTest{
 				"in"
 				);
 		
-		computed = filter.filter(null, originalLog, parameters);
+		computed = filter.filter(originalLog, parameters);
 
 		assert equalLog(expected, computed);
 	}
@@ -156,7 +156,7 @@ public class FilterFrequencyOccurenceTest extends FilterdPackageTest{
 				"in"
 				);
 		
-		computed = filter.filter(null, originalLog, parameters);
+		computed = filter.filter(originalLog, parameters);
 
 		assert equalLog(expected, computed);
 	}
@@ -181,7 +181,7 @@ public class FilterFrequencyOccurenceTest extends FilterdPackageTest{
 				"out"
 				);
 		
-		computed = filter.filter(null, originalLog, parameters);
+		computed = filter.filter(originalLog, parameters);
 
 		assert equalLog(expected, computed);
 	}
@@ -206,7 +206,7 @@ public class FilterFrequencyOccurenceTest extends FilterdPackageTest{
 				"out"
 				);
 		
-		computed = filter.filter(null, originalLog, parameters);
+		computed = filter.filter(originalLog, parameters);
 
 
 		assert equalLog(expected, computed);
@@ -232,7 +232,7 @@ public class FilterFrequencyOccurenceTest extends FilterdPackageTest{
 				"in"
 				);
 		
-		computed = filter.filter(null, originalLog, parameters);
+		computed = filter.filter(originalLog, parameters);
 
 		assert equalLog(expected, computed);
 	}
@@ -257,7 +257,7 @@ public class FilterFrequencyOccurenceTest extends FilterdPackageTest{
 				"in"
 				);
 		
-		computed = filter.filter(null, originalLog, parameters);
+		computed = filter.filter(originalLog, parameters);
 
 		assert equalLog(expected, computed);
 	}
@@ -282,7 +282,7 @@ public class FilterFrequencyOccurenceTest extends FilterdPackageTest{
 				"in"
 				);
 		
-		computed = filter.filter(null, originalLog, parameters);
+		computed = filter.filter(originalLog, parameters);
 
 		assert equalLog(expected, computed);
 	}
@@ -307,7 +307,7 @@ public class FilterFrequencyOccurenceTest extends FilterdPackageTest{
 				"out"
 				);
 		
-		computed = filter.filter(null, originalLog, parameters);
+		computed = filter.filter(originalLog, parameters);
 
 		assert equalLog(expected, computed);
 	}

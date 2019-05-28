@@ -57,7 +57,7 @@ public class FilterEventAttributeTest extends FilterdPackageTest {
 		
 		FilterdEventAttrFilter filter = new FilterdEventAttrFilter();
 		filter.setKey("concept:name");
-		XLog computed = filter.filterCategorical(null, originalLog, parameters);
+		XLog computed = filter.filterCategorical(originalLog, parameters);
 	
 		assert equalLog(expected, computed);
 	}
@@ -98,7 +98,7 @@ public class FilterEventAttributeTest extends FilterdPackageTest {
 		
 		FilterdEventAttrFilter filter = new FilterdEventAttrFilter();
 		filter.setKey("lifecycle:transition");
-		XLog computed = filter.filterCategorical(null, originalLog, parameters);
+		XLog computed = filter.filterCategorical(originalLog, parameters);
 		
 		assert equalLog(expected, computed);
 	}
@@ -153,7 +153,7 @@ public class FilterEventAttributeTest extends FilterdPackageTest {
 		
 		FilterdEventAttrFilter filter = new FilterdEventAttrFilter();
 		filter.setKey("delivery");
-		XLog computed = filter.filterNumerical(null, originalLog, parameters);
+		XLog computed = filter.filterNumerical(originalLog, parameters);
 
 		assert equalLog(expected, computed);
 	}
@@ -206,7 +206,7 @@ public class FilterEventAttributeTest extends FilterdPackageTest {
 		
 		FilterdEventAttrFilter filter = new FilterdEventAttrFilter();
 		filter.setKey("delivery");
-		XLog computed = filter.filterNumerical(null, originalLog, parameters);
+		XLog computed = filter.filterNumerical(originalLog, parameters);
 
 		assert equalLog(expected, computed);
 	}
@@ -253,7 +253,7 @@ public class FilterEventAttributeTest extends FilterdPackageTest {
 		
 		FilterdEventAttrFilter filter = new FilterdEventAttrFilter();
 		filter.setKey("delivery");
-		XLog computed = filter.filterNumerical(null, originalLog, parameters);
+		XLog computed = filter.filterNumerical(originalLog, parameters);
 
 		assert equalLog(expected, computed);
 	}
@@ -294,7 +294,7 @@ public class FilterEventAttributeTest extends FilterdPackageTest {
 		
 		FilterdEventAttrFilter filter = new FilterdEventAttrFilter();
 		filter.setKey("org:resource");
-		XLog computed = filter.filterCategorical(null, originalLog, parameters);
+		XLog computed = filter.filterCategorical(originalLog, parameters);
 
 		assert equalLog(expected, computed);
 	}
@@ -338,7 +338,7 @@ public class FilterEventAttributeTest extends FilterdPackageTest {
 
 		FilterdEventAttrFilter filter = new FilterdEventAttrFilter();
 		filter.setKey("lifecycle:transition");
-		XLog computed = filter.filterCategorical(null, originalLog, parameters);
+		XLog computed = filter.filterCategorical(originalLog, parameters);
 
 		assert equalLog(expected, computed);
 	}
@@ -377,7 +377,7 @@ public class FilterEventAttributeTest extends FilterdPackageTest {
 
 		FilterdEventAttrFilter filter = new FilterdEventAttrFilter();
 		filter.setKey("lifecycle:transition");
-		XLog computed = filter.filterCategorical(null, originalLog, parameters);
+		XLog computed = filter.filterCategorical(originalLog, parameters);
 
 		assert equalLog(expected, computed);
 	}
@@ -417,7 +417,7 @@ public class FilterEventAttributeTest extends FilterdPackageTest {
 
 		FilterdEventAttrFilter filter = new FilterdEventAttrFilter();
 		filter.setKey("lifecycle:transition");
-		XLog computed = filter.filterCategorical(null, originalLog, parameters);
+		XLog computed = filter.filterCategorical(originalLog, parameters);
 
 		assert equalLog(expected, computed);
 	}
@@ -456,7 +456,7 @@ public class FilterEventAttributeTest extends FilterdPackageTest {
 
 		FilterdEventAttrFilter filter = new FilterdEventAttrFilter();
 		filter.setKey("concept:name");
-		XLog computed = filter.filterCategorical(null, originalLog, parameters);
+		XLog computed = filter.filterCategorical(originalLog, parameters);
 
 		assert equalLog(expected, computed);
 	}
@@ -497,7 +497,7 @@ public class FilterEventAttributeTest extends FilterdPackageTest {
 		parameters.add(range);
 		
 		FilterdEventAttrFilter filter = new FilterdEventAttrFilter();
-		XLog computed = filter.filterTimestamp(null, originalLog, parameters);
+		XLog computed = filter.filterTimestamp(originalLog, parameters);
 
 		assert equalLog(expected, computed);
 	}
@@ -536,7 +536,7 @@ public class FilterEventAttributeTest extends FilterdPackageTest {
 		parameters.add(range);
 		
 		FilterdEventAttrFilter filter = new FilterdEventAttrFilter();
-		XLog computed = filter.filterTimestamp(null, originalLog, parameters);
+		XLog computed = filter.filterTimestamp(originalLog, parameters);
 
 		assert equalLog(expected, computed);
 	}

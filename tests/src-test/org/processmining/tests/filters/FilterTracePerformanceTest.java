@@ -34,7 +34,7 @@ public class FilterTracePerformanceTest extends FilterdPackageTest {
 				86400000, 
 				Integer.MAX_VALUE);
 		
-		computed = filter.filter(null, originalLog, parameters);
+		computed = filter.filter(originalLog, parameters);
 
 		assert equalLog(expected, computed);
 	}
@@ -58,7 +58,7 @@ public class FilterTracePerformanceTest extends FilterdPackageTest {
 				3, 
 				6);
 		
-		computed = filter.filter(null, originalLog, parameters);
+		computed = filter.filter(originalLog, parameters);
 
 		assert equalLog(expected, computed);
 	}

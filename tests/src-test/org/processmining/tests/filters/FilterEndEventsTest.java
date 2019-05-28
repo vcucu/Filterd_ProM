@@ -58,7 +58,7 @@ public class FilterEndEventsTest extends FilterdPackageTest{
 		
 		//instantiate filter class
 		FilterdTraceEndEventFilter filter = new FilterdTraceEndEventFilter();
-		XLog computed = filter.filter(null, originalLog, parameters);
+		XLog computed = filter.filter(originalLog, parameters);
 		assert equalLog(expected, computed);
 	}
 	
@@ -101,7 +101,7 @@ public class FilterEndEventsTest extends FilterdPackageTest{
 		
 		//instantiate filter class
 		FilterdTraceEndEventFilter filter = new FilterdTraceEndEventFilter();
-		XLog computed = filter.filter(null, originalLog, parameters);
+		XLog computed = filter.filter(originalLog, parameters);
 		assert equalLog(expected, computed);
 		
 	}

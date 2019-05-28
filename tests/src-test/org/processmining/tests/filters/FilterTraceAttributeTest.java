@@ -41,7 +41,7 @@ public class FilterTraceAttributeTest extends FilterdPackageTest {
 				Arrays.asList("41", "56", "76")
 				);
 		
-		computed = filter.filter(null, originalLog, parameters);
+		computed = filter.filter(originalLog, parameters);
 
 		assert equalLog(expected, computed);
 	}
