@@ -27,15 +27,24 @@ public class ParameterValueFromRangeController<N extends Number> extends Paramet
         }
         // set specifics
         label.setText(nameDisplayed);
-        slider.setMin((Double) minMaxPair.get(0));
-        slider.setMax((Double) minMaxPair.get(1));
-        slider.setMinorTickCount(4);
-        slider.setValue((Double) defaultValue);
-        double majorTickUnit = ((Double) minMaxPair.get(1) - (Double) minMaxPair.get(0)) / 4.0;
-        slider.setMajorTickUnit(Math.floor(majorTickUnit));
-        if(genericTypeClass.equals(Double.TYPE)) {
+        if(genericTypeClass.equals(Double.class)) {
+        	slider.setMin((Double) minMaxPair.get(0));
+            slider.setMax((Double) minMaxPair.get(1));
+            slider.setMinorTickCount(4);
+            slider.setValue((Double) defaultValue);
+            double majorTickUnit = ((Double) minMaxPair.get(1) - (Double) minMaxPair.get(0)) / 4.0;
+            slider.setMajorTickUnit(Math.floor(majorTickUnit));
+        } else if(genericTypeClass.equals(Integer.class)) {
+        	slider.setMin(minMaxPair.get(0).doubleValue());
+            slider.setMax(minMaxPair.get(1).doubleValue());
+            slider.setMinorTickCount(4);
+            slider.setValue(defaultValue.doubleValue());
+            double majorTickUnit = (minMaxPair.get(1).doubleValue() - minMaxPair.get(0).doubleValue()) / 4.0;
+            slider.setMajorTickUnit(Math.floor(majorTickUnit));
+        }
+        if(genericTypeClass.equals(Double.class)) {
         	slider.setBlockIncrement(0.1);
-        } else if(genericTypeClass.equals(Integer.TYPE)) {
+        } else if(genericTypeClass.equals(Integer.class)) {
         	slider.setBlockIncrement(1);
         } else {
         	throw new IllegalArgumentException("Supported types are integer and double");
@@ -43,9 +52,9 @@ public class ParameterValueFromRangeController<N extends Number> extends Paramet
 	}
 	
 	public N getValue() {
-		if(genericTypeClass.equals(Double.TYPE)) {
+		if(genericTypeClass.equals(Double.class)) {
 			return (N)(Object) slider.getValue();
-        } else if(genericTypeClass.equals(Integer.TYPE)) {
+        } else if(genericTypeClass.equals(Integer.class)) {
         	return (N)(Object) Math.round(slider.getValue());
         } else {
         	throw new IllegalStateException("Supported types are integer and double");

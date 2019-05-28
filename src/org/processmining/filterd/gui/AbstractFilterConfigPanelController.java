@@ -55,7 +55,7 @@ public abstract class AbstractFilterConfigPanelController {
 	public <N extends Number> void addParameterValueFromRange(ParameterValueFromRange<N> parameter) {
 		ParameterController controller = new ParameterValueFromRangeController<N>(parameter.getNameDisplayed(), 
 				parameter.getName(), 
-				parameter.getChosen(), 
+				parameter.getChosen() == null ? parameter.getDefaultChoice() : parameter.getChosen(),
 				parameter.getOptionsPair(),
 				parameter.getGenericTypeClass());
 		getNextContainer().getChildren().add(controller.getContents());

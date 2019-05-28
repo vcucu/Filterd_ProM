@@ -130,15 +130,23 @@ public class FilterdTraceFrequencyConfig extends FilterdAbstractConfig {
 										(ParameterRangeFromRangeController<Double>) changingParameter;
 								
 								if (newValue.equals("frequency")) {
-									castedChanging.getSlider().setMin(0);
-									castedChanging.getSlider().setLowValue(0);
-									castedChanging.getSlider().setMax(100);
-									castedChanging.getSlider().setHighValue(100);
+									List<Double> defaultValue = new ArrayList<>();
+									defaultValue.add(0.0);
+									defaultValue.add(100.0);
+									List<Double> minMaxPair = new ArrayList<>();
+									minMaxPair.add(0.0);
+									minMaxPair.add(100.0);
+									castedChanging.setSliderConfig(defaultValue, minMaxPair);
+									
+									ParameterRangeFromRange<Double> castedParameter = (ParameterRangeFromRange<Double>) getParameter("threshold");
+									castedParameter.setDefaultPair(defaultValue);
+									castedParameter.setOptionsPair(minMaxPair);
 								} else {
-									castedChanging.getSlider().setMin(logMinAndMaxSize.get(0));
-									castedChanging.getSlider().setLowValue(logMinAndMaxSize.get(0));
-									castedChanging.getSlider().setMax(logMinAndMaxSize.get(1));
-									castedChanging.getSlider().setHighValue(logMinAndMaxSize.get(1));
+									castedChanging.setSliderConfig(logMinAndMaxSize, logMinAndMaxSize);
+									
+									ParameterRangeFromRange<Double> castedParameter = (ParameterRangeFromRange<Double>) getParameter("threshold");
+									castedParameter.setDefaultPair(logMinAndMaxSize);
+									castedParameter.setOptionsPair(logMinAndMaxSize);
 								}
 								
 							}
@@ -147,6 +155,13 @@ public class FilterdTraceFrequencyConfig extends FilterdAbstractConfig {
 						
 			        }
 				});
+			}
+			if(parameter.getName().equals("threshold")) {
+				ParameterRangeFromRangeController<Double> casted = (ParameterRangeFromRangeController<Double>) parameter;
+				ParameterRangeFromRange<Double> castedParameter = (ParameterRangeFromRange<Double>) getParameter("threshold");
+				casted.setSliderConfig(castedParameter.getChosenPair().size() == 0 ? 
+						castedParameter.getDefaultPair() : 
+						castedParameter.getChosenPair(), castedParameter.getOptionsPair());
 			}
 		}
 		return filterConfigPanel;

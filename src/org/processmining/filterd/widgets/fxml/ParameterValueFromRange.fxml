@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+<VBox xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
          <children>
@@ -23,7 +23,7 @@
               </rowConstraints>
                <children>
                   <Slider fx:id="slider" maxWidth="1.7976931348623157E308" showTickLabels="true" GridPane.hgrow="ALWAYS" />
-                  <VBox GridPane.columnIndex="1" GridPane.hgrow="ALWAYS">
+                  <VBox maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS">
                      <children>
                         <Label fx:id="label" alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="ParameterValueFromRange" VBox.vgrow="ALWAYS" />
                      </children>
