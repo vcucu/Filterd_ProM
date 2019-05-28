@@ -59,6 +59,8 @@ public class NotebookModel {
 		this.initialInput = new YLog(Toolbox.getNextId(), "Initial input", log);
 		this.promCanceller = canceller; 
 		this.cells = FXCollections.observableArrayList();
+		// set the computation mode to manual
+		setComputationMode(ComputationMode.MANUAL);
 
 		// Get current view manager and resource manager.
 		UIContext globalContext = context.getGlobalContext();
