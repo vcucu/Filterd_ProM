@@ -384,6 +384,7 @@ public class ComputationCellController extends CellController {
 		filterOptions.add("Trace Start Event Filter");
 		filterOptions.add("Trace Frequency");
 		filterOptions.add("Trace Sample");
+		filterOptions.add("Trace Performance");
 		configurationModal.showFilterList(filterOptions, new Callback<String, FilterdAbstractConfig>() {
 
 			public FilterdAbstractConfig call(String userSelection) {
