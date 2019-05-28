@@ -1,6 +1,7 @@
 package org.processmining.tests.filters;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -35,11 +36,14 @@ public class FilterFrequencyOccurenceTest extends FilterdPackageTest{
 	 * Result: remove events where pack order is complete/aborted/resume/suspend
 	 */
 	@Test
-	public void testEventRate() throws Throwable {
-		XLog expected = parseLog("freq-occurence", "test_event_rate_80.xes");
+	public void testEventRateFrequency() throws Throwable {
+		XLog expected = parseLog("freq-occurence", "test_event_rate_frequency_80.xes");
 		XLog computed = null;
 		List empty = Collections.EMPTY_LIST;
 		List<Parameter> parameters = new ArrayList<>();
+		List<String> desiredEventClasses = new ArrayList<>(Arrays.asList("receive payment+complete",
+				"receive order+complete", "archive+complete", "pack order+start", "add item+complete", 
+				"ship parcel+complete"));
 		
 		ParameterOneFromSet rate = new ParameterOneFromSet("rate", "", "Frequency", empty);
 		ParameterValueFromRange threshold = new ParameterValueFromRange("threshold", "", 80, empty);
@@ -51,6 +55,8 @@ public class FilterFrequencyOccurenceTest extends FilterdPackageTest{
 		rate.setChosen("Frequency");
 		threshold.setChosen(80);
 		selectionType.setChosen("Filter in");
+		desiredEvents.setChosen(desiredEventClasses);
+		
 		
 		parameters.add(rate);
 		parameters.add(threshold);
@@ -61,6 +67,49 @@ public class FilterFrequencyOccurenceTest extends FilterdPackageTest{
 		computed = filter.filter(null, originalLog, parameters);
 		assert equalLog(expected, computed);
 	}
+	
+	/*
+	 * Filter on event rate test
+	 * Rate = Occurrence
+	 * Threshold = 6
+	 * Selection type = Filter in
+	 * 
+	 * Result: remove events where pack order is complete/aborted/resume/suspend or 
+	 * ship parcel is complete
+	 */
+	@Test
+	public void testEventRateOccurrence() throws Throwable {
+		XLog expected = parseLog("freq-occurence", "test_event_rate_occurrence_6.xes");
+		XLog computed = null;
+		List empty = Collections.EMPTY_LIST;
+		List<Parameter> parameters = new ArrayList<>();
+
+		List<String> desiredEventClasses = new ArrayList<>(Arrays.asList("receive payment+complete",
+				"receive order+complete", "archive+complete", "pack order+start", "add item+complete"));
+		
+		ParameterOneFromSet rate = new ParameterOneFromSet("rate", "", "Occurrence", empty);
+		ParameterValueFromRange threshold = new ParameterValueFromRange("threshold", "", 6, empty);
+		ParameterOneFromSet selectionType = new 
+				ParameterOneFromSet("selectionType", "", "Filter in", empty);
+		ParameterMultipleFromSet desiredEvents = new 
+				ParameterMultipleFromSet("desiredEvents","", empty, empty);
+		
+		rate.setChosen("Occurrence");
+		threshold.setChosen(6);
+		selectionType.setChosen("Filter in");
+		desiredEvents.setChosen(desiredEventClasses);
+		
+		parameters.add(rate);
+		parameters.add(threshold);
+		parameters.add(selectionType);
+		parameters.add(desiredEvents);
+		
+		FilterdEventRateFilter filter = new FilterdEventRateFilter();
+		computed = filter.filter(null, originalLog, parameters);
+		
+		assert equalLog(expected, computed);
+	}
+	
 	
 	/* Corresponds to test case 13 from test_specification.xlsx.
 	 * See ProM - Filter In High Frequency Traces.

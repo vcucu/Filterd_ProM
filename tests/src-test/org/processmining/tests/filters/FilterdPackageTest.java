@@ -75,7 +75,7 @@ public class FilterdPackageTest extends TestCase {
 			return false; 
 		}
 		if (eventsExpected != eventsComputed) {
-			System.out.println("traces expected " + tracesExpected + " traces computed " + tracesComputed);
+			System.out.println("events expected " + eventsExpected + " events computed " + eventsComputed);
 			return false;
 		}
 

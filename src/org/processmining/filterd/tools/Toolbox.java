@@ -10,7 +10,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
+import org.deckfour.xes.classification.XEventClass;
+import org.deckfour.xes.classification.XEventClasses;
 import org.deckfour.xes.classification.XEventClassifier;
 import org.deckfour.xes.factory.XFactory;
 import org.deckfour.xes.factory.XFactoryRegistry;
@@ -21,6 +24,8 @@ import org.deckfour.xes.model.XAttributeMap;
 import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
+import org.processmining.filterd.parameters.ParameterOneFromSet;
+import org.processmining.filterd.parameters.ParameterValueFromRange;
 
 public class Toolbox {
 	
@@ -66,6 +71,77 @@ public class Toolbox {
 		}
 		return null;
 	}
+	
+	
+	
+	/**
+	 * This method computes which event classes should be highlighted according 
+	 * to the selected percentage
+	 * @param threshold
+	 * @param desiredEvents
+	 * @param rate
+	 */
+	public static List<String> computeDesiredEventsFromThreshold
+	(ParameterValueFromRange<Integer> threshold, ParameterOneFromSet rate,
+			XEventClasses eventClasses) {
+		
+		boolean rateChoice = rate.getChosen().equals("Frequency");
+		List<String> desirableEventClasses = new ArrayList<>();
+		
+		
+		int selectedValueFromRange = threshold.getChosen();
+		int size = 0;
+		/*sort eventClasses according to their size, from smallest to biggest*/
+		TreeSet<Integer> eventSizes = new TreeSet<Integer>();
+		
+		for (XEventClass event : eventClasses.getClasses()) {
+			size += event.size();
+			eventSizes.add(event.size());
+		}
+		
+		int value;
+		
+		if (rateChoice) {
+			
+			value = 0;
+			int aux_threshold = size * selectedValueFromRange/100;
+			
+			while (value < aux_threshold) {
+				/* extract the class with the greatest value */
+				int biggestEventClass = eventSizes.last();
+				eventSizes.remove(biggestEventClass);
+				
+				/* mark all the event classes that have this size */
+				for (XEventClass eventClass : eventClasses.getClasses()) {
+					if (eventClass.size() == biggestEventClass) {
+						value += biggestEventClass;
+						desirableEventClasses.add(eventClass.toString());
+					}
+				}
+			}
+			
+		} else {
+			
+			value = eventSizes.last();
+			while (value > selectedValueFromRange) {
+				/*extract the class with the greatest size */
+				int biggestEventClass = eventSizes.last();
+				eventSizes.remove(biggestEventClass);
+				value = eventSizes.last();
+				/* mark all the event classes that have this size */
+				for (XEventClass eventClass : eventClasses.getClasses()) {
+					if (eventClass.size() == biggestEventClass) {
+						desirableEventClasses.add(eventClass.toString());
+					}
+				}
+			}	
+			
+		}
+		
+		return desirableEventClasses;
+	}
+
+	
 	
 	/**
 	 * Computes the list of global attributes of the log events

@@ -24,7 +24,7 @@ public class FilterdEventRateConfig extends FilterdAbstractConfig {
 		List<Parameter> parameters = new ArrayList<>();
 		
 		//Create the rate parameter
-		List<String> rateOptions = new ArrayList<>(Arrays.asList("Frequency","Occurence"));
+		List<String> rateOptions = new ArrayList<>(Arrays.asList("Frequency","Occurrence"));
 		ParameterOneFromSet rate = new ParameterOneFromSet("rate", "Choose rate type", rateOptions.get(0), rateOptions);
 		
 		//Create the threshold parameter

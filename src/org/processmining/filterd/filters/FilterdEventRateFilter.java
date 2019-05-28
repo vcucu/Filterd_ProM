@@ -1,8 +1,6 @@
 package org.processmining.filterd.filters;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.TreeSet;
 
 import org.deckfour.xes.classification.XEventClass;
 import org.deckfour.xes.classification.XEventClasses;
@@ -45,7 +43,14 @@ public class FilterdEventRateFilter extends Filter {
 		ParameterValueFromRange<Integer> threshold = (ParameterValueFromRange<Integer>)this
 				.getParameter(parameters,"threshold");
 		
-		desiredEvents.setChosen(this.computeDesiredEventsFromThreshold(threshold, rate, eventClasses));
+		/*
+		 * TODO: remove the line if you do not want the desired  
+		 * values generated from the threshold, but just extracted from the
+		 * configuration panel
+		 * Note: if the tests fail after this, manually add the desired event classes
+		 * to the desiredEvents parameter.
+		 */
+		//desiredEvents.setChosen(Toolbox.computeDesiredEventsFromThreshold(threshold, rate, eventClasses));
 		
 		//initialize the log that will be output
 		filteredLog = Toolbox.initializeLog(log);
@@ -84,70 +89,4 @@ public class FilterdEventRateFilter extends Filter {
 		
 	}
 	
-	/**
-	 * This method computes which event classes should be highlighted according 
-	 * to the selected percentage
-	 * @param threshold
-	 * @param desiredEvents
-	 * @param rate
-	 */
-	public List<String> computeDesiredEventsFromThreshold
-	(ParameterValueFromRange<Integer> threshold, ParameterOneFromSet rate,
-			XEventClasses eventClasses) {
-		
-		boolean rateChoice = rate.getChosen().equals("Frequency");
-		List<String> desirableEventClasses = new ArrayList<>();
-		
-		
-		int selectedValueFromRange = threshold.getChosen();
-		int size = 0;
-		/*sort eventClasses according to their size, from smallest to biggest*/
-		TreeSet<Integer> eventSizes = new TreeSet<Integer>();
-		
-		for (XEventClass event : eventClasses.getClasses()) {
-			size += event.size();
-			eventSizes.add(event.size());
-		}
-		
-		int value = 0;
-		
-		if (rateChoice) {
-			
-			int aux_threshold = size * selectedValueFromRange/100;
-			
-			while (value < aux_threshold) {
-				/* extract the class with the greatest value */
-				int biggestEventClass = eventSizes.last();
-				eventSizes.remove(biggestEventClass);
-				
-				/* mark all the event classes that have this size */
-				for (XEventClass eventClass : eventClasses.getClasses()) {
-					if (eventClass.size() == biggestEventClass) {
-						value += biggestEventClass;
-						desirableEventClasses.add(eventClass.toString());
-					}
-				}
-			}
-			
-		} else {
-				
-			while (value < selectedValueFromRange) {
-				/*extract the class with the greatest size */
-				int biggestEventClass = eventSizes.last();
-				eventSizes.remove(biggestEventClass);
-				
-				/* mark all the event classes that have this size */
-				for (XEventClass eventClass : eventClasses.getClasses()) {
-					if (eventClass.size() == biggestEventClass) {
-						value += biggestEventClass;
-						desirableEventClasses.add(eventClass.toString());
-					}
-				}
-			}		
-			
-		}
-		
-		return desirableEventClasses;
-	}
-
 }
