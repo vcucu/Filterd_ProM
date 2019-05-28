@@ -10,11 +10,13 @@ import javax.swing.SwingUtilities;
 import org.deckfour.uitopia.api.model.ViewType;
 import org.processmining.filterd.configurations.FilterdAbstractConfig;
 import org.processmining.filterd.configurations.FilterdEventAttrConfig;
+import org.processmining.filterd.configurations.FilterdEventRateConfig;
 import org.processmining.filterd.configurations.FilterdTraceFrequencyConfig;
 import org.processmining.filterd.configurations.FilterdTracePerformanceConfig;
 import org.processmining.filterd.configurations.FilterdTraceSampleConfig;
 import org.processmining.filterd.configurations.FilterdTraceStartEventConfig;
 import org.processmining.filterd.filters.FilterdEventAttrFilter;
+import org.processmining.filterd.filters.FilterdEventRateFilter;
 import org.processmining.filterd.filters.FilterdTraceFrequencyFilter;
 import org.processmining.filterd.filters.FilterdTracePerformanceFilter;
 import org.processmining.filterd.filters.FilterdTraceSampleFilter;
@@ -388,6 +390,7 @@ public class ComputationCellController extends CellController {
 		filterOptions.add("Trace Sample");
 		filterOptions.add("Trace Performance");
 		filterOptions.add("Event Attributes");
+		filterOptions.add("Event Rate");
 
 		configurationModal.showFilterList(filterOptions, new Callback<String, FilterdAbstractConfig>() {
 
@@ -438,6 +441,15 @@ public class ComputationCellController extends CellController {
 						try {
 							filterConfig = new FilterdEventAttrConfig(model.getInputLog().get(),
 									new FilterdEventAttrFilter());
+						} catch (EmptyLogException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						break;
+					case "Event Rate":
+						try {
+							filterConfig = new FilterdEventRateConfig(model.getInputLog().get(),
+									new FilterdEventRateFilter());
 						} catch (EmptyLogException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();

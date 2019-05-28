@@ -10,7 +10,6 @@ import org.deckfour.xes.info.impl.XLogInfoImpl;
 import org.deckfour.xes.model.XLog;
 import org.processmining.filterd.filters.Filter;
 import org.processmining.filterd.gui.FilterConfigPanelController;
-import org.processmining.filterd.parameters.Parameter;
 import org.processmining.filterd.parameters.ParameterMultipleFromSet;
 import org.processmining.filterd.parameters.ParameterOneFromSet;
 import org.processmining.filterd.parameters.ParameterValueFromRange;
@@ -21,7 +20,7 @@ public class FilterdEventRateConfig extends FilterdAbstractConfig {
 
 	public FilterdEventRateConfig(XLog log, Filter filterType) {
 		super(log, filterType);
-		List<Parameter> parameters = new ArrayList<>();
+		parameters = new ArrayList<>();
 		
 		//Create the rate parameter
 		List<String> rateOptions = new ArrayList<>(Arrays.asList("Frequency","Occurrence"));
@@ -30,7 +29,7 @@ public class FilterdEventRateConfig extends FilterdAbstractConfig {
 		//Create the threshold parameter
 		List<Integer> optionsPair = new ArrayList<>(Arrays.asList(0, 100));
 		ParameterValueFromRange<Integer> threshold = new ParameterValueFromRange<>("threshold",
-				"Select threshold for frequency/occurence", 100, optionsPair);
+				"Select threshold for frequency/occurence", 100, optionsPair, Integer.TYPE);
 		
 		//Create the selectionType parameter
 		List<String> selectionTypeOptions = new ArrayList<>(Arrays.asList("Filter in", "Filter out"));
