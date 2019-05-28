@@ -20,6 +20,7 @@ public class CellModel {
 		this.property = new PropertyChangeSupport(this);
 		this.index = index;
 		isHidden = false;
+		setStatusBar(CellStatus.IDLE); // set the initial cell status to idle
 		setCellName("Cell #" + Integer.toString((int) (Math.random() * 900 + 100))); // assign an initial name to the cell
 	}
 
