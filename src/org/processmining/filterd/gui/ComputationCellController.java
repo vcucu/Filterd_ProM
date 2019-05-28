@@ -137,7 +137,6 @@ public class ComputationCellController extends CellController {
 				getClass().getResource("/org/processmining/filterd/gui/fxml/FilterButton.fxml"));
 		FilterButtonController newController = new FilterButtonController(this, model);
 		loader.setController(newController);
-		getCellModel().addFilterController(index, newController);
 		try {
 			HBox newPanelLayout = (HBox) loader.load();
 			panelLayout.getChildren().add(index, newPanelLayout);
@@ -160,18 +159,20 @@ public class ComputationCellController extends CellController {
 							System.out.printf("ID: %d ----------\n", getCellModel().getFilters().get(i).getIndex());
 							System.out.println("Updated: " + i + " " + getCellModel().getFilters().get(i));
 							System.out.println("SELECTED: " + getCellModel().getFilters().get(i).getSelected());
-							getCellModel().getFilterControllers().get(getCellModel().getFilters().get(i).getIndex())
-									.updateFilterButtonView();
+							// Do something
 						}
 					} else {
 						for (FilterButtonModel removedFilter : change.getRemoved()) {
 							System.out.printf("ID: %d ----------\n", removedFilter.getIndex());
 							System.out.println("Removed: " + removedFilter);
+							// Do something
 						}
 						for (FilterButtonModel addedFilter : change.getAddedSubList()) {
 							System.out.printf("ID: %d ----------\n", addedFilter.getIndex());
 							System.out.println("Added: " + addedFilter);
+							// Do something
 						}
+						// Update indices
 						for (int i = 0; i < getCellModel().getFilters().size(); i++) {
 							getCellModel().getFilters().get(i).setIndex(i);
 						}
@@ -179,6 +180,12 @@ public class ComputationCellController extends CellController {
 				}
 			}
 		});
+	}
+	
+	public void removeFilter(FilterButtonModel filter) {
+		int index = filter.getIndex();
+		getCellModel().removeFilter(filter); // Removes the cell from the model
+		panelLayout.getChildren().remove(index);	// Removes the layout
 	}
 
 	public VBox getPanelLayout() {
@@ -335,15 +342,10 @@ public class ComputationCellController extends CellController {
 			visualizerPane.setRightAnchor(visualizerSwgNode, 0.0);
 			// if filter selection was cancelled, delete the added button
 			if (configurationStep == ConfigurationStep.ADD_FILTER) {
-				// remove model
+				// remove FilterButton
 				FilterButtonModel buttonToRemove = getCellModel().getFilters()
 						.get(getCellModel().getFilters().size() - 1);
-				getCellModel().removeFilterModel(buttonToRemove);
-				// remove controller
-				FilterButtonController controllerToRemove = getCellModel().getFilterControllers()
-						.get(getCellModel().getFilterControllers().size() - 1);
-				getCellModel().removeFilterController(controllerToRemove);
-				getPanelLayout().getChildren().remove(controllerToRemove.getFilterLayout());
+				removeFilter(buttonToRemove);
 			}
 		}
 		this.isConfigurationModalShown = false;

@@ -35,7 +35,6 @@ public class ComputationCellModel extends CellModel {
 	private List<YLog> inputLogs;
 	private List<YLog> outputLogs;
 	private ObservableList<FilterButtonModel> filters;
-	private ArrayList<FilterButtonController> filterControllers;
 
 	public ComputationCellModel(UIPluginContext context, int index, ProMCanceller canceller, List<YLog> eventLogs) {
 		super(context, index);
@@ -43,8 +42,6 @@ public class ComputationCellModel extends CellModel {
 		this.inputLogs = eventLogs;
 		this.outputLogs = new ArrayList<>();
 		outputLogs.add(new YLog(Toolbox.getNextId(), getCellName() + " output log"));
-
-		filterControllers = new ArrayList<>();
 
 		filters = FXCollections.observableArrayList(new Callback<FilterButtonModel, Observable[]>() {
 			@Override
@@ -62,20 +59,8 @@ public class ComputationCellModel extends CellModel {
 		this.filters.add(index, model);
 	}
 	
-	public void removeFilterModel(FilterButtonModel filter) {
+	public void removeFilter(FilterButtonModel filter) {
 		filters.remove(filter);
-	}
-	
-	public ArrayList<FilterButtonController> getFilterControllers() {
-		return filterControllers;
-	}
-
-	public void addFilterController(int index, FilterButtonController controller) {
-		this.filterControllers.add(index, controller);
-	}
-	
-	public void removeFilterController(FilterButtonController controller) {
-		this.filterControllers.remove(controller);
 	}
 
 	public void setInputLog(YLog log) {
@@ -198,7 +183,7 @@ public class ComputationCellModel extends CellModel {
     			inputOutput = filter.getOutputLog().get();
     		} catch(InvalidConfigurationException e) {
     			FilterButtonModel model = e.getFilterButtonModel();
-    			FilterButtonController controller = filterControllers.get(model.getIndex());
+//    			FilterButtonController controller = filterControllers.get(model.getIndex());
     			// TODO: set controller as invalid
     		} catch(Exception e) {
     			// if any other exception occurs, throw it

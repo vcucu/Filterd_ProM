@@ -137,16 +137,13 @@ public abstract class CellController {
 	}
 	
 	private void move(int index) {
-		CellModel model = getCellModel();
-		
+		// Remove layout
 		controller.getCellsLayout().getChildren().remove(cellLayout);
-		
-		controller.getModel().getCells().remove(model);
-//		controller.getCellControllers().remove(this);
-		
-		controller.getModel().getCells().add(index, model);
-//		controller.getCellModel().addFilterController(index, this);
-		
+		// Remove model
+		controller.getModel().getCells().remove(getCellModel());
+		// Add model at new position
+		controller.getModel().getCells().add(index, getCellModel());
+		// Add layout at new position
 		controller.getCellsLayout().getChildren().add(index, cellLayout);
 	}
 

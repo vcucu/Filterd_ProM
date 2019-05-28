@@ -32,6 +32,10 @@ public class FilterButtonModel {
 		return name.get();
 	}
 	
+	public StringProperty getNameProperty() {
+		return name;
+	}
+	
 	public void setName(String value) {
 		this.name.set(value);
 	}
@@ -54,6 +58,10 @@ public class FilterButtonModel {
 
 	public boolean getSelected() {
 		return selected.get();
+	}
+	
+	public BooleanProperty getSelectedProperty() {
+		return selected;
 	}
 
 	public void setSelected(boolean value) {
