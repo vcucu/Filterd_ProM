@@ -17,6 +17,7 @@ import org.processmining.filterd.filters.FilterdTraceSampleFilter;
 import org.processmining.filterd.filters.FilterdTraceStartEventFilter;
 import org.processmining.filterd.gui.ConfigurationModalController.ConfigurationStep;
 import org.processmining.filterd.models.YLog;
+import org.processmining.filterd.tools.EmptyLogException;
 
 import javafx.collections.ListChangeListener;
 import javafx.embed.swing.SwingNode;
@@ -385,19 +386,34 @@ public class ComputationCellController extends CellController {
 				if(model.getInputLog().get() == null) {
 					throw new IllegalStateException("No input log selected");
 				}
-				FilterdAbstractConfig filterConfig;
+				FilterdAbstractConfig filterConfig = null;
 				switch(userSelection) {
 					case "Trace Start Event Filter":
-						filterConfig = new FilterdTraceStartEventConfig(model.getInputLog().get(),
-								new FilterdTraceStartEventFilter());
+						try {
+							filterConfig = new FilterdTraceStartEventConfig(model.getInputLog().get(),
+									new FilterdTraceStartEventFilter());
+						} catch (EmptyLogException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 						break;
 					case "Trace Frequency":
-						filterConfig = new FilterdTraceFrequencyConfig(model.getInputLog().get(),
-								new FilterdTraceFrequencyFilter());
+						try {
+							filterConfig = new FilterdTraceFrequencyConfig(model.getInputLog().get(),
+									new FilterdTraceFrequencyFilter());
+						} catch (EmptyLogException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 						break;
 					case "Trace Sample":
-						filterConfig = new FilterdTraceSampleConfig(model.getInputLog().get(),
-								new FilterdTraceSampleFilter());
+						try {
+							filterConfig = new FilterdTraceSampleConfig(model.getInputLog().get(),
+									new FilterdTraceSampleFilter());
+						} catch (EmptyLogException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 						break;
 					default:
 						throw new IllegalArgumentException("Unsupported filter selected");

@@ -14,6 +14,7 @@ import org.processmining.filterd.parameters.ParameterRangeFromRange;
 import org.processmining.filterd.parameters.ParameterText;
 import org.processmining.filterd.parameters.ParameterValueFromRange;
 import org.processmining.filterd.parameters.ParameterYesNo;
+import org.processmining.filterd.tools.EmptyLogException;
 import org.processmining.filterd.widgets.ParameterController;
 import org.processmining.filterd.widgets.ParameterMultipleFromSetController;
 import org.processmining.filterd.widgets.ParameterOneFromSetController;
@@ -33,12 +34,14 @@ public abstract class FilterdAbstractConfig {
 	protected List<XExtension> standardExtensions;
 	protected boolean isAttribute; // checks whether selected string is attribute or complex classifier
 
-	public FilterdAbstractConfig(XLog log, Filter filterType ) {
+	public FilterdAbstractConfig(XLog log, Filter filterType ) throws EmptyLogException{
 		
 		this.filterType = filterType;
+		this.checkEmptyLog(log);
 		this.setLog(log);
 		
 	}
+	
 	
 	public XEventClassifier getClassifier() {
 		return classifier;
@@ -58,6 +61,14 @@ public abstract class FilterdAbstractConfig {
 
 	public XLog getLog() {
 		return log;
+	}
+	
+	public void checkEmptyLog(XLog candidateLog) throws EmptyLogException {
+		try {
+			candidateLog.get(0);		
+		} catch (IndexOutOfBoundsException e) {
+			throw new EmptyLogException("The used log cannot be empty");
+		}
 	}
 	
 	
