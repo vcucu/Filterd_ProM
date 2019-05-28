@@ -37,12 +37,12 @@ public class FilterdTracePerformanceFilter extends Filter {
 			case "filter on duration": {
 				return filterDuration(
 						clonedLog, 
-						(ParameterRangeFromRange<Double>) parameters.get(1));
+						(ParameterRangeFromRange<Integer>) parameters.get(1));
 			}
 			case "filter on number of events": {
 				return filterNumberOfEvents(
 						clonedLog, 
-						(ParameterRangeFromRange<Double>) parameters.get(1));
+						(ParameterRangeFromRange<Integer>) parameters.get(1));
 			}
 		}
 		
@@ -50,7 +50,7 @@ public class FilterdTracePerformanceFilter extends Filter {
 	}
 	
 	public XLog filterDuration(XLog clonedLog,
-			ParameterRangeFromRange<Double> threshold) {
+			ParameterRangeFromRange<Integer> threshold) {
 		
 		// Threshold contains the thresholds in milliseconds.
 		double lowThreshold = threshold.getChosenPair().get(0);
@@ -78,7 +78,7 @@ public class FilterdTracePerformanceFilter extends Filter {
 			LocalDateTime endTime = Toolbox.synchronizeGMT(lastEventTime);
 			
 			Duration traceDuration = Duration.between(startTime, endTime);
-			double totalMillis = traceDuration.toMillis();
+			int totalMillis = (int) traceDuration.toMillis();
 			
 			if (totalMillis < lowThreshold || totalMillis > highThreshold) {
 				removeFromLog.add(trace);
@@ -92,11 +92,11 @@ public class FilterdTracePerformanceFilter extends Filter {
 	}
 	
 	public XLog filterNumberOfEvents(XLog clonedLog,
-			ParameterRangeFromRange<Double> threshold) {
+			ParameterRangeFromRange<Integer> threshold) {
 		
 		// Threshold contains the thresholds in number of events.
-		double lowThreshold = threshold.getChosenPair().get(0);
-		double highThreshold = threshold.getChosenPair().get(1);
+		int lowThreshold = threshold.getChosenPair().get(0);
+		int highThreshold = threshold.getChosenPair().get(1);
 		
 		Set<XTrace> removeFromLog = new HashSet<>();
 		
