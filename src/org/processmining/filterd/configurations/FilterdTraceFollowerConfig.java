@@ -334,4 +334,10 @@ public class FilterdTraceFollowerConfig extends FilterdAbstractReferencingConfig
 		// TODO Auto-generated method stub
 		return false;
 	}
+
+	@Override
+	public FilterdAbstractConfig changeReference(ParameterOneFromSetExtendedController controller) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

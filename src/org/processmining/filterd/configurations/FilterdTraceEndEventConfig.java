@@ -124,10 +124,6 @@ public class FilterdTraceEndEventConfig extends FilterdAbstractReferencingConfig
 		return new FilterConfigPanelController("Trace End Event Configuration", parameters, this);
 	}
 	
-	public FilterdAbstractConfig changeReference(ParameterOneFromSetController chosen) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 	
 	@Override
 	public boolean checkValidity(XLog candidateLog) {
@@ -140,6 +136,12 @@ public class FilterdTraceEndEventConfig extends FilterdAbstractReferencingConfig
 			return false;
 		}	
 		return true;
+	}
+
+	@Override
+	public FilterdAbstractConfig changeReference(ParameterOneFromSetExtendedController controller) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 

@@ -145,9 +145,10 @@ public class FilterdTraceAttrConfig extends FilterdAbstractReferencingConfig {
 				);
 	}
 	
+	@Override
 	public FilterdAbstractConfig changeReference(
-			ParameterOneFromSetController chosen) {
-
+			ParameterOneFromSetExtendedController chosen) {
+		
 		// Switch on the chosen type of attribute
 		switch (chosen.getValue()) {
 			// Categorical, so we create a new categorical configuration.
@@ -194,5 +195,7 @@ public class FilterdTraceAttrConfig extends FilterdAbstractReferencingConfig {
 		// Impossible since we can not figure out the type.
 		return false;
 	}
+
+
 
 }

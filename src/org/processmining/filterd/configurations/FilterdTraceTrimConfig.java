@@ -72,17 +72,18 @@ public class FilterdTraceTrimConfig extends FilterdAbstractReferencingConfig {
 		return new FilterConfigPanelController("Trace Trim Configuration", parameters, this);
 	}
 	
-	public FilterdAbstractConfig changeReference(ParameterOneFromSetController chosen) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	public boolean checkValidity(XLog log) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	public XLog filter() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public FilterdAbstractConfig changeReference(ParameterOneFromSetExtendedController controller) {
 		// TODO Auto-generated method stub
 		return null;
 	}
