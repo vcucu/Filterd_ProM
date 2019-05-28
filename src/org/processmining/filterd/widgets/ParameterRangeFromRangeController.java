@@ -38,7 +38,7 @@ public class ParameterRangeFromRangeController<N extends Number> extends Paramet
         // set the slider
 		setSliderConfig(defaultValue, minMaxPair);
         if(!genericTypeClass.equals(Double.TYPE) && !genericTypeClass.equals(Integer.TYPE)) {
-        	throw new IllegalArgumentException("Supported types are integer and double");
+        	throw new IllegalArgumentException("Supported types are integer (Integer.TYPE) and double (Double.TYPE)");
         }
         // set listeners for slider labels
         slider.lowValueProperty().addListener(new ChangeListener<Number>() {
@@ -76,7 +76,7 @@ public class ParameterRangeFromRangeController<N extends Number> extends Paramet
         	value.add((N)(Object) Math.round(slider.getLowValue()));
     		value.add((N)(Object) Math.round(slider.getHighValue()));
         } else {
-        	throw new IllegalArgumentException("Supported types are integer and double");
+        	throw new IllegalArgumentException("Supported types are integer (Integer.TYPE) and double (Double.TYPE)");
         }
 		return value;
 	}

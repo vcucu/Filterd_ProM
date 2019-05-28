@@ -29,7 +29,7 @@ public class FilterdTraceSampleConfig extends FilterdAbstractConfig {
 			"Sample size", 
 			0, 
 			optionsPair,
-			Integer.class	
+			Integer.TYPE	
 		);
 		
 		parameters.add(valueFromRangeParam);
