@@ -406,7 +406,7 @@ public static List<Integer> getMinAnMaxDuration(XLog log) {
 					.get("time:timestamp")
 					.toString();
 			String lastEventTime = trace
-					.get(trace.size())
+					.get(trace.size() - 1)
 					.getAttributes()
 					.get("time:timestamp")
 					.toString();
