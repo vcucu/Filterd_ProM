@@ -81,4 +81,8 @@ public class ParameterValueFromRangeController<N extends Number> extends Paramet
         	throw new IllegalArgumentException("Supported types are integer (Integer.TYPE) and double (Double.TYPE)");
         }
 	}
+	
+	public Slider getSlider() {
+		return this.slider;
+	}
 }
