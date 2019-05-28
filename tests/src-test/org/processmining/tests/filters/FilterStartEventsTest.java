@@ -479,7 +479,6 @@ public class FilterStartEventsTest extends FilterdPackageTest{
 	public void testStartAttribute_101() throws Throwable{
 		XLog expected = parseLog("start-events", "test_start_event_attribute_101.xes");
 		List empty = Collections.EMPTY_LIST;
-		List<String> oneElement = new ArrayList<>();
 		/*manually instantiate the filter's parameters*/
 		ArrayList<Parameter> parameters = new ArrayList<>();
 

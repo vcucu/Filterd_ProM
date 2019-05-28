@@ -12,6 +12,7 @@ public class ParameterMultipleFromSet extends Parameter {
 		super(name, nameDisplayed);
 		this.defaultChoice = defaultChoice;
 		this.options = options;
+		this.chosen = defaultChoice;
 	}
 	
 	public List<String> getDefaultChoice() {

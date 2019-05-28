@@ -3,7 +3,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.TreeSet;
 
 import org.deckfour.xes.classification.XEventClass;
 import org.deckfour.xes.info.XLogInfo;
@@ -75,41 +74,6 @@ public class FilterdEventRateConfig extends FilterdAbstractConfig {
 	// I did not find any case where a different input log would cause invalidity
 	public boolean checkValidity(XLog candidateLog) {	
 		return true;
-	}
-	
-	
-	/**
-	 * This method computes which event classes should be highlighted according to the selected percentage
-	 * @param threshold
-	 * @param desiredEvents
-	 */
-	public void stateChanged(ParameterValueFromRange<Integer> threshold, ParameterMultipleFromSet desiredEvents) {
-		int percentage = threshold.getChosen();
-		int size = 0;
-		//sort eventClasses according to their size, from smallest to biggest
-		TreeSet<Integer> eventSizes = new TreeSet<Integer>();
-		for (XEventClass event : eventClasses) {
-			size += event.size();
-			eventSizes.add(event.size());
-		}
-		int aux_threshold = size * percentage/100;
-		int value = 0;
-		List<String> desirableEventClasses = new ArrayList<>();
-		while (value < aux_threshold) {
-			//extract the class with the greatest value
-			int biggestEventClass = eventSizes.last();
-			eventSizes.remove(biggestEventClass);
-			
-			// mark all the event classes that have this size
-			for (XEventClass eventClass : eventClasses) {
-				if (eventClass.size() == biggestEventClass) {
-					value += biggestEventClass;
-					// this event class should be highlighted
-					desirableEventClasses.add(eventClass.toString());
-				}
-			}
-		}
-		desiredEvents.setChosen(desirableEventClasses);
 	}
 
 }

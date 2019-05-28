@@ -191,9 +191,6 @@ public class FilterdEventAttrFilter extends Filter {
 
 				String time = event.getAttributes().get(key).toString();
 
-				// check if time has miliseconds, otherwise add it 
-				if (!time.contains(".")) time = time.substring(0, 19) + ".000" + time.substring(19);
-
 				LocalDateTime date = Toolbox.synchronizeGMT(time);
 
 				if (date.isAfter(lower) && date.isBefore(upper)) {
