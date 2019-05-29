@@ -160,7 +160,7 @@ public class NotebookModelTest extends FilterdPackageTest {
 		// Get computation mode of the model
 		ComputationMode mode = model.getComputationMode();
 		// Check computation mode of the model
-		assertEquals(mode, null);
+		assertEquals(mode, ComputationMode.MANUAL);
 		
 		// Set new computation mode for the model
 		model.setComputationMode(ComputationMode.AUTOMATIC);

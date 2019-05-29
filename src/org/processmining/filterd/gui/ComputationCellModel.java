@@ -6,6 +6,10 @@ import java.util.Set;
 
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 import org.deckfour.uitopia.api.model.ViewType;
 import org.deckfour.xes.model.XLog;
@@ -29,13 +33,29 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.util.Callback;
 
+@XmlAccessorType(XmlAccessType.NONE) // Makes sure only explicitly named elements get added to the XML.
+@XmlRootElement(name = "ComputationCellModel") // Needed by JAXB to generate an XML.
 public class ComputationCellModel extends CellModel {
 
 	private ProMCanceller canceller;
 	private YLog inputLog;
 	private List<YLog> inputLogs;
 	private List<YLog> outputLogs;
+	@XmlElement
 	private ObservableList<FilterButtonModel> filters;
+	
+	/**
+	 * Constructor for importing/exporting. This constructor needs to exist because JAXB needs a no-argument constructor for unmarshalling.
+	 * Properties set here could be overwritten during loading.
+	 */
+	public ComputationCellModel() {
+		filters = FXCollections.observableArrayList(new Callback<FilterButtonModel, Observable[]>() {
+			@Override
+			public Observable[] call(FilterButtonModel temp) {
+				return new Observable[] { temp.nameProperty(), temp.selectedProperty() };
+			}
+		});
+	}
 
 	public ComputationCellModel(UIPluginContext context, int index, ProMCanceller canceller, List<YLog> eventLogs) {
 		super(context, index);
