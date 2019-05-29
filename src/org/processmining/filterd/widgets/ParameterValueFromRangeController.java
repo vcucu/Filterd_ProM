@@ -85,4 +85,5 @@ public class ParameterValueFromRangeController<N extends Number> extends Paramet
 	public Slider getSlider() {
 		return this.slider;
 	}
+
 }
