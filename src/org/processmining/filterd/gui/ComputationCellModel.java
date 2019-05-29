@@ -6,6 +6,10 @@ import java.util.Set;
 
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 import org.deckfour.uitopia.api.model.ViewType;
 import org.deckfour.xes.model.XLog;
@@ -29,13 +33,29 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.util.Callback;
 
+@XmlAccessorType(XmlAccessType.NONE) // Makes sure only explicitly named elements get added to the XML.
+@XmlRootElement(name = "ComputationCellModel") // Needed by JAXB to generate an XML.
 public class ComputationCellModel extends CellModel {
 
 	private ProMCanceller canceller;
 	private YLog inputLog;
 	private List<YLog> inputLogs;
 	private List<YLog> outputLogs;
+	@XmlElement
 	private ObservableList<FilterButtonModel> filters;
+	
+	/**
+	 * Constructor for importing/exporting. This constructor needs to exist because JAXB needs a no-argument constructor for unmarshalling.
+	 * Properties set here could be overwritten during loading.
+	 */
+	public ComputationCellModel() {
+		filters = FXCollections.observableArrayList(new Callback<FilterButtonModel, Observable[]>() {
+			@Override
+			public Observable[] call(FilterButtonModel temp) {
+				return new Observable[] { temp.nameProperty(), temp.selectedProperty() };
+			}
+		});
+	}
 
 	public ComputationCellModel(UIPluginContext context, int index, ProMCanceller canceller, List<YLog> eventLogs) {
 		super(context, index);
@@ -58,6 +78,11 @@ public class ComputationCellModel extends CellModel {
 
 	public void addFilterModel(int index, FilterButtonModel model) {
 		this.filters.add(index, model);
+		// set cell output to be the output of the last filter (the filter we just created)
+		this.outputLogs.clear();
+		YLog outputLog = model.getOutputLog();
+//		outputLog.setName(getCellModel().getCellName() + " output log");
+		this.outputLogs.add(outputLog);
 	}
 	
 	public void removeFilter(FilterButtonModel filter) {
@@ -69,6 +94,9 @@ public class ComputationCellModel extends CellModel {
 			throw new IllegalArgumentException("Log cannot be null!");
 		}
 		this.inputLog = log;
+		if(filters.size() > 0) { // if there are any filters, the first one should have the new log as input
+			filters.get(0).setInputLog(log);
+		}
 	}
 	
     public YLog getInputLog() {
@@ -151,7 +179,7 @@ public class ComputationCellModel extends CellModel {
 						// Let the user know which plug-in we're invoking. This name should match the name of the plug-in.
 						System.out.println("[Visualizerd] Calling plug-in " + pluginName + " w/ canceller to visualize log");
 						return context.tryToFindOrConstructFirstNamedObject(JComponent.class, pluginName, null, null,
-								inputLog.get(), new ProMCanceller() {
+								outputLogs.get(0).get(), new ProMCanceller() {
 									public boolean isCancelled() {
 										// TODO Auto-generated method stub
 										return false;
@@ -160,7 +188,7 @@ public class ComputationCellModel extends CellModel {
 						// Let the user know which plug-in we're invoking. This name should match the name of the plug-in.
 						System.out.println("[Visualizerd] Calling plug-in " + pluginName + " w/o canceller to visualize log");
 						return context.tryToFindOrConstructFirstNamedObject(JComponent.class, pluginName, null, null,
-								inputLog.get());
+								outputLogs.get(0).get());
 					}
 				} catch (Exception ex) {
 					// Message if visualizer fails for whatever reason.
@@ -173,6 +201,8 @@ public class ComputationCellModel extends CellModel {
 	}
     
     public void compute() {
+    	System.out.println("Computation cell compute starting");
+    	
     	XLog inputOutput = this.inputLog.get();
     	if(inputOutput == null) {
     		throw new IllegalStateException("Input log is null. "
@@ -180,18 +210,27 @@ public class ComputationCellModel extends CellModel {
     	}
     	for(FilterButtonModel filter : filters) {
     		try {
+    			System.out.println("Starting with a filter");
     			filter.compute();
     			inputOutput = filter.getOutputLog().get();
+    			System.out.println("Done with a filter");
     		} catch(InvalidConfigurationException e) {
     			FilterButtonModel model = e.getFilterButtonModel();
 //    			FilterButtonController controller = filterControllers.get(model.getIndex());
     			// TODO: set controller as invalid
+    			System.out.println("Invalid configuration");
     		} catch(EmptyLogException e) {
     			// TODO: handle this
+    			System.out.println("Empty log");
     		} catch(Exception e) {
     			// if any other exception occurs, throw it
     			throw e;
     		}
     	}
+    	System.out.println("Output log name is " + this.outputLogs.get(0).getName());
+    	System.out.print("Output log size is ");
+    	System.out.println(this.outputLogs.get(0).get().size());
+    	System.out.println("Computation cell compute done.");
+    	
     }
 }

@@ -77,7 +77,7 @@ public class FilterdTraceFrequencyFilter extends Filter {
 		// Get parameters set by the user in the configuration panel.
 		ParameterOneFromSet FreqOcc = (ParameterOneFromSet) parameters.get(0);
 		ParameterRangeFromRange<Double> thresholdParameters = 
-				(ParameterRangeFromRange<Double>) parameters.get(1);
+				(ParameterRangeFromRange<Double>) parameters.get(1);		
 		ParameterOneFromSet filterInOut = 
 				(ParameterOneFromSet) parameters.get(2);
 

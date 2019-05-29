@@ -427,7 +427,7 @@ public class Toolbox {
 		return id;
 	}
 	
-public static List<Integer> getMinAnMaxDuration(XLog log) {
+	public static List<Integer> getMinAnMaxDuration(XLog log) {
 		
 		int minDuration = Integer.MAX_VALUE;
 		int maxDuration = -Integer.MAX_VALUE;
@@ -484,6 +484,80 @@ public static List<Integer> getMinAnMaxDuration(XLog log) {
 		}
 		
 		return Arrays.asList(minEventSize, maxEventSize);
+	}
+	public static boolean satisfies(XAttributeMap attributes, String attribute_key,
+			List<String> attribute_values) {
+		//if the event does not have the desired attribute, return false
+		if (!attributes.containsKey(attribute_key)) {
+			return false;
+		}
+		XAttribute attr = attributes.get(attribute_key);
+		// the only way to get the value consistently 
+		// out of all the attribute subclasses
+		String attr_value = attr.toString();
+		
+		//if one of the desired values matches the attribute value, return true
+		//else return false
+		for (String s : attribute_values) {
+			if (attr_value.equals(s)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public static double[] getFirstAndLastTimes(XLog log) {
+		
+		double[] firstAndLast = new double[2];
+		
+		// Set initial values for comparison.
+		LocalDateTime firstTimestamp = LocalDateTime.MAX;
+		LocalDateTime finalTimestamp = LocalDateTime.MIN;
+		
+		// Loop over every trace to get the times of every trace.
+		for (XTrace trace : log) {
+			
+			// First and last event is the start and finish time of this trace.
+			// Use first and last event to calculate the total duration of
+			// the trace.
+			String firstEventTime = trace
+					.get(0)
+					.getAttributes()
+					.get("time:timestamp")
+					.toString();
+			String lastEventTime = trace
+					.get(trace.size() - 1)
+					.getAttributes()
+					.get("time:timestamp")
+					.toString();
+			
+			// Get the values in LocalDateTime
+			LocalDateTime startTime = synchronizeGMT(firstEventTime);
+			LocalDateTime endTime = synchronizeGMT(lastEventTime);
+			
+			// Do comparisons to get the earliest time a trace is started.
+			if (firstTimestamp.compareTo(startTime) < 0) {
+				firstTimestamp = startTime;
+			}
+			
+			// Do comparisons to get the latest time a trace is finished.
+			if (finalTimestamp.compareTo(endTime) > 0) {
+				finalTimestamp = endTime;
+			}
+			
+		}
+		
+		// Set the found values in the array.
+		// 0 is an absolute reference, meaning the start of the firstTimestamp
+		// and the total time between the first and final time stamp is set as
+		// the second value in the array.
+		firstAndLast[0] = 0;
+		firstAndLast[1] = Duration
+				.between(firstTimestamp, finalTimestamp)
+				.toMillis();
+			
+				
+		return firstAndLast;
 	}
 
 }

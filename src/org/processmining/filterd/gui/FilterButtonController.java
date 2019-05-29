@@ -107,12 +107,17 @@ public class FilterButtonController {
 			controller.getCellModel().selectFilter(model);
 		}
 	}
+	
+	public void enableEditFilterHandler() {
+		this.editButton.setDisable(false);
+	}
 
 	@FXML
 	private void editFilterHandler() {
 		selectFilterButton();
 		if(this.model.getFilterConfig() != null) {
-			this.controller.showModalFilterConfiguration(this.model.getFilterConfig());
+			this.controller.showModalFilterConfiguration(this.model.getFilterConfig(), this);
+			this.editButton.setDisable(true);
 		}
 	}
 	

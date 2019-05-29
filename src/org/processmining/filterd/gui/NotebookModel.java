@@ -4,6 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
+
 import org.deckfour.xes.model.XLog;
 import org.processmining.contexts.uitopia.UIContext;
 import org.processmining.contexts.uitopia.UIPluginContext;
@@ -13,8 +19,11 @@ import org.processmining.filterd.models.YLog;
 import org.processmining.filterd.tools.Toolbox;
 import org.processmining.framework.plugin.ProMCanceller;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 
 /**
  * This class contains the model for the notebook.
@@ -22,6 +31,9 @@ import javafx.collections.ObservableList;
  * @author Ewoud
  *
  */
+
+@XmlAccessorType(XmlAccessType.NONE) // Makes sure only explicitly named elements get added to the XML.
+@XmlRootElement(namespace = "org.processmining.filterd.gui") // set this class as the root of the XML file for this package.
 public class NotebookModel {
 
 	/**
@@ -35,13 +47,20 @@ public class NotebookModel {
 	private YLog initialInput; // the event log the notebook was initialized with.
 	// ObservableList allows for action listeners. ObeservableLists are provided by JavaFX
 	private ProMCanceller promCanceller;
+	@XmlElementWrapper(name = "cells")
+	@XmlElement(name = "cell")
 	private ObservableList<CellModel> cells; // the list of all cells currently in the notebook.
+	@XmlElement
 	private ComputationMode computationMode; // the computation mode the notebook is currently in.
 	
 	
-	// Only used by Import/Export plugin
+	/**
+	 * Constructor for importing/exporting. This constructor needs to exist because JAXB needs a no-argument constructor for unmarshalling.
+	 * Properties set here could be overwritten during loading.
+	 */
 	public NotebookModel() {
 		this.cells = FXCollections.observableArrayList();
+		setComputationMode(ComputationMode.MANUAL);
 	}
 
 	/**
@@ -276,14 +295,35 @@ public class NotebookModel {
 	}
 	
 	public void compute() {
-		List<ComputationCellModel> computeList = cells
-				.stream()
-				.filter(c -> c instanceof ComputationCellModel) // use only computation cells
-				.map(c -> (ComputationCellModel) c) // cast to computation cell model
-				.collect(Collectors.toList()); // transform steam to list
-		for(ComputationCellModel cellModel : computeList) {
-			cellModel.compute();
-		}
+		Task<Void> task = new Task<Void>() {
+
+			@Override
+			protected Void call() throws Exception {
+				System.out.println("Starting compute");
+				List<ComputationCellModel> computeList = cells
+						.stream()
+						.filter(c -> c instanceof ComputationCellModel) // use only computation cells
+						.map(c -> (ComputationCellModel) c) // cast to computation cell model
+						.collect(Collectors.toList()); // transform steam to list
+				for(ComputationCellModel cellModel : computeList) {
+					cellModel.compute();
+				}
+				System.out.println("Computation done");
+				return null;
+			}
+		};
+		task.exceptionProperty().addListener(new ChangeListener<Throwable>() {
+
+			public void changed(ObservableValue<? extends Throwable> observable, Throwable oldValue,
+					Throwable newValue) {
+				if(newValue != null) {
+					Exception exception = (Exception) newValue;
+					exception.printStackTrace();
+				}	
+			}
+		});
+		Thread thread = new Thread(task);
+		thread.start();
 	}
 	
 	

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.deckfour.xes.model.XAttributeMap;
 import org.deckfour.xes.model.XLog;
 import org.junit.Test;
 import org.processmining.filterd.filters.FilterdTraceAttrFilter;
@@ -115,19 +114,6 @@ public class FilterTraceAttributeTest extends FilterdPackageTest {
 	@Test
 	public void testLogAttribute3() throws Throwable {
 		XLog expected = parseLog("trace-attribute", "test_log_attribute_min_max.xes");
-		XLog computed = null; // insert filter operation
-
-		assert equalLog(expected, computed);
-	}
-	
-	/* Corresponds to test case 30 from test_specification.xlsx.
-	 * Keeps trace intersecting with 24/12/2018 0:00 - 26/12/2018 23:59:59.
-	 * 
-	 * Result: case 41 - 8 events.
-	 */
-	@Test
-	public void testTimeframeIntersect() throws Throwable {
-		XLog expected = parseLog("trace-attribute", "test_timeframe_2.xes");
 		XLog computed = null; // insert filter operation
 
 		assert equalLog(expected, computed);

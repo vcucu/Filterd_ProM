@@ -20,7 +20,7 @@ import javafx.scene.control.ComboBox;
 
 public class FilterdTraceFrequencyConfig extends FilterdAbstractConfig {
 	
-	private List<Integer> logMinAndMaxSize;
+	private List<Double> logMinAndMaxSize;
 
 	public FilterdTraceFrequencyConfig(XLog log, Filter filterType) {
 		super(log, filterType);
@@ -61,24 +61,24 @@ public class FilterdTraceFrequencyConfig extends FilterdAbstractConfig {
 		}
 		
 		logMinAndMaxSize = new ArrayList<>();
-		logMinAndMaxSize.add(minOccurrence);
-		logMinAndMaxSize.add(maxOccurrence);
+		logMinAndMaxSize.add(new Integer(minOccurrence).doubleValue());
+		logMinAndMaxSize.add(new Integer(maxOccurrence).doubleValue());
 		
 		// Initialize the threshold options parameter and add it to the 
 		// parameters list
-		List<Integer> thrOptions = new ArrayList<>();
+		List<Double> thrOptions = new ArrayList<>();
 		
 		//since the default option is "frequency", it goes from 1% to 100%
-		thrOptions.add(0);
-		thrOptions.add(100);
+		thrOptions.add(0.0);
+		thrOptions.add(100.0);
 		
-		ParameterRangeFromRange<Integer> threshold = 
+		ParameterRangeFromRange<Double> threshold = 
 				new ParameterRangeFromRange<>(
 				"threshold",
 				"Threshold",
 				thrOptions,
 				thrOptions,
-				Integer.TYPE
+				Double.TYPE
 				);
 		
 		
@@ -126,25 +126,29 @@ public class FilterdTraceFrequencyConfig extends FilterdAbstractConfig {
 							
 							if (changingParameter.getName().equals("threshold")) {
 								
-								ParameterRangeFromRangeController<Integer> castedChanging = 
-										(ParameterRangeFromRangeController<Integer>) changingParameter;
+								ParameterRangeFromRangeController<Double> castedChanging = 
+										(ParameterRangeFromRangeController<Double>) changingParameter;
 								
 								if (newValue.equals("frequency")) {
-									List<Integer> defaultValue = new ArrayList<>();
-									defaultValue.add(0);
-									defaultValue.add(100);
-									List<Integer> minMaxPair = new ArrayList<>();
-									minMaxPair.add(0);
-									minMaxPair.add(100);
+									List<Double> defaultValue = new ArrayList<>();
+									defaultValue.add(0.0);
+									defaultValue.add(100.0);
+									List<Double> minMaxPair = new ArrayList<>();
+									minMaxPair.add(0.0);
+									minMaxPair.add(100.0);
 									castedChanging.setSliderConfig(defaultValue, minMaxPair);
 									
-									ParameterRangeFromRange<Integer> castedParameter = (ParameterRangeFromRange<Integer>) getParameter("threshold");
+									castedChanging.actLikeDouble(minMaxPair);
+									
+									ParameterRangeFromRange<Double> castedParameter = (ParameterRangeFromRange<Double>) getParameter("threshold");
 									castedParameter.setDefaultPair(defaultValue);
 									castedParameter.setOptionsPair(minMaxPair);
 								} else {
 									castedChanging.setSliderConfig(logMinAndMaxSize, logMinAndMaxSize);
 									
-									ParameterRangeFromRange<Integer> castedParameter = (ParameterRangeFromRange<Integer>) getParameter("threshold");
+									castedChanging.actLikeInteger(logMinAndMaxSize);
+									
+									ParameterRangeFromRange<Double> castedParameter = (ParameterRangeFromRange<Double>) getParameter("threshold");
 									castedParameter.setDefaultPair(logMinAndMaxSize);
 									castedParameter.setOptionsPair(logMinAndMaxSize);
 								}

@@ -74,9 +74,9 @@ public class ParameterValueFromRangeController<N extends Number> extends Paramet
 	
 	public N getValue() {
 		if(genericTypeClass.equals(Double.TYPE)) {
-			return (N)(Object) slider.getValue();
+        	return (N) (new Double(slider.getValue()));
         } else if(genericTypeClass.equals(Integer.TYPE)) {
-        	return (N)(Object) Math.round(slider.getValue());
+        	return (N) new Integer((new Double(slider.getValue())).intValue());
         } else {
         	throw new IllegalArgumentException("Supported types are integer (Integer.TYPE) and double (Double.TYPE)");
         }

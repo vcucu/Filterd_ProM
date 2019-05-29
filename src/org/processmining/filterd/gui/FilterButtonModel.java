@@ -1,5 +1,10 @@
 package org.processmining.filterd.gui;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
 import org.deckfour.xes.model.XLog;
 import org.processmining.filterd.configurations.FilterdAbstractConfig;
 import org.processmining.filterd.models.YLog;
@@ -10,14 +15,28 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
+@XmlAccessorType(XmlAccessType.NONE) // Makes sure only explicitly named elements get added to the XML.
+@XmlRootElement(name = "FilterButtonModel") // Needed by JAXB to generate an XML.
 public class FilterButtonModel {
 	
 	private StringProperty name;
+	@XmlElement
 	private int index;
 	private BooleanProperty selected;
+	//@XmlElement
 	private FilterdAbstractConfig filterConfig;
 	private YLog inputLog;
 	private YLog outputLog;
+	
+	/**
+	 * Constructor for importing/exporting. This constructor needs to exist because JAXB needs a no-argument constructor for unmarshalling.
+	 * Properties set here could be overwritten during loading.
+	 */
+	public FilterButtonModel() {
+		String filterName = "Filter #" + Integer.toString((int) (Math.random() * 900 + 100));
+		name = new SimpleStringProperty(filterName);
+		selected = new SimpleBooleanProperty(false);
+	}	
 	
 	public FilterButtonModel(int index, YLog inputLog) {
 		String filterName = "Filter #" + Integer.toString((int) (Math.random() * 900 + 100));
@@ -28,6 +47,7 @@ public class FilterButtonModel {
 		this.outputLog = new YLog(Toolbox.getNextId(), filterName + " output log", inputLog.get());
 	}
 	
+	@XmlElement
 	public String getName() {
 		return name.get();
 	}
@@ -38,6 +58,10 @@ public class FilterButtonModel {
 	
 	public void setName(String value) {
 		this.name.set(value);
+	}
+	
+	public void setInputLog(YLog inputLog) {
+		this.inputLog = inputLog;
 	}
 	
 	public YLog getOutputLog() {
@@ -56,6 +80,7 @@ public class FilterButtonModel {
 		this.index = index;
 	}
 
+	@XmlElement
 	public boolean getSelected() {
 		return selected.get();
 	}
@@ -81,17 +106,26 @@ public class FilterButtonModel {
 	}
 	
 	public void compute() {
+		System.out.println("Filter button compute starting");
 		if(inputLog.get() == null) {
+			System.out.println("Filter button input log is null");
 			throw new IllegalStateException("Input log is null. Upstream filter was not computed.");
 		}
+		System.out.println("Filter button setting config log");
 		filterConfig.setLog(inputLog.get());
+		System.out.println("Filter button set config log");
 		if(filterConfig.isValid()) {
 			// compute
+			System.out.println("Filter button computing");
 			XLog output = filterConfig.filter();
+			System.out.println("Filter button output setting log");
 			outputLog.setLog(output);
+			System.out.println("Filter button output log set");
 		} else {
+			System.out.println("Filter button configuration became invalid after setting the log");
 			// throw exception to notify the user that the computation could not be completed
 			throw new InvalidConfigurationException("Configuration became invalid", this);
 		}
+		System.out.println("Filter button compute done");
 	}
 }

@@ -2,6 +2,7 @@ package org.processmining.filterd.gui;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.JComponent;
@@ -79,12 +80,18 @@ public class ComputationCellController extends CellController {
 		// Load event logs in cmbEventLog and select "Initial input"
 		cmbEventLog.getItems().addAll(model.getInputLogs());
 		cmbEventLog.getSelectionModel().selectFirst();
+		model.setOutputLogs(new ArrayList<YLog>(
+				Arrays.asList(
+					new YLog[] { model.getInputLogs().get(0) }
+				)));
 		setXLog();
 
 		// Add listeners to the basic model components
 		cellModel.getProperty().addPropertyChangeListener(new CellModelListeners(this));
 		// Add listeners for filter buttons
 		addFilterButtonListeners();
+		// bind the cell name to the cell name variable.
+		getCellModel().bindCellName(cellName.textProperty());
 
 		// Initialize the visualizer
 		visualizerSwgNode = new SwingNode();
@@ -128,12 +135,6 @@ public class ComputationCellController extends CellController {
 				inputLog = getCellModel().getFilters().get(index - 1).getOutputLog();
 			}
 			FilterButtonModel filterModel = new FilterButtonModel(index, inputLog);
-			// set cell output to be the output of the last filter (the filter we just created)
-			List<YLog> outputLogs = getCellModel().getOutputLogs();
-			outputLogs.clear();
-			YLog outputLog = filterModel.getOutputLog();
-			outputLog.setName(getCellModel().getCellName() + " output log");
-			outputLogs.add(outputLog);
 			getCellModel().addFilterModel(index, filterModel);
 			loadFilter(index, filterModel);
 		}
@@ -153,7 +154,7 @@ public class ComputationCellController extends CellController {
 		}
 		newController.selectFilterButton();
 		// show the filter list to allow the user to pick which filter she wants to add
-		showModalFilterList(model);
+		showModalFilterList(newController, model);
 	}
 
 	private void addFilterButtonListeners() {
@@ -313,6 +314,7 @@ public class ComputationCellController extends CellController {
 		if (cmbVisualizers.getValue() == Utilities.dummyViewType) {
 			// Remove visualizer if "None" is selected
 			visualizerPane.getChildren().remove(visualizerSwgNode);
+			this.visualizerSwgNode.setContent(null);
 			return;
 		}
 		JComponent visualizer = model.getVisualization(cmbVisualizers.getValue());
@@ -358,7 +360,7 @@ public class ComputationCellController extends CellController {
 		this.isConfigurationModalShown = false;
 	}
 
-	public void showModalFilterConfiguration(FilterdAbstractConfig filterConfig) {
+	public void showModalFilterConfiguration(FilterdAbstractConfig filterConfig, FilterButtonController filterConfigController) {
 		if (filterConfig == null) {
 			throw new IllegalArgumentException("Fitler configuration cannot be null");
 		}
@@ -367,7 +369,7 @@ public class ComputationCellController extends CellController {
 		// Disable visualizer combobox
 		cmbVisualizers.setDisable(true);
 		// populate filter configuration modal
-		configurationModal.showFilterConfiguration(filterConfig);
+		configurationModal.showFilterConfiguration(filterConfig, filterConfigController);
 		// get root component of the configuration modal
 		VBox configurationModalRoot = configurationModal.getRoot();
 		visualizerPane.getChildren().add(configurationModalRoot);
@@ -379,7 +381,7 @@ public class ComputationCellController extends CellController {
 		this.isConfigurationModalShown = true;
 	}
 
-	public void showModalFilterList(FilterButtonModel filterButtonModel) {
+	public void showModalFilterList(FilterButtonController filterButtonController, FilterButtonModel filterButtonModel) {
 		// Remove visualizer
 		visualizerPane.getChildren().remove(visualizerSwgNode);
 		// Disable visualizer combobox
@@ -392,7 +394,7 @@ public class ComputationCellController extends CellController {
 		filterOptions.add("Event Attributes");
 		filterOptions.add("Event Rate");
 
-		configurationModal.showFilterList(filterOptions, new Callback<String, FilterdAbstractConfig>() {
+		configurationModal.showFilterList(filterOptions, filterButtonController, new Callback<String, FilterdAbstractConfig>() {
 
 			public FilterdAbstractConfig call(String userSelection) {
 				ComputationCellModel model = (ComputationCellModel) cellModel;
