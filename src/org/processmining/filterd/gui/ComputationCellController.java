@@ -10,11 +10,13 @@ import javax.swing.SwingUtilities;
 import org.deckfour.uitopia.api.model.ViewType;
 import org.processmining.filterd.configurations.FilterdAbstractConfig;
 import org.processmining.filterd.configurations.FilterdEventAttrConfig;
+import org.processmining.filterd.configurations.FilterdEventRateConfig;
 import org.processmining.filterd.configurations.FilterdTraceFrequencyConfig;
 import org.processmining.filterd.configurations.FilterdTracePerformanceConfig;
 import org.processmining.filterd.configurations.FilterdTraceSampleConfig;
 import org.processmining.filterd.configurations.FilterdTraceStartEventConfig;
 import org.processmining.filterd.filters.FilterdEventAttrFilter;
+import org.processmining.filterd.filters.FilterdEventRateFilter;
 import org.processmining.filterd.filters.FilterdTraceFrequencyFilter;
 import org.processmining.filterd.filters.FilterdTracePerformanceFilter;
 import org.processmining.filterd.filters.FilterdTraceSampleFilter;
@@ -151,7 +153,7 @@ public class ComputationCellController extends CellController {
 		}
 		newController.selectFilterButton();
 		// show the filter list to allow the user to pick which filter she wants to add
-		showModalFilterList(model);
+		showModalFilterList(newController, model);
 	}
 
 	private void addFilterButtonListeners() {
@@ -356,7 +358,7 @@ public class ComputationCellController extends CellController {
 		this.isConfigurationModalShown = false;
 	}
 
-	public void showModalFilterConfiguration(FilterdAbstractConfig filterConfig) {
+	public void showModalFilterConfiguration(FilterdAbstractConfig filterConfig, FilterButtonController filterConfigController) {
 		if (filterConfig == null) {
 			throw new IllegalArgumentException("Fitler configuration cannot be null");
 		}
@@ -365,7 +367,7 @@ public class ComputationCellController extends CellController {
 		// Disable visualizer combobox
 		cmbVisualizers.setDisable(true);
 		// populate filter configuration modal
-		configurationModal.showFilterConfiguration(filterConfig);
+		configurationModal.showFilterConfiguration(filterConfig, filterConfigController);
 		// get root component of the configuration modal
 		VBox configurationModalRoot = configurationModal.getRoot();
 		visualizerPane.getChildren().add(configurationModalRoot);
@@ -377,7 +379,7 @@ public class ComputationCellController extends CellController {
 		this.isConfigurationModalShown = true;
 	}
 
-	public void showModalFilterList(FilterButtonModel filterButtonModel) {
+	public void showModalFilterList(FilterButtonController filterButtonController, FilterButtonModel filterButtonModel) {
 		// Remove visualizer
 		visualizerPane.getChildren().remove(visualizerSwgNode);
 		// Disable visualizer combobox
@@ -388,8 +390,9 @@ public class ComputationCellController extends CellController {
 		filterOptions.add("Trace Sample");
 		filterOptions.add("Trace Performance");
 		filterOptions.add("Event Attributes");
+		filterOptions.add("Event Rate");
 
-		configurationModal.showFilterList(filterOptions, new Callback<String, FilterdAbstractConfig>() {
+		configurationModal.showFilterList(filterOptions, filterButtonController, new Callback<String, FilterdAbstractConfig>() {
 
 			public FilterdAbstractConfig call(String userSelection) {
 				ComputationCellModel model = (ComputationCellModel) cellModel;
@@ -438,6 +441,15 @@ public class ComputationCellController extends CellController {
 						try {
 							filterConfig = new FilterdEventAttrConfig(model.getInputLog().get(),
 									new FilterdEventAttrFilter());
+						} catch (EmptyLogException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						break;
+					case "Event Rate":
+						try {
+							filterConfig = new FilterdEventRateConfig(model.getInputLog().get(),
+									new FilterdEventRateFilter());
 						} catch (EmptyLogException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
