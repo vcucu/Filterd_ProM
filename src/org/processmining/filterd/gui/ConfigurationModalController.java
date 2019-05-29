@@ -89,6 +89,9 @@ public class ConfigurationModalController {
 	@FXML
 	private void cancel() {
 		parent.hideConfigurationModal();
+		if(this.filterButtonController != null) {
+			filterButtonController.enableEditFilterHandler();
+		}
 		resetModal();
 	}
 
@@ -116,8 +119,8 @@ public class ConfigurationModalController {
 			if(this.filterButtonController != null) {
 				filterButtonController.enableEditFilterHandler();
 			}
-			resetModal();
 		}
+		resetModal();
 	}
 
 	public void resetModal() {

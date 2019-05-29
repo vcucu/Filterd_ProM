@@ -40,6 +40,10 @@ public class FilterButtonModel {
 		this.name.set(value);
 	}
 	
+	public void setInputLog(YLog inputLog) {
+		this.inputLog = inputLog;
+	}
+	
 	public YLog getOutputLog() {
 		return this.outputLog;
 	}
@@ -81,17 +85,26 @@ public class FilterButtonModel {
 	}
 	
 	public void compute() {
+		System.out.println("Filter button compute starting");
 		if(inputLog.get() == null) {
+			System.out.println("Filter button input log is null");
 			throw new IllegalStateException("Input log is null. Upstream filter was not computed.");
 		}
+		System.out.println("Filter button setting config log");
 		filterConfig.setLog(inputLog.get());
+		System.out.println("Filter button set config log");
 		if(filterConfig.isValid()) {
 			// compute
+			System.out.println("Filter button computing");
 			XLog output = filterConfig.filter();
+			System.out.println("Filter button output setting log");
 			outputLog.setLog(output);
+			System.out.println("Filter button output log set");
 		} else {
+			System.out.println("Filter button configuration became invalid after setting the log");
 			// throw exception to notify the user that the computation could not be completed
 			throw new InvalidConfigurationException("Configuration became invalid", this);
 		}
+		System.out.println("Filter button compute done");
 	}
 }

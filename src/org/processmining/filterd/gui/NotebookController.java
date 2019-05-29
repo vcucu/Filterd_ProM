@@ -142,7 +142,7 @@ public class NotebookController {
 	 */
 	@FXML
 	private void computeButtonHandler() {
-		compute();
+		model.compute();
 	}
 
 	/**

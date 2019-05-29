@@ -2,6 +2,7 @@ package org.processmining.filterd.gui;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.JComponent;
@@ -79,6 +80,10 @@ public class ComputationCellController extends CellController {
 		// Load event logs in cmbEventLog and select "Initial input"
 		cmbEventLog.getItems().addAll(model.getInputLogs());
 		cmbEventLog.getSelectionModel().selectFirst();
+		model.setOutputLogs(new ArrayList<YLog>(
+				Arrays.asList(
+					new YLog[] { model.getInputLogs().get(0) }
+				)));
 		setXLog();
 
 		// Add listeners to the basic model components
@@ -128,12 +133,6 @@ public class ComputationCellController extends CellController {
 				inputLog = getCellModel().getFilters().get(index - 1).getOutputLog();
 			}
 			FilterButtonModel filterModel = new FilterButtonModel(index, inputLog);
-			// set cell output to be the output of the last filter (the filter we just created)
-			List<YLog> outputLogs = getCellModel().getOutputLogs();
-			outputLogs.clear();
-			YLog outputLog = filterModel.getOutputLog();
-			outputLog.setName(getCellModel().getCellName() + " output log");
-			outputLogs.add(outputLog);
 			getCellModel().addFilterModel(index, filterModel);
 			loadFilter(index, filterModel);
 		}
@@ -313,6 +312,7 @@ public class ComputationCellController extends CellController {
 		if (cmbVisualizers.getValue() == Utilities.dummyViewType) {
 			// Remove visualizer if "None" is selected
 			visualizerPane.getChildren().remove(visualizerSwgNode);
+			this.visualizerSwgNode.setContent(null);
 			return;
 		}
 		JComponent visualizer = model.getVisualization(cmbVisualizers.getValue());

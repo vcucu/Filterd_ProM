@@ -70,11 +70,11 @@ public class ParameterRangeFromRangeController<N extends Number> extends Paramet
 	public List<N> getValue() {
 		List<N> value = new ArrayList<>();
 		if(genericTypeClass.equals(Double.TYPE)) {
-			value.add((N)(Object) slider.getLowValue());
-			value.add((N)(Object) slider.getHighValue());
+			value.add((N) (new Double(slider.getLowValue())));
+			value.add((N) (new Double(slider.getHighValue())));
         } else if(genericTypeClass.equals(Integer.TYPE)) {
-        	value.add((N)(Object) Math.round(slider.getLowValue()));
-    		value.add((N)(Object) Math.round(slider.getHighValue()));
+        	value.add((N) new Integer((new Double(slider.getLowValue())).intValue()));
+    		value.add((N) new Integer((new Double(slider.getHighValue())).intValue()));
         } else {
         	throw new IllegalArgumentException("Supported types are integer (Integer.TYPE) and double (Double.TYPE)");
         }

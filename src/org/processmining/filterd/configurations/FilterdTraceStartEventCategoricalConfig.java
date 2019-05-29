@@ -2,11 +2,10 @@ package org.processmining.filterd.configurations;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.deckfour.xes.classification.XEventAttributeClassifier;
 import org.deckfour.xes.classification.XEventClass;
-import org.deckfour.xes.classification.XEventClasses;
 import org.deckfour.xes.classification.XEventClassifier;
 import org.deckfour.xes.info.XLogInfo;
-import org.deckfour.xes.classification.XEventAttributeClassifier;
 import org.deckfour.xes.info.impl.XLogInfoImpl;
 import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XLog;
@@ -21,9 +20,8 @@ import org.processmining.filterd.parameters.ParameterValueFromRange;
 import org.processmining.filterd.parameters.ParameterYesNo;
 import org.processmining.filterd.widgets.ParameterController;
 import org.processmining.filterd.widgets.ParameterMultipleFromSetController;
-import org.processmining.filterd.widgets.ParameterRangeFromRangeController;
 import org.processmining.filterd.widgets.ParameterValueFromRangeController;
-import org.processmining.filterd.tools.Toolbox;
+
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.Slider;
