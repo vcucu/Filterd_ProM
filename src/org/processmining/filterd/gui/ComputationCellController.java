@@ -153,7 +153,7 @@ public class ComputationCellController extends CellController {
 		}
 		newController.selectFilterButton();
 		// show the filter list to allow the user to pick which filter she wants to add
-		showModalFilterList(model);
+		showModalFilterList(newController, model);
 	}
 
 	private void addFilterButtonListeners() {
@@ -358,7 +358,7 @@ public class ComputationCellController extends CellController {
 		this.isConfigurationModalShown = false;
 	}
 
-	public void showModalFilterConfiguration(FilterdAbstractConfig filterConfig) {
+	public void showModalFilterConfiguration(FilterdAbstractConfig filterConfig, FilterButtonController filterConfigController) {
 		if (filterConfig == null) {
 			throw new IllegalArgumentException("Fitler configuration cannot be null");
 		}
@@ -367,7 +367,7 @@ public class ComputationCellController extends CellController {
 		// Disable visualizer combobox
 		cmbVisualizers.setDisable(true);
 		// populate filter configuration modal
-		configurationModal.showFilterConfiguration(filterConfig);
+		configurationModal.showFilterConfiguration(filterConfig, filterConfigController);
 		// get root component of the configuration modal
 		VBox configurationModalRoot = configurationModal.getRoot();
 		visualizerPane.getChildren().add(configurationModalRoot);
@@ -379,7 +379,7 @@ public class ComputationCellController extends CellController {
 		this.isConfigurationModalShown = true;
 	}
 
-	public void showModalFilterList(FilterButtonModel filterButtonModel) {
+	public void showModalFilterList(FilterButtonController filterButtonController, FilterButtonModel filterButtonModel) {
 		// Remove visualizer
 		visualizerPane.getChildren().remove(visualizerSwgNode);
 		// Disable visualizer combobox
@@ -392,7 +392,7 @@ public class ComputationCellController extends CellController {
 		filterOptions.add("Event Attributes");
 		filterOptions.add("Event Rate");
 
-		configurationModal.showFilterList(filterOptions, new Callback<String, FilterdAbstractConfig>() {
+		configurationModal.showFilterList(filterOptions, filterButtonController, new Callback<String, FilterdAbstractConfig>() {
 
 			public FilterdAbstractConfig call(String userSelection) {
 				ComputationCellModel model = (ComputationCellModel) cellModel;
