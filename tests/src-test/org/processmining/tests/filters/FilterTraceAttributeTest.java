@@ -144,46 +144,46 @@ public class FilterTraceAttributeTest extends FilterdPackageTest {
 		attributeSelector.setChosen(attribute);
 		
 		// Create the array list for selecting the type of attribute the user
-				// has selected.
-				List<String> attributeTypeList = new ArrayList<String>();
-				attributeTypeList.add("Categorical");		
-				attributeTypeList.add("Numerical");
-				attributeTypeList.add("Timeframe");
-				attributeTypeList.add("Duration");
-				attributeTypeList.add("Filter on events");
-				
-				// Create the parameter for selecting the type of attribute.
-				ParameterOneFromSet attributeTypeSelector = 
-						new ParameterOneFromSet(
-								"Attribute type", 
-								"Select attribute type", 
-								attributeTypeList.get(0), 
-								attributeTypeList);
-				
-				attributeTypeSelector.setChosen(attributeType);
-			
-				ParameterYesNo nullHandlingParam = new ParameterYesNo("nullHandling",
-						"Null handling:",
-						true);
-				nullHandlingParam.setChosen(nullHandling);
-				List<String> selectionTypeOptions = new ArrayList<>();
-				selectionTypeOptions.add("Mandatory");
-				selectionTypeOptions.add("Forbidden");
-				
-				ParameterOneFromSet selectionTypeParam = new ParameterOneFromSet("selectionType",
-					"Selection type:",
-					"Mandatory",
-					selectionTypeOptions);
-				selectionTypeParam.setChosen(selectionType);
-				
-				ParameterMultipleFromSet desiredValuesParam = new ParameterMultipleFromSet(
-						"desiredValues",
-						"Desired values:",
-						chosenValues,
-						chosenValues
-					);
-				
-				desiredValuesParam.setChosen(chosenValues);
+		// has selected.
+		List<String> attributeTypeList = new ArrayList<String>();
+		attributeTypeList.add("Categorical");		
+		attributeTypeList.add("Numerical");
+		attributeTypeList.add("Timeframe");
+		attributeTypeList.add("Duration");
+		attributeTypeList.add("Filter on events");
+		
+		// Create the parameter for selecting the type of attribute.
+		ParameterOneFromSet attributeTypeSelector = 
+				new ParameterOneFromSet(
+						"Attribute type", 
+						"Select attribute type", 
+						attributeTypeList.get(0), 
+						attributeTypeList);
+		
+		attributeTypeSelector.setChosen(attributeType);
+	
+		ParameterYesNo nullHandlingParam = new ParameterYesNo("nullHandling",
+				"Null handling:",
+				true);
+		nullHandlingParam.setChosen(nullHandling);
+		List<String> selectionTypeOptions = new ArrayList<>();
+		selectionTypeOptions.add("Mandatory");
+		selectionTypeOptions.add("Forbidden");
+		
+		ParameterOneFromSet selectionTypeParam = new ParameterOneFromSet("selectionType",
+			"Selection type:",
+			"Mandatory",
+			selectionTypeOptions);
+		selectionTypeParam.setChosen(selectionType);
+		
+		ParameterMultipleFromSet desiredValuesParam = new ParameterMultipleFromSet(
+				"desiredValues",
+				"Desired values:",
+				chosenValues,
+				chosenValues
+			);
+		
+		desiredValuesParam.setChosen(chosenValues);
 		
 		parameters.add(attributeSelector);
 		parameters.add(attributeTypeSelector);

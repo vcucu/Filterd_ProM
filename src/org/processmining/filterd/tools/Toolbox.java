@@ -506,9 +506,9 @@ public class Toolbox {
 		return false;
 	}
 	
-	public static double[] getFirstAndLastTimes(XLog log) {
+	public static LocalDateTime[] getFirstAndLastTimes(XLog log) {
 		
-		double[] firstAndLast = new double[2];
+		LocalDateTime[] firstAndLast = new LocalDateTime[2];
 		
 		// Set initial values for comparison.
 		LocalDateTime firstTimestamp = LocalDateTime.MAX;
@@ -536,25 +536,19 @@ public class Toolbox {
 			LocalDateTime endTime = synchronizeGMT(lastEventTime);
 			
 			// Do comparisons to get the earliest time a trace is started.
-			if (firstTimestamp.compareTo(startTime) < 0) {
+			if (firstTimestamp.compareTo(startTime) > 0) {
 				firstTimestamp = startTime;
 			}
 			
 			// Do comparisons to get the latest time a trace is finished.
-			if (finalTimestamp.compareTo(endTime) > 0) {
+			if (finalTimestamp.compareTo(endTime) < 0) {
 				finalTimestamp = endTime;
 			}
 			
 		}
 		
-		// Set the found values in the array.
-		// 0 is an absolute reference, meaning the start of the firstTimestamp
-		// and the total time between the first and final time stamp is set as
-		// the second value in the array.
-		firstAndLast[0] = 0;
-		firstAndLast[1] = Duration
-				.between(firstTimestamp, finalTimestamp)
-				.toMillis();
+		firstAndLast[0] = firstTimestamp;
+		firstAndLast[1] = finalTimestamp;
 			
 				
 		return firstAndLast;
