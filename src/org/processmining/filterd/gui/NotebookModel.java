@@ -4,6 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
+
 import org.deckfour.xes.model.XLog;
 import org.processmining.contexts.uitopia.UIContext;
 import org.processmining.contexts.uitopia.UIPluginContext;
@@ -22,6 +28,9 @@ import javafx.collections.ObservableList;
  * @author Ewoud
  *
  */
+
+@XmlAccessorType(XmlAccessType.NONE) // Makes sure only explicitly named elements get added to the XML.
+@XmlRootElement(namespace = "org.processmining.filterd.gui") // set this class as the root of the XML file for this package.
 public class NotebookModel {
 
 	/**
@@ -35,13 +44,20 @@ public class NotebookModel {
 	private YLog initialInput; // the event log the notebook was initialized with.
 	// ObservableList allows for action listeners. ObeservableLists are provided by JavaFX
 	private ProMCanceller promCanceller;
+	@XmlElementWrapper(name = "cells")
+	@XmlElement(name = "cell")
 	private ObservableList<CellModel> cells; // the list of all cells currently in the notebook.
+	@XmlElement
 	private ComputationMode computationMode; // the computation mode the notebook is currently in.
 	
 	
-	// Only used by Import/Export plugin
+	/**
+	 * Constructor for importing/exporting. This constructor needs to exist because JAXB needs a no-argument constructor for unmarshalling.
+	 * Properties set here could be overwritten during loading.
+	 */
 	public NotebookModel() {
 		this.cells = FXCollections.observableArrayList();
+		setComputationMode(ComputationMode.MANUAL);
 	}
 
 	/**

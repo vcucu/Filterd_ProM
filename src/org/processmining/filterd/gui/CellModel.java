@@ -2,18 +2,40 @@ package org.processmining.filterd.gui;
 
 import java.beans.PropertyChangeSupport;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
 import org.processmining.contexts.uitopia.UIPluginContext;
 
+@XmlAccessorType(XmlAccessType.NONE) // Makes sure only explicitly named elements get added to the XML.
+@XmlRootElement(name = "CellModel")  // Needed by JAXB to generate an XML.
 public class CellModel {
 
-	private boolean isHidden;
 	private UIPluginContext context;
+	@XmlElement
+	private boolean isHidden;
+	@XmlElement
 	private CellStatus statusBar;
+	@XmlElement
 	private String cellName;
+	@XmlElement
 	private int index;
 	//property used to register property listeners for each bound property
 	protected PropertyChangeSupport property;
 
+	/**
+	 * Constructor for importing/exporting. This constructor needs to exist because JAXB needs a no-argument constructor for unmarshalling.
+	 * Properties set here could be overwritten during loading.
+	 */
+	public CellModel() {
+		this.property = new PropertyChangeSupport(this);
+		isHidden = false;
+		setStatusBar(CellStatus.IDLE); // set the initial cell status to idle
+		setCellName("Cell #" + Integer.toString((int) (Math.random() * 900 + 100))); // assign an initial name to the cell
+	}
+	
 	public CellModel(UIPluginContext context, int index) {
 		this.context = context;
 		//adding property to register all change listeners to all bounded properties of the model

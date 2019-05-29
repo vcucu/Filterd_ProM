@@ -1,15 +1,29 @@
 package org.processmining.filterd.gui;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
 import org.processmining.contexts.uitopia.UIPluginContext;
 
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
+@XmlAccessorType(XmlAccessType.NONE) // Makes sure only explicitly named elements get added to the XML.
+@XmlRootElement(name = "TextCellModel") // Needed by JAXB to generate an XML.
 public class TextCellModel extends CellModel{
 	
 	private StringProperty comment; // StringProperty is used because it can be bound.
 
+	/**
+	 * Constructor for importing/exporting. This constructor needs to exist because JAXB needs a no-argument constructor for unmarshalling.
+	 * Properties set here could be overwritten during loading.
+	 */
+	public TextCellModel() {
+	}
+	
 	public TextCellModel(UIPluginContext context, int index) {
 		super(context, index);
 		comment = new SimpleStringProperty();
@@ -37,6 +51,7 @@ public class TextCellModel extends CellModel{
 	 * Returns the string value contained in the StringProperty. Corresponds to the text in the TextArea of the TextCell.
 	 * @return THe strinv value contained in the StringProperty.
 	 */
+	@XmlElement
 	public String getComment() {
 		return comment.getValue();
 	}
