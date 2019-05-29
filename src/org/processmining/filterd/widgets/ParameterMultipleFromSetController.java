@@ -1,6 +1,7 @@
 package org.processmining.filterd.widgets;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javafx.collections.FXCollections;
@@ -42,8 +43,14 @@ public class ParameterMultipleFromSetController extends ParameterController {
 	}
 	
 	public void setSelected(List<String> selection) {
+		list.getSelectionModel().clearSelection();
 		for (String option : selection) {
 			list.getSelectionModel().select(option);
 		}
 	}
+	
+	public List<String> getSelected(){
+		return (List<String>) list.getSelectionModel();
+	}
+	
 }

@@ -8,22 +8,9 @@ import org.deckfour.xes.model.XLog;
 import org.processmining.filterd.filters.Filter;
 import org.processmining.filterd.gui.AbstractFilterConfigPanelController;
 import org.processmining.filterd.gui.FilterConfigPanelController;
-import org.processmining.filterd.parameters.Parameter;
-import org.processmining.filterd.parameters.ParameterMultipleFromSet;
-import org.processmining.filterd.parameters.ParameterOneFromSet;
-import org.processmining.filterd.parameters.ParameterRangeFromRange;
-import org.processmining.filterd.parameters.ParameterText;
-import org.processmining.filterd.parameters.ParameterValueFromRange;
-import org.processmining.filterd.parameters.ParameterYesNo;
+import org.processmining.filterd.parameters.*;
 import org.processmining.filterd.tools.Toolbox;
-import org.processmining.filterd.widgets.ParameterController;
-import org.processmining.filterd.widgets.ParameterMultipleFromSetController;
-import org.processmining.filterd.widgets.ParameterOneFromSetController;
-import org.processmining.filterd.widgets.ParameterOneFromSetExtendedController;
-import org.processmining.filterd.widgets.ParameterRangeFromRangeController;
-import org.processmining.filterd.widgets.ParameterTextController;
-import org.processmining.filterd.widgets.ParameterValueFromRangeController;
-import org.processmining.filterd.widgets.ParameterYesNoController;
+import org.processmining.filterd.widgets.*;
 
 public class FilterdTraceStartEventConfig extends FilterdAbstractReferencingConfig {
 
@@ -70,6 +57,7 @@ public class FilterdTraceStartEventConfig extends FilterdAbstractReferencingConf
 				ParameterOneFromSetExtendedController casted = (ParameterOneFromSetExtendedController) controller;
 				ParameterOneFromSet param = (ParameterOneFromSet) getParameter(controller.getName());
 				param.setChosen(casted.getValue());
+				System.out.println("I want a nested panel");
 				concreteReference.populate(casted.getNestedConfigPanel());
 				//this method needs to be in every referencable class
 				
@@ -149,7 +137,9 @@ public class FilterdTraceStartEventConfig extends FilterdAbstractReferencingConf
 
 	@Override
 	public FilterdAbstractConfig changeReference(ParameterOneFromSetExtendedController controller) {
-		// TODO Auto-generated method stub
-		return null;
+		concreteReference = new FilterdTraceStartEventCategoricalConfig(
+				log, filterType, controller.getValue(),Toolbox.computeComplexClassifiers(log));
+				
+		return concreteReference;
 	}
 }
