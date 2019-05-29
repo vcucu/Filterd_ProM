@@ -9,6 +9,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import org.processmining.contexts.uitopia.UIPluginContext;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+
 @XmlAccessorType(XmlAccessType.NONE) // Makes sure only explicitly named elements get added to the XML.
 @XmlRootElement(name = "CellModel")  // Needed by JAXB to generate an XML.
 public class CellModel {
@@ -18,8 +21,8 @@ public class CellModel {
 	private boolean isHidden;
 	@XmlElement
 	private CellStatus statusBar;
-	@XmlElement
-	private String cellName;
+	// XML Annotated at the getter method because a conversion is needed.
+	private StringProperty cellName;
 	@XmlElement
 	private int index;
 	//property used to register property listeners for each bound property
@@ -34,6 +37,7 @@ public class CellModel {
 		isHidden = false;
 		setStatusBar(CellStatus.IDLE); // set the initial cell status to idle
 		setCellName("Cell #" + Integer.toString((int) (Math.random() * 900 + 100))); // assign an initial name to the cell
+		cellName = new SimpleStringProperty(); // initialize the cellName
 	}
 	
 	public CellModel(UIPluginContext context, int index) {
@@ -43,7 +47,16 @@ public class CellModel {
 		this.index = index;
 		isHidden = false;
 		setStatusBar(CellStatus.IDLE); // set the initial cell status to idle
+		cellName = new SimpleStringProperty(); // initialize the cellName
 		setCellName("Cell #" + Integer.toString((int) (Math.random() * 900 + 100))); // assign an initial name to the cell
+	}
+	
+	/**
+	 * Binds StringProperty to the cell name so they will always contain the same value.
+	 * @param stringProperty The variable to bind to the cell name.
+	 */
+	public void bindCellName(StringProperty stringProperty) {
+		cellName.bindBidirectional(stringProperty);
 	}
 
 	public boolean isHidden() {
@@ -71,21 +84,25 @@ public class CellModel {
 		this.statusBar = statusBar;
 	}
 
+	/**
+	 * Returns the string value contained in the StringProperty cellName. Corresponds to the text in the cell name of the Cell.
+	 * @return THe string value contained in the StringProperty.
+	 */
+	@XmlElement
 	public String getCellName() {
-		return cellName;
+		return cellName.getValue();
 	}
 
 	/**
 	 * Sets cellName of cell model to cellName and fires a change event
 	 * 
-	 * @param cellName
+	 * @param cellName The name to give to the cell
 	 */
 	public void setCellName(String cellName) {
-		String oldState = this.cellName;
-		this.cellName = cellName;
+		String oldState = this.cellName.getValue();
+		this.cellName.setValue(cellName);
 		//System.out.println("cellName in cell model with cellName value:" + cellName + " and old value" + oldState);
 		property.firePropertyChange("setCellName", oldState, cellName);
-		this.cellName = cellName;
 	}
 
 	public UIPluginContext getContext() {

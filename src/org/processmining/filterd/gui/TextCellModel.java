@@ -15,6 +15,7 @@ import javafx.beans.property.StringProperty;
 @XmlRootElement(name = "TextCellModel") // Needed by JAXB to generate an XML.
 public class TextCellModel extends CellModel{
 	
+	// Annotated at the getter method because a conversion is needed.
 	private StringProperty comment; // StringProperty is used because it can be bound.
 
 	/**
@@ -49,7 +50,7 @@ public class TextCellModel extends CellModel{
 	
 	/**
 	 * Returns the string value contained in the StringProperty. Corresponds to the text in the TextArea of the TextCell.
-	 * @return THe strinv value contained in the StringProperty.
+	 * @return THe string value contained in the StringProperty.
 	 */
 	@XmlElement
 	public String getComment() {

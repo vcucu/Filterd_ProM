@@ -85,6 +85,8 @@ public class ComputationCellController extends CellController {
 		cellModel.getProperty().addPropertyChangeListener(new CellModelListeners(this));
 		// Add listeners for filter buttons
 		addFilterButtonListeners();
+		// bind the cell name to the cell name variable.
+		getCellModel().bindCellName(cellName.textProperty());
 
 		// Initialize the visualizer
 		visualizerSwgNode = new SwingNode();

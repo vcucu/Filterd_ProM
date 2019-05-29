@@ -13,6 +13,7 @@ public class TextCellController extends CellController {
 
 	public void initialize() {
 		cellModel.getProperty().addPropertyChangeListener(new CellModelListeners(this));
+		getCellModel().bindCellName(cellName.textProperty()); // bind the cell name to the cell name variable.
 		getCellModel().bindComment(commentField.textProperty()); // bind the text in the UI to its variable counterpart.
 	}
 	
