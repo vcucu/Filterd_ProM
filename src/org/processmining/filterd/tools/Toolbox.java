@@ -485,5 +485,25 @@ public static List<Integer> getMinAnMaxDuration(XLog log) {
 		
 		return Arrays.asList(minEventSize, maxEventSize);
 	}
+	public static boolean satisfies(XAttributeMap attributes, String attribute_key,
+			List<String> attribute_values) {
+		//if the event does not have the desired attribute, return false
+		if (!attributes.containsKey(attribute_key)) {
+			return false;
+		}
+		XAttribute attr = attributes.get(attribute_key);
+		// the only way to get the value consistently 
+		// out of all the attribute subclasses
+		String attr_value = attr.toString();
+		
+		//if one of the desired values matches the attribute value, return true
+		//else return false
+		for (String s : attribute_values) {
+			if (attr_value.equals(s)) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 }
