@@ -13,7 +13,7 @@ public class TextCellController extends CellController {
 
 	public void initialize() {
 		cellModel.getProperty().addPropertyChangeListener(new CellModelListeners(this));
-		commentField.textProperty().bindBidirectional(getCellModel().getCommentProperty()); // bind the text in de UI to its variable counterpart
+		getCellModel().bindComment(commentField.textProperty()); // bind the text in the UI to its variable counterpart.
 	}
 	
 	public void changeComment(String comment) {
