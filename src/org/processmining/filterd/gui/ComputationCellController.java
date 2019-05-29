@@ -1,5 +1,6 @@
 package org.processmining.filterd.gui;
 
+import java.awt.Dimension;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -331,6 +332,11 @@ public class ComputationCellController extends CellController {
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
+				Dimension dimension = new Dimension();
+				dimension.setSize(Double.MAX_VALUE, Double.MAX_VALUE);
+				//visualizer.setPreferredSize(new Dimension((int)button.getPreferredSize().getWidth()+10, (int)button.getPreferredSize().getHeight()));
+				visualizer.setMaximumSize(dimension);
+				visualizer.setPreferredSize(dimension);
 				visualizerSwgNode.setContent(visualizer);
 			}
 		});
