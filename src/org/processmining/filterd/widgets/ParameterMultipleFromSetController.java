@@ -46,4 +46,11 @@ public class ParameterMultipleFromSetController extends ParameterController {
 			list.getSelectionModel().select(option);
 		}
 	}
+	
+	public void changeOptions(List<String> options) {
+		ObservableList<String> observableList = FXCollections.observableList(options);
+        list.setItems(observableList);
+        list.getSelectionModel().select(options.get(0));
+        list.scrollTo(options.get(0));
+	}
 }

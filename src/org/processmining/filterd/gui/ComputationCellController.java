@@ -16,12 +16,14 @@ import org.processmining.filterd.configurations.FilterdTraceFrequencyConfig;
 import org.processmining.filterd.configurations.FilterdTracePerformanceConfig;
 import org.processmining.filterd.configurations.FilterdTraceSampleConfig;
 import org.processmining.filterd.configurations.FilterdTraceStartEventConfig;
+import org.processmining.filterd.configurations.FilterdTracesHavingEventConfig;
 import org.processmining.filterd.filters.FilterdEventAttrFilter;
 import org.processmining.filterd.filters.FilterdEventRateFilter;
 import org.processmining.filterd.filters.FilterdTraceFrequencyFilter;
 import org.processmining.filterd.filters.FilterdTracePerformanceFilter;
 import org.processmining.filterd.filters.FilterdTraceSampleFilter;
 import org.processmining.filterd.filters.FilterdTraceStartEventFilter;
+import org.processmining.filterd.filters.FilterdTracesHavingEvent;
 import org.processmining.filterd.gui.ConfigurationModalController.ConfigurationStep;
 import org.processmining.filterd.models.YLog;
 import org.processmining.filterd.tools.EmptyLogException;
@@ -393,6 +395,7 @@ public class ComputationCellController extends CellController {
 		filterOptions.add("Trace Performance");
 		filterOptions.add("Event Attributes");
 		filterOptions.add("Event Rate");
+		filterOptions.add("Trace Having Event");
 
 		configurationModal.showFilterList(filterOptions, filterButtonController, new Callback<String, FilterdAbstractConfig>() {
 
@@ -452,6 +455,15 @@ public class ComputationCellController extends CellController {
 						try {
 							filterConfig = new FilterdEventRateConfig(model.getInputLog().get(),
 									new FilterdEventRateFilter());
+						} catch (EmptyLogException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						break;
+					case "Trace Having Event":
+						try {
+							filterConfig = new FilterdTracesHavingEventConfig(model.getInputLog().get(),
+									new FilterdTracesHavingEvent());
 						} catch (EmptyLogException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
