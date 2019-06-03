@@ -1,10 +1,13 @@
 package org.processmining.tests.filters;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XLog;
+import org.deckfour.xes.model.XTrace;
 import org.junit.Test;
 import org.processmining.filterd.filters.FilterdEventAttrFilter;
 import org.processmining.filterd.parameters.Parameter;
@@ -12,6 +15,7 @@ import org.processmining.filterd.parameters.ParameterMultipleFromSet;
 import org.processmining.filterd.parameters.ParameterOneFromSet;
 import org.processmining.filterd.parameters.ParameterRangeFromRange;
 import org.processmining.filterd.parameters.ParameterYesNo;
+import org.processmining.filterd.tools.Toolbox;
 
 /* Test cases for validating the Filter on Event Attributes.
  * Test files xes location: /tests/testfiles/event-attribute/ */
@@ -142,11 +146,11 @@ public class FilterEventAttributeTest extends FilterdPackageTest {
 		values.setChosen(chosen);
 		parameters.add(values);
 		
-		ArrayList<String> options = new ArrayList<>();
-		options.add("1");
-		options.add("10");
+		ArrayList<Integer> options = new ArrayList<>();
+		options.add(1);
+		options.add(10);
 		
-		ParameterRangeFromRange<String> range = new ParameterRangeFromRange<>("range",
+		ParameterRangeFromRange<Integer> range = new ParameterRangeFromRange<>("range",
 				"", options, options);
 		range.setChosenPair(options);
 		parameters.add(range);
@@ -195,11 +199,11 @@ public class FilterEventAttributeTest extends FilterdPackageTest {
 		values.setChosen(chosen);
 		parameters.add(values);
 		
-		ArrayList<String> options = new ArrayList<>();
-		options.add("1");
-		options.add("10");
+		ArrayList<Integer> options = new ArrayList<>();
+		options.add(1);
+		options.add(10);
 		
-		ParameterRangeFromRange<String> range = new ParameterRangeFromRange<>("range",
+		ParameterRangeFromRange<Integer> range = new ParameterRangeFromRange<>("range",
 				"", options, options);
 		range.setChosenPair(options);
 		parameters.add(range);
@@ -242,11 +246,11 @@ public class FilterEventAttributeTest extends FilterdPackageTest {
 		values.setChosen(chosen);
 		parameters.add(values);
 		
-		ArrayList<String> options = new ArrayList<>();
-		options.add("1");
-		options.add("10");
+		ArrayList<Integer> options = new ArrayList<>();
+		options.add(1);
+		options.add(10);
 		
-		ParameterRangeFromRange<String> range = new ParameterRangeFromRange<>("range",
+		ParameterRangeFromRange<Integer> range = new ParameterRangeFromRange<>("range",
 				"", options, options);
 		range.setChosenPair(options);
 		parameters.add(range);
@@ -489,11 +493,27 @@ public class FilterEventAttributeTest extends FilterdPackageTest {
 		eventHandling.setChosen(false);
 		parameters.add(eventHandling);
 		
-		ParameterRangeFromRange<String> range = new ParameterRangeFromRange<String>("range", "", empty, empty);
-		ArrayList<String> chosen = new ArrayList<>();
-		chosen.add("2019-01-01T00:00:00.000");
-		chosen.add("2019-12-27T09:02:00.000"); // random date far after the original log
+		ArrayList<String> times = new ArrayList<>();
+		/*populate the array times with the ordered date&time of all events */
+		for (XTrace trace: originalLog) {
+			for (XEvent event : trace) {
+				/* timestamp format YYYY-MM-DDTHH:MM:SS.ssssGMT with GMT = {Z, + , -} */
+				if (!event.getAttributes().containsKey("time:timestamp")) continue;
+				String value = event.getAttributes().get("time:timestamp").toString();
+				LocalDateTime time = Toolbox.synchronizeGMT(value);
+				times.add(time.toString());
+			}
+		}
+
+		/* sort the timestamps in ascending order */
+		Collections.sort(times);
+	
+		ParameterRangeFromRange<Integer> range = new ParameterRangeFromRange<Integer>("time-range","", empty, empty);
+		ArrayList<Integer> chosen = new ArrayList<>();
+		chosen.add(times.indexOf(Toolbox.synchronizeGMT("2019-01-05T08:15:00.000+01:00").toString()));
+		chosen.add(times.indexOf(Toolbox.synchronizeGMT("2019-01-05T17:18:00.000+01:00").toString()));
 		range.setChosenPair(chosen);
+		range.setTimes(times);
 		parameters.add(range);
 		
 		FilterdEventAttrFilter filter = new FilterdEventAttrFilter();
@@ -528,11 +548,30 @@ public class FilterEventAttributeTest extends FilterdPackageTest {
 		eventHandling.setChosen(false);
 		parameters.add(eventHandling);
 		
-		ParameterRangeFromRange<String> range = new ParameterRangeFromRange<String>("range","", empty, empty);
-		ArrayList<String> chosen = new ArrayList<>();
-		chosen.add("2019-01-01T00:00:00.000");
-		chosen.add("2019-12-27T09:02:00.000"); // random date far after the original log
+		ArrayList<String> times = new ArrayList<>();
+		/*populate the array times with the ordered date&time of all events */
+		for (XTrace trace: originalLog) {
+			for (XEvent event : trace) {
+				/* timestamp format YYYY-MM-DDTHH:MM:SS.ssssGMT with GMT = {Z, + , -} */
+				if (!event.getAttributes().containsKey("time:timestamp")) continue;
+				String value = event.getAttributes().get("time:timestamp").toString();
+
+				LocalDateTime time = Toolbox.synchronizeGMT(value);
+				times.add(time.toString());
+			}
+		}
+
+		/* sort the timestamps in ascending order */
+		Collections.sort(times);
+	
+		ParameterRangeFromRange<Integer> range = new ParameterRangeFromRange<Integer>("time-range","", empty, empty);
+		ArrayList<Integer> chosen = new ArrayList<>();
+		
+		chosen.add(times.indexOf(Toolbox.synchronizeGMT("2019-01-05T08:15:00.000+01:00").toString()));
+		chosen.add(times.indexOf(Toolbox.synchronizeGMT("2019-01-05T17:18:00.000+01:00").toString()));
+
 		range.setChosenPair(chosen);
+		range.setTimes(times);
 		parameters.add(range);
 		
 		FilterdEventAttrFilter filter = new FilterdEventAttrFilter();

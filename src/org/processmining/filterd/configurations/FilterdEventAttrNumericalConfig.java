@@ -70,11 +70,11 @@ public class FilterdEventAttrNumericalConfig extends FilterdAbstractReferenceabl
 				"Select interval to choose from.", defaultPair, optionsPair, Integer.TYPE);
 		
 		parameters.add(selectionType);
-		parameters.add(traceHandling);
-		parameters.add(eventHandling);
 		parameters.add(parameterType);
 		parameters.add(desiredValues);
 		parameters.add(range);
+		parameters.add(traceHandling);
+		parameters.add(eventHandling);
 		
 	}
 

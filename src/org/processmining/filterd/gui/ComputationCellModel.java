@@ -81,7 +81,7 @@ public class ComputationCellModel extends CellModel {
 		// set cell output to be the output of the last filter (the filter we just created)
 		this.outputLogs.clear();
 		YLog outputLog = model.getOutputLog();
-//		outputLog.setName(getCellModel().getCellName() + " output log");
+		outputLog.setName(getCellName() + " output log");
 		this.outputLogs.add(outputLog);
 	}
 	

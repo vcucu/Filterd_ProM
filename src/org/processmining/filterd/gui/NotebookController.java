@@ -92,7 +92,7 @@ public class NotebookController {
 		
 	}
 	
-	private void cellListeners() {
+	public void cellListeners() {
 		model.getCells().addListener(new ListChangeListener<CellModel>() {
 			@Override
 			public void onChanged(Change<? extends CellModel> change) {
@@ -129,7 +129,7 @@ public class NotebookController {
 	 * Automatic.
 	 */
 	@FXML
-	private void autoButtonHandler() {
+	public void autoButtonHandler() {
 		setComputationMode(ComputationMode.AUTOMATIC);
 	}
 
@@ -138,7 +138,7 @@ public class NotebookController {
 	 * to Manual.
 	 */
 	@FXML
-	private void manualButtonHandler() {
+	public void manualButtonHandler() {
 		setComputationMode(ComputationMode.MANUAL);
 	}
 

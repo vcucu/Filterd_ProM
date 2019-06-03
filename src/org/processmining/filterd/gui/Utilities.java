@@ -16,7 +16,7 @@ import javafx.scene.layout.Pane;
 
 public class Utilities {
 	
-	static ViewType dummyViewType = new ViewType() {
+	public static ViewType dummyViewType = new ViewType() {
 
 		@Override
 		public View createView(Resource arg0) throws IllegalArgumentException {

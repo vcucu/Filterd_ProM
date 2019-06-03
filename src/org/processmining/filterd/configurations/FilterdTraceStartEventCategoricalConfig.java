@@ -43,7 +43,9 @@ public class FilterdTraceStartEventCategoricalConfig extends FilterdAbstractRefe
 		// is a classifier or an attribute
 		
 		// check whether the selected string is an attribute or a classifier
+		System.out.println("I got this attribute name: "+attribute);
 		for (XEventClassifier c: classifiers) {
+			System.out.println("I am checking against this classifier: "+c.name());
 			if (c.name().equals(attribute)) {
 				//if it is a classifier than create eventclasses object accordingly
 				isAttribute = false; // the selected string is a complex classifier
@@ -51,8 +53,8 @@ public class FilterdTraceStartEventCategoricalConfig extends FilterdAbstractRefe
 				//eventClasses = new ArrayList<>(logInfo.getEventClasses(c).getClasses());
 				xEventClasses = new XEventClasses(c);
 				xEventClasses = XEventClasses.deriveEventClasses(c, log);				
-
-				for (int i = 0; i == xEventClasses.size() - 1; i++) {
+		
+				for (int i = 0; i <= xEventClasses.size() - 1; i++) {
 					allValues.add(xEventClasses.getByIndex(i).toString());
 				}
 				break;
@@ -61,20 +63,24 @@ public class FilterdTraceStartEventCategoricalConfig extends FilterdAbstractRefe
 		
 		if (isAttribute) {
 			//if it is an attribute than create eventclasses object accordingly
-			XEventAttributeClassifier attrClassifier = new XEventAttributeClassifier("attrClassifier", attribute);
+			XEventAttributeClassifier attrClassifier = new XEventAttributeClassifier(
+					"attrClassifier", attribute);
 			XLogInfo logInfo = XLogInfoImpl.create(log);
 			
 			xEventClasses = new XEventClasses(attrClassifier);
 			xEventClasses = XEventClasses.deriveEventClasses(attrClassifier, log);
 			
-			for (int i = 0; i == xEventClasses.size() - 1; i++) {
+			for (int i = 0; i <= xEventClasses.size() - 1; i++) {
+				//uncomment to disallow filtering on empty values(non-null but just empty)
+				//if (!xEventClasses.getByIndex(i).toString().equals("")) {
 				allValues.add(xEventClasses.getByIndex(i).toString());
+				//}
 			}			
 		}
 		
 		// Create desiredEvents parameter	
-		ParameterMultipleFromSet desiredEvents = new ParameterMultipleFromSet("desiredEvents",
-				"Select start values", allValues, allValues);
+		ParameterMultipleFromSet desiredEvents = new ParameterMultipleFromSet(
+				"desiredEvents", "Select start values", allValues, allValues);
 		
 		// Should you keep empty traces
 		ParameterYesNo traceHandling = new ParameterYesNo("traceHandling", 
