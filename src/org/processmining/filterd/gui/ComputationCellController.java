@@ -3,25 +3,16 @@ package org.processmining.filterd.gui;
 import java.awt.Dimension;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 
 import org.deckfour.uitopia.api.model.ViewType;
-import org.processmining.filterd.configurations.FilterdAbstractConfig;
-import org.processmining.filterd.configurations.FilterdEventAttrConfig;
-import org.processmining.filterd.configurations.FilterdEventRateConfig;
-import org.processmining.filterd.configurations.FilterdTraceFrequencyConfig;
-import org.processmining.filterd.configurations.FilterdTracePerformanceConfig;
-import org.processmining.filterd.configurations.FilterdTraceSampleConfig;
-import org.processmining.filterd.configurations.FilterdTraceStartEventConfig;
-import org.processmining.filterd.filters.FilterdEventAttrFilter;
-import org.processmining.filterd.filters.FilterdEventRateFilter;
-import org.processmining.filterd.filters.FilterdTraceFrequencyFilter;
-import org.processmining.filterd.filters.FilterdTracePerformanceFilter;
-import org.processmining.filterd.filters.FilterdTraceSampleFilter;
-import org.processmining.filterd.filters.FilterdTraceStartEventFilter;
+import org.processmining.filterd.configurations.*;
+import org.processmining.filterd.filters.*;
+
 import org.processmining.filterd.gui.ConfigurationModalController.ConfigurationStep;
 import org.processmining.filterd.models.YLog;
 import org.processmining.filterd.tools.EmptyLogException;
@@ -78,6 +69,10 @@ public class ComputationCellController extends CellController {
 		// Load event logs in cmbEventLog and select "Initial input"
 		cmbEventLog.getItems().addAll(model.getInputLogs());
 		cmbEventLog.getSelectionModel().selectFirst();
+		model.setOutputLogs(new ArrayList<YLog>(
+				Arrays.asList(
+					new YLog[] { model.getInputLogs().get(0) }
+				)));
 		setXLog();
 
 		// Add listeners to the basic model components
@@ -129,12 +124,6 @@ public class ComputationCellController extends CellController {
 				inputLog = getCellModel().getFilters().get(index - 1).getOutputLog();
 			}
 			FilterButtonModel filterModel = new FilterButtonModel(index, inputLog);
-			// set cell output to be the output of the last filter (the filter we just created)
-			List<YLog> outputLogs = getCellModel().getOutputLogs();
-			outputLogs.clear();
-			YLog outputLog = filterModel.getOutputLog();
-			outputLog.setName(getCellModel().getCellName() + " output log");
-			outputLogs.add(outputLog);
 			getCellModel().addFilterModel(index, filterModel);
 			loadFilter(index, filterModel);
 		}
@@ -273,15 +262,15 @@ public class ComputationCellController extends CellController {
 			cellToolbar.getChildren().add(cellToolbar.getChildren().size() - 1, fullToolbar);
 			fullToolbar.setPadding(new Insets(0, 0, 0, 0));
 
-			//make the notebook toolbar and scrollpane visible 
+			//make the notebook toolbar and scrollpane visible
 			notebookToolbar.setVisible(isFullScreen);
 			notebookToolbar.setManaged(isFullScreen);
 			notebookScrollPane.setVisible(isFullScreen);
 			notebookScrollPane.setManaged(isFullScreen);
-			
+
 			// Refresh visualizer
 			visualizerSwgWrap.refresh();
-			
+
 			isFullScreen = false;
 		} else if (!isFullScreen && !isConfigurationModalShown) {
 			//make the notebook toolbar and scrollpane invisible
@@ -296,10 +285,10 @@ public class ComputationCellController extends CellController {
 			notebookLayout.getChildren().add(fullToolbar);
 			notebookLayout.getChildren().add(visualizerPane);
 			VBox.setVgrow(visualizerPane, Priority.ALWAYS);
-			
+
 			// Refresh visualizer
 			visualizerSwgWrap.refresh();
-			
+
 			isFullScreen = true;
 		}
 	}
@@ -321,12 +310,13 @@ public class ComputationCellController extends CellController {
 		if (cmbVisualizers.getValue() == Utilities.dummyViewType) {
 			// Remove visualizer if "None" is selected
 			visualizerPane.getChildren().remove(visualizerSwgWrap);
+			visualizerSwgWrap.setContent(null);
 			return;
 		}
 		JComponent visualizer = model.getVisualization(cmbVisualizers.getValue());
 		if (!visualizerPane.getChildren().contains(visualizerSwgWrap)) {
-			// Add visualizer if not present 
-			visualizerPane.getChildren().add(visualizerSwgWrap);			
+			// Add visualizer if not present
+			visualizerPane.getChildren().add(visualizerSwgWrap);
 		}
 		// We set the anchors for each side of the swingNode to 0 so it fits itself to the anchorPane and gets resized with the cell.
 		AnchorPane.setTopAnchor(visualizerSwgWrap, 0.0);
@@ -399,11 +389,15 @@ public class ComputationCellController extends CellController {
 		cmbVisualizers.setDisable(true);
 		List<String> filterOptions = new ArrayList<>();
 		filterOptions.add("Trace Start Event Filter");
+		filterOptions.add("Trace End Event Filter");
 		filterOptions.add("Trace Frequency");
 		filterOptions.add("Trace Sample");
 		filterOptions.add("Trace Performance");
+		filterOptions.add("Trace Having Event");
+		filterOptions.add("Trace Attribute");
 		filterOptions.add("Event Attributes");
 		filterOptions.add("Event Rate");
+
 
 		configurationModal.showFilterList(filterOptions, filterButtonController, new Callback<String, FilterdAbstractConfig>() {
 
@@ -418,6 +412,15 @@ public class ComputationCellController extends CellController {
 						try {
 							filterConfig = new FilterdTraceStartEventConfig(model.getInputLog().get(),
 									new FilterdTraceStartEventFilter());
+						} catch (EmptyLogException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						break;
+					case "Trace End Event Filter":
+						try {
+							filterConfig = new FilterdTraceEndEventConfig(model.getInputLog().get(),
+									new FilterdTraceEndEventFilter());
 						} catch (EmptyLogException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -463,6 +466,24 @@ public class ComputationCellController extends CellController {
 						try {
 							filterConfig = new FilterdEventRateConfig(model.getInputLog().get(),
 									new FilterdEventRateFilter());
+						} catch (EmptyLogException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						break;
+					case "Trace Having Event":
+						try {
+							filterConfig = new FilterdTracesHavingEventConfig(model.getInputLog().get(),
+									new FilterdTracesHavingEvent());
+						} catch (EmptyLogException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						break;
+					case "Trace Attribute":
+						try {
+							filterConfig = new FilterdTraceAttrConfig(model.getInputLog().get(),
+									new FilterdTraceAttrFilter());
 						} catch (EmptyLogException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();

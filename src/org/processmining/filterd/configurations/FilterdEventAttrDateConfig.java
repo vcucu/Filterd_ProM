@@ -17,11 +17,12 @@ import org.processmining.filterd.tools.Toolbox;
 public class FilterdEventAttrDateConfig extends FilterdAbstractReferenceableConfig{
 
 	private ArrayList<String> times; 
-	private ArrayList<String> defaultPair;
-	private ArrayList<String> optionsPair;
+	private ArrayList<Integer> defaultPair;
+	private ArrayList<Integer> optionsPair;
 	String defaultOption;
 	ArrayList<String> optionList;
-	ParameterRangeFromRange<String> range;
+	ParameterRangeFromRange<Integer> range;
+	String key = "time:timestamp";
 
 	public FilterdEventAttrDateConfig(XLog log, Filter filterType) {
 		super(log, filterType);
@@ -39,9 +40,9 @@ public class FilterdEventAttrDateConfig extends FilterdAbstractReferenceableConf
 		for (XTrace trace: log) {
 			for (XEvent event : trace) {
 				/* timestamp format YYYY-MM-DDTHH:MM:SS.ssssGMT with GMT = {Z, + , -} */
-				if (!event.getAttributes().containsKey("time:timestamp")) continue;
-				String value = event.getAttributes().get("time:timestamp").toString();
-				LocalDateTime time =Toolbox.synchronizeGMT(value);
+				if (!event.getAttributes().containsKey(key)) continue;
+				String value = event.getAttributes().get(key).toString();
+				LocalDateTime time = Toolbox.synchronizeGMT(value);
 				times.add(time.toString());
 			}
 		}
@@ -49,17 +50,18 @@ public class FilterdEventAttrDateConfig extends FilterdAbstractReferenceableConf
 		/* sort the timestamps in ascending order */
 		Collections.sort(times);
 
-		defaultPair.add(new String(times.get(0)));
-		defaultPair.add(new String(times.get(times.size()-1)));
-		optionsPair.add(new String(times.get(0)));
-		optionsPair.add(new String(times.get(times.size()-1)));
+		defaultPair.add(0);
+		defaultPair.add(times.size()-1);
+		optionsPair.add(0);
+		optionsPair.add(times.size()-1);
 
 		// slider values parameter
-		range = new ParameterRangeFromRange<>("range",
-				"Select timeframe", defaultPair, optionsPair);
+		range = new ParameterRangeFromRange<>("time-range",
+				"Select timeframe", defaultPair, optionsPair, Integer.TYPE);
+		range.setTimes(times);
 
 		// should you remove empty traces
-		ParameterYesNo traceHandling = new ParameterYesNo("eventHandling", 
+		ParameterYesNo traceHandling = new ParameterYesNo("traceHandling", 
 				"Keep empty traces.", true);
 
 		// should you keep events which do not have the specified attribute
@@ -70,10 +72,10 @@ public class FilterdEventAttrDateConfig extends FilterdAbstractReferenceableConf
 		ParameterOneFromSet selectionType = new ParameterOneFromSet("selectionType",
 				"Select option for filtering", defaultOption, optionList);
 
-		parameters.add(traceHandling);
-		parameters.add(eventHandling);
 		parameters.add(selectionType);
 		parameters.add(range);
+		parameters.add(traceHandling);
+		parameters.add(eventHandling);
 
 	}
 
@@ -84,26 +86,32 @@ public class FilterdEventAttrDateConfig extends FilterdAbstractReferenceableConf
 
 
 	public boolean checkValidity(XLog log) {
-		ArrayList<LocalDateTime> times = new ArrayList<>();
+		ArrayList<Integer> pair = new ArrayList<>();
 		
-		//check whether the parameters haven't been populated yet
-		if(range.getChosenPair().isEmpty()) return true;
+		/* check if the parameters are populated */
+		try {
+			pair.addAll(range.getChosenPair());
+		} catch(Exception e) {
+			return true;
+		}
 		
-		LocalDateTime lower = Toolbox.synchronizeGMT(range.getChosenPair().get(0));
-		LocalDateTime upper = Toolbox.synchronizeGMT(range.getChosenPair().get(1));
+		/* get the chosen timestamps */
+		String lower = times.get(pair.get(0));
+		String upper = times.get(pair.get(1));
+		Boolean hasTime = false;
 
+		/* check if each event of the log is in those timebounds */
 		for (XTrace trace : log) {
 			for (XEvent event : trace) {
-				String key = "time:timestamp";
-				LocalDateTime time = Toolbox.synchronizeGMT(event.getAttributes().get(key).toString());
-				times.add(time);
+				if (!event.getAttributes().containsKey(key)) continue;
+				hasTime = true;
+				String time = Toolbox.synchronizeGMT(event.getAttributes().get(key).toString()).toString();
+				if (lower.compareTo(time) <= 0 && upper.compareTo(time) >= 0) return true;
 			}
 		}
 
-		Collections.sort(times);
-
 		/* an old date configuration is valid iff the old bounds are in the new log
 		 * and there exists time:timestamp attributes */
-		return times.size() != 0 &&  lower.isAfter(times.get(0)) && upper.isBefore(times.get(times.size()-1));
+		return hasTime;
 	}
 }

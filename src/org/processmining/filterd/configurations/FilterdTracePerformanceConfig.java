@@ -59,8 +59,7 @@ public class FilterdTracePerformanceConfig extends FilterdAbstractConfig {
 	}
 
 	public boolean checkValidity(XLog candidateLog) {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	public boolean canPopulate(FilterConfigPanelController component) {

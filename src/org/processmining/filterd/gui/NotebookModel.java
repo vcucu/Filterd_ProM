@@ -19,8 +19,11 @@ import org.processmining.filterd.models.YLog;
 import org.processmining.filterd.tools.Toolbox;
 import org.processmining.framework.plugin.ProMCanceller;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 
 /**
  * This class contains the model for the notebook.
@@ -292,14 +295,35 @@ public class NotebookModel {
 	}
 	
 	public void compute() {
-		List<ComputationCellModel> computeList = cells
-				.stream()
-				.filter(c -> c instanceof ComputationCellModel) // use only computation cells
-				.map(c -> (ComputationCellModel) c) // cast to computation cell model
-				.collect(Collectors.toList()); // transform steam to list
-		for(ComputationCellModel cellModel : computeList) {
-			cellModel.compute();
-		}
+		Task<Void> task = new Task<Void>() {
+
+			@Override
+			protected Void call() throws Exception {
+				System.out.println("Starting compute");
+				List<ComputationCellModel> computeList = cells
+						.stream()
+						.filter(c -> c instanceof ComputationCellModel) // use only computation cells
+						.map(c -> (ComputationCellModel) c) // cast to computation cell model
+						.collect(Collectors.toList()); // transform steam to list
+				for(ComputationCellModel cellModel : computeList) {
+					cellModel.compute();
+				}
+				System.out.println("Computation done");
+				return null;
+			}
+		};
+		task.exceptionProperty().addListener(new ChangeListener<Throwable>() {
+
+			public void changed(ObservableValue<? extends Throwable> observable, Throwable oldValue,
+					Throwable newValue) {
+				if(newValue != null) {
+					Exception exception = (Exception) newValue;
+					exception.printStackTrace();
+				}	
+			}
+		});
+		Thread thread = new Thread(task);
+		thread.start();
 	}
 	
 	

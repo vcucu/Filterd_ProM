@@ -1,4 +1,5 @@
 package org.processmining.filterd.configurations;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -15,68 +16,48 @@ import org.processmining.filterd.gui.FilterConfigPanelController;
 import org.processmining.filterd.parameters.Parameter;
 import org.processmining.filterd.parameters.ParameterMultipleFromSet;
 import org.processmining.filterd.parameters.ParameterOneFromSet;
-import org.processmining.filterd.parameters.ParameterRangeFromRange;
-import org.processmining.filterd.parameters.ParameterText;
-import org.processmining.filterd.parameters.ParameterValueFromRange;
-import org.processmining.filterd.parameters.ParameterYesNo;
+import org.processmining.filterd.tools.EmptyLogException;
 import org.processmining.filterd.widgets.ParameterController;
 import org.processmining.filterd.widgets.ParameterMultipleFromSetController;
 import org.processmining.filterd.widgets.ParameterOneFromSetController;
-import org.processmining.filterd.widgets.ParameterOneFromSetExtendedController;
 import org.processmining.filterd.widgets.ParameterRangeFromRangeController;
-import org.processmining.filterd.widgets.ParameterTextController;
-import org.processmining.filterd.widgets.ParameterValueFromRangeController;
-import org.processmining.filterd.widgets.ParameterYesNoController;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.ComboBox;
 
-public class FilterdTraceAttrConfig extends FilterdAbstractConfig {
-
-	
-	Set<String> traceAttributes;
-	
-	public FilterdTraceAttrConfig(XLog log, Filter filterType) {
+public class FilterdTracesHavingEventConfig extends FilterdAbstractConfig {
+	Set<String> eventAttributes;
+	public FilterdTracesHavingEventConfig(XLog log, Filter filterType) throws EmptyLogException {
 		super(log, filterType);
-		
-		parameters = new ArrayList<Parameter>();
-		
-		traceAttributes = new HashSet<>();
-		
+		this.log = log;
+		eventAttributes = new HashSet<>();
 		for (XTrace trace : log) {
 			
+			for (XEvent event : trace) {
 				
-				traceAttributes.addAll(trace.getAttributes().keySet());	
-			
+				eventAttributes.addAll(event.getAttributes().keySet());
+				
+			}
+		
 		}
-		
-		// Create attribute parameter, creates reference is true
-		ParameterOneFromSet attribute = new ParameterOneFromSet(
-				"attribute", 
-				"Filter by", 
-				traceAttributes.iterator().next(), 
-				new ArrayList<String>(traceAttributes)
+		List<String> attributesList = new ArrayList<String>(eventAttributes);
+		ParameterOneFromSet attrType = new ParameterOneFromSet("attrType",
+				"Attribute type:",
+				attributesList.get(0),
+				attributesList
 				);
 		
-		ParameterOneFromSet filterInOut = new ParameterOneFromSet(
-				"filterInOut",
-				"Filter mode",
-				"in",
-				Arrays.asList("in", "out")
-				);
-		
-
 		Set<String> attributeValues = new HashSet<>();
 		
-		List<String> traceAttributesList = new ArrayList<>(traceAttributes);
 		for (XTrace trace : log) {
 			
+			for (XEvent event : trace) {
 				
-				XAttributeMap traceAttrs = trace.getAttributes();
-				if (traceAttrs.containsKey(traceAttributesList.get(0)))
-					System.out.println(traceAttributesList.size());
-					attributeValues.add(traceAttrs.get(traceAttributesList.get(0)).toString());		
+				XAttributeMap eventAttrs = event.getAttributes();
+				if (eventAttrs.containsKey(attributesList.get(0))) 
+					attributeValues.add(eventAttrs.get(attributesList.get(0)).toString());
+			}
 		}
 		List<String> attributeValuesList = new ArrayList<String>(attributeValues);
 		ParameterMultipleFromSet attrValues = new ParameterMultipleFromSet(
@@ -85,38 +66,44 @@ public class FilterdTraceAttrConfig extends FilterdAbstractConfig {
 				Arrays.asList(attributeValuesList.get(0)),
 				attributeValuesList
 				);
-		parameters.add(attribute);
-		parameters.add(filterInOut);
-		parameters.add(attrValues);
+		
+		ParameterOneFromSet selectionType = new ParameterOneFromSet("selectionType",
+				"Selection type:",
+				"Mandatory",
+				Arrays.asList("Mandatory", "Forbidden")
+				);
+		
+		this.parameters = Arrays.asList(attrType, attrValues, selectionType);
 	}
 
-	
-
-	public boolean canPopulate(FilterConfigPanelController component) {
-		// Impossible to check so we have to rely on the user himself to 
-		// populate it with the correct parameters.
+	@Override
+	public boolean checkValidity(XLog candidateLog) {
+		// TODO Auto-generated method stub
 		return true;
 	}
 
-	public FilterConfigPanelController getConfigPanel() {
-		FilterConfigPanelController filterConfigPanel = 
-				new FilterConfigPanelController(
-				"Trace Attribute Configuration", 
-				parameters, this
-				);
+	@Override
+	public boolean canPopulate(FilterConfigPanelController component) {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public AbstractFilterConfigPanelController getConfigPanel() {
+		FilterConfigPanelController filterConfigPanel = new FilterConfigPanelController(
+				"Filter Traces Having Event Configuration", 
+				parameters, 
+				this);
 		for(ParameterController parameter : filterConfigPanel.getControllers()) {
-			if (parameter.getName().equals("attribute")) {
+			if (parameter.getName().equals("attrType")) {
 				ParameterOneFromSetController casted = (ParameterOneFromSetController) parameter;
 				ComboBox<String> comboBox = casted.getComboBox();
 				comboBox.valueProperty().addListener(new ChangeListener<String>() {
 					@Override 
 					public void changed(ObservableValue ov, String oldValue, String newValue) {
 						final XLog Llog = log;
-						if (Llog == null) 
-							System.out.println("log is null");
 						List<Parameter> params = parameters;
 						if (Llog != null) {
-							System.out.println("log not null");
 						for (ParameterController changingParameter : filterConfigPanel.getControllers()) {
 							
 							if (changingParameter.getName().equals("attrValues")) {
@@ -127,20 +114,19 @@ public class FilterdTraceAttrConfig extends FilterdAbstractConfig {
 								
 								for (XTrace trace : Llog) {
 									
+									for (XEvent event : trace) {
 										
-										XAttributeMap traceAttrs = trace.getAttributes();
-										if (traceAttrs.containsKey("customer"))
-										System.out.println(traceAttrs.get("customer").toString());
-										if (traceAttrs.containsKey(newValue))
-											attributeValues.add(traceAttrs.get(newValue).toString());
-									
+										XAttributeMap eventAttrs = event.getAttributes();
+										if (eventAttrs.containsKey(newValue))
+											attributeValues.add(eventAttrs.get(newValue).toString());
+									}
 								}
 								List<String> attributeValuesList = new ArrayList<String>(attributeValues);
-								((ParameterMultipleFromSet) params.get(2))
+								((ParameterMultipleFromSet) params.get(1))
 								.setOptions(attributeValuesList);
-								((ParameterMultipleFromSet) params.get(2))
+								((ParameterMultipleFromSet) params.get(1))
 								.setChosen(attributeValuesList);
-								((ParameterMultipleFromSet) params.get(2))
+								((ParameterMultipleFromSet) params.get(1))
 								.setDefaultChoice(attributeValuesList);
 								castedChanging.changeOptions(attributeValuesList);
 							
@@ -155,14 +141,5 @@ public class FilterdTraceAttrConfig extends FilterdAbstractConfig {
 		}
 		return filterConfigPanel;
 	}
-	
-	
-
-	public boolean checkValidity(XLog log) {
-		// Impossible since we can not figure out the type.
-		return true;
-	}
-
-
 
 }

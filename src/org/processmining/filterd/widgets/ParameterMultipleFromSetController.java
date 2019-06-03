@@ -1,6 +1,7 @@
 package org.processmining.filterd.widgets;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javafx.collections.FXCollections;
@@ -15,7 +16,7 @@ import javafx.scene.layout.VBox;
 public class ParameterMultipleFromSetController extends ParameterController {
 	@FXML private ListView<String> list;
 	@FXML private Label label;
-	
+
 	public ParameterMultipleFromSetController(String nameDisplayed, String name, List<String> defaultValues, List<String> options) {
 		super(name);
 		// load contents
@@ -36,14 +37,25 @@ public class ParameterMultipleFromSetController extends ParameterController {
         }
         list.scrollTo(defaultValues.get(0));
 	}
-	
+
 	public List<String> getValue() {
 		return list.getSelectionModel().getSelectedItems();
 	}
-	
+
 	public void setSelected(List<String> selection) {
+		list.getSelectionModel().clearSelection();
 		for (String option : selection) {
 			list.getSelectionModel().select(option);
 		}
+	}
+
+	public void changeOptions(List<String> options) {
+		ObservableList<String> observableList = FXCollections.observableList(options);
+        list.setItems(observableList);
+        list.getSelectionModel().select(options.get(0));
+        list.scrollTo(options.get(0));
+	}
+	public List<String> getSelected(){
+		return (List<String>) list.getSelectionModel();
 	}
 }

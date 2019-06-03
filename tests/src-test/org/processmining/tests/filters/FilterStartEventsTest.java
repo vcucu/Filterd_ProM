@@ -560,6 +560,15 @@ public class FilterStartEventsTest extends FilterdPackageTest{
 		assert equalLog(expected, computed);
 	}
 	
+	
+	/*
+	 * eventHandling = TRUE
+	 * traceHandling = TRUE
+	 * selectionType = Filter in
+	 * Selects traces with start event "register request+"
+	 * 
+	 * Result: original log
+	 */
 
 	@Test
 	public void testStartClassifier_empty() throws Throwable {

@@ -1,5 +1,5 @@
 package org.processmining.filterd.filters;
-import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.deckfour.xes.factory.XFactory;
@@ -139,15 +139,21 @@ public class FilterdEventAttrFilter extends Filter {
 				/* selection type: range from range */
 				if (selectionChoice) {
 					if (value >= lower && value <= upper) {
-						System.out.println("event with " + value);
 						add = choice;
 					}
 				} else {
 					/* selection type: multiple from set */
-					if (desiredValues.getChosen().contains(Integer.toString(value))) add = choice;
+					if (desiredValues.getChosen().contains(Integer.toString(value)))
+						add = choice;
 				}
-				if (!filteredTrace.isEmpty() || keepTraces) filteredLog.add(filteredTrace);
+				
+				if (add) {
+					filteredTrace.add(event);
+				}
+				
 			}
+
+			if (!filteredTrace.isEmpty() || keepTraces) filteredLog.add(filteredTrace);
 		}
 		return filteredLog;
 	}
@@ -158,18 +164,19 @@ public class FilterdEventAttrFilter extends Filter {
 		ParameterYesNo eventHandling = (ParameterYesNo) this.getParameter(parameters, "eventHandling");
 
 		ParameterOneFromSet selectionType = (ParameterOneFromSet) this.getParameter(parameters, "selectionType");
-		ParameterRangeFromRange<String> range = (ParameterRangeFromRange<String>) this.getParameter(parameters,"range");
+		ParameterRangeFromRange<Integer> range = (ParameterRangeFromRange<Integer>) this.getParameter(parameters,"time-range");
 
 		boolean choice = selectionType.getChosen().contains("Filter in");
 		boolean keepNull = traceHandling.getChosen();
 		boolean keepEmpty = eventHandling.getChosen();
-
+		
+		ArrayList<String> times = range.getTimes();
 
 		filteredLog = Toolbox.initializeLog(log);
 		XFactory factory = XFactoryRegistry.instance().currentDefault();
 
-		LocalDateTime lower = Toolbox.synchronizeGMT(range.getChosenPair().get(0));
-		LocalDateTime upper = Toolbox.synchronizeGMT(range.getChosenPair().get(1));
+		int lower = range.getChosenPair().get(0);
+		int upper = range.getChosenPair().get(1);
 
 		for (XTrace trace : log) {
 			XTrace filteredTrace = factory.createTrace(trace.getAttributes());
@@ -184,9 +191,9 @@ public class FilterdEventAttrFilter extends Filter {
 
 				String time = event.getAttributes().get(key).toString();
 
-				LocalDateTime date = Toolbox.synchronizeGMT(time);
+				int pos = times.indexOf(Toolbox.synchronizeGMT(time).toString());
 
-				if (date.isAfter(lower) && date.isBefore(upper)) {
+				if (pos >= lower && pos <= upper) {
 					add = choice;
 				}
 

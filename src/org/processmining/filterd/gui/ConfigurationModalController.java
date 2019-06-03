@@ -48,7 +48,8 @@ public class ConfigurationModalController {
 		}
 	}
 
-	public void showFilterList(List<String> options, FilterButtonController filterButtonController, Callback<String, FilterdAbstractConfig> callback) {
+	public void showFilterList(List<String> options, FilterButtonController filterButtonController,
+			Callback<String, FilterdAbstractConfig> callback) {
 		if (callback == null) {
 			throw new IllegalArgumentException("Callback cannot be null");
 		}
@@ -66,9 +67,10 @@ public class ConfigurationModalController {
 		this.configurationStep = ConfigurationStep.ADD_FILTER;
 	}
 
-	public void showFilterConfiguration(FilterdAbstractConfig filterConfig, FilterButtonController filterButtonController) {
+	public void showFilterConfiguration(FilterdAbstractConfig filterConfig,
+			FilterButtonController filterButtonController) {
 		if (filterConfig == null) {
-			throw new IllegalArgumentException("Filter configuration cannot be null");
+			throw new NullPointerException("Filter configuration cannot be null");
 		}
 		resetModal();
 		// set internal variables
@@ -89,6 +91,9 @@ public class ConfigurationModalController {
 	@FXML
 	private void cancel() {
 		parent.hideConfigurationModal();
+		if (this.filterButtonController != null) {
+			filterButtonController.enableEditFilterHandler();
+		}
 		resetModal();
 	}
 
@@ -111,20 +116,20 @@ public class ConfigurationModalController {
 			}
 			// user is configuring a filter config. -> apply changes
 			FilterConfigPanelController casted = (FilterConfigPanelController) currentContentsController;
-			filterConfig.populate(casted);
+			this.filterConfig.populate(casted);
 			parent.hideConfigurationModal();
-			if(this.filterButtonController != null) {
+			if (this.filterButtonController != null) {
 				filterButtonController.enableEditFilterHandler();
 			}
 			resetModal();
 		}
 	}
 
-	public void resetModal() {
-		filterConfig = null;
-		contentPane.getChildren().clear();
-		apply.setText("Apply");
-		apply.disableProperty().unbind(); // remove any bindings that may have been added
+	private void resetModal() {
+		this.filterConfig = null;
+		this.contentPane.getChildren().clear();
+		this.apply.setText("Apply");
+		this.apply.disableProperty().unbind(); // remove any bindings that may have been added
 		this.filterSelectionCallback = null;
 		this.filterButtonController = null;
 	}
