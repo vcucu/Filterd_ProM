@@ -251,7 +251,7 @@ public class ComputationCellController extends CellController {
 			//unbind from window size
 			cell.prefHeightProperty().unbind();
 			//set the PrefHeight to what it is by default
-			cell.setPrefHeight(cell.USE_COMPUTED_SIZE);
+			cell.setPrefHeight(Region.USE_COMPUTED_SIZE);
 		} else if (!isExpanded && !isConfigurationModalShown) {
 			isExpanded = true;
 			//set height of cell to be the size of the 'window'
@@ -294,7 +294,7 @@ public class ComputationCellController extends CellController {
 			//add the toolbar and visualiser to the notebook
 			notebookVisualiser.getChildren().add(fullToolbar);
 			notebookVisualiser.getChildren().add(visualizerPane);
-			notebookVisualiser.setVgrow(visualizerPane, Priority.ALWAYS);
+			VBox.setVgrow(visualizerPane, Priority.ALWAYS);
 			isFullScreen = true;
 		}
 	}
@@ -324,10 +324,10 @@ public class ComputationCellController extends CellController {
 			visualizerPane.getChildren().add(visualizerSwgNode);			
 		}
 		// We set the anchors for each side of the swingNode to 0 so it fits itself to the anchorPane and gets resized with the cell.
-		visualizerPane.setTopAnchor(visualizerSwgNode, 0.0);
-		visualizerPane.setBottomAnchor(visualizerSwgNode, 0.0);
-		visualizerPane.setLeftAnchor(visualizerSwgNode, 0.0);
-		visualizerPane.setRightAnchor(visualizerSwgNode, 0.0);
+		AnchorPane.setTopAnchor(visualizerSwgNode, 0.0);
+		AnchorPane.setBottomAnchor(visualizerSwgNode, 0.0);
+		AnchorPane.setLeftAnchor(visualizerSwgNode, 0.0);
+		AnchorPane.setRightAnchor(visualizerSwgNode, 0.0);
 		// Load Visualizer
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
@@ -351,10 +351,10 @@ public class ComputationCellController extends CellController {
 			// Enable visualizer combobox
 			cmbVisualizers.setDisable(false);
 			// set properties w.r.t. parent node (AnchorPane)
-			visualizerPane.setTopAnchor(visualizerSwgNode, 0.0);
-			visualizerPane.setBottomAnchor(visualizerSwgNode, 0.0);
-			visualizerPane.setLeftAnchor(visualizerSwgNode, 0.0);
-			visualizerPane.setRightAnchor(visualizerSwgNode, 0.0);
+			AnchorPane.setTopAnchor(visualizerSwgNode, 0.0);
+			AnchorPane.setBottomAnchor(visualizerSwgNode, 0.0);
+			AnchorPane.setLeftAnchor(visualizerSwgNode, 0.0);
+			AnchorPane.setRightAnchor(visualizerSwgNode, 0.0);
 			// if filter selection was cancelled, delete the added button
 			if (configurationStep == ConfigurationStep.ADD_FILTER) {
 				// remove FilterButton
@@ -368,7 +368,7 @@ public class ComputationCellController extends CellController {
 
 	public void showModalFilterConfiguration(FilterdAbstractConfig filterConfig, FilterButtonController filterConfigController) {
 		if (filterConfig == null) {
-			throw new IllegalArgumentException("Fitler configuration cannot be null");
+			throw new IllegalArgumentException("Filter configuration cannot be null");
 		}
 		// Remove visualizer
 		visualizerPane.getChildren().remove(visualizerSwgNode);
@@ -380,10 +380,10 @@ public class ComputationCellController extends CellController {
 		VBox configurationModalRoot = configurationModal.getRoot();
 		visualizerPane.getChildren().add(configurationModalRoot);
 		// set properties w.r.t. parent node (AnchorPane)
-		visualizerPane.setTopAnchor(configurationModalRoot, 0.0);
-		visualizerPane.setBottomAnchor(configurationModalRoot, 0.0);
-		visualizerPane.setLeftAnchor(configurationModalRoot, 0.0);
-		visualizerPane.setRightAnchor(configurationModalRoot, 0.0);
+		AnchorPane.setTopAnchor(configurationModalRoot, 0.0);
+		AnchorPane.setBottomAnchor(configurationModalRoot, 0.0);
+		AnchorPane.setLeftAnchor(configurationModalRoot, 0.0);
+		AnchorPane.setRightAnchor(configurationModalRoot, 0.0);
 		this.isConfigurationModalShown = true;
 	}
 
@@ -474,10 +474,10 @@ public class ComputationCellController extends CellController {
 		});
 		VBox configurationModalRoot = configurationModal.getRoot();
 		visualizerPane.getChildren().add(configurationModalRoot);
-		visualizerPane.setTopAnchor(configurationModalRoot, 0.0);
-		visualizerPane.setBottomAnchor(configurationModalRoot, 0.0);
-		visualizerPane.setLeftAnchor(configurationModalRoot, 0.0);
-		visualizerPane.setRightAnchor(configurationModalRoot, 0.0);
+		AnchorPane.setTopAnchor(configurationModalRoot, 0.0);
+		AnchorPane.setBottomAnchor(configurationModalRoot, 0.0);
+		AnchorPane.setLeftAnchor(configurationModalRoot, 0.0);
+		AnchorPane.setRightAnchor(configurationModalRoot, 0.0);
 		this.isConfigurationModalShown = true;
 	}
 
