@@ -74,8 +74,8 @@ public class FilterFrequencyOccurenceTest extends FilterdPackageTest{
 	 * Threshold = 6
 	 * Selection type = Filter in
 	 * 
-	 * Result: remove events where pack order is complete/aborted/resume/suspend or 
-	 * ship parcel is complete
+	 * Result: remove events where "pack order" is complete/aborted/resume/suspend or 
+	 * "ship parcel" is complete
 	 */
 	@Test
 	public void testEventRateOccurrence() throws Throwable {
