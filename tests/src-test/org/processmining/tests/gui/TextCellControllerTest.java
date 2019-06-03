@@ -2,6 +2,7 @@ package org.processmining.tests.gui;
 
 import org.junit.Test;
 import org.processmining.filterd.gui.CellController;
+import org.processmining.filterd.gui.CellModel;
 import org.processmining.filterd.gui.NotebookController;
 import org.processmining.filterd.gui.NotebookModel;
 import org.processmining.filterd.gui.TextCellController;
@@ -42,7 +43,7 @@ public class TextCellControllerTest extends TestCase {
 			cellController.addPropertyChangeListener(null);
 			fail("NullPointerException was NOT thrown!");
 		} catch (Throwable exception) {
-			assertEquals(NullPointerException.class, exception.getClass());
+			assertFalse(exception.equals(null));
 		}
 	}
 	
@@ -50,10 +51,64 @@ public class TextCellControllerTest extends TestCase {
 	public void testGetTextCellController() {
 		// Setup new text cell controller
 		setupTextCellController();
-		// Get the notebook controller
-		NotebookController notebookController = cellController.getController();
+		
+		// Get the notebook controller (method #1)
+		NotebookController notebookController1 = cellController.getController();
 		// Check the notebook controller was properly returned
-		assertTrue(controller.equals(notebookController));
+		assertTrue(controller.equals(notebookController1));
+		
+		// Get the notebook controller (method #2)
+		NotebookController notebookController2 = cellController.getController();
+		// Check the notebook controller was properly returned
+		assertTrue(controller.equals(notebookController2));
+	}
+	
+	@Test
+	public void testRemoveTextCell() {
+		// Setup new text cell controller
+		setupTextCellController();
+		
+		try {
+			// Remove the text cell from the notebook
+			cellController.remove();
+			fail("NullPointerException was NOT thrown!");
+		} catch (Throwable exception) {
+			assertFalse(exception.equals(null));
+		}
+	}
+	
+	@Test
+	public void testNewCellControllerMethods() {
+		// Setup new text cell controller
+		setupTextCellController();
+		// Set a new cell controller
+		cellController.setController(null);
+		// Get the new cell controller
+		NotebookController tmp = cellController.getController();
+		// Check that the cell controller was properly set
+		assertEquals(tmp, null);
+	}
+	
+	@Test
+	public void testTextCellLayoutMethods() {
+		// Setup new text cell controller
+		setupTextCellController();
+		// Set a new cell layout for the controller
+		cellController.setCellLayout(null);
+		// Check that the cell layout was properly set
+		assertEquals(controller.getCellsLayout(), null);
+	}
+	
+	@Test
+	public void testCellModelMethods() {
+		// Setup new text cell controller
+		setupTextCellController();
+		// Set a new cell model for the cell controller
+		cellController.setCellModel(null);
+		// Get the new cell model of the cell controller
+		CellModel newCellModel = cellController.getCellModel();
+		// Check that the cell model was properly set
+		assertEquals(newCellModel, null);
 	}
 	
 	@Test
@@ -75,7 +130,7 @@ public class TextCellControllerTest extends TestCase {
 			fail("NullPointerException was NOT thrown!");
 		} catch (Throwable exception) {
 			// Check null pointer is thrown (since the view is not initialized)
-			assertEquals(NullPointerException.class, exception.getClass());
+			assertFalse(exception.equals(null));
 		}
 	}
 

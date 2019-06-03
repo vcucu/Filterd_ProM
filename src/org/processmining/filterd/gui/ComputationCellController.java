@@ -198,6 +198,7 @@ public class ComputationCellController extends CellController {
 	}
 
 	public void removeFilter(FilterButtonModel filter) {
+		this.hideConfigurationModal(false);
 		int index = filter.getIndex();
 		getCellModel().removeFilter(filter); // Removes the cell from the model
 		panelLayout.getChildren().remove(index);	// Removes the layout
@@ -327,7 +328,8 @@ public class ComputationCellController extends CellController {
 		ComputationCellModel model = this.getCellModel();
 		if (cmbVisualizers.getValue() == Utilities.dummyViewType) {
 			// Remove visualizer if "None" is selected
-			visualizerPane.getChildren().remove(visualizerSwgWrap);
+//			visualizerPane.getChildren().remove(visualizerSwgWrap);
+			visualizerPane.getChildren().clear();
 			visualizerSwgWrap.setContent(null);
 			return;
 		}
@@ -355,10 +357,11 @@ public class ComputationCellController extends CellController {
 		});
 	}
 
-	public void hideConfigurationModal() {
+	public void hideConfigurationModal(boolean removeFilter) {
 		if (this.isConfigurationModalShown) {
 			ConfigurationStep configurationStep = configurationModal.getConfigurationStep();
-			visualizerPane.getChildren().remove(configurationModal.getRoot());
+//			visualizerPane.getChildren().remove(configurationModal.getRoot());
+			visualizerPane.getChildren().clear();
 			// set visualizer as the content
 			visualizerPane.getChildren().add(visualizerSwgWrap);
 			// Enable visualizer combobox
@@ -369,8 +372,9 @@ public class ComputationCellController extends CellController {
 			AnchorPane.setLeftAnchor(visualizerSwgWrap, 0.0);
 			AnchorPane.setRightAnchor(visualizerSwgWrap, 0.0);
 			// if filter selection was cancelled, delete the added button
-			if (configurationStep == ConfigurationStep.ADD_FILTER) {
-				// remove FilterButton
+			if (configurationStep == ConfigurationStep.ADD_FILTER &&
+					removeFilter) {
+				// remove FilterButton (its always the last in the list)
 				FilterButtonModel buttonToRemove = getCellModel().getFilters()
 						.get(getCellModel().getFilters().size() - 1);
 				removeFilter(buttonToRemove);
@@ -384,7 +388,8 @@ public class ComputationCellController extends CellController {
 			throw new IllegalArgumentException("Filter configuration cannot be null");
 		}
 		// Remove visualizer
-		visualizerPane.getChildren().remove(visualizerSwgWrap);
+//		visualizerPane.getChildren().remove(visualizerSwgWrap);
+		visualizerPane.getChildren().clear();
 		// Disable visualizer combobox
 		cmbVisualizers.setDisable(true);
 		// populate filter configuration modal
@@ -402,7 +407,8 @@ public class ComputationCellController extends CellController {
 
 	public void showModalFilterList(FilterButtonController filterButtonController, FilterButtonModel filterButtonModel) {
 		// Remove visualizer
-		visualizerPane.getChildren().remove(visualizerSwgWrap);
+//		visualizerPane.getChildren().remove(visualizerSwgWrap);
+		visualizerPane.getChildren().clear();
 		// Disable visualizer combobox
 		cmbVisualizers.setDisable(true);
 		List<String> filterOptions = new ArrayList<>();

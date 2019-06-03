@@ -90,7 +90,7 @@ public class ConfigurationModalController {
 
 	@FXML
 	private void cancel() {
-		parent.hideConfigurationModal();
+		parent.hideConfigurationModal(true);
 		if (this.filterButtonController != null) {
 			filterButtonController.enableEditFilterHandler();
 		}
@@ -117,7 +117,7 @@ public class ConfigurationModalController {
 			// user is configuring a filter config. -> apply changes
 			FilterConfigPanelController casted = (FilterConfigPanelController) currentContentsController;
 			this.filterConfig.populate(casted);
-			parent.hideConfigurationModal();
+			parent.hideConfigurationModal(false);
 			if (this.filterButtonController != null) {
 				filterButtonController.enableEditFilterHandler();
 			}

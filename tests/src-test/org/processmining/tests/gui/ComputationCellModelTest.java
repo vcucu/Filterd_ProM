@@ -14,6 +14,8 @@ import org.processmining.filterd.models.YLog;
 import org.processmining.filterd.parameters.ParameterValueFromRange;
 import org.processmining.tests.filters.FilterdPackageTest;
 
+import javafx.concurrent.Task;
+
 public class ComputationCellModelTest extends FilterdPackageTest {
 
 	public ComputationCellModelTest() throws Exception {
@@ -197,7 +199,14 @@ public class ComputationCellModelTest extends FilterdPackageTest {
 		model1.setFilterConfig(config);
 		
 		// Compute the cell's output
-		cell.compute();
+		cell.compute(new Task<Void> () {
+
+			protected Void call() throws Exception {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+		});
 		// Check that the computation was successful
 		assertTrue(true);
 	}

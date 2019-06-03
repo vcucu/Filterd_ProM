@@ -137,4 +137,30 @@ public class FilterButtonModelTest extends FilterdPackageTest {
 			assertEquals(InvalidConfigurationException.class, exception.getClass());
 		}
 	}
+	
+	@Test
+	public void testFilterButtonComputeNullLog() {
+		// Create new YLog
+		YLog initialLog = new YLog(0, "Original Log", originalLog);
+		// Create new filter button instance
+		FilterButtonModel filter = new FilterButtonModel(0, initialLog);
+		// Create new configuration for the button instance
+		FilterdAbstractConfig config = new FilterdTraceSampleConfig(initialLog.get(),
+				new FilterdTraceSampleFilter());
+		// Set the filter configuration parameters
+		((ParameterValueFromRange<Integer>) config.getParameters().get(0)).setChosen(initialLog.get().size()+5);
+		// Set the configuration for the filter button
+		filter.setFilterConfig(config);
+		
+		// Set the initial log to null
+		initialLog.setLog(null);
+		
+		try {
+			// Compute the cell's output
+			filter.compute();
+			fail("NullPointerException was NOT thrown!");
+		} catch (Throwable exception) {
+			assertEquals(NullPointerException.class, exception.getClass());
+		}
+	}
 }

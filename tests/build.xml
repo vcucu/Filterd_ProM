@@ -137,7 +137,22 @@
 	    	<test name="org.processmining.tests.filters.FilterTraceFollowerTest" todir="${test.basedir}" />
 	    	<test name="org.processmining.tests.filters.FilterTrimTraceTest" todir="${test.basedir}" />
 	    	<!-- GUI TESTS -->
+	    	<test name="org.processmining.tests.gui.AbstractFilterConfigPanelControllerTest" todir="${test.basedir}" />
+	    	<test name="org.processmining.tests.gui.CellModelTest" todir="${test.basedir}" />
+	    	<test name="org.processmining.tests.gui.ComputationCellControllerTest" todir="${test.basedir}" />
+	    	<test name="org.processmining.tests.gui.ComputationCellModelTest" todir="${test.basedir}" />
+	    	<test name="org.processmining.tests.gui.FilterButtonControllerTest" todir="${test.basedir}" />
 	    	<test name="org.processmining.tests.gui.FilterButtonModelTest" todir="${test.basedir}" />
+    		<test name="org.processmining.tests.gui.NotebookControllerTest" todir="${test.basedir}" />
+    		<test name="org.processmining.tests.gui.NotebookModelTest" todir="${test.basedir}" />
+    		<test name="org.processmining.tests.gui.TextCellControllerTest" todir="${test.basedir}" />
+    		<test name="org.processmining.tests.gui.TextCellModelTest" todir="${test.basedir}" />
+    		<test name="org.processmining.tests.gui.UtilitiesTest" todir="${test.basedir}" />
+	    	<!-- CONFIG TESTS -->
+	    	<test name="org.processmining.tests.config.ConfigEventAttributeTest" todir="${test.basedir}" />
+	    	<!-- WIDGETS TESTS (Hudson will not run them) -->
+	    	<!-- <test name="org.processmining.tests.widgets.FilterdConfigurationDialogTest" todir="${test.basedir}" /> -->
+	    	<!-- <test name="org.processmining.tests.widgets.FilterdConfigurationModalTest" todir="${test.basedir}" /> -->
 	    </junit>
 		
 		<!-- Cobertura: generate HTML coverage report -->
