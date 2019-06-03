@@ -115,6 +115,7 @@ public class FilterButtonController {
 			button.setVisible(false);
 		}
 		filterLayout.setStyle("-fx-background-color: #eeeeee");
+		enableEditFilterHandler();
 	}
 	
 	private void makeInvalid() {

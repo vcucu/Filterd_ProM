@@ -210,8 +210,12 @@ public class ComputationCellModel extends CellModel {
     		if(computeTask.isCancelled()) {
     			break;
     		}
-    		filter.compute(); // no point in passing the task to the individual filter models (individual filters do not support canceling)
-			inputOutput = filter.getOutputLog().get();
+    		try {
+    			filter.compute(); // no point in passing the task to the individual filter models (individual filters do not support canceling)
+    			inputOutput = filter.getOutputLog().get();
+    		} catch(Exception e) {
+    			// TODO: used to display error message to the user (if this is not done, remove throw statements from FilterButtonModel::compute
+    		}
     	}
     	
     }
