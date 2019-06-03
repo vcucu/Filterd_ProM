@@ -7,7 +7,7 @@ public class CellModelListeners implements PropertyChangeListener {
 
 	CellController controller;
 
-	CellModelListeners(CellController controller) {
+	public CellModelListeners(CellController controller) {
 		super();
 		this.controller = controller;
 	}
