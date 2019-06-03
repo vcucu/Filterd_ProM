@@ -5,6 +5,8 @@ import java.util.List;
 import org.deckfour.xes.classification.XEventAttributeClassifier;
 import org.deckfour.xes.classification.XEventClasses;
 import org.deckfour.xes.classification.XEventClassifier;
+import org.deckfour.xes.factory.XFactory;
+import org.deckfour.xes.factory.XFactoryRegistry;
 import org.deckfour.xes.info.XLogInfo;
 import org.deckfour.xes.info.impl.XLogInfoImpl;
 import org.deckfour.xes.model.XEvent;
@@ -37,22 +39,18 @@ public class FilterdTraceStartEventCategoricalConfig extends FilterdAbstractRefe
 		super(log, filterType);
 		parameters = new ArrayList<Parameter>();
 		isAttribute = true;
-
+		XLog startEventsLog = startEventsOnly();
 		//classifiers array contains all complex classifiers that can be mapped to the log
 		//the attribute is the selected thing from the dropdown regardless of whether it 
 		// is a classifier or an attribute
 		
 		// check whether the selected string is an attribute or a classifier
-		System.out.println("I got this attribute name: "+attribute);
 		for (XEventClassifier c: classifiers) {
-			System.out.println("I am checking against this classifier: "+c.name());
 			if (c.name().equals(attribute)) {
 				//if it is a classifier than create eventclasses object accordingly
 				isAttribute = false; // the selected string is a complex classifier
-				XLogInfo logInfo = XLogInfoImpl.create(log);
-				//eventClasses = new ArrayList<>(logInfo.getEventClasses(c).getClasses());
 				xEventClasses = new XEventClasses(c);
-				xEventClasses = XEventClasses.deriveEventClasses(c, log);				
+				xEventClasses = XEventClasses.deriveEventClasses(c, startEventsLog);				
 		
 				for (int i = 0; i <= xEventClasses.size() - 1; i++) {
 					allValues.add(xEventClasses.getByIndex(i).toString());
@@ -65,10 +63,9 @@ public class FilterdTraceStartEventCategoricalConfig extends FilterdAbstractRefe
 			//if it is an attribute than create eventclasses object accordingly
 			XEventAttributeClassifier attrClassifier = new XEventAttributeClassifier(
 					"attrClassifier", attribute);
-			XLogInfo logInfo = XLogInfoImpl.create(log);
 			
 			xEventClasses = new XEventClasses(attrClassifier);
-			xEventClasses = XEventClasses.deriveEventClasses(attrClassifier, log);
+			xEventClasses = XEventClasses.deriveEventClasses(attrClassifier, startEventsLog);
 			
 			for (int i = 0; i <= xEventClasses.size() - 1; i++) {
 				//uncomment to disallow filtering on empty values(non-null but just empty)
@@ -80,7 +77,7 @@ public class FilterdTraceStartEventCategoricalConfig extends FilterdAbstractRefe
 		
 		// Create desiredEvents parameter	
 		ParameterMultipleFromSet desiredEvents = new ParameterMultipleFromSet(
-				"desiredEvents", "Select start values", allValues, allValues);
+				"desiredEvents", "Select start event values", allValues, allValues);
 		
 		// Should you keep empty traces
 		ParameterYesNo traceHandling = new ParameterYesNo("traceHandling", 
@@ -117,6 +114,17 @@ public class FilterdTraceStartEventCategoricalConfig extends FilterdAbstractRefe
 				}
 			}
 		}
+	}
+	
+	private XLog startEventsOnly() {
+		XLog filteredLog = Toolbox.initializeLog(log);
+		XFactory factory = XFactoryRegistry.instance().currentDefault();
+		for (XTrace trace: this.log) {
+			XTrace filteredTrace = factory.createTrace(trace.getAttributes());
+			filteredTrace.add(trace.get(0));
+			filteredLog.add(filteredTrace);
+		}
+		return filteredLog;
 	}
 	
 	

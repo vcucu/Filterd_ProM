@@ -61,7 +61,7 @@ public class FilterdEventAttrDateConfig extends FilterdAbstractReferenceableConf
 		range.setTimes(times);
 
 		// should you remove empty traces
-		ParameterYesNo traceHandling = new ParameterYesNo("eventHandling", 
+		ParameterYesNo traceHandling = new ParameterYesNo("traceHandling", 
 				"Keep empty traces.", true);
 
 		// should you keep events which do not have the specified attribute
@@ -96,22 +96,22 @@ public class FilterdEventAttrDateConfig extends FilterdAbstractReferenceableConf
 		}
 		
 		/* get the chosen timestamps */
-		LocalDateTime lower = Toolbox.synchronizeGMT(times.get(pair.get(0)));
-		LocalDateTime upper = Toolbox.synchronizeGMT(times.get(pair.get(1)));
-		Boolean has = false;
+		String lower = times.get(pair.get(0));
+		String upper = times.get(pair.get(1));
+		Boolean hasTime = false;
 
 		/* check if each event of the log is in those timebounds */
 		for (XTrace trace : log) {
 			for (XEvent event : trace) {
 				if (!event.getAttributes().containsKey(key)) continue;
-				has = true;
-				LocalDateTime time = Toolbox.synchronizeGMT(event.getAttributes().get(key).toString());
-				if (lower.isBefore(time) || upper.isAfter(time)) return false;
+				hasTime = true;
+				String time = Toolbox.synchronizeGMT(event.getAttributes().get(key).toString()).toString();
+				if (lower.compareTo(time) <= 0 && upper.compareTo(time) >= 0) return true;
 			}
 		}
 
 		/* an old date configuration is valid iff the old bounds are in the new log
 		 * and there exists time:timestamp attributes */
-		return has;
+		return hasTime;
 	}
 }
