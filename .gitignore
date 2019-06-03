@@ -7,3 +7,4 @@ tests/*
 !tests/build.xml
 *.jar
 *.jar
+statechart.log
