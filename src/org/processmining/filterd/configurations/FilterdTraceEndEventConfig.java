@@ -59,13 +59,7 @@ public class FilterdTraceEndEventConfig extends FilterdAbstractReferencingConfig
 		//parameters.addAll(concreteReference.getParameters());
 	}
 	
-	public List<String> computeGlobalAttributes(XLog log) {
-		List<String> globalAttr = new ArrayList<>();
-		for (XAttribute attribute : log.getGlobalEventAttributes()) {
-			globalAttr.add(attribute.getKey());
-		}
-		return globalAttr;
-	}
+
 	
 	public FilterdAbstractConfig populate(AbstractFilterConfigPanelController abstractComponent) {
 		
@@ -127,21 +121,27 @@ public class FilterdTraceEndEventConfig extends FilterdAbstractReferencingConfig
 	
 	@Override
 	public boolean checkValidity(XLog candidateLog) {
+		if (parameters == null) {
+			return true;
+		}
 		List<String> attrCandidateLog = new ArrayList<>();
 		attrCandidateLog.addAll(Toolbox.computeAttributes(candidateLog));
-		List<String> attrs = computeGlobalAttributes(candidateLog);
-		// to be changed with the selected attribute
-		String attr = attrs.get(0);
-		if (!attrCandidateLog.contains(attr)) {
+
+		ParameterOneFromSet attribute = (ParameterOneFromSet) getParameter("attribute");
+		String chosenAttr = attribute.getChosen();
+
+		if (!attrCandidateLog.contains(chosenAttr)) {
 			return false;
-		}	
+		}			
 		return true;
 	}
 
 	@Override
 	public FilterdAbstractConfig changeReference(ParameterOneFromSetExtendedController controller) {
-		// TODO Auto-generated method stub
-		return null;
+		concreteReference = new FilterdTraceEndEventCategoricalConfig(
+				log, filterType, controller.getValue(),Toolbox.computeComplexClassifiers(log));
+				
+		return concreteReference;
 	}
 
 

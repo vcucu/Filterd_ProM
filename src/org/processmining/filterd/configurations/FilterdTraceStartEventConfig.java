@@ -107,7 +107,8 @@ public class FilterdTraceStartEventConfig extends FilterdAbstractReferencingConf
 	};
 
 	public AbstractFilterConfigPanelController getConfigPanel() {
-		return new FilterConfigPanelController("Trace Start Event Configuration", parameters, this);
+		return new FilterConfigPanelController("Trace Start Event Configuration",
+				parameters, this);
 	}
 
 	/*
@@ -116,29 +117,28 @@ public class FilterdTraceStartEventConfig extends FilterdAbstractReferencingConf
 	 */
 	@Override
 	public boolean checkValidity(XLog candidateLog) {
-		
-		List<String> attrCandidateLog = new ArrayList<>();
-		attrCandidateLog.addAll(Toolbox.computeAttributes(candidateLog));
-		List<String> attrs = Toolbox.computeAttributes(candidateLog);
-		// to be changed with the selected attribute	
-		String attr = attrs.get(0);
-		if (!attrCandidateLog.contains(attr)) {
-			return false;
-		}
-		
 		if (parameters == null) {
 			return true;
 		}
-			
-				
+		List<String> attrCandidateLog = new ArrayList<>();
+		attrCandidateLog.addAll(Toolbox.computeAttributes(candidateLog));
+
+		ParameterOneFromSet attribute = (ParameterOneFromSet) getParameter("attribute");
+		String chosenAttr = attribute.getChosen();
+
+		if (!attrCandidateLog.contains(chosenAttr)) {
+			return false;
+		}			
 		return true;
 	}
 
 
 	@Override
-	public FilterdAbstractConfig changeReference(ParameterOneFromSetExtendedController controller) {
+	public FilterdAbstractConfig changeReference(
+			ParameterOneFromSetExtendedController controller) {
 		concreteReference = new FilterdTraceStartEventCategoricalConfig(
-				log, filterType, controller.getValue(),Toolbox.computeComplexClassifiers(log));
+				log, filterType, controller.getValue(),
+				Toolbox.computeComplexClassifiers(log));
 				
 		return concreteReference;
 	}
