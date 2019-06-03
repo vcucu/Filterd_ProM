@@ -100,8 +100,8 @@ public class NotebookController {
 					Platform.runLater(new Runnable(){
 						@Override 
 						public void run() {
-//							computeButton.setText("\u23F8"); // unicode for pause symbol
-							computeButton.setText("pause"); // unicode for pause symbol
+							computeButton.setText("\u23F8"); // unicode for pause symbol
+//							computeButton.setText("pause"); // unicode for pause symbol
 		                 }
 					});
 				} else {
@@ -109,7 +109,7 @@ public class NotebookController {
 						@Override 
 						public void run() {
 //							computeButton.setText("\u25B6"); // unicode for play symbol
-							computeButton.setText("play"); // unicode for play symbol
+							computeButton.setText("▶"); // unicode for play symbol
 		                 }
 					});
 				}

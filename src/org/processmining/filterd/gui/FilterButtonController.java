@@ -56,12 +56,8 @@ public class FilterButtonController {
 			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
 				if(newValue) {
 					// filter became valid
-					if(model.getSelected()) {
-						controller.hideConfigurationModal();
-						controller.getCellModel().selectFilter(model);
-					} else {
-						hideButtons();
-					}
+					controller.hideConfigurationModal();
+					setSelected(model.getSelected());
 				} else {
 					// filter became invalid (empty log or invalid configuration)
 					makeInvalid();
@@ -140,6 +136,7 @@ public class FilterButtonController {
 	@FXML
 	private void editFilterHandler() {
 		selectFilterButton();
+		showButtons();
 		if(this.model.getFilterConfig() != null) {
 			this.controller.showModalFilterConfiguration(this.model.getFilterConfig(), this);
 			this.editButton.setDisable(true);
