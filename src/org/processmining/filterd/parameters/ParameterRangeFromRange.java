@@ -9,6 +9,7 @@ public class ParameterRangeFromRange<T> extends Parameter  {
 	private List<T> chosenPair;
 	private List<T> optionsPair;
 	private Class<T> genericTypeClass;
+	private ArrayList<String> times; // for timeframe
 	
 	public ParameterRangeFromRange(String name, String nameDisplayed, List<T> defaultPair, List<T> optionsPair) {
 		super(name, nameDisplayed);
@@ -16,6 +17,7 @@ public class ParameterRangeFromRange<T> extends Parameter  {
 		this.optionsPair = optionsPair;
 		this.chosenPair = defaultPair;
 		this.genericTypeClass = (Class<T>) Double.TYPE;
+		this.times = new ArrayList<>();
 	}
 	
 	public ParameterRangeFromRange(String name, String nameDisplayed, List<T> defaultPair, List<T> optionsPair, Class<T> genericTypeClass) {
@@ -24,6 +26,7 @@ public class ParameterRangeFromRange<T> extends Parameter  {
 		this.optionsPair = optionsPair;
 		this.chosenPair = defaultPair;
 		this.genericTypeClass = genericTypeClass;
+		this.times = new ArrayList<>();
 	}
 	
 	public List<T> getDefaultPair() {
@@ -47,6 +50,14 @@ public class ParameterRangeFromRange<T> extends Parameter  {
 	
 	public Class<T> getGenericTypeClass() {
 		return genericTypeClass;
+	}
+	
+	public void setTimes(ArrayList<String> times) {
+		this.times = times;
+	}
+	
+	public ArrayList<String> getTimes() {
+		return this.times;
 	}
 	
 }

@@ -53,11 +53,11 @@ public class FilterdEventAttrCategoricalConfig extends FilterdAbstractReferencea
 		
 		ParameterMultipleFromSet desiredValues = new ParameterMultipleFromSet(
 				"desiredValues", "Choose values:", defaultValues, values);
-		
-		parameters.add(traceHandling);
-		parameters.add(eventHandling);
+
 		parameters.add(selectionType);
 		parameters.add(desiredValues);
+		parameters.add(traceHandling);
+		parameters.add(eventHandling);
 	}
 
 	public boolean checkValidity(XLog log) {

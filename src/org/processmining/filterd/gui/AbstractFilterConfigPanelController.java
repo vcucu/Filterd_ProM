@@ -71,12 +71,16 @@ public abstract class AbstractFilterConfigPanelController {
 	}
 	
 	public <N extends Number> void addParameterRangeFromRange(ParameterRangeFromRange<N> parameter) {
-		ParameterController controller = new ParameterRangeFromRangeController<N>(parameter.getNameDisplayed(), 
+		ParameterRangeFromRangeController<N> controller = new ParameterRangeFromRangeController<N>(parameter.getNameDisplayed(), 
 				parameter.getName(), 
 				parameter.getChosenPair().size() == 0 ? parameter.getDefaultPair() : parameter.getChosenPair(),
 				parameter.getOptionsPair(),
 				parameter.getGenericTypeClass());
 		getNextContainer().getChildren().add(controller.getContents());
+		if (parameter.getName().equals("time-range")) {
+			controller.setTimes(parameter.getTimes());
+			controller.setTimeframe();
+		}
 		controllers.add(controller);
 	}
 	
