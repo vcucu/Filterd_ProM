@@ -61,7 +61,7 @@ public class FilterdEventAttrDateConfig extends FilterdAbstractReferenceableConf
 		range.setTimes(times);
 
 		// should you remove empty traces
-		ParameterYesNo traceHandling = new ParameterYesNo("eventHandling", 
+		ParameterYesNo traceHandling = new ParameterYesNo("traceHandling", 
 				"Keep empty traces.", true);
 
 		// should you keep events which do not have the specified attribute
