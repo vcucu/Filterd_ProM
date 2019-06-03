@@ -93,12 +93,10 @@ public class FilterdTraceTimeframeFilter extends Filter {
 			 * Trim all the traces such that all the events are contained in the
 			 * time frame. Remove the traces that end up empty.
 			 */
-			System.out.println(firstEventPos + " " + lowPos + " "
-					+ finalEventPos + " " + highPos);
 			switch (keepTracesParameter.getChosen()) {
 				
 				case "Contained in timeframe": {
-				
+					
 					// If the trace is not contained, remove it.
 					if (firstEventPos < lowPos
 							|| finalEventPos > highPos) {

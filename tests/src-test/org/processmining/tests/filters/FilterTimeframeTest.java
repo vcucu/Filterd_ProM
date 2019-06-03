@@ -37,8 +37,8 @@ public class FilterTimeframeTest extends FilterdPackageTest {
 				new FilterdTraceTimeframeFilter();
 		
 		List<Parameter> parameters = getTestParameters(
-				8, 
-				8,
+				25, 
+				31,
 				"Intersecting timeframe",
 				originalLog);
 		
