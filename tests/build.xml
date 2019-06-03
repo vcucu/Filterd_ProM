@@ -148,6 +148,8 @@
     		<test name="org.processmining.tests.gui.TextCellControllerTest" todir="${test.basedir}" />
     		<test name="org.processmining.tests.gui.TextCellModelTest" todir="${test.basedir}" />
     		<test name="org.processmining.tests.gui.UtilitiesTest" todir="${test.basedir}" />
+	    	<!-- CONFIG TESTS -->
+	    	<test name="org.processmining.tests.config.ConfigEventAttributeTest" todir="${test.basedir}" />
 	    	<!-- WIDGETS TESTS (Hudson will not run them) -->
 	    	<!-- <test name="org.processmining.tests.widgets.FilterdConfigurationDialogTest" todir="${test.basedir}" /> -->
 	    	<!-- <test name="org.processmining.tests.widgets.FilterdConfigurationModalTest" todir="${test.basedir}" /> -->
