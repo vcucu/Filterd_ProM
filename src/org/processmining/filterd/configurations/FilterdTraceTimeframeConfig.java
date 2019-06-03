@@ -66,11 +66,6 @@ public class FilterdTraceTimeframeConfig extends FilterdAbstractConfig {
 				if (!event.getAttributes().containsKey(key)) continue;
 				String value = event.getAttributes().get(key).toString();
 				LocalDateTime time = Toolbox.synchronizeGMT(value);
-				if(time == null)
-					System.out.println("time is null");
-				if(value == null) {
-					System.out.println("value is null");
-				}
 				times.add(time.toString());
 			}
 		}
@@ -102,14 +97,13 @@ public class FilterdTraceTimeframeConfig extends FilterdAbstractConfig {
 	}
 
 	public boolean checkValidity(XLog candidateLog) {
-		
-		return true;
+		if( parameters == null || candidateLog.equals(log) )
+			return true;
+		return false;
 	}
 
-	public boolean canPopulate(FilterConfigPanelController component) {
-		
-		
-		return false;
+	public boolean canPopulate(FilterConfigPanelController component) {	
+		return true;
 	}
 
 	public AbstractFilterConfigPanelController getConfigPanel() {

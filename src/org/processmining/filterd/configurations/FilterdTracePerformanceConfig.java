@@ -59,6 +59,7 @@ public class FilterdTracePerformanceConfig extends FilterdAbstractConfig {
 	}
 
 	public boolean checkValidity(XLog candidateLog) {
+		
 		return true;
 	}
 

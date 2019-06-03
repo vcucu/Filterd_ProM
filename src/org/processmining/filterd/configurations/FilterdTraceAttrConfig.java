@@ -51,7 +51,6 @@ public class FilterdTraceAttrConfig extends FilterdAbstractConfig {
 			
 		}
 		
-		// Create attribute parameter, creates reference is true
 		ParameterOneFromSet attribute = new ParameterOneFromSet(
 				"attribute", 
 				"Filter by", 
@@ -93,8 +92,6 @@ public class FilterdTraceAttrConfig extends FilterdAbstractConfig {
 	
 
 	public boolean canPopulate(FilterConfigPanelController component) {
-		// Impossible to check so we have to rely on the user himself to 
-		// populate it with the correct parameters.
 		return true;
 	}
 
@@ -158,8 +155,16 @@ public class FilterdTraceAttrConfig extends FilterdAbstractConfig {
 	
 	
 
-	public boolean checkValidity(XLog log) {
-		// Impossible since we can not figure out the type.
+	public boolean checkValidity(XLog candidateLog) {
+		if (parameters == null || candidateLog.equals(log))
+			return true;
+		Set<String> cTraceAttributes = new HashSet<>();
+		for (XTrace trace : log) {							
+			cTraceAttributes.addAll(trace.getAttributes().keySet());							
+		}
+		if (!cTraceAttributes.contains(((ParameterOneFromSet) parameters.get(0))
+				.getChosen()))
+			return false;
 		return true;
 	}
 

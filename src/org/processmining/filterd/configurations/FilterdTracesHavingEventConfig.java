@@ -78,7 +78,20 @@ public class FilterdTracesHavingEventConfig extends FilterdAbstractConfig {
 
 	@Override
 	public boolean checkValidity(XLog candidateLog) {
-		// TODO Auto-generated method stub
+		if (parameters == null || candidateLog.equals(log))
+			return true;
+		Set<String> cEventAttributes = new HashSet<>();
+		for (XTrace trace : log) {
+			
+			for (XEvent event : trace) {
+				
+				eventAttributes.addAll(event.getAttributes().keySet());
+				
+			}		
+		}
+		if (!cEventAttributes.contains(((ParameterOneFromSet) parameters.get(0))
+				.getChosen()))
+			return false;
 		return true;
 	}
 
