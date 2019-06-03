@@ -9,21 +9,8 @@ import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 
 import org.deckfour.uitopia.api.model.ViewType;
-import org.processmining.filterd.configurations.FilterdAbstractConfig;
-import org.processmining.filterd.configurations.FilterdEventAttrConfig;
-import org.processmining.filterd.configurations.FilterdEventRateConfig;
-import org.processmining.filterd.configurations.FilterdTraceFrequencyConfig;
-import org.processmining.filterd.configurations.FilterdTracePerformanceConfig;
-import org.processmining.filterd.configurations.FilterdTraceSampleConfig;
-import org.processmining.filterd.configurations.FilterdTraceStartEventConfig;
-import org.processmining.filterd.configurations.FilterdTracesHavingEventConfig;
-import org.processmining.filterd.filters.FilterdEventAttrFilter;
-import org.processmining.filterd.filters.FilterdEventRateFilter;
-import org.processmining.filterd.filters.FilterdTraceFrequencyFilter;
-import org.processmining.filterd.filters.FilterdTracePerformanceFilter;
-import org.processmining.filterd.filters.FilterdTraceSampleFilter;
-import org.processmining.filterd.filters.FilterdTraceStartEventFilter;
-import org.processmining.filterd.filters.FilterdTracesHavingEvent;
+import org.processmining.filterd.configurations.*;
+import org.processmining.filterd.filters.*;
 import org.processmining.filterd.gui.ConfigurationModalController.ConfigurationStep;
 import org.processmining.filterd.models.YLog;
 import org.processmining.filterd.tools.EmptyLogException;
@@ -390,6 +377,7 @@ public class ComputationCellController extends CellController {
 		cmbVisualizers.setDisable(true);
 		List<String> filterOptions = new ArrayList<>();
 		filterOptions.add("Trace Start Event Filter");
+		filterOptions.add("Trace End Event Filter");
 		filterOptions.add("Trace Frequency");
 		filterOptions.add("Trace Sample");
 		filterOptions.add("Trace Performance");
@@ -410,6 +398,15 @@ public class ComputationCellController extends CellController {
 						try {
 							filterConfig = new FilterdTraceStartEventConfig(model.getInputLog().get(),
 									new FilterdTraceStartEventFilter());
+						} catch (EmptyLogException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						break;
+					case "Trace End Event Filter":
+						try {
+							filterConfig = new FilterdTraceEndEventConfig(model.getInputLog().get(),
+									new FilterdTraceEndEventFilter());
 						} catch (EmptyLogException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();

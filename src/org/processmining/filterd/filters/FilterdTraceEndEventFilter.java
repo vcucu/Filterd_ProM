@@ -2,7 +2,10 @@ package org.processmining.filterd.filters;
 
 import java.util.List;
 
-import org.deckfour.xes.model.XEvent;
+import org.deckfour.xes.classification.XEventClasses;
+import org.deckfour.xes.classification.XEventClassifier;
+import org.deckfour.xes.info.impl.XLogInfoImpl;
+import org.deckfour.xes.model.XAttributeMap;
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
 import org.processmining.filterd.parameters.Parameter;
@@ -25,85 +28,69 @@ public class FilterdTraceEndEventFilter extends Filter {
 		//which values for the attribute were selected
 		ParameterMultipleFromSet desiredEvents = (ParameterMultipleFromSet)this
 				.getParameter(parameters, "desiredEvents");
-		//whether to remove if no value provided
-		ParameterYesNo nullHandling = (ParameterYesNo)this
-				.getParameter(parameters, "nullHandling");
-		
+		ParameterYesNo traceHandling = (ParameterYesNo) this
+				.getParameter(parameters, "traceHandling");
 		
 		//initialize the log that will be output
 		filteredLog = Toolbox.initializeLog(log);
 	
 		
-		if (selectionType.getChosen().equals("Filter in")) {
-			//Keeping desired attributes in
-			if(nullHandling.getChosen()) {
-				//remove nulls
-				for (XTrace trace : log) {
-					//do not query on empty traces
-					if (!trace.isEmpty()) {
-						//retrieve the first event
-						XEvent first =  trace.get(trace.size()-1);
-						//retrieve the first value
-						String value = first.getAttributes().get(attribute.getChosen()).toString();
-						if (desiredEvents.getChosen().contains(value)) {
-							filteredLog.add(trace);
-						}
-					}
-				}
-			} else {
-				//keep nulls in
-				for (XTrace trace : log) {
-					//do not query on empty traces
-					if (!trace.isEmpty()) {
-						//retrieve the first event
-						XEvent first =  trace.get(trace.size()-1);
-						//retrieve the first value
-						String value = first.getAttributes().get(attribute.getChosen()).toString();
-						if ((desiredEvents.getChosen().contains(value)) || (value == null)) {
-							filteredLog.add(trace);
-						}
-					}
-				}
-			}
-			
-		} else {
-			//Removing desired attributes out
-			if(nullHandling.getChosen()) {
-				//remove nulls
-				for (XTrace trace : log) {
-					//do not query on empty traces
-					if (trace.isEmpty()) {
-						//retrieve the first event
-						XEvent first =  trace.get(0);
-						//retrieve the first value
-						String value = first.getAttributes().get(attribute.getChosen()).toString();
-						//if the events selection didnt contain the value and the value is not null
-						if (!(desiredEvents.getChosen().contains(value)) && !(value == null)) {
-							filteredLog.add(trace);
-						}
-					}
-				}
-			} else {
-				//keep nulls in
-				for (XTrace trace : log) {
-					//do not query on empty traces
-					if (trace.isEmpty()) {
-						//retrieve the first event
-						XEvent first =  trace.get(0);
-						//retrieve the first value
-						String value = first.getAttributes().get(attribute.getChosen()).toString();
-						//if the events selection didnt contain the value (also nulls are never contained)
-						if (!(desiredEvents.getChosen().contains(value))) {
-							filteredLog.add(trace);
-						}
-					}
-				}
-			}
+		/** alternative **/  
+		boolean choice = selectionType.getChosen().equals("Filter in");
+		boolean keepTraces = traceHandling.getChosen();
+		boolean isAttribute = true;
+		String chosen = attribute.getChosen();
+		List<XEventClassifier> classifiers = Toolbox.computeComplexClassifiers(log);
+		XEventClasses classes = null;
+
+		/* check if the chosen value is an attribute or a classifier */
+		if (Toolbox.getClassifiersName(classifiers).contains(chosen)) {
+			isAttribute = false;
+			/* initialize classifiers and classes */
+			XEventClassifier c = Toolbox.computeClassifier(log, chosen);
+			classes = XLogInfoImpl.create(log).getEventClasses(c);
 		}
 		
-		
+
+		for (XTrace trace: log) {
+			XTrace filteredTrace = trace;
+			boolean add = !choice;
+
+			/* should you keep empty traces */
+			if (trace.isEmpty()) {
+				if (keepTraces) filteredLog.add(filteredTrace);
+				continue;
+			}
+
+			/* change behavior based on whether the chosen value is an attribute or a classifier */
+			if (isAttribute) {
+				//whether to remove events if no value provided
+				ParameterYesNo eventHandling = (ParameterYesNo) this
+						.getParameter(parameters, "eventHandling");
+				boolean keepEvents = eventHandling.getChosen();
+
+				XAttributeMap eventAttributes = trace.get(trace.size()-1).getAttributes();
+				/* check if the event has the given attribute */
+				if (!eventAttributes.containsKey(chosen)) {
+					if (keepEvents) add = choice; 
+				} else {
+					String value = eventAttributes.get(chosen).toString();
+					if (desiredEvents.getChosen().contains(value)) add = choice;
+				}
+
+				if (add) filteredLog.add(filteredTrace);
+			}
+			else {
+				/* get the class of this event */
+				String eventClass = classes.getClassOf(trace.get(trace.size()-1)).toString();
+				/* check if it is part of the selected classes */
+				if (desiredEvents.getChosen().contains(eventClass)) add = choice;
+
+				if (add) filteredLog.add(filteredTrace);
+			}
+		}
+
 		return filteredLog;
-	
 	}
 
 }

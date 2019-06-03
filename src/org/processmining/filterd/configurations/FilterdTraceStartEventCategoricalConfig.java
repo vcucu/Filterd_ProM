@@ -43,14 +43,10 @@ public class FilterdTraceStartEventCategoricalConfig extends FilterdAbstractRefe
 		// is a classifier or an attribute
 		
 		// check whether the selected string is an attribute or a classifier
-		System.out.println("I got this attribute name: "+attribute);
 		for (XEventClassifier c: classifiers) {
-			System.out.println("I am checking against this classifier: "+c.name());
 			if (c.name().equals(attribute)) {
 				//if it is a classifier than create eventclasses object accordingly
 				isAttribute = false; // the selected string is a complex classifier
-				XLogInfo logInfo = XLogInfoImpl.create(log);
-				//eventClasses = new ArrayList<>(logInfo.getEventClasses(c).getClasses());
 				xEventClasses = new XEventClasses(c);
 				xEventClasses = XEventClasses.deriveEventClasses(c, log);				
 		
@@ -65,7 +61,6 @@ public class FilterdTraceStartEventCategoricalConfig extends FilterdAbstractRefe
 			//if it is an attribute than create eventclasses object accordingly
 			XEventAttributeClassifier attrClassifier = new XEventAttributeClassifier(
 					"attrClassifier", attribute);
-			XLogInfo logInfo = XLogInfoImpl.create(log);
 			
 			xEventClasses = new XEventClasses(attrClassifier);
 			xEventClasses = XEventClasses.deriveEventClasses(attrClassifier, log);
@@ -80,7 +75,7 @@ public class FilterdTraceStartEventCategoricalConfig extends FilterdAbstractRefe
 		
 		// Create desiredEvents parameter	
 		ParameterMultipleFromSet desiredEvents = new ParameterMultipleFromSet(
-				"desiredEvents", "Select start values", allValues, allValues);
+				"desiredEvents", "Select start event values", allValues, allValues);
 		
 		// Should you keep empty traces
 		ParameterYesNo traceHandling = new ParameterYesNo("traceHandling", 
