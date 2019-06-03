@@ -13,6 +13,7 @@ import org.deckfour.xes.model.XTrace;
 import org.processmining.filterd.filters.Filter;
 import org.processmining.filterd.gui.AbstractFilterConfigPanelController;
 import org.processmining.filterd.gui.FilterConfigPanelController;
+import org.processmining.filterd.parameters.Parameter;
 import org.processmining.filterd.parameters.ParameterMultipleFromSet;
 import org.processmining.filterd.parameters.ParameterOneFromSet;
 import org.processmining.filterd.tools.EmptyLogException;
@@ -100,10 +101,9 @@ public class FilterdTracesHavingEventConfig extends FilterdAbstractConfig {
 				comboBox.valueProperty().addListener(new ChangeListener<String>() {
 					@Override 
 					public void changed(ObservableValue ov, String oldValue, String newValue) {
-						System.out.println("new selection but log is null :(");
 						final XLog Llog = log;
+						List<Parameter> params = parameters;
 						if (Llog != null) {
-							System.out.println("new selection");
 						for (ParameterController changingParameter : filterConfigPanel.getControllers()) {
 							
 							if (changingParameter.getName().equals("attrValues")) {
@@ -122,8 +122,14 @@ public class FilterdTracesHavingEventConfig extends FilterdAbstractConfig {
 									}
 								}
 								List<String> attributeValuesList = new ArrayList<String>(attributeValues);
+								((ParameterMultipleFromSet) params.get(1))
+								.setOptions(attributeValuesList);
+								((ParameterMultipleFromSet) params.get(1))
+								.setChosen(attributeValuesList);
+								((ParameterMultipleFromSet) params.get(1))
+								.setDefaultChoice(attributeValuesList);
 								castedChanging.changeOptions(attributeValuesList);
-								
+							
 							}
 						}
 						
