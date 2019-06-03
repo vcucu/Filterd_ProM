@@ -18,6 +18,7 @@ public class FilterdTracesHavingEvent extends Filter {
 	public XLog filter(XLog log, List<Parameter> parameters) {
 		XLog clonedLog = (XLog) log.clone();
 		
+		//initialize parameter values
 		ParameterOneFromSet attrTypeParam = (ParameterOneFromSet) parameters.get(0);
 		String attrType = attrTypeParam.getChosen();
 		
@@ -28,15 +29,21 @@ public class FilterdTracesHavingEvent extends Filter {
 		String selectionType = selectionTypeParam.getChosen();
 		List<XTrace> toRemove = new ArrayList<>();
 		
+	
+	
 		for (XTrace trace : clonedLog) {
 			boolean remove = true;
 			for (XEvent event : trace) {
 				XAttributeMap eventAttributes = event.getAttributes();
+				//if a trace contains an event with a forbidden value, mark it 
+				//for removal
 				if (selectionType.equals("Forbidden") &&
 						Toolbox.satisfies(eventAttributes, attrType, attrValues)) {
 					toRemove.add(trace);
 					break;			
 				}
+				//if a trace contains an event with a mandatory value, unmark it
+				//from removal
 				if (selectionType.equals("Mandatory") &&
 						Toolbox.satisfies(eventAttributes, attrType, attrValues)) {
 					remove = false;

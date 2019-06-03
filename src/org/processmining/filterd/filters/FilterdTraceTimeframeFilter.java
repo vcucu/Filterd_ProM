@@ -27,17 +27,13 @@ public class FilterdTraceTimeframeFilter extends Filter {
 		// change input logs
 		XLog clonedLog = (XLog) log.clone();
 		
-//		ParameterRangeFromRange<Double> timeframeParameter = 
-//				(ParameterRangeFromRange<Double>) parameters.get(0);
 	ParameterRangeFromRange<Integer> timeframeParameter = 
 		(ParameterRangeFromRange<Integer>) parameters.get(0);
 		ParameterOneFromSet keepTracesParameter =
 				(ParameterOneFromSet) parameters.get(1);
 		
 		ArrayList<String> times = timeframeParameter.getTimes();
-		// Threshold contains the thresholds in milliseconds.
-//		double lowThreshold = timeframeParameter.getChosenPair().get(0);
-//		double highThreshold = timeframeParameter.getChosenPair().get(1);
+
 		int lowPos = timeframeParameter.getChosenPair().get(0);
 		int highPos = timeframeParameter.getChosenPair().get(1);
 		
@@ -68,16 +64,6 @@ public class FilterdTraceTimeframeFilter extends Filter {
 			int firstEventPos = times.indexOf(firstEventTimeStamp.toString());
 			int finalEventPos = times.indexOf(finalEventTimeStamp.toString());
 			
-//			double firstTimeStampMillis = 
-//					Duration.between(
-//							firstAndlastTimestamp[0], 
-//							firstEventTimeStamp)
-//					.toMillis();
-//			double secondTimeStampMillis = 
-//					Duration.between(
-//							firstAndlastTimestamp[0], 
-//							finalEventTimeStamp)
-//					.toMillis();
 			
 			/* Base the filtering on the parameter chosen:
 			 * 
@@ -147,11 +133,6 @@ public class FilterdTraceTimeframeFilter extends Filter {
 								.get("time:timestamp")
 								.toString());
 						
-//						double eventTimeStampMillis = 
-//								Duration.between(
-//										firstAndlastTimestamp[0], 
-//										eventTimeStamp)
-//								.toMillis();
 						
 						int eventPos = times.indexOf(eventTimeStamp.toString());
 						// If the event is not contained in the time frame,
