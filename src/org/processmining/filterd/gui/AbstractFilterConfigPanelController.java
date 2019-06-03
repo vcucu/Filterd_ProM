@@ -84,7 +84,7 @@ public abstract class AbstractFilterConfigPanelController {
 		controllers.add(controller);
 	}
 	
-	protected <N1 extends Number, N2 extends Number> void populateFromParameters(List<Parameter> parameters) {
+	public <N1 extends Number, N2 extends Number> void populateFromParameters(List<Parameter> parameters) {
 		for(Parameter parameter : parameters) {
 			if(parameter instanceof ParameterYesNo) {
 				ParameterYesNo casted = (ParameterYesNo) parameter;

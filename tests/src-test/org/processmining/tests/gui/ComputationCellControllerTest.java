@@ -11,15 +11,24 @@ import org.processmining.filterd.gui.NotebookModel;
 import junit.framework.TestCase;
 
 public class ComputationCellControllerTest extends TestCase {
-
-	@Test
-	public void testNewComputationCellController() {
+	
+	ComputationCellModel cell;
+	NotebookModel model;
+	NotebookController controller;
+	
+	public void setupComputationCell() {
 		// Create new computation cell model instance
 		ComputationCellModel cell = new ComputationCellModel(null, 0, null, new ArrayList<>());
 		// Create new notebook model
 		NotebookModel model = new NotebookModel();
 		// Create new notebook controller
 		NotebookController controller = new NotebookController(model);
+	}
+
+	@Test
+	public void testNewComputationCellController() {
+		// Setup new computation cell
+		setupComputationCell();
 		
 		try {
 			// Create new computation cell controller (should throw an exception)
@@ -29,5 +38,4 @@ public class ComputationCellControllerTest extends TestCase {
 			assertFalse(exception.equals(null));
 		}
 	}
-	
 }
