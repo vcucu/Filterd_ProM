@@ -27,7 +27,6 @@ import org.processmining.filterd.models.YLog;
 import org.processmining.filterd.tools.EmptyLogException;
 
 import javafx.collections.ListChangeListener;
-import javafx.embed.swing.SwingNode;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -49,12 +48,11 @@ public class ComputationCellController extends CellController {
 	private boolean isFullScreen;
 	private boolean isConfigurationModalShown;
 
-	private VBox notebookVisualiser;
+	private VBox notebookLayout;
 	private HBox notebookToolbar;
-	private SwingNode visualizerSwgNode;
+	private ScrollPane notebookScrollPane;
+	private SwingWrap visualizerSwgWrap;
 	private ConfigurationModalController configurationModal;
-
-	private ScrollPane scrollPane;
 
 	@FXML private VBox panelLayout;
 	@FXML private AnchorPane visualizerPane;
@@ -90,11 +88,11 @@ public class ComputationCellController extends CellController {
 		getCellModel().bindCellName(cellName.textProperty());
 
 		// Initialize the visualizer
-		visualizerSwgNode = new SwingNode();
+		visualizerSwgWrap = new SwingWrap(visualizerPane);
 		// Add listener for the ComboBoxes and the MenuButton (workaround JavaFX - SwingNode)
-		Utilities.JFXSwingFix(visualizerPane, cmbEventLog, visualizerSwgNode);
-		Utilities.JFXSwingFix(visualizerPane, cmbVisualizers, visualizerSwgNode);
-		Utilities.JFXSwingFix(visualizerPane, menuBtnCellSettings, visualizerSwgNode);
+		SwingWrap.workaround(cmbEventLog);
+		SwingWrap.workaround(cmbVisualizers);
+		SwingWrap.workaround(menuBtnCellSettings);
 		// bind cellBody width to cellContent width so the visualizations scale properly
 		cellBody.maxWidthProperty().bind(controller.getScene().widthProperty().subtract(64));
 	}
@@ -110,9 +108,9 @@ public class ComputationCellController extends CellController {
 
 		isExpanded = false;
 		isFullScreen = false;
-		notebookVisualiser = controller.getNotebookLayout();
+		notebookLayout = controller.getNotebookLayout();
 		notebookToolbar = controller.getToolbarLayout();
-		scrollPane = controller.getScrollPane();
+		notebookScrollPane = controller.getScrollPane();
 	}
 
 	@FXML
@@ -256,7 +254,7 @@ public class ComputationCellController extends CellController {
 			isExpanded = true;
 			//set height of cell to be the size of the 'window'
 			cell.prefHeightProperty()
-			.bind(notebookVisualiser.heightProperty().subtract(notebookToolbar.heightProperty()));
+			.bind(notebookLayout.heightProperty().subtract(notebookToolbar.heightProperty()));
 		}
 		//extend visualizerPane over the filter pane
 		filterPanelScroll.setVisible(!isExpanded);
@@ -278,23 +276,30 @@ public class ComputationCellController extends CellController {
 			//make the notebook toolbar and scrollpane visible 
 			notebookToolbar.setVisible(isFullScreen);
 			notebookToolbar.setManaged(isFullScreen);
-			scrollPane.setVisible(isFullScreen);
-			scrollPane.setManaged(isFullScreen);
+			notebookScrollPane.setVisible(isFullScreen);
+			notebookScrollPane.setManaged(isFullScreen);
+			
+			// Refresh visualizer
+			visualizerSwgWrap.refresh();
+			
 			isFullScreen = false;
-
 		} else if (!isFullScreen && !isConfigurationModalShown) {
 			//make the notebook toolbar and scrollpane invisible
 			notebookToolbar.setVisible(isFullScreen);
 			notebookToolbar.setManaged(isFullScreen);
-			scrollPane.setVisible(isFullScreen);
-			scrollPane.setManaged(isFullScreen);
+			notebookScrollPane.setVisible(isFullScreen);
+			notebookScrollPane.setManaged(isFullScreen);
 			//fullToolbar.setStyle("-fx-background-color: #00ffff; ");
 			fullToolbar.setPadding(new Insets(5, 20, 5, 10));
 
 			//add the toolbar and visualiser to the notebook
-			notebookVisualiser.getChildren().add(fullToolbar);
-			notebookVisualiser.getChildren().add(visualizerPane);
+			notebookLayout.getChildren().add(fullToolbar);
+			notebookLayout.getChildren().add(visualizerPane);
 			VBox.setVgrow(visualizerPane, Priority.ALWAYS);
+			
+			// Refresh visualizer
+			visualizerSwgWrap.refresh();
+			
 			isFullScreen = true;
 		}
 	}
@@ -315,19 +320,19 @@ public class ComputationCellController extends CellController {
 		ComputationCellModel model = this.getCellModel();
 		if (cmbVisualizers.getValue() == Utilities.dummyViewType) {
 			// Remove visualizer if "None" is selected
-			visualizerPane.getChildren().remove(visualizerSwgNode);
+			visualizerPane.getChildren().remove(visualizerSwgWrap);
 			return;
 		}
 		JComponent visualizer = model.getVisualization(cmbVisualizers.getValue());
-		if (!visualizerPane.getChildren().contains(visualizerSwgNode)) {
+		if (!visualizerPane.getChildren().contains(visualizerSwgWrap)) {
 			// Add visualizer if not present 
-			visualizerPane.getChildren().add(visualizerSwgNode);			
+			visualizerPane.getChildren().add(visualizerSwgWrap);			
 		}
 		// We set the anchors for each side of the swingNode to 0 so it fits itself to the anchorPane and gets resized with the cell.
-		AnchorPane.setTopAnchor(visualizerSwgNode, 0.0);
-		AnchorPane.setBottomAnchor(visualizerSwgNode, 0.0);
-		AnchorPane.setLeftAnchor(visualizerSwgNode, 0.0);
-		AnchorPane.setRightAnchor(visualizerSwgNode, 0.0);
+		AnchorPane.setTopAnchor(visualizerSwgWrap, 0.0);
+		AnchorPane.setBottomAnchor(visualizerSwgWrap, 0.0);
+		AnchorPane.setLeftAnchor(visualizerSwgWrap, 0.0);
+		AnchorPane.setRightAnchor(visualizerSwgWrap, 0.0);
 		// Load Visualizer
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
@@ -337,7 +342,7 @@ public class ComputationCellController extends CellController {
 				//visualizer.setPreferredSize(new Dimension((int)button.getPreferredSize().getWidth()+10, (int)button.getPreferredSize().getHeight()));
 				visualizer.setMaximumSize(dimension);
 				visualizer.setPreferredSize(dimension);
-				visualizerSwgNode.setContent(visualizer);
+				visualizerSwgWrap.setContent(visualizer);
 			}
 		});
 	}
@@ -347,14 +352,14 @@ public class ComputationCellController extends CellController {
 			ConfigurationStep configurationStep = configurationModal.getConfigurationStep();
 			visualizerPane.getChildren().remove(configurationModal.getRoot());
 			// set visualizer as the content
-			visualizerPane.getChildren().add(visualizerSwgNode);
+			visualizerPane.getChildren().add(visualizerSwgWrap);
 			// Enable visualizer combobox
 			cmbVisualizers.setDisable(false);
 			// set properties w.r.t. parent node (AnchorPane)
-			AnchorPane.setTopAnchor(visualizerSwgNode, 0.0);
-			AnchorPane.setBottomAnchor(visualizerSwgNode, 0.0);
-			AnchorPane.setLeftAnchor(visualizerSwgNode, 0.0);
-			AnchorPane.setRightAnchor(visualizerSwgNode, 0.0);
+			AnchorPane.setTopAnchor(visualizerSwgWrap, 0.0);
+			AnchorPane.setBottomAnchor(visualizerSwgWrap, 0.0);
+			AnchorPane.setLeftAnchor(visualizerSwgWrap, 0.0);
+			AnchorPane.setRightAnchor(visualizerSwgWrap, 0.0);
 			// if filter selection was cancelled, delete the added button
 			if (configurationStep == ConfigurationStep.ADD_FILTER) {
 				// remove FilterButton
@@ -371,7 +376,7 @@ public class ComputationCellController extends CellController {
 			throw new IllegalArgumentException("Filter configuration cannot be null");
 		}
 		// Remove visualizer
-		visualizerPane.getChildren().remove(visualizerSwgNode);
+		visualizerPane.getChildren().remove(visualizerSwgWrap);
 		// Disable visualizer combobox
 		cmbVisualizers.setDisable(true);
 		// populate filter configuration modal
@@ -389,7 +394,7 @@ public class ComputationCellController extends CellController {
 
 	public void showModalFilterList(FilterButtonController filterButtonController, FilterButtonModel filterButtonModel) {
 		// Remove visualizer
-		visualizerPane.getChildren().remove(visualizerSwgNode);
+		visualizerPane.getChildren().remove(visualizerSwgWrap);
 		// Disable visualizer combobox
 		cmbVisualizers.setDisable(true);
 		List<String> filterOptions = new ArrayList<>();
@@ -486,7 +491,7 @@ public class ComputationCellController extends CellController {
 		super.show();
 		if (isExpanded) {
 			cell.prefHeightProperty()
-			.bind(notebookVisualiser.heightProperty().subtract(notebookToolbar.heightProperty()));
+			.bind(notebookLayout.heightProperty().subtract(notebookToolbar.heightProperty()));
 		}
 	}
 
