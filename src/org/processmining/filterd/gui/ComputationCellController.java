@@ -395,6 +395,7 @@ public class ComputationCellController extends CellController {
 		filterOptions.add("Trace Performance");
 		filterOptions.add("Trace Having Event");
 		filterOptions.add("Trace Attribute");
+		filterOptions.add("Trace Timeframe");
 		filterOptions.add("Event Attributes");
 		filterOptions.add("Event Rate");
 
@@ -484,6 +485,15 @@ public class ComputationCellController extends CellController {
 						try {
 							filterConfig = new FilterdTraceAttrConfig(model.getInputLog().get(),
 									new FilterdTraceAttrFilter());
+						} catch (EmptyLogException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						break;
+					case "Trace Timeframe":
+						try {
+							filterConfig = new FilterdTraceTimeframeConfig(model.getInputLog().get(),
+									new FilterdTraceTimeframeFilter());
 						} catch (EmptyLogException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();

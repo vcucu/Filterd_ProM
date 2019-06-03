@@ -36,6 +36,9 @@ public class FilterdTraceTimeframeConfig extends FilterdAbstractConfig {
 		firstAndlastTimestamp.add(Toolbox.getFirstAndLastTimes(log)[0]);
 		firstAndlastTimestamp.add(Toolbox.getFirstAndLastTimes(log)[1]);
 		
+		times = new ArrayList<>();
+		defaultPair = new ArrayList<>();
+		optionsPair = new ArrayList<>();
 		parameters = new ArrayList<>();
 		
 		// Create time frame parameter, the user can select here what time
@@ -63,6 +66,11 @@ public class FilterdTraceTimeframeConfig extends FilterdAbstractConfig {
 				if (!event.getAttributes().containsKey(key)) continue;
 				String value = event.getAttributes().get(key).toString();
 				LocalDateTime time = Toolbox.synchronizeGMT(value);
+				if(time == null)
+					System.out.println("time is null");
+				if(value == null) {
+					System.out.println("value is null");
+				}
 				times.add(time.toString());
 			}
 		}
@@ -71,7 +79,7 @@ public class FilterdTraceTimeframeConfig extends FilterdAbstractConfig {
 		defaultPair.add(times.size()-1);
 		optionsPair.add(0);
 		optionsPair.add(times.size()-1);
-		range = new ParameterRangeFromRange<>("timeframe",
+		range = new ParameterRangeFromRange<>("time-range",
 				"Select timeframe", defaultPair, 
 				optionsPair, Integer.TYPE);
 		range.setTimes(times);
@@ -95,7 +103,7 @@ public class FilterdTraceTimeframeConfig extends FilterdAbstractConfig {
 
 	public boolean checkValidity(XLog candidateLog) {
 		
-		return false;
+		return true;
 	}
 
 	public boolean canPopulate(FilterConfigPanelController component) {
@@ -108,7 +116,8 @@ public class FilterdTraceTimeframeConfig extends FilterdAbstractConfig {
 		
 		
 		
-		return null;
+		return new FilterConfigPanelController(
+				"Filter Trace Timeframe Configuration", parameters, this);
 	}
 	
 	
