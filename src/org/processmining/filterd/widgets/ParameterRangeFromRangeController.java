@@ -25,13 +25,21 @@ public class ParameterRangeFromRangeController<N extends Number> extends Paramet
 	private Label highValueLabel;
 	private Class<N> genericTypeClass;
 	private boolean isActingLikeInteger;
+	private boolean isTimeframe; 
 	private ChangeListener<N> lowValueChangeListener;
 	private ChangeListener<N> highValueChangeListener;
+	List<String> times; // needed for timeframe
 
 	public ParameterRangeFromRangeController(String nameDisplayed, String name, List<N> defaultValue,
 			List<N> minMaxPair, Class<N> genericTypeClass) {
 		super(name);
 		this.genericTypeClass = genericTypeClass;
+		// check if timeframe 
+		if (name.equals("time-range")) {
+			isTimeframe = true;
+		} else {
+			isTimeframe = false;
+		}
 		// load contents
 		FXMLLoader fxmlLoader = new FXMLLoader(
 				getClass().getResource("/org/processmining/filterd/widgets/fxml/ParameterRangeFromRange.fxml"));
@@ -61,7 +69,12 @@ public class ParameterRangeFromRangeController<N extends Number> extends Paramet
 						lowValueLabel.setText(df.format(newValue));
 					}
 				} else if (genericTypeClass.equals(Integer.TYPE)) {
-					lowValueLabel.setText(Integer.toString(newValue.intValue()));
+					if (!isTimeframe) {
+						lowValueLabel.setText(Integer.toString(newValue.intValue()));
+					}
+					else {
+						lowValueLabel.setText(times.get(newValue.intValue()));
+					}
 				}
 			}
 
@@ -77,7 +90,12 @@ public class ParameterRangeFromRangeController<N extends Number> extends Paramet
 						highValueLabel.setText(df.format(newValue));
 					}
 				} else if (genericTypeClass.equals(Integer.TYPE)) {
-					highValueLabel.setText(Integer.toString(newValue.intValue()));
+					if (!isTimeframe) {
+						highValueLabel.setText(Integer.toString(newValue.intValue()));
+					}
+					else {
+						highValueLabel.setText(times.get(newValue.intValue()));
+					}
 				}
 			}
 
@@ -95,6 +113,7 @@ public class ParameterRangeFromRangeController<N extends Number> extends Paramet
 			}
 		};
 		this.isActingLikeInteger = false;
+		this.times = new ArrayList<>();
 	}
 
 	public List<N> getValue() {
@@ -137,8 +156,13 @@ public class ParameterRangeFromRangeController<N extends Number> extends Paramet
 			slider.setLowValue(defaultValue.get(0).doubleValue());
 			slider.setHighValue(defaultValue.get(1).doubleValue());
 			slider.setBlockIncrement(1);
-			lowValueLabel.setText(Integer.toString(defaultValue.get(0).intValue()));
-			highValueLabel.setText(Integer.toString(defaultValue.get(1).intValue()));
+			if (!isTimeframe) {
+				lowValueLabel.setText(Integer.toString(defaultValue.get(0).intValue()));
+				highValueLabel.setText(Integer.toString(defaultValue.get(1).intValue()));
+			} else {
+				lowValueLabel.setText("");
+				highValueLabel.setText("");
+			}
 		}
 	}
 
@@ -147,7 +171,7 @@ public class ParameterRangeFromRangeController<N extends Number> extends Paramet
 		slider.setMajorTickUnit(majorTickUnit);
 		slider.setBlockIncrement(0.1);
 		slider.lowValueProperty()
-				.addListener((obs, oldval, newVal) -> slider.setLowValue(Math.round(newVal.doubleValue())));
+		.addListener((obs, oldval, newVal) -> slider.setLowValue(Math.round(newVal.doubleValue())));
 		slider.lowValueProperty().removeListener((ChangeListener<? super Number>) this.lowValueChangeListener);
 		slider.highValueProperty().removeListener((ChangeListener<? super Number>) this.highValueChangeListener);
 		this.isActingLikeInteger = false;
@@ -161,5 +185,21 @@ public class ParameterRangeFromRangeController<N extends Number> extends Paramet
 		slider.lowValueProperty().addListener((ChangeListener<? super Number>) this.lowValueChangeListener);
 		slider.highValueProperty().addListener((ChangeListener<? super Number>) this.highValueChangeListener);
 		this.isActingLikeInteger = true;
+	}
+
+	public void setTimeframe() { 
+		slider.setShowTickLabels(false);
+		slider.setShowTickMarks(false);
+		lowValueLabel.setText(times.get(0));
+		highValueLabel.setText(times.get(times.size() - 1));
+		//TO DO: set the labes such that date fits
+	}
+	
+	public boolean getTimeframe() {
+		return this.isTimeframe;
+	}
+	
+	public void setTimes(List<String> times) {
+		this.times = times;
 	}
 }

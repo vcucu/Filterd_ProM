@@ -22,6 +22,7 @@ public class FilterdEventAttrDateConfig extends FilterdAbstractReferenceableConf
 	String defaultOption;
 	ArrayList<String> optionList;
 	ParameterRangeFromRange<Integer> range;
+	String key = "time:timestamp";
 
 	public FilterdEventAttrDateConfig(XLog log, Filter filterType) {
 		super(log, filterType);
@@ -39,8 +40,8 @@ public class FilterdEventAttrDateConfig extends FilterdAbstractReferenceableConf
 		for (XTrace trace: log) {
 			for (XEvent event : trace) {
 				/* timestamp format YYYY-MM-DDTHH:MM:SS.ssssGMT with GMT = {Z, + , -} */
-				if (!event.getAttributes().containsKey("time:timestamp")) continue;
-				String value = event.getAttributes().get("time:timestamp").toString();
+				if (!event.getAttributes().containsKey(key)) continue;
+				String value = event.getAttributes().get(key).toString();
 				LocalDateTime time = Toolbox.synchronizeGMT(value);
 				times.add(time.toString());
 			}
@@ -55,8 +56,9 @@ public class FilterdEventAttrDateConfig extends FilterdAbstractReferenceableConf
 		optionsPair.add(times.size()-1);
 
 		// slider values parameter
-		range = new ParameterRangeFromRange<>("range",
+		range = new ParameterRangeFromRange<>("time-range",
 				"Select timeframe", defaultPair, optionsPair, Integer.TYPE);
+		range.setTimes(times);
 
 		// should you remove empty traces
 		ParameterYesNo traceHandling = new ParameterYesNo("eventHandling", 
@@ -70,10 +72,10 @@ public class FilterdEventAttrDateConfig extends FilterdAbstractReferenceableConf
 		ParameterOneFromSet selectionType = new ParameterOneFromSet("selectionType",
 				"Select option for filtering", defaultOption, optionList);
 
-		parameters.add(traceHandling);
-		parameters.add(eventHandling);
 		parameters.add(selectionType);
 		parameters.add(range);
+		parameters.add(traceHandling);
+		parameters.add(eventHandling);
 
 	}
 
@@ -84,30 +86,32 @@ public class FilterdEventAttrDateConfig extends FilterdAbstractReferenceableConf
 
 
 	public boolean checkValidity(XLog log) {
-		ArrayList<LocalDateTime> newTimes = new ArrayList<>();
 		ArrayList<Integer> pair = new ArrayList<>();
 		
+		/* check if the parameters are populated */
 		try {
 			pair.addAll(range.getChosenPair());
 		} catch(Exception e) {
 			return true;
 		}
 		
+		/* get the chosen timestamps */
 		LocalDateTime lower = Toolbox.synchronizeGMT(times.get(pair.get(0)));
 		LocalDateTime upper = Toolbox.synchronizeGMT(times.get(pair.get(1)));
+		Boolean has = false;
 
+		/* check if each event of the log is in those timebounds */
 		for (XTrace trace : log) {
 			for (XEvent event : trace) {
-				String key = "time:timestamp";
+				if (!event.getAttributes().containsKey(key)) continue;
+				has = true;
 				LocalDateTime time = Toolbox.synchronizeGMT(event.getAttributes().get(key).toString());
-				newTimes.add(time);
+				if (lower.isBefore(time) || upper.isAfter(time)) return false;
 			}
 		}
 
-		Collections.sort(newTimes);
-
 		/* an old date configuration is valid iff the old bounds are in the new log
 		 * and there exists time:timestamp attributes */
-		return times.size() != 0 &&  lower.isAfter(newTimes.get(0)) && upper.isBefore(newTimes.get(newTimes.size()-1));
+		return has;
 	}
 }
