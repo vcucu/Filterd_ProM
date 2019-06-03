@@ -8,9 +8,10 @@ import org.deckfour.xes.model.XLog;
 import org.processmining.filterd.filters.Filter;
 import org.processmining.filterd.gui.AbstractFilterConfigPanelController;
 import org.processmining.filterd.gui.FilterConfigPanelController;
-import org.processmining.filterd.parameters.*;
+import org.processmining.filterd.parameters.Parameter;
+import org.processmining.filterd.parameters.ParameterOneFromSet;
 import org.processmining.filterd.tools.Toolbox;
-import org.processmining.filterd.widgets.*;
+import org.processmining.filterd.widgets.ParameterOneFromSetExtendedController;
 
 public class FilterdTraceStartEventConfig extends FilterdAbstractReferencingConfig {
 
@@ -61,7 +62,9 @@ public class FilterdTraceStartEventConfig extends FilterdAbstractReferencingConf
 
 	/*
 	 * The candidateLog is invalid if the event attributes list does not 
-	 * contain the selected attribute.
+	 * contain the selected attribute 
+	 * The candidateLog is invalid if the complex classifiers list does not
+	 * contain the selected complex classifier
 	 */
 	@Override
 	public boolean checkValidity(XLog candidateLog) {
@@ -69,14 +72,20 @@ public class FilterdTraceStartEventConfig extends FilterdAbstractReferencingConf
 			return true;
 		}
 		List<String> attrCandidateLog = new ArrayList<>();
+		List<XEventClassifier> complexClassifiers = new ArrayList<>();
+		
 		attrCandidateLog.addAll(Toolbox.computeAttributes(candidateLog));
-
+		complexClassifiers.addAll(Toolbox.computeComplexClassifiers(candidateLog));
+		for (XEventClassifier c : complexClassifiers) {
+			attrCandidateLog.add(c.toString());
+		}
 		ParameterOneFromSet attribute = (ParameterOneFromSet) getParameter("attribute");
 		String chosenAttr = attribute.getChosen();
-
+		
 		if (!attrCandidateLog.contains(chosenAttr)) {
 			return false;
-		}			
+		}
+		
 		return true;
 	}
 

@@ -4,27 +4,13 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.deckfour.xes.classification.XEventClassifier;
-import org.deckfour.xes.model.XAttribute;
 import org.deckfour.xes.model.XLog;
 import org.processmining.filterd.filters.Filter;
-import org.processmining.filterd.gui.AbstractFilterConfigPanelController;
 import org.processmining.filterd.gui.FilterConfigPanelController;
 import org.processmining.filterd.parameters.Parameter;
-import org.processmining.filterd.parameters.ParameterMultipleFromSet;
 import org.processmining.filterd.parameters.ParameterOneFromSet;
-import org.processmining.filterd.parameters.ParameterRangeFromRange;
-import org.processmining.filterd.parameters.ParameterText;
-import org.processmining.filterd.parameters.ParameterValueFromRange;
-import org.processmining.filterd.parameters.ParameterYesNo;
 import org.processmining.filterd.tools.Toolbox;
-import org.processmining.filterd.widgets.ParameterController;
-import org.processmining.filterd.widgets.ParameterMultipleFromSetController;
-import org.processmining.filterd.widgets.ParameterOneFromSetController;
 import org.processmining.filterd.widgets.ParameterOneFromSetExtendedController;
-import org.processmining.filterd.widgets.ParameterRangeFromRangeController;
-import org.processmining.filterd.widgets.ParameterTextController;
-import org.processmining.filterd.widgets.ParameterValueFromRangeController;
-import org.processmining.filterd.widgets.ParameterYesNoController;
 
 public class FilterdTraceEndEventConfig extends FilterdAbstractReferencingConfig {
 
@@ -79,8 +65,13 @@ public class FilterdTraceEndEventConfig extends FilterdAbstractReferencingConfig
 			return true;
 		}
 		List<String> attrCandidateLog = new ArrayList<>();
+		List<XEventClassifier> complexClassifiers = new ArrayList<>();
+		
 		attrCandidateLog.addAll(Toolbox.computeAttributes(candidateLog));
-
+		complexClassifiers.addAll(Toolbox.computeComplexClassifiers(candidateLog));
+		for (XEventClassifier c : complexClassifiers) {
+			attrCandidateLog.add(c.toString());
+		}
 		ParameterOneFromSet attribute = (ParameterOneFromSet) getParameter("attribute");
 		String chosenAttr = attribute.getChosen();
 
