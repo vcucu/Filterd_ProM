@@ -50,33 +50,7 @@ public class FilterdEventAttrConfig extends FilterdAbstractReferencingConfig {
 			"Filter by", attributes.get(0), attributes, true);
 
 		parameters.add(attribute);
-		
-		for (XAttribute a : eventAttributes) {
-			if (a.getKey().equals(attributes.get(0))) {
-				switch(Toolbox.getType(a)) {
-					case "Literal":
-						concreteReference = new FilterdEventAttrCategoricalConfig(log, filterType, a);
-						break;
-					case "Boolean":
-						concreteReference = new FilterdEventAttrCategoricalConfig(log, filterType, a);
-						break;
-					case "Continuous":
-						concreteReference = new FilterdEventAttrNumericalConfig(log, filterType, a);
-						break;
-					case "Discrete":
-						concreteReference = new FilterdEventAttrNumericalConfig(log, filterType, a);
-						break;
-					case "ID":
-						concreteReference = new FilterdEventAttrCategoricalConfig(log, filterType, a);
-						break;
-					case "Timestamp":
-						concreteReference = new FilterdEventAttrDateConfig(log, filterType);
-						break;
-					default: concreteReference = new FilterdEventAttrCategoricalConfig(log, filterType, a);
-						break;
-				}
-			}
-		}
+		switchReference(attributes.get(0));
 	}
 
 	
@@ -91,8 +65,11 @@ public class FilterdEventAttrConfig extends FilterdAbstractReferencingConfig {
 	}
 	
 	public FilterdAbstractConfig changeReference(ParameterOneFromSetExtendedController chosen) {
-		String key = chosen.getValue();
-		
+		switchReference(chosen.getValue());
+		return concreteReference;
+	}
+	
+	public void switchReference(String key) {
 		for (XAttribute a : eventAttributes) {
 			if (a.getKey().equals(key)) {
 				switch(Toolbox.getType(a)) {
@@ -103,10 +80,10 @@ public class FilterdEventAttrConfig extends FilterdAbstractReferencingConfig {
 						concreteReference = new FilterdEventAttrCategoricalConfig(log, filterType, a);
 						break;
 					case "Continuous":
-						concreteReference = new FilterdEventAttrNumericalConfig(log, filterType, a);
+						concreteReference = new FilterdEventAttrNumericalConfig(log, filterType, a.getKey());
 						break;
 					case "Discrete":
-						concreteReference = new FilterdEventAttrNumericalConfig(log, filterType, a);
+						concreteReference = new FilterdEventAttrNumericalConfig(log, filterType, a.getKey());
 						break;
 					case "ID":
 						concreteReference = new FilterdEventAttrCategoricalConfig(log, filterType, a);
@@ -119,8 +96,6 @@ public class FilterdEventAttrConfig extends FilterdAbstractReferencingConfig {
 				}
 			}
 		}
-		
-		return concreteReference;
 	}
    
 	public boolean checkValidity(XLog log) {

@@ -4,9 +4,12 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
+import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XLog;
+import org.deckfour.xes.model.XTrace;
 import org.processmining.filterd.filters.Filter;
 import org.processmining.filterd.gui.AbstractFilterConfigPanelController;
 import org.processmining.filterd.gui.FilterConfigPanelController;
@@ -17,6 +20,13 @@ import org.processmining.filterd.tools.Toolbox;
 public class FilterdTraceTimeframeConfig extends FilterdAbstractConfig {
 	
 	List<LocalDateTime> firstAndlastTimestamp;
+	private ArrayList<String> times; 
+	private ArrayList<Integer> defaultPair;
+	private ArrayList<Integer> optionsPair;
+
+	ArrayList<String> optionList;
+	ParameterRangeFromRange<Integer> range;
+	String key = "time:timestamp";
 
 	public FilterdTraceTimeframeConfig(XLog log, Filter filterType) {
 		super(log, filterType);
@@ -26,27 +36,53 @@ public class FilterdTraceTimeframeConfig extends FilterdAbstractConfig {
 		firstAndlastTimestamp.add(Toolbox.getFirstAndLastTimes(log)[0]);
 		firstAndlastTimestamp.add(Toolbox.getFirstAndLastTimes(log)[1]);
 		
+		times = new ArrayList<>();
+		defaultPair = new ArrayList<>();
+		optionsPair = new ArrayList<>();
 		parameters = new ArrayList<>();
 		
 		// Create time frame parameter, the user can select here what time
 		// frame he wants.
-		ParameterRangeFromRange<Double> timeframeParameter = 
-				new ParameterRangeFromRange<Double>(
-						"timeframe", 
-						"Select timeframe", 
-						Arrays.asList(
-								0d,
-								(double) Duration.between(
-										firstAndlastTimestamp.get(0), 
-										firstAndlastTimestamp.get(1))
-								.toMillis()), 
-						Arrays.asList(
-								0d,
-								(double) Duration.between(
-										firstAndlastTimestamp.get(0), 
-										firstAndlastTimestamp.get(1))
-								.toMillis()));
-		
+//		ParameterRangeFromRange<Double> timeframeParameter = 
+//				new ParameterRangeFromRange<Double>(
+//						"timeframe", 
+//						"Select timeframe", 
+//						Arrays.asList(
+//								0d,
+//								(double) Duration.between(
+//										firstAndlastTimestamp.get(0), 
+//										firstAndlastTimestamp.get(1))
+//								.toMillis()), 
+//						Arrays.asList(
+//								0d,
+//								(double) Duration.between(
+//										firstAndlastTimestamp.get(0), 
+//										firstAndlastTimestamp.get(1))
+//								.toMillis()));
+		/*populate the array times with the ordered date&time of all events */
+		for (XTrace trace: log) {
+			for (XEvent event : trace) {
+				/* timestamp format YYYY-MM-DDTHH:MM:SS.ssssGMT with GMT = {Z, + , -} */
+				if (!event.getAttributes().containsKey(key)) continue;
+				String value = event.getAttributes().get(key).toString();
+				LocalDateTime time = Toolbox.synchronizeGMT(value);
+				if(time == null)
+					System.out.println("time is null");
+				if(value == null) {
+					System.out.println("value is null");
+				}
+				times.add(time.toString());
+			}
+		}
+		Collections.sort(times);
+		defaultPair.add(0);
+		defaultPair.add(times.size()-1);
+		optionsPair.add(0);
+		optionsPair.add(times.size()-1);
+		range = new ParameterRangeFromRange<>("time-range",
+				"Select timeframe", defaultPair, 
+				optionsPair, Integer.TYPE);
+		range.setTimes(times);
 		// Create the keep traces parameter, the user can select here how the
 		// traces should be kept based on the time frame.
 		ParameterOneFromSet keepTracesParameter = 
@@ -61,13 +97,13 @@ public class FilterdTraceTimeframeConfig extends FilterdAbstractConfig {
 								"Completed in timeframe",
 								"Trim to timeframe"));
 		
-		parameters.add(timeframeParameter);
+		parameters.add(range);
 		parameters.add(keepTracesParameter);
 	}
 
 	public boolean checkValidity(XLog candidateLog) {
 		
-		return false;
+		return true;
 	}
 
 	public boolean canPopulate(FilterConfigPanelController component) {
@@ -80,7 +116,8 @@ public class FilterdTraceTimeframeConfig extends FilterdAbstractConfig {
 		
 		
 		
-		return null;
+		return new FilterConfigPanelController(
+				"Filter Trace Timeframe Configuration", parameters, this);
 	}
 	
 	

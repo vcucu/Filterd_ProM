@@ -62,7 +62,7 @@ public class FilterdEventAttrCategoricalConfig extends FilterdAbstractReferencea
 
 	public boolean checkValidity(XLog log) {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 	
 	public boolean canPopulate(FilterConfigPanelController component) {

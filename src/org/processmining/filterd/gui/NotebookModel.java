@@ -19,6 +19,8 @@ import org.processmining.filterd.models.YLog;
 import org.processmining.filterd.tools.Toolbox;
 import org.processmining.framework.plugin.ProMCanceller;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -52,6 +54,8 @@ public class NotebookModel {
 	private ObservableList<CellModel> cells; // the list of all cells currently in the notebook.
 	@XmlElement
 	private ComputationMode computationMode; // the computation mode the notebook is currently in.
+	private Task<Void> computeTask;
+	private SimpleBooleanProperty isComputing;
 	
 	
 	/**
@@ -61,6 +65,8 @@ public class NotebookModel {
 	public NotebookModel() {
 		this.cells = FXCollections.observableArrayList();
 		setComputationMode(ComputationMode.MANUAL);
+		this.isComputing = new SimpleBooleanProperty();
+		this.isComputing.set(false);
 	}
 
 	/**
@@ -85,6 +91,8 @@ public class NotebookModel {
 		UIContext globalContext = context.getGlobalContext();
 		viewManager = ProMViewManager.initialize(globalContext);
 		resourceManager = ProMResourceManager.initialize(globalContext);
+		this.isComputing = new SimpleBooleanProperty();
+		this.isComputing.set(false);
 	}
 
 	/**
@@ -295,24 +303,27 @@ public class NotebookModel {
 	}
 	
 	public void compute() {
-		Task<Void> task = new Task<Void>() {
+		this.computeTask = new Task<Void>() {
 
 			@Override
 			protected Void call() throws Exception {
-				System.out.println("Starting compute");
+				isComputing.set(true); // let the controller know that the computation is starting
 				List<ComputationCellModel> computeList = cells
 						.stream()
 						.filter(c -> c instanceof ComputationCellModel) // use only computation cells
 						.map(c -> (ComputationCellModel) c) // cast to computation cell model
 						.collect(Collectors.toList()); // transform steam to list
 				for(ComputationCellModel cellModel : computeList) {
-					cellModel.compute();
+					if(isCancelled()) {
+						break;
+					}
+					cellModel.compute(this);
 				}
-				System.out.println("Computation done");
+				isComputing.set(false); // let the controller know the computation is done
 				return null;
 			}
 		};
-		task.exceptionProperty().addListener(new ChangeListener<Throwable>() {
+		this.computeTask.exceptionProperty().addListener(new ChangeListener<Throwable>() {
 
 			public void changed(ObservableValue<? extends Throwable> observable, Throwable oldValue,
 					Throwable newValue) {
@@ -322,8 +333,22 @@ public class NotebookModel {
 				}	
 			}
 		});
-		Thread thread = new Thread(task);
+		Thread thread = new Thread(this.computeTask);
 		thread.start();
+	}
+	
+	public void cancelCompute() {
+		if(this.computeTask != null) {
+			this.computeTask.cancel();
+		}
+	}
+	
+	public boolean isComputing() {
+		return this.isComputing.get();
+	}
+	
+	public BooleanProperty isComputingProperty() {
+		return this.isComputing;
 	}
 	
 	

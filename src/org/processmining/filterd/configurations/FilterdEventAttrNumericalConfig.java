@@ -2,7 +2,6 @@ package org.processmining.filterd.configurations;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import org.deckfour.xes.model.XAttribute;
 import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
@@ -15,14 +14,14 @@ import org.processmining.filterd.parameters.ParameterRangeFromRange;
 import org.processmining.filterd.parameters.ParameterYesNo;
 
 public class FilterdEventAttrNumericalConfig extends FilterdAbstractReferenceableConfig {
-	XAttribute numerical;
+	String key;
 
-	public FilterdEventAttrNumericalConfig(XLog log, Filter filterType, XAttribute numerical) {
+	public FilterdEventAttrNumericalConfig(XLog log, Filter filterType, String key) {
 		super(log, filterType);
-		this.numerical = numerical; 
+		this.key = key; 
 		parameters = new ArrayList<Parameter>();
-		ArrayList<Integer> defaultPair = new ArrayList<>();
-		ArrayList<Integer> optionsPair = new ArrayList<>();
+		ArrayList<Double> defaultPair = new ArrayList<>();
+		ArrayList<Double> optionsPair = new ArrayList<>();
 
 		String defaultSelect = "Choose different values.";
 		ArrayList<String> selectList = new ArrayList<>();
@@ -47,7 +46,6 @@ public class FilterdEventAttrNumericalConfig extends FilterdAbstractReferenceabl
 				"Keep events if attribute not specified.", false);
 
 		ArrayList<String> values = new ArrayList<>();
-		String key = numerical.getKey();
 		/*populate the array times with the numerical values of all events */
 		for (XTrace trace: log) {
 			for (XEvent event : trace) {
@@ -61,14 +59,16 @@ public class FilterdEventAttrNumericalConfig extends FilterdAbstractReferenceabl
 		ParameterMultipleFromSet desiredValues = new ParameterMultipleFromSet(
 				"desiredValues", "Choose values:", values, values);
 		
-		defaultPair.add(Integer.parseInt(values.get(0)));
-		defaultPair.add(Integer.parseInt(values.get(values.size() - 1)));
-		optionsPair.add(Integer.parseInt(values.get(0)));
-		optionsPair.add(Integer.parseInt(values.get(values.size() - 1)));
+		/* populate the parameters */
+		defaultPair.add(Double.parseDouble(values.get(0)));
+		defaultPair.add(Double.parseDouble(values.get(values.size() - 1)));
+		optionsPair.add(Double.parseDouble(values.get(0)));
+		optionsPair.add(Double.parseDouble(values.get(values.size() - 1)));
 		// slider values parameter
-		ParameterRangeFromRange<Integer> range = new ParameterRangeFromRange<>("range",
-				"Select interval to choose from.", defaultPair, optionsPair, Integer.TYPE);
+		ParameterRangeFromRange<Double> range = new ParameterRangeFromRange<>("range",
+				"Select interval to choose from.", defaultPair, optionsPair, Double.TYPE);
 		
+		/* add the parameters */
 		parameters.add(selectionType);
 		parameters.add(parameterType);
 		parameters.add(desiredValues);
@@ -86,6 +86,6 @@ public class FilterdEventAttrNumericalConfig extends FilterdAbstractReferenceabl
 
 	public boolean checkValidity(XLog log) {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 }

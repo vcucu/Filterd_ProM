@@ -1,7 +1,6 @@
 package org.processmining.filterd.widgets;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javafx.collections.FXCollections;

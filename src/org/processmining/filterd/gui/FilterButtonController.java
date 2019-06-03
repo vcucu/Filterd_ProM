@@ -2,6 +2,8 @@ package org.processmining.filterd.gui;
 
 import java.util.ArrayList;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
@@ -47,6 +49,21 @@ public class FilterButtonController {
 				(observable, oldvalue, newvalue) ->
 				setSelected(newvalue)
 		);
+		
+		// valid property
+		model.isValidProperty().addListener(new ChangeListener<Boolean>() {
+
+			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+				if(newValue) {
+					// filter became valid
+					controller.hideConfigurationModal();
+					setSelected(model.getSelected());
+				} else {
+					// filter became invalid (empty log or invalid configuration)
+					makeInvalid();
+				}
+			}
+		});
 		
 	}
 	
@@ -98,6 +115,11 @@ public class FilterButtonController {
 			button.setVisible(false);
 		}
 		filterLayout.setStyle("-fx-background-color: #eeeeee");
+		enableEditFilterHandler();
+	}
+	
+	private void makeInvalid() {
+		filterLayout.setStyle("-fx-background-color: #ecabab");
 	}
 
 	@FXML
@@ -115,6 +137,7 @@ public class FilterButtonController {
 	@FXML
 	private void editFilterHandler() {
 		selectFilterButton();
+		showButtons();
 		if(this.model.getFilterConfig() != null) {
 			this.controller.showModalFilterConfiguration(this.model.getFilterConfig(), this);
 			this.editButton.setDisable(true);
