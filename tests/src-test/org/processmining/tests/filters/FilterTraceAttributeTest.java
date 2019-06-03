@@ -34,9 +34,8 @@ public class FilterTraceAttributeTest extends FilterdPackageTest {
 		
 		FilterdTraceAttrFilter filter = new FilterdTraceAttrFilter();
 		
-		List<Parameter> parameters = getParametersCategorical("concept:name","Categorical",
-				false,
-				"Mandatory",
+		List<Parameter> parameters = getParameters("concept:name",
+				"in",
 				Arrays.asList("41", "56", "76")
 				);
 		
@@ -45,19 +44,6 @@ public class FilterTraceAttributeTest extends FilterdPackageTest {
 		assert equalLog(expected, computed);
 	}
 	
-	/* Corresponds to test case 37 from test_specification.xlsx.
-	 * See Disco Attributes - mandatory traces having at least one event with
-	 * "concept:name" != "archive" and "receive payment"
-	 * 
-	 * Result: each case except case 34.
-	 */
-	@Test
-	public void testAttributesMandatory() throws Throwable {
-		XLog expected = parseLog("event-attributes", "test_attributes_2.xes");
-		XLog computed = null; // insert filter operation
-
-		assert equalLog(expected, computed);
-	}
 	
 	/* Corresponds to test case 24 from test_specification.xlsx.
 	 * See ProM - Filter log on trace attribute values.
@@ -69,60 +55,24 @@ public class FilterTraceAttributeTest extends FilterdPackageTest {
 	public void testTraceAttribute2() throws Throwable {
 		XLog expected = parseLog("trace-attribute", "test_trace_attribute_customer.xes");
 		XLog computed = null; // insert filter operation
-
+		
+		FilterdTraceAttrFilter filter = new FilterdTraceAttrFilter();
+		
+		List<Parameter> parameters = getParameters("customer",
+				"in",
+				Arrays.asList("X", "Y", "Z")
+				);
+		
+		computed = filter.filter(originalLog, parameters);
 		assert equalLog(expected, computed);
 	}
 
 
-	/* Corresponds to test case 25 from test_specification.xlsx.
-	 * See ProM - Filter log by attributes.
-	 * Keep traces with an event having delivery = 623, 514.
-	 * 
-	 * Result: cases 56, 76 - 6 events
-	 * 		 case 41 - 8 events.
-	 */
-	@Test
-	public void testLogAttribute1() throws Throwable {
-		XLog expected = parseLog("trace-attribute", "test_log_attribute_delivery.xes");
-		XLog computed = null; // insert filter operation
-
-		assert equalLog(expected, computed);
-	}
 
 
-	/* Corresponds to test case 26 from test_specification.xlsx.
-	 * See ProM - Filter log by attributes.
-	 * Keep traces with an event having lifecycle:transition = abort.
-	 * 
-	 * Result: cases 56, 74, 75, 76 - 6 events.
-	 */
-	@Test
-	public void testLogAttribute2() throws Throwable {
-		XLog expected = parseLog("trace-attribute", "test_log_attribute_abort.xes");
-		XLog computed = null; // insert filter operation
-
-		assert equalLog(expected, computed);
-	}
-
-	/* NO TEST FILE!!!!!!
-	 * Corresponds to test case 27 from test_specification.xlsx.
-	 * See ProM - Filter log by attributes.
-	 * Keep traces with minimum number of events = 3 and maximum = 7.
-	 * 
-	 * Result: cases 56, 74, 75, 76 - 6 events.
-	 */
-	@Test
-	public void testLogAttribute3() throws Throwable {
-		XLog expected = parseLog("trace-attribute", "test_log_attribute_min_max.xes");
-		XLog computed = null; // insert filter operation
-
-		assert equalLog(expected, computed);
-	}
 	
-	private List<Parameter> getParametersCategorical(
+	private List<Parameter> getParameters(
 			String attribute,
-			String attributeType,
-			boolean nullHandling,
 			String selectionType,
 			List<String> chosenValues
 			) {
@@ -136,7 +86,7 @@ public class FilterTraceAttributeTest extends FilterdPackageTest {
 		// Create the parameter for selecting the attribute.
 		ParameterOneFromSet attributeSelector = 
 				new ParameterOneFromSet(
-						"Attribute", 
+						"attribute", 
 						"Select attribute", 
 						attributes.get(0), 
 						attributes);
@@ -145,39 +95,20 @@ public class FilterTraceAttributeTest extends FilterdPackageTest {
 		
 		// Create the array list for selecting the type of attribute the user
 		// has selected.
-		List<String> attributeTypeList = new ArrayList<String>();
-		attributeTypeList.add("Categorical");		
-		attributeTypeList.add("Numerical");
-		attributeTypeList.add("Timeframe");
-		attributeTypeList.add("Duration");
-		attributeTypeList.add("Filter on events");
 		
 		// Create the parameter for selecting the type of attribute.
-		ParameterOneFromSet attributeTypeSelector = 
+		ParameterOneFromSet selectionTypeSelector = 
 				new ParameterOneFromSet(
-						"Attribute type", 
-						"Select attribute type", 
-						attributeTypeList.get(0), 
-						attributeTypeList);
+						"filterInOut", 
+						"filterInOut", 
+						"in", 
+						Arrays.asList("in","out"));
 		
-		attributeTypeSelector.setChosen(attributeType);
+		selectionTypeSelector.setChosen("in");
 	
-		ParameterYesNo nullHandlingParam = new ParameterYesNo("nullHandling",
-				"Null handling:",
-				true);
-		nullHandlingParam.setChosen(nullHandling);
-		List<String> selectionTypeOptions = new ArrayList<>();
-		selectionTypeOptions.add("Mandatory");
-		selectionTypeOptions.add("Forbidden");
-		
-		ParameterOneFromSet selectionTypeParam = new ParameterOneFromSet("selectionType",
-			"Selection type:",
-			"Mandatory",
-			selectionTypeOptions);
-		selectionTypeParam.setChosen(selectionType);
 		
 		ParameterMultipleFromSet desiredValuesParam = new ParameterMultipleFromSet(
-				"desiredValues",
+				"attrValues",
 				"Desired values:",
 				chosenValues,
 				chosenValues
@@ -186,9 +117,7 @@ public class FilterTraceAttributeTest extends FilterdPackageTest {
 		desiredValuesParam.setChosen(chosenValues);
 		
 		parameters.add(attributeSelector);
-		parameters.add(attributeTypeSelector);
-		parameters.add(nullHandlingParam);
-		parameters.add(selectionTypeParam);
+		parameters.add(selectionTypeSelector);
 		parameters.add(desiredValuesParam);
 		return parameters;
 	}
