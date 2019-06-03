@@ -67,7 +67,7 @@ public class FilterButtonController {
 		
 	}
 	
-	private void setSelected(boolean selected) {
+	public void setSelected(boolean selected) {
 		if (selected) {
 			showButtons();
 		} else {
