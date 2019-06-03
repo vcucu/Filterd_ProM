@@ -11,6 +11,7 @@ import javax.swing.SwingUtilities;
 import org.deckfour.uitopia.api.model.ViewType;
 import org.processmining.filterd.configurations.*;
 import org.processmining.filterd.filters.*;
+
 import org.processmining.filterd.gui.ConfigurationModalController.ConfigurationStep;
 import org.processmining.filterd.models.YLog;
 import org.processmining.filterd.tools.EmptyLogException;
@@ -381,9 +382,11 @@ public class ComputationCellController extends CellController {
 		filterOptions.add("Trace Frequency");
 		filterOptions.add("Trace Sample");
 		filterOptions.add("Trace Performance");
+		filterOptions.add("Trace Having Event");
+		filterOptions.add("Trace Attribute");
 		filterOptions.add("Event Attributes");
 		filterOptions.add("Event Rate");
-		filterOptions.add("Trace Having Event");
+	
 
 		configurationModal.showFilterList(filterOptions, filterButtonController, new Callback<String, FilterdAbstractConfig>() {
 
@@ -461,6 +464,15 @@ public class ComputationCellController extends CellController {
 						try {
 							filterConfig = new FilterdTracesHavingEventConfig(model.getInputLog().get(),
 									new FilterdTracesHavingEvent());
+						} catch (EmptyLogException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						break;
+					case "Trace Attribute":
+						try {
+							filterConfig = new FilterdTraceAttrConfig(model.getInputLog().get(),
+									new FilterdTraceAttrFilter());
 						} catch (EmptyLogException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
