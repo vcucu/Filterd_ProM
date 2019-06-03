@@ -2,6 +2,7 @@ package org.processmining.filterd.filters;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -16,6 +17,7 @@ import org.processmining.filterd.parameters.ParameterMultipleFromSet;
 import org.processmining.filterd.parameters.ParameterOneFromSet;
 import org.processmining.filterd.parameters.ParameterRangeFromRange;
 import org.processmining.filterd.parameters.ParameterYesNo;
+import org.processmining.filterd.tools.Toolbox;
 
 public class FilterdTraceAttrFilter extends Filter {
 	
@@ -30,95 +32,29 @@ public class FilterdTraceAttrFilter extends Filter {
 		XLog clonedLog = (XLog) log.clone();
 		
 		
-		/*
-		 * 1st parameter: Select attribute to filter on.
-		 * 2nd parameter: Select type of attribute.
-		 * 
-		 * Consecutive parameters are based on the attribute type.
-		 * 
-		 * - Categorical:
-		 * 	3rd parameter, Null handling:
-		 * 	Remove the trace if an event does not have this attribute.
-		 * 	If Null handling == true
-		 * 		Then Remove the trace.
-		 * 	Else
-		 * 		Then Continue.
-		 * 	4th parameter, selection type:
-		 * 	Choice out of 2 options:
-		 * 	- "Mandatory": Mandatory to have the selection the user made for the
-		 * 	chosen attribute.
-		 * 	- "Forbidden": Forbidden to have the selection the user made for the
-		 * 	chosen attribute.
-		 * 	5th parameter, attribute:
-		 * 	What attribute the user has selected to filter on.
-		 * 	6th parameter, desired values:
-		 * 	The values the selected attribute can take.
-		 * 
-		 * - Numerical:
-		 * 	3rd parameter, range:
-		 * 	The range selected by the user.
-		 * 	4th parameter, selection type:
-		 * 	Choice out of 2 options:
-		 * 	- "Mandatory": Mandatory to have the selection the user made for the
-		 * 	chosen attribute.
-		 * 	- "Forbidden": Forbidden to have the selection the user made for the
-		 * 	chosen attribute.
-		 * 	5th parameter, attribute
-		 * 	What attribute the user has selected to filter on.
-		 * 
-		 * - Time frame:
-		 * 	3rd parameter, keep traces options:
-		 * 	How the traces are to be filtered with the threshold set.
-		 * 	4th parameter, threshold:
-		 * 	The time frame selected by the user.
-		 * 
-		 * - NumberOfEvents:
-		 * 	3rd parameter, threshold:
-		 * 	The threshold set by the user.
-		 * 
-		 * - Duration:
-		 * 	3rd parameter, threshold:
-		 * 	The threshold set by the user.
-		 * 
-		 */
+		ParameterOneFromSet attrTypeParam = (ParameterOneFromSet) parameters.get(0);
+		String attrType = attrTypeParam.getChosen();
 		
-		ParameterOneFromSet attrType = (ParameterOneFromSet) parameters.get(1);
-		String attrValue = attrType.getChosen();
+		ParameterMultipleFromSet attrValuesParam = (ParameterMultipleFromSet) parameters.get(2);
+		List<String> attrValues = attrValuesParam.getChosen();
 		
-		switch (attrValue) {
-			case "Categorical": {
-				clonedLog = filterCategorical(clonedLog, 
-						(ParameterYesNo) parameters.get(2), 
-						(ParameterOneFromSet) parameters.get(3), 
-						(ParameterOneFromSet) parameters.get(0), 
-						(ParameterMultipleFromSet) parameters.get(4));
-				break;
-			}
-			case "Numerical": {
-				clonedLog = filterNumerical(clonedLog, 
-						(ParameterRangeFromRange<Double>) parameters.get(2), 
-						(ParameterOneFromSet) parameters.get(3), 
-						(ParameterOneFromSet) parameters.get(4));
-				break;
-			}
-			case "Timeframe": {
-				clonedLog = filterTimeframe(clonedLog, 
-						(ParameterOneFromSet) parameters.get(2), 
-						(ParameterRangeFromRange<Double>) parameters.get(3));
-				break;
-			}
-			case "Duration": {
-				clonedLog = filterDuration(clonedLog, 
-						(ParameterRangeFromRange<Double>) parameters.get(2));
-				break;
-			}
-			case "Number of events": {
-				clonedLog = filterDuration(clonedLog, 
-						(ParameterRangeFromRange<Double>) parameters.get(2));
-				break;
-			}
+		ParameterOneFromSet selectionTypeParam = (ParameterOneFromSet) parameters.get(1);
+		String selectionType = selectionTypeParam.getChosen();
+		List<XTrace> toRemove = new ArrayList<>();
+		
+		for (XTrace trace : clonedLog) {
+				XAttributeMap traceAttributes = trace.getAttributes();
+				if (selectionType.equals("in") &&
+						!Toolbox.satisfies(traceAttributes, attrType, attrValues)) {
+					toRemove.add(trace);		
+				}
+				if (selectionType.equals("out") &&
+						Toolbox.satisfies(traceAttributes, attrType, attrValues)) {
+					toRemove.add(trace);
+	
+				}
 		}
-		
+		clonedLog.removeAll(toRemove);
 		return clonedLog;
 	}
 	

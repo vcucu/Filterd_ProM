@@ -32,7 +32,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.ComboBox;
 
-public class FilterdTraceAttrConfig extends FilterdAbstractReferencingConfig {
+public class FilterdTraceAttrConfig extends FilterdAbstractConfig {
 
 	
 	Set<String> traceAttributes;
@@ -47,9 +47,7 @@ public class FilterdTraceAttrConfig extends FilterdAbstractReferencingConfig {
 		for (XTrace trace : log) {
 			
 				
-				traceAttributes.addAll(trace.getAttributes().keySet());
-				
-			
+				traceAttributes.addAll(trace.getAttributes().keySet());	
 			
 		}
 		
@@ -58,8 +56,8 @@ public class FilterdTraceAttrConfig extends FilterdAbstractReferencingConfig {
 				"attribute", 
 				"Filter by", 
 				traceAttributes.iterator().next(), 
-				new ArrayList<String>(traceAttributes), 
-				true);
+				new ArrayList<String>(traceAttributes)
+				);
 		
 		ParameterOneFromSet filterInOut = new ParameterOneFromSet(
 				"filterInOut",
@@ -71,14 +69,14 @@ public class FilterdTraceAttrConfig extends FilterdAbstractReferencingConfig {
 
 		Set<String> attributeValues = new HashSet<>();
 		
-		List traceAttributesList = new ArrayList<String>();
+		List<String> traceAttributesList = new ArrayList<>(traceAttributes);
 		for (XTrace trace : log) {
 			
 				
 				XAttributeMap traceAttrs = trace.getAttributes();
-				if (traceAttrs.containsKey(traceAttributesList.get(0))) 
-					attributeValues.add(traceAttrs.get(traceAttributesList.get(0)).toString());
-			
+				if (traceAttrs.containsKey(traceAttributesList.get(0)))
+					System.out.println(traceAttributesList.size());
+					attributeValues.add(traceAttrs.get(traceAttributesList.get(0)).toString());		
 		}
 		List<String> attributeValuesList = new ArrayList<String>(attributeValues);
 		ParameterMultipleFromSet attrValues = new ParameterMultipleFromSet(
@@ -92,54 +90,7 @@ public class FilterdTraceAttrConfig extends FilterdAbstractReferencingConfig {
 		parameters.add(attrValues);
 	}
 
-	public FilterdAbstractConfig populate(AbstractFilterConfigPanelController abstractComponent) {
-		FilterConfigPanelController component = (FilterConfigPanelController) abstractComponent;
-		List<ParameterController> controllers = component.getControllers();
-		for(ParameterController controller : controllers) {
-			//all cases assume that the controller has a name corresponding to the parameter name
-			if(controller instanceof ParameterOneFromSetExtendedController) {
-				ParameterOneFromSetExtendedController casted = (ParameterOneFromSetExtendedController) controller;
-				concreteReference.populate(casted.getNestedConfigPanel());
-				//this method needs to be in every referencing class
-				
-			} else if(controller instanceof ParameterYesNoController) {
-				ParameterYesNoController casted = (ParameterYesNoController) controller;
-				ParameterYesNo param = (ParameterYesNo) getParameter(controller.getName());
-				param.setChosen(casted.getValue());	
-				
-			} else if(controller instanceof ParameterOneFromSetController) {
-				ParameterOneFromSetController casted = (ParameterOneFromSetController) controller;
-				ParameterOneFromSet param = (ParameterOneFromSet) getParameter(controller.getName());
-				param.setChosen(casted.getValue());	
-				
-			} else if(controller instanceof ParameterMultipleFromSetController) {
-				ParameterMultipleFromSetController casted = (ParameterMultipleFromSetController) controller;
-				ParameterMultipleFromSet param = (ParameterMultipleFromSet) getParameter(controller.getName());
-				param.setChosen(casted.getValue());				
-				
-			} else if(controller instanceof ParameterValueFromRangeController) {
-				ParameterValueFromRangeController casted = (ParameterValueFromRangeController) controller;
-				ParameterValueFromRange param = (ParameterValueFromRange) getParameter(controller.getName());
-				param.setChosen(casted.getValue());	
-				
-			} else if(controller instanceof ParameterTextController) {
-				ParameterTextController casted = (ParameterTextController) controller;
-				ParameterText param = (ParameterText) getParameter(controller.getName());
-				param.setChosen(casted.getValue());	
-				
-			} else if(controller instanceof ParameterRangeFromRangeController) {
-				ParameterRangeFromRangeController casted = (ParameterRangeFromRangeController) controller;
-				ParameterRangeFromRange param = (ParameterRangeFromRange) getParameter(controller.getName());
-				param.setChosenPair(casted.getValue());	
-				
-			} else {
-				throw new IllegalArgumentException("Unsupporrted controller type.");
-			}	
-			
-			
-		}
-		return this;
-	}
+	
 
 	public boolean canPopulate(FilterConfigPanelController component) {
 		// Impossible to check so we have to rely on the user himself to 
@@ -161,8 +112,11 @@ public class FilterdTraceAttrConfig extends FilterdAbstractReferencingConfig {
 					@Override 
 					public void changed(ObservableValue ov, String oldValue, String newValue) {
 						final XLog Llog = log;
+						if (Llog == null) 
+							System.out.println("log is null");
 						List<Parameter> params = parameters;
 						if (Llog != null) {
+							System.out.println("log not null");
 						for (ParameterController changingParameter : filterConfigPanel.getControllers()) {
 							
 							if (changingParameter.getName().equals("attrValues")) {
@@ -175,6 +129,8 @@ public class FilterdTraceAttrConfig extends FilterdAbstractReferencingConfig {
 									
 										
 										XAttributeMap traceAttrs = trace.getAttributes();
+										if (traceAttrs.containsKey("customer"))
+										System.out.println(traceAttrs.get("customer").toString());
 										if (traceAttrs.containsKey(newValue))
 											attributeValues.add(traceAttrs.get(newValue).toString());
 									
@@ -200,18 +156,11 @@ public class FilterdTraceAttrConfig extends FilterdAbstractReferencingConfig {
 		return filterConfigPanel;
 	}
 	
-	@Override
-	public FilterdAbstractConfig changeReference(
-			ParameterOneFromSetExtendedController chosen) {
-		
-		
-		// Return this reference.
-		return this;
-	}
+	
 
 	public boolean checkValidity(XLog log) {
 		// Impossible since we can not figure out the type.
-		return false;
+		return true;
 	}
 
 

@@ -12,6 +12,7 @@ import org.deckfour.uitopia.api.model.ViewType;
 import org.processmining.filterd.configurations.FilterdAbstractConfig;
 import org.processmining.filterd.configurations.FilterdEventAttrConfig;
 import org.processmining.filterd.configurations.FilterdEventRateConfig;
+import org.processmining.filterd.configurations.FilterdTraceAttrConfig;
 import org.processmining.filterd.configurations.FilterdTraceFrequencyConfig;
 import org.processmining.filterd.configurations.FilterdTracePerformanceConfig;
 import org.processmining.filterd.configurations.FilterdTraceSampleConfig;
@@ -19,6 +20,7 @@ import org.processmining.filterd.configurations.FilterdTraceStartEventConfig;
 import org.processmining.filterd.configurations.FilterdTracesHavingEventConfig;
 import org.processmining.filterd.filters.FilterdEventAttrFilter;
 import org.processmining.filterd.filters.FilterdEventRateFilter;
+import org.processmining.filterd.filters.FilterdTraceAttrFilter;
 import org.processmining.filterd.filters.FilterdTraceFrequencyFilter;
 import org.processmining.filterd.filters.FilterdTracePerformanceFilter;
 import org.processmining.filterd.filters.FilterdTraceSampleFilter;
@@ -393,9 +395,11 @@ public class ComputationCellController extends CellController {
 		filterOptions.add("Trace Frequency");
 		filterOptions.add("Trace Sample");
 		filterOptions.add("Trace Performance");
+		filterOptions.add("Trace Having Event");
+		filterOptions.add("Trace Attribute");
 		filterOptions.add("Event Attributes");
 		filterOptions.add("Event Rate");
-		filterOptions.add("Trace Having Event");
+	
 
 		configurationModal.showFilterList(filterOptions, filterButtonController, new Callback<String, FilterdAbstractConfig>() {
 
@@ -464,6 +468,15 @@ public class ComputationCellController extends CellController {
 						try {
 							filterConfig = new FilterdTracesHavingEventConfig(model.getInputLog().get(),
 									new FilterdTracesHavingEvent());
+						} catch (EmptyLogException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						break;
+					case "Trace Attribute":
+						try {
+							filterConfig = new FilterdTraceAttrConfig(model.getInputLog().get(),
+									new FilterdTraceAttrFilter());
 						} catch (EmptyLogException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
