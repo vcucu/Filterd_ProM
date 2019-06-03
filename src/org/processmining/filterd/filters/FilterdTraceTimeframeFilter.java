@@ -2,6 +2,7 @@ package org.processmining.filterd.filters;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -26,14 +27,19 @@ public class FilterdTraceTimeframeFilter extends Filter {
 		// change input logs
 		XLog clonedLog = (XLog) log.clone();
 		
-		ParameterRangeFromRange<Double> timeframeParameter = 
-				(ParameterRangeFromRange<Double>) parameters.get(0);
+//		ParameterRangeFromRange<Double> timeframeParameter = 
+//				(ParameterRangeFromRange<Double>) parameters.get(0);
+	ParameterRangeFromRange<Integer> timeframeParameter = 
+		(ParameterRangeFromRange<Integer>) parameters.get(0);
 		ParameterOneFromSet keepTracesParameter =
 				(ParameterOneFromSet) parameters.get(1);
 		
+		ArrayList<String> times = timeframeParameter.getTimes();
 		// Threshold contains the thresholds in milliseconds.
-		double lowThreshold = timeframeParameter.getChosenPair().get(0);
-		double highThreshold = timeframeParameter.getChosenPair().get(1);
+//		double lowThreshold = timeframeParameter.getChosenPair().get(0);
+//		double highThreshold = timeframeParameter.getChosenPair().get(1);
+		int lowPos = timeframeParameter.getChosenPair().get(0);
+		int highPos = timeframeParameter.getChosenPair().get(1);
 		
 		LocalDateTime[] firstAndlastTimestamp = 
 				Toolbox.getFirstAndLastTimes(clonedLog);
@@ -52,22 +58,26 @@ public class FilterdTraceTimeframeFilter extends Filter {
 					.getAttributes()
 					.get("time:timestamp")
 					.toString());
+			
 			LocalDateTime finalEventTimeStamp = Toolbox.synchronizeGMT(
 					lastEvent
 					.getAttributes()
 					.get("time:timestamp")
 					.toString());
 			
-			double firstTimeStampMillis = 
-					Duration.between(
-							firstAndlastTimestamp[0], 
-							firstEventTimeStamp)
-					.toMillis();
-			double secondTimeStampMillis = 
-					Duration.between(
-							firstAndlastTimestamp[0], 
-							finalEventTimeStamp)
-					.toMillis();
+			int firstEventPos = times.indexOf(firstEventTimeStamp.toString());
+			int finalEventPos = times.indexOf(finalEventTimeStamp.toString());
+			
+//			double firstTimeStampMillis = 
+//					Duration.between(
+//							firstAndlastTimestamp[0], 
+//							firstEventTimeStamp)
+//					.toMillis();
+//			double secondTimeStampMillis = 
+//					Duration.between(
+//							firstAndlastTimestamp[0], 
+//							finalEventTimeStamp)
+//					.toMillis();
 			
 			/* Base the filtering on the parameter chosen:
 			 * 
@@ -88,8 +98,8 @@ public class FilterdTraceTimeframeFilter extends Filter {
 				case "Contained in timeframe": {
 					
 					// If the trace is not contained, remove it.
-					if (firstTimeStampMillis < lowThreshold
-							|| secondTimeStampMillis > highThreshold) {
+					if (firstEventPos < lowPos
+							|| finalEventPos > highPos) {
 						tracesToRemove.add(trace);
 					}
 					
@@ -98,8 +108,8 @@ public class FilterdTraceTimeframeFilter extends Filter {
 				case "Intersecting timeframe": {
 					
 					// If the trace is not intersecting, remove it.
-					if (!(firstTimeStampMillis <= highThreshold
-							&& secondTimeStampMillis >= lowThreshold)) {
+					if (!(firstEventPos <= highPos
+							&& finalEventPos >= lowPos)) {
 						tracesToRemove.add(trace);
 					}
 					
@@ -108,8 +118,8 @@ public class FilterdTraceTimeframeFilter extends Filter {
 				case "Started in timeframe": {
 					
 					// If the trace is not started in the time frame, remove it.
-					if (firstTimeStampMillis < lowThreshold
-							|| firstTimeStampMillis > highThreshold) {
+					if (firstEventPos < lowPos
+							|| firstEventPos > highPos) {
 						tracesToRemove.add(trace);
 					}
 					
@@ -119,8 +129,8 @@ public class FilterdTraceTimeframeFilter extends Filter {
 					
 					// If the trace is not completed in the time frame, 
 					// remove it.
-					if (!(secondTimeStampMillis <= highThreshold
-							&& secondTimeStampMillis >= highThreshold)) {
+					if (!(finalEventPos <= highPos
+							&& finalEventPos >= highPos)) {
 						tracesToRemove.add(trace);
 					}
 					
@@ -137,16 +147,17 @@ public class FilterdTraceTimeframeFilter extends Filter {
 								.get("time:timestamp")
 								.toString());
 						
-						double eventTimeStampMillis = 
-								Duration.between(
-										firstAndlastTimestamp[0], 
-										eventTimeStamp)
-								.toMillis();
+//						double eventTimeStampMillis = 
+//								Duration.between(
+//										firstAndlastTimestamp[0], 
+//										eventTimeStamp)
+//								.toMillis();
 						
+						int eventPos = times.indexOf(eventTimeStamp.toString());
 						// If the event is not contained in the time frame,
 						// remove it.
-						if (!(eventTimeStampMillis >= firstTimeStampMillis
-								&& eventTimeStampMillis <= secondTimeStampMillis)) {
+						if (!(eventPos >= firstEventPos
+								&& eventPos <= finalEventPos)) {
 							
 							eventsToRemove.add(event);
 							
