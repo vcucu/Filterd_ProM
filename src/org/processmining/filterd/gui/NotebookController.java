@@ -7,6 +7,9 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
+import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -89,6 +92,29 @@ public class NotebookController {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		// change compute button text (play / pause symbols) when the computation stops / starts
+		this.model.isComputingProperty().addListener(new ChangeListener<Boolean>() {
+
+			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+				if(newValue) {
+					Platform.runLater(new Runnable(){
+						@Override 
+						public void run() {
+//							computeButton.setText("\u23F8"); // unicode for pause symbol
+							computeButton.setText("pause"); // unicode for pause symbol
+		                 }
+					});
+				} else {
+					Platform.runLater(new Runnable(){
+						@Override 
+						public void run() {
+//							computeButton.setText("\u25B6"); // unicode for play symbol
+							computeButton.setText("play"); // unicode for play symbol
+		                 }
+					});
+				}
+			}
+		});
 		
 	}
 	
@@ -147,7 +173,12 @@ public class NotebookController {
 	 */
 	@FXML
 	private void computeButtonHandler() {
-		model.compute();
+		// TODO: set compute button icon to play / pause w.r.t. this.isComputing
+		if(model.isComputing()) {
+			model.cancelCompute();
+		} else {
+			model.compute();
+		}
 	}
 
 	/**
@@ -176,13 +207,6 @@ public class NotebookController {
 	 */
 	public void setComputationMode(ComputationMode mode) {
 		model.setComputationMode(mode);
-	}
-
-	/**
-	 * (Re)computes the entire notebook.
-	 */
-	public void compute() {
-		//TODO: implement. check out model.recomputeFrom.
 	}
 
 	/**

@@ -20,7 +20,6 @@ import org.processmining.contexts.uitopia.hub.ProMResourceManager;
 import org.processmining.contexts.uitopia.hub.ProMViewManager;
 import org.processmining.filterd.models.YLog;
 import org.processmining.filterd.plugins.FilterdVisualizer;
-import org.processmining.filterd.tools.EmptyLogException;
 import org.processmining.filterd.tools.Toolbox;
 import org.processmining.framework.plugin.PluginParameterBinding;
 import org.processmining.framework.plugin.ProMCanceller;
@@ -31,6 +30,7 @@ import org.processmining.framework.util.Pair;
 import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.util.Callback;
 
 @XmlAccessorType(XmlAccessType.NONE) // Makes sure only explicitly named elements get added to the XML.
@@ -200,37 +200,19 @@ public class ComputationCellModel extends CellModel {
 		return new JLabel("Visualizer " + type.getTypeName() + " could not be found.");
 	}
     
-    public void compute() {
-    	System.out.println("Computation cell compute starting");
-    	
+    public void compute(Task<Void> computeTask) {
     	XLog inputOutput = this.inputLog.get();
     	if(inputOutput == null) {
     		throw new IllegalStateException("Input log is null. "
     				+ "Cell has been requested to be computed, but its upstream cells have not been computed yet.");
     	}
     	for(FilterButtonModel filter : filters) {
-    		try {
-    			System.out.println("Starting with a filter");
-    			filter.compute();
-    			inputOutput = filter.getOutputLog().get();
-    			System.out.println("Done with a filter");
-    		} catch(InvalidConfigurationException e) {
-    			FilterButtonModel model = e.getFilterButtonModel();
-//    			FilterButtonController controller = filterControllers.get(model.getIndex());
-    			// TODO: set controller as invalid
-    			System.out.println("Invalid configuration");
-    		} catch(EmptyLogException e) {
-    			// TODO: handle this
-    			System.out.println("Empty log");
-    		} catch(Exception e) {
-    			// if any other exception occurs, throw it
-    			throw e;
+    		if(computeTask.isCancelled()) {
+    			break;
     		}
+    		filter.compute(); // no point in passing the task to the individual filter models (individual filters do not support canceling)
+			inputOutput = filter.getOutputLog().get();
     	}
-    	System.out.println("Output log name is " + this.outputLogs.get(0).getName());
-    	System.out.print("Output log size is ");
-    	System.out.println(this.outputLogs.get(0).get().size());
-    	System.out.println("Computation cell compute done.");
     	
     }
 }

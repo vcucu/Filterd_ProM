@@ -56,13 +56,13 @@ public class FilterConfigPanelController extends AbstractFilterConfigPanelContro
 			FilterdAbstractReferencingConfig casted = (FilterdAbstractReferencingConfig) owner;
 			controller = new ParameterOneFromSetExtendedController(parameter.getNameDisplayed(), 
 					parameter.getName(),
-					parameter.getChosen() == null ? parameter.getDefaultChoice() : parameter.getChosen(), 
+					parameter.getChosen(), 
 					parameter.getOptions(),
 					casted);
 		} else {
 			controller = new ParameterOneFromSetController(parameter.getNameDisplayed(), 
 					parameter.getName(),
-					parameter.getChosen() == null ? parameter.getDefaultChoice() : parameter.getChosen(), 
+					parameter.getChosen(), 
 					parameter.getOptions());
 		}
 		getNextContainer().getChildren().add(controller.getContents());
