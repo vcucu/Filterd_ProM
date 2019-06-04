@@ -267,12 +267,14 @@ public class NotebookModel {
 	 */
 	public void saveNotebook() {
 		//NOTE: shouldn't we give the notebook a name? 
-
-		String xml = getXML();
-
-		promContext.getProvidedObjectManager().createProvidedObject("Notebook File", xml, String.class,
-				promContext);
-		promContext.getGlobalContext().getResourceManager().getResourceForInstance(xml).setFavorite(true);
+		try {
+			String xml = getXML(); // get the XML.
+			promContext.getProvidedObjectManager().createProvidedObject("Notebook File", xml, String.class,
+					promContext);
+			promContext.getGlobalContext().getResourceManager().getResourceForInstance(xml).setFavorite(true);
+		} catch (JAXBException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -361,32 +363,22 @@ public class NotebookModel {
 	 * 
 	 * @Return The XML of the notebook.
 	 */
-	public String getXML(){
-		try {
-			//Create JAXB Context
-			JAXBContext jaxbContext = JAXBContext.newInstance(NotebookModelAdapted.class, TextCellModel.class,
-					ComputationCellModel.class, FilterButtonModel.class);
-			//Create Marshaller
-			Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
-			//Format XML (otherwise it wil be a single line without spaces)
-			jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-			//Create adapted notebook
-			NotebookModelAdapted adaptedModel = new NotebookModelAdapted();
-			adaptedModel.setCells(getCells());
-			adaptedModel.setComputationMode(getComputationMode());
-			//Write XML to StringWriter
-			StringWriter sw = new StringWriter();
-			jaxbMarshaller.marshal(adaptedModel, sw);
-			//print xml to console
-			String xmlContent = sw.toString();
-			System.out.println(xmlContent);
-			return xmlContent;
+	public String getXML() throws JAXBException {
+		JAXBContext jaxbContext = JAXBContext.newInstance(NotebookModelAdapted.class, TextCellModel.class,
+				ComputationCellModel.class, FilterButtonModel.class); // Create JAXB Context.
+		Marshaller jaxbMarshaller = jaxbContext.createMarshaller(); // Create Marshaller.
+		jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE); // Format XML (otherwise it wil be a single line without spaces)
+		
+		NotebookModelAdapted adaptedModel = new NotebookModelAdapted(); // Create adapted notebook.
+		adaptedModel.setCells(getCells());
+		adaptedModel.setComputationMode(getComputationMode());
+		
+		StringWriter sw = new StringWriter();
+		jaxbMarshaller.marshal(adaptedModel, sw); // write XML to stringwriter.
+		String xmlContent = sw.toString(); 
+		System.out.println(xmlContent); //print xml to console
+		return xmlContent;
 
-		} catch (JAXBException e) {
-			e.printStackTrace();
-			//TODO: Handle this in calling method.
-			return "";
-		}
 	}
 
 	/**
