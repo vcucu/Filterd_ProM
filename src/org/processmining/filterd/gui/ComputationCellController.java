@@ -15,6 +15,7 @@ import org.processmining.filterd.configurations.FilterdEventAttrConfig;
 import org.processmining.filterd.configurations.FilterdEventRateConfig;
 import org.processmining.filterd.configurations.FilterdTraceAttrConfig;
 import org.processmining.filterd.configurations.FilterdTraceEndEventConfig;
+import org.processmining.filterd.configurations.FilterdTraceFollowerConfig;
 import org.processmining.filterd.configurations.FilterdTraceFrequencyConfig;
 import org.processmining.filterd.configurations.FilterdTracePerformanceConfig;
 import org.processmining.filterd.configurations.FilterdTraceSampleConfig;
@@ -25,6 +26,7 @@ import org.processmining.filterd.filters.FilterdEventAttrFilter;
 import org.processmining.filterd.filters.FilterdEventRateFilter;
 import org.processmining.filterd.filters.FilterdTraceAttrFilter;
 import org.processmining.filterd.filters.FilterdTraceEndEventFilter;
+import org.processmining.filterd.filters.FilterdTraceFollowerFilter;
 import org.processmining.filterd.filters.FilterdTraceFrequencyFilter;
 import org.processmining.filterd.filters.FilterdTracePerformanceFilter;
 import org.processmining.filterd.filters.FilterdTraceSampleFilter;
@@ -422,6 +424,7 @@ public class ComputationCellController extends CellController {
 		filterOptions.add("Trace Timeframe");
 		filterOptions.add("Event Attributes");
 		filterOptions.add("Event Rate");
+		filterOptions.add("Trace Follower Filter");
 
 
 		configurationModal.showFilterList(filterOptions, filterButtonController, new Callback<String, FilterdAbstractConfig>() {
@@ -518,6 +521,15 @@ public class ComputationCellController extends CellController {
 						try {
 							filterConfig = new FilterdTraceTimeframeConfig(model.getInputLog().get(),
 									new FilterdTraceTimeframeFilter());
+						} catch (EmptyLogException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						break;
+					case "Trace Follower Filter":
+						try {
+							filterConfig = new FilterdTraceFollowerConfig(model.getInputLog().get(),
+									new FilterdTraceFollowerFilter());
 						} catch (EmptyLogException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
