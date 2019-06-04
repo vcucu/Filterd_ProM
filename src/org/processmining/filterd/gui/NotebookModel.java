@@ -1,20 +1,21 @@
 package org.processmining.filterd.gui;
 
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.deckfour.xes.model.XLog;
 import org.processmining.contexts.uitopia.UIContext;
 import org.processmining.contexts.uitopia.UIPluginContext;
 import org.processmining.contexts.uitopia.hub.ProMResourceManager;
 import org.processmining.contexts.uitopia.hub.ProMViewManager;
+import org.processmining.filterd.gui.adapters.NotebookModelAdapted;
 import org.processmining.filterd.models.YLog;
 import org.processmining.filterd.tools.Toolbox;
 import org.processmining.framework.plugin.ProMCanceller;
@@ -33,13 +34,12 @@ import javafx.concurrent.Task;
  * @author Ewoud
  *
  */
-
-@XmlAccessorType(XmlAccessType.NONE) // Makes sure only explicitly named elements get added to the XML.
-@XmlRootElement(namespace = "org.processmining.filterd.gui") // set this class as the root of the XML file for this package.
+@XmlJavaTypeAdapter(NotebookModel.NotebookModelAdapter.class)
 public class NotebookModel {
 
 	/**
-	 * TODO: IF YOU ADD A NEW VARIABLE, MAKE SURE TO UPDATE THE clone() METHOD!!!  
+	 * TODO: IF YOU ADD A NEW VARIABLE, MAKE SURE TO UPDATE THE clone()
+	 * METHOD!!!
 	 */
 	// objects from ProM
 	private UIPluginContext promContext; // The ProM context to communicate with the ProM framework.
@@ -49,17 +49,15 @@ public class NotebookModel {
 	private YLog initialInput; // the event log the notebook was initialized with.
 	// ObservableList allows for action listeners. ObeservableLists are provided by JavaFX
 	private ProMCanceller promCanceller;
-	@XmlElementWrapper(name = "cells")
-	@XmlElement(name = "cell")
 	private ObservableList<CellModel> cells; // the list of all cells currently in the notebook.
-	@XmlElement
 	private ComputationMode computationMode; // the computation mode the notebook is currently in.
 	private Task<Void> computeTask;
 	private SimpleBooleanProperty isComputing;
 	
 	
 	/**
-	 * Constructor for importing/exporting. This constructor needs to exist because JAXB needs a no-argument constructor for unmarshalling.
+	 * Constructor for importing/exporting. This constructor needs to exist
+	 * because JAXB needs a no-argument constructor for unmarshalling.
 	 * Properties set here could be overwritten during loading.
 	 */
 	public NotebookModel() {
@@ -82,7 +80,7 @@ public class NotebookModel {
 	public NotebookModel(UIPluginContext context, XLog log, ProMCanceller canceller) {
 		this.promContext = context;
 		this.initialInput = new YLog(Toolbox.getNextId(), "Initial input", log);
-		this.promCanceller = canceller; 
+		this.promCanceller = canceller;
 		this.cells = FXCollections.observableArrayList();
 		// set the computation mode to manual
 		setComputationMode(ComputationMode.MANUAL);
@@ -103,7 +101,7 @@ public class NotebookModel {
 	public UIPluginContext getPromContext() {
 		return promContext;
 	}
-	
+
 	/**
 	 * Returns the ProM canceller.
 	 * 
@@ -139,12 +137,12 @@ public class NotebookModel {
 	public YLog getInitialInput() {
 		return initialInput;
 	}
-	
+
 	/**
 	 * Set the initial event log for the notebook.
 	 * 
 	 * @param log
-	 * 			The event log the notebook is initialized with.
+	 *            The event log the notebook is initialized with.
 	 */
 	public void setInitialInput(YLog log) {
 		this.initialInput = log;
@@ -188,7 +186,7 @@ public class NotebookModel {
 	public void removeCell(CellModel cell) {
 		cells.remove(cell);
 	}
-	
+
 	/**
 	 * Adds a single cell to the list of cells in this model.
 	 * 
@@ -212,7 +210,7 @@ public class NotebookModel {
 	public void addCells(int index, List<CellModel> cells) {
 		this.cells.addAll(index, cells);
 	}
-	
+
 	/**
 	 * Removes a cell from the list of cells in this model.
 	 * 
@@ -273,7 +271,8 @@ public class NotebookModel {
 
 		NotebookModel newNotebook = clone();
 
-		promContext.getProvidedObjectManager().createProvidedObject("Notebook File", newNotebook, NotebookModel.class, promContext);
+		promContext.getProvidedObjectManager().createProvidedObject("Notebook File", newNotebook, NotebookModel.class,
+				promContext);
 		promContext.getGlobalContext().getResourceManager().getResourceForInstance(newNotebook).setFavorite(true);
 	}
 
@@ -286,7 +285,7 @@ public class NotebookModel {
 	public void loadNotebook(String name) {
 		//TODO: implement
 	}
-	
+
 	public List<YLog> getOutputLogsTill(int index) {
 		List<YLog> logs = new ArrayList<>();
 		logs.add(initialInput);
@@ -301,7 +300,7 @@ public class NotebookModel {
 		}
 		return logs;
 	}
-	
+
 	public void compute() {
 		this.computeTask = new Task<Void>() {
 
@@ -327,10 +326,10 @@ public class NotebookModel {
 
 			public void changed(ObservableValue<? extends Throwable> observable, Throwable oldValue,
 					Throwable newValue) {
-				if(newValue != null) {
+				if (newValue != null) {
 					Exception exception = (Exception) newValue;
 					exception.printStackTrace();
-				}	
+				}
 			}
 		});
 		Thread thread = new Thread(this.computeTask);
@@ -357,8 +356,76 @@ public class NotebookModel {
 		NotebookModel newNotebook = new NotebookModel(promContext, initialInput.get(), promCanceller);
 		newNotebook.addCells(cells);
 		newNotebook.setComputationMode(computationMode);
-		
+
 		return newNotebook;
 	}
 	
+	/**
+	 * Prints an XML of the notebook generated by JAXB
+	 */
+	public void printXML() {
+		try {
+            //Create JAXB Context
+            JAXBContext jaxbContext = JAXBContext.newInstance(NotebookModelAdapted.class, TextCellModel.class, ComputationCellModel.class, FilterButtonModel.class);
+             
+            //Create Marshaller
+            Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+ 
+            //Required formatting??
+            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+ 
+            //Print XML String to Console
+            StringWriter sw = new StringWriter();
+             
+            //Create adapted notebook
+            NotebookModelAdapted adaptedModel = new NotebookModelAdapted();
+			adaptedModel.setCells(getCells());
+			adaptedModel.setComputationMode(getComputationMode());
+            
+            
+            //Write XML to StringWriter
+            jaxbMarshaller.marshal(adaptedModel, sw);
+            
+            //Store XML to File
+//            File file = new File("test.xml");
+//            jaxbMarshaller.marshal(model, file);
+             
+            // Print the xml to the console
+            String xmlContent = sw.toString();
+            System.out.println( xmlContent );
+ 
+        } catch (JAXBException e) {
+            e.printStackTrace();
+        }
+	}
+
+	/**
+	 * Converts the NotebookModel into a NotebokModelAdapted and vice versa.
+	 *
+	 */
+	public class NotebookModelAdapter extends AbstractJAXBAdapter<NotebookModelAdapted, NotebookModel> {
+
+		/**
+		 * Converts the NotebookMode into a NotebookModelAdapted.
+		 */
+		public NotebookModelAdapted marshal(NotebookModel model) throws Exception {
+			NotebookModelAdapted adaptedModel = new NotebookModelAdapted();
+			adaptedModel.setCells(model.getCells());
+			adaptedModel.setComputationMode(model.getComputationMode());
+			return adaptedModel;
+		}
+
+		/**
+		 * Converts a NotebookModelAdapted to a NotebookModel
+		 */
+		public NotebookModel unmarshal(NotebookModelAdapted adaptedModel) throws Exception {
+			// Parameters come from the static variables in AbstractJAXBAdapter
+			NotebookModel model = new NotebookModel(this.staticPromContext, this.staticInitialInput, this.staticPromCanceller);
+			model.addCells(adaptedModel.getCells());
+			model.setComputationMode(adaptedModel.getComputationMode());
+			return model;
+		}
+
+	}
+
 }
