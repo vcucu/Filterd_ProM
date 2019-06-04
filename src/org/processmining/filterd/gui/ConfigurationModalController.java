@@ -70,7 +70,9 @@ public class ConfigurationModalController {
 	public void showFilterConfiguration(FilterdAbstractConfig filterConfig,
 			FilterButtonController filterButtonController) {
 		if (filterConfig == null) {
-			throw new NullPointerException("Filter configuration cannot be null");
+			// if the filter config. is null the error was shown by the invoker -> gracefully cancel
+			cancel();
+			return;
 		}
 		resetModal();
 		// set internal variables

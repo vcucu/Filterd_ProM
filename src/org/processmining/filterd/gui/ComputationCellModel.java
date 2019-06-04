@@ -219,7 +219,7 @@ public class ComputationCellModel extends CellModel {
 		return new JLabel("Visualizer " + type.getTypeName() + " could not be found.");
 	}
     
-    private static void handleError(Exception e) {
+    public static void handleError(Exception e) {
         // This method is invoked on the JavaFX thread
     	Alert alert = new Alert(AlertType.ERROR);
 		if(e instanceof EmptyLogException) {
