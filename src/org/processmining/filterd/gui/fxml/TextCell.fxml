@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
+<?import java.net.URL?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.TextArea?>
@@ -8,27 +11,36 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.SVGPath?>
+<?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="940.0" spacing="5.0" stylesheets="@../css/TextCell.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+<VBox fx:id="cell" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="940.0" spacing="5.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Circle fx:id="prependCellButton" fill="#787878" onMouseClicked="#prependCellButtonHandler" radius="8.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
-      <HBox VBox.vgrow="ALWAYS">
+      <Label fx:id="prependCellButton" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#prependCellButtonHandler" prefHeight="16.0" prefWidth="16.0">
+         <graphic>
+            <SVGPath content="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z" fill="WHITE" scaleX="0.02" scaleY="0.02" styleClass="icon-svg" translateX="-216.0" />
+         </graphic>
+         <styleClass>
+            <String fx:value="prepend-cell-button" />
+            <String fx:value="round-button" />
+         </styleClass>
+      </Label>
+      <HBox styleClass="cell-panel" VBox.vgrow="ALWAYS">
          <children>
             <Region fx:id="statusBar" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minWidth="-Infinity" onMouseClicked="#handleStatusBar" prefWidth="14.0" style="-fx-background-color: #799ea4;" HBox.hgrow="ALWAYS" />
-            <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" HBox.hgrow="ALWAYS">
+            <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" styleClass="panel-content" HBox.hgrow="ALWAYS">
                <children>
-                  <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="35.0" spacing="10.0" VBox.vgrow="ALWAYS">
+                  <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="35.0" spacing="10.0" styleClass="cell-toolbar" VBox.vgrow="ALWAYS">
                      <children>
                         <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                        <TextField fx:id="cellName" alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" onKeyPressed="#handleCellName" prefHeight="25.0" text="Cell name" />
+                        <TextField fx:id="cellName" alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" onKeyPressed="#handleCellName" prefHeight="25.0" styleClass="cell-name" text="Cell name" />
                         <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                        <MenuButton fx:id="menuBtnCellSettings" mnemonicParsing="false">
-                          <items>
-                          	<MenuItem mnemonicParsing="false" onAction="#moveUp" text="Move up" />
-                          	<MenuItem mnemonicParsing="false" onAction="#moveDown" text="Move down" />
-                            <MenuItem mnemonicParsing="false" onAction="#remove" text="Remove Cell" />
-                          </items>
+                        <MenuButton fx:id="menuBtnCellSettings" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="12.0" prefWidth="4.0" styleClass="dropdown-button">
+                           <items>
+                              <MenuItem mnemonicParsing="false" onAction="#moveUp" text="Move up" />
+                              <MenuItem mnemonicParsing="false" onAction="#moveDown" text="Move down" />
+                              <MenuItem mnemonicParsing="false" onAction="#remove" text="Remove Cell" />
+                           </items>
                         </MenuButton>
                      </children>
                      <padding>
@@ -37,7 +49,10 @@
                   </HBox>
                   <HBox fx:id="cellBody" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
                      <children>
-                        <TextArea fx:id="commentField" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="70.0" HBox.hgrow="ALWAYS" />
+                        <TextArea fx:id="commentField" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="20.0" wrapText="true" HBox.hgrow="ALWAYS">
+                           <font>
+                              <Font size="14.0" />
+                           </font></TextArea>
                      </children>
                      <VBox.margin>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
@@ -49,6 +64,10 @@
       </HBox>
    </children>
    <padding>
-      <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+      <Insets bottom="2.0" left="15.0" right="15.0" top="2.0" />
    </padding>
+   <stylesheets>
+      <URL value="@../css/TextCell.css" />
+      <URL value="@../css/Cell.css" />
+   </stylesheets>
 </VBox>

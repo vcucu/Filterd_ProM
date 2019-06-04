@@ -2,10 +2,6 @@ root {
     display: block;
 }
 
-.root {
-	-fx-background-color: #eeeeee;
-}
-
-.button-play {
-	-fx-shape: "url('@../../../../../../resources/icons/play-solid.svg')";
+.notebook-toolbar {
+	-fx-background-color: #000000;
 }

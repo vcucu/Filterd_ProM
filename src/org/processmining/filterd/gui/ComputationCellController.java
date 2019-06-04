@@ -10,9 +10,25 @@ import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 
 import org.deckfour.uitopia.api.model.ViewType;
-import org.processmining.filterd.configurations.*;
-import org.processmining.filterd.filters.*;
-
+import org.processmining.filterd.configurations.FilterdAbstractConfig;
+import org.processmining.filterd.configurations.FilterdEventAttrConfig;
+import org.processmining.filterd.configurations.FilterdEventRateConfig;
+import org.processmining.filterd.configurations.FilterdTraceAttrConfig;
+import org.processmining.filterd.configurations.FilterdTraceEndEventConfig;
+import org.processmining.filterd.configurations.FilterdTraceFrequencyConfig;
+import org.processmining.filterd.configurations.FilterdTracePerformanceConfig;
+import org.processmining.filterd.configurations.FilterdTraceSampleConfig;
+import org.processmining.filterd.configurations.FilterdTraceStartEventConfig;
+import org.processmining.filterd.configurations.FilterdTracesHavingEventConfig;
+import org.processmining.filterd.filters.FilterdEventAttrFilter;
+import org.processmining.filterd.filters.FilterdEventRateFilter;
+import org.processmining.filterd.filters.FilterdTraceAttrFilter;
+import org.processmining.filterd.filters.FilterdTraceEndEventFilter;
+import org.processmining.filterd.filters.FilterdTraceFrequencyFilter;
+import org.processmining.filterd.filters.FilterdTracePerformanceFilter;
+import org.processmining.filterd.filters.FilterdTraceSampleFilter;
+import org.processmining.filterd.filters.FilterdTraceStartEventFilter;
+import org.processmining.filterd.filters.FilterdTracesHavingEvent;
 import org.processmining.filterd.gui.ConfigurationModalController.ConfigurationStep;
 import org.processmining.filterd.models.YLog;
 import org.processmining.filterd.tools.EmptyLogException;
@@ -22,6 +38,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
@@ -29,8 +46,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
 import javafx.util.Callback;
 
 public class ComputationCellController extends CellController {
@@ -49,14 +64,14 @@ public class ComputationCellController extends CellController {
 	@FXML private AnchorPane visualizerPane;
 	@FXML private ComboBox<YLog> cmbEventLog;
 	@FXML private ComboBox<ViewType> cmbVisualizers;
-	@FXML private Rectangle expandButton;
+	@FXML private Label expandButton;
 	@FXML private ScrollPane filterPanelScroll;
 	@FXML private VBox cell;
 	@FXML private HBox cellBody;
-	@FXML private Rectangle fullScreenButton;
-	@FXML private Circle playButton;
+	@FXML private Label fullScreenButton;
+	@FXML private Label playButton;
 	@FXML private MenuButton menuBtnCellSettings;
-	@FXML private Circle prependCellButton;
+	@FXML private Label prependCellButton;
 	@FXML private HBox fullToolbar;
 	@FXML private HBox cellToolbar;
 
@@ -260,6 +275,7 @@ public class ComputationCellController extends CellController {
 			//add the toolbar and visualiser to their original cell parent
 			cellBody.getChildren().add(visualizerPane);
 			cellToolbar.getChildren().add(cellToolbar.getChildren().size() - 1, fullToolbar);
+			fullToolbar.setStyle(null);
 			fullToolbar.setPadding(new Insets(0, 0, 0, 0));
 
 			//make the notebook toolbar and scrollpane visible
@@ -278,7 +294,7 @@ public class ComputationCellController extends CellController {
 			notebookToolbar.setManaged(isFullScreen);
 			notebookScrollPane.setVisible(isFullScreen);
 			notebookScrollPane.setManaged(isFullScreen);
-			//fullToolbar.setStyle("-fx-background-color: #00ffff; ");
+			fullToolbar.setStyle("-fx-background-color: #000000;");
 			fullToolbar.setPadding(new Insets(5, 20, 5, 10));
 
 			//add the toolbar and visualiser to the notebook

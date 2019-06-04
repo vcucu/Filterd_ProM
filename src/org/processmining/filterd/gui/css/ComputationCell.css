@@ -1,7 +1,13 @@
-root { 
-    display: block;
-}
-
 .addFilterButton {
 	 -fx-cursor: hand;
+}
+
+.round-combobox {
+	-fx-background-radius: 15;
+	-fx-background-color: linear-gradient(#ABABAB, #A9A9A9, #8B8B8B, #898989);
+}
+
+.expand-button {
+	-fx-background-color: #707070;
+	-fx-background-radius: 10 0 0 10;
 }
