@@ -110,6 +110,9 @@ public class FilterButtonModel {
 		this.filterConfig = filterConfig;
 	}
 	
+	/**
+	 * Compute the output of this filter.
+	 */
 	public void compute() {
 		// check that the upstream filters have finished computation
 		if(inputLog == null) {
@@ -119,16 +122,13 @@ public class FilterButtonModel {
 		try {
 			filterConfig.setLog(inputLog);
 		} catch(EmptyLogException e) {
-			this.isValid.set(false); // make this filter button invalid (controllers will handle this property change)
-			throw e; // throw exception to notify the computation cell
+			throw e; // throw exception to notify the computation cell (it will invalidate this filter button)
 		}
 		// if the filter config. is not valid, we have to inform the cell controller (throw an exception)
 		if(filterConfig.isValid()) {
-			// compute
-			this.outputLog = filterConfig.filter();
+			this.outputLog = filterConfig.filter(); // compute
 		} else {
-			this.isValid.set(false); // make this filter button invalid (controllers will handle this property change)
-			throw new InvalidConfigurationException("Configuration became invalid.", this); // throw exception to notify the computation cell
+			throw new InvalidConfigurationException("Configuration became invalid.", this); // throw exception to notify the computation cell (it will invalidate this filter button)
 		}
 	}
 	

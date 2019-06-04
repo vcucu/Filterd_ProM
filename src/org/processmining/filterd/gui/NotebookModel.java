@@ -51,8 +51,8 @@ public class NotebookModel {
 	private ProMCanceller promCanceller;
 	private ObservableList<CellModel> cells; // the list of all cells currently in the notebook.
 	private ComputationMode computationMode; // the computation mode the notebook is currently in.
-	private Task<Void> computeTask;
-	private SimpleBooleanProperty isComputing;
+	private Task<Void> computeTask; // javafx task which is initialized every time a computation is requested (not anonymous variable so that the user can cancel the task)
+	private SimpleBooleanProperty isComputing; // boolean property stating whether the notebook is currently being computed
 
 	/**
 	 * Constructor for importing/exporting. This constructor needs to exist
@@ -306,25 +306,38 @@ public class NotebookModel {
 		return logs;
 	}
 
+	/**
+	 * Method that computes the whole notebook in a separate thread. 
+	 * Notebook is computed by computing each individual computation cell while respecting their order in the list.
+	 * Separate thread is used so that the UI thread is not blocked in long computation.
+	 */
 	public void compute() {
+		// computation is executed in a task which is passed to a thread
 		this.computeTask = new Task<Void>() {
 
 			@Override
 			protected Void call() throws Exception {
 				isComputing.set(true); // let the controller know that the computation is starting
-				List<ComputationCellModel> computeList = cells.stream().filter(c -> c instanceof ComputationCellModel) // use only computation cells
+				// transform the cells list into a new computation cells list (ordering is preserved)
+				List<ComputationCellModel> computeList = cells
+						.stream()
+						.filter(c -> c instanceof ComputationCellModel) // use only computation cells
 						.map(c -> (ComputationCellModel) c) // cast to computation cell model
 						.collect(Collectors.toList()); // transform steam to list
+				// compute cells in their order in the list
 				for (ComputationCellModel cellModel : computeList) {
+					// check if the computation was cancelled by the user (if so, break out of the loop) 
 					if (isCancelled()) {
 						break;
 					}
-					cellModel.compute(this);
+					cellModel.compute(this); // compute 
 				}
 				isComputing.set(false); // let the controller know the computation is done
 				return null;
 			}
 		};
+		// javafx tasks do not report exceptions to the console (this is a feature)
+		// add a change listener to print the exception (needed for debugging)
 		this.computeTask.exceptionProperty().addListener(new ChangeListener<Throwable>() {
 
 			public void changed(ObservableValue<? extends Throwable> observable, Throwable oldValue,
@@ -335,6 +348,7 @@ public class NotebookModel {
 				}
 			}
 		});
+		// create and start a thread
 		Thread thread = new Thread(this.computeTask);
 		thread.start();
 	}

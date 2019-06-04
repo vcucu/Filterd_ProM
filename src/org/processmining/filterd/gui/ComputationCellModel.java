@@ -208,22 +208,34 @@ public class ComputationCellModel extends CellModel {
 		// If the visualizer could not be found, show some text.
 		return new JLabel("Visualizer " + type.getTypeName() + " could not be found.");
 	}
-    
+
+    /**
+     * Compute the cell by computing each of its individual filters in the appropriate order
+     * @param computeTask  javafx task which is used to check whether the user cancelled the compute task
+     */
     public void compute(Task<Void> computeTask) {
-    	XLog inputOutput = this.inputLog.get();
+    	XLog inputOutput = this.inputLog.get(); // variable that stores the output of the previous filter (i.e. input for the next one)
     	if(inputOutput == null) {
+    		// this state can only be reached if the cells are not computed in order (i.e. this cell uses the output of another cell which is yet to be computed)
     		throw new IllegalStateException("Input log is null. "
     				+ "Cell has been requested to be computed, but its upstream cells have not been computed yet.");
     	}
+    	// go through all filters in order
     	for(FilterButtonModel filter : filters) {
+    		// check if the computation was cancelled by the user (if so, break out of the loop)
     		if(computeTask.isCancelled()) {
     			break;
     		}
+    		// compute method may throw two expected exceptions:
+    		// - EmptyLogException  the of the previously computed filter is empty (i.e. it has 0 traces)
+    		// - InvalidConfigurationExcpetion  the selected configuration is not valid w.r.t. the output of the previous filter  
     		try {
     			filter.setInputLog(inputOutput);
     			filter.compute(); // no point in passing the task to the individual filter models (individual filters do not support canceling)
-    			inputOutput = filter.getOutputLog();
+    			inputOutput = filter.getOutputLog(); // if this line is reached, the filter did not throw an error -> fetch the filter output
     		} catch(Exception e) {
+    			computeTask.cancel(); // stop any further computation in the notebook
+    			filter.isValidProperty().set(false); // make this filter button invalid (filter button controllers will handle this property change)
     			if(e instanceof EmptyLogException) {
     				
     			} else if(e instanceof InvalidConfigurationException) {
@@ -233,6 +245,6 @@ public class ComputationCellModel extends CellModel {
     			}
     		}
     	}
-    	this.outputLogs.get(0).setLog(inputOutput);
+    	this.outputLogs.get(0).setLog(inputOutput); // set the output of this cell to be the output of the last filter
     }
 }
