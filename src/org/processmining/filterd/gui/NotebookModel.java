@@ -295,7 +295,11 @@ public class NotebookModel {
 				CellModel gCell = getCells().get(i);
 				if (getCells().get(i) instanceof ComputationCellModel) {
 					ComputationCellModel cell = (ComputationCellModel) gCell;
-					logs.addAll(cell.getOutputLogs());
+					// add all output logs (except the initial input log since we don't want it to be duplicated)
+					logs.addAll(cell.getOutputLogs()
+							.stream() // parse as a stream
+							.filter(l -> !l.getName().equals(initialInput.getName())) // filter all logs whose name is not the same as input log's
+							.collect(Collectors.toList())); // convert to a list
 				}
 			}
 		}

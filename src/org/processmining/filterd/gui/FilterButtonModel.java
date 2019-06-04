@@ -7,9 +7,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import org.deckfour.xes.model.XLog;
 import org.processmining.filterd.configurations.FilterdAbstractConfig;
-import org.processmining.filterd.models.YLog;
 import org.processmining.filterd.tools.EmptyLogException;
-import org.processmining.filterd.tools.Toolbox;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -26,8 +24,8 @@ public class FilterButtonModel {
 	private BooleanProperty selected;
 	//@XmlElement
 	private FilterdAbstractConfig filterConfig;
-	private YLog inputLog;
-	private YLog outputLog;
+	private XLog inputLog;
+	private XLog outputLog;
 	private SimpleBooleanProperty isValid;
 	
 	/**
@@ -41,14 +39,13 @@ public class FilterButtonModel {
 		isValid = new SimpleBooleanProperty(true);
 	}	
 	
-	public FilterButtonModel(int index, YLog inputLog) {
+	public FilterButtonModel(int index) {
 		String filterName = "Filter #" + Integer.toString((int) (Math.random() * 900 + 100));
 		name = new SimpleStringProperty(filterName);
 		selected = new SimpleBooleanProperty(false);
 		isValid = new SimpleBooleanProperty(true);
 		this.index = index;
-		this.inputLog = inputLog;
-		this.outputLog = new YLog(Toolbox.getNextId(), filterName + " output log", inputLog.get());
+		this.outputLog = null;
 	}
 	
 	@XmlElement
@@ -64,11 +61,15 @@ public class FilterButtonModel {
 		this.name.set(value);
 	}
 	
-	public void setInputLog(YLog inputLog) {
+	public XLog getInputLog() {
+		return this.inputLog;
+	}
+	
+	public void setInputLog(XLog inputLog) {
 		this.inputLog = inputLog;
 	}
 	
-	public YLog getOutputLog() {
+	public XLog getOutputLog() {
 		return this.outputLog;
 	}
 	
@@ -111,12 +112,12 @@ public class FilterButtonModel {
 	
 	public void compute() {
 		// check that the upstream filters have finished computation
-		if(inputLog.get() == null) {
+		if(inputLog == null) {
 			throw new NullPointerException("Input log is null. Upstream filter was not computed.");
 		}
 		// if the input log is empty, setLog will throw an exception 
 		try {
-			filterConfig.setLog(inputLog.get());
+			filterConfig.setLog(inputLog);
 		} catch(EmptyLogException e) {
 			this.isValid.set(false); // make this filter button invalid (controllers will handle this property change)
 			throw e; // throw exception to notify the computation cell
@@ -124,8 +125,7 @@ public class FilterButtonModel {
 		// if the filter config. is not valid, we have to inform the cell controller (throw an exception)
 		if(filterConfig.isValid()) {
 			// compute
-			XLog output = filterConfig.filter();
-			outputLog.setLog(output);
+			this.outputLog = filterConfig.filter();
 		} else {
 			this.isValid.set(false); // make this filter button invalid (controllers will handle this property change)
 			throw new InvalidConfigurationException("Configuration became invalid.", this); // throw exception to notify the computation cell

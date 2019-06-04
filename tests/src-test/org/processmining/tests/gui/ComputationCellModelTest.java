@@ -50,7 +50,8 @@ public class ComputationCellModelTest extends FilterdPackageTest {
 		YLog initialLog = new YLog(0, "Original Log", originalLog);
 		
 		// Create new filter button model (to be added to the computation cell filter panel)
-		FilterButtonModel model = new FilterButtonModel(0, initialLog);
+		FilterButtonModel model = new FilterButtonModel(0);
+		model.setInputLog(originalLog);
 		
 		// Add model to the filter models list
 		cell.addFilterModel(0, model);
@@ -132,8 +133,10 @@ public class ComputationCellModelTest extends FilterdPackageTest {
 		YLog initialLog = new YLog(0, "Original Log", originalLog);
 		
 		// Create new filter button models (to be added to the computation cell filter panel)
-		FilterButtonModel model0 = new FilterButtonModel(0, initialLog);
-		FilterButtonModel model1 = new FilterButtonModel(1, initialLog);
+		FilterButtonModel model0 = new FilterButtonModel(0);
+		model0.setInputLog(originalLog);
+		FilterButtonModel model1 = new FilterButtonModel(0);
+		model1.setInputLog(originalLog);
 		
 		// Add models to the filter models list
 		cell.addFilterModel(0, model0);
@@ -182,8 +185,11 @@ public class ComputationCellModelTest extends FilterdPackageTest {
 		cell.setInputLog(initialLog);
 		
 		// Create new filter button models
-		FilterButtonModel model0 = new FilterButtonModel(0, initialLog);
-		FilterButtonModel model1 = new FilterButtonModel(1, initialLog);
+		FilterButtonModel model0 = new FilterButtonModel(0);
+		model0.setInputLog(originalLog);
+		FilterButtonModel model1 = new FilterButtonModel(0);
+		model1.setInputLog(originalLog);
+		model1.setInputLog(model0.getOutputLog());
 		
 		// Add filter buttons to the computation cell filter list
 		cell.addFilterModel(0, model0);

@@ -27,11 +27,6 @@ public abstract class CellController {
 		this.cellModel = cellModel;
 	}
 
-//	public void intialize() {
-//		// add PropertyChangeListeners for each of cell model properties
-//		cellModel.getProperty().addPropertyChangeListener(new CellModelListeners(this));
-//	}
-
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
 		cellModel.getProperty().addPropertyChangeListener(listener);
 	}

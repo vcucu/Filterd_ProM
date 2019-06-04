@@ -66,8 +66,7 @@ public class ParameterValueFromRangeController<N extends Number> extends Paramet
             slider.setMax(minMaxPair.get(1).doubleValue());
             slider.setMinorTickCount(4);
             slider.setValue(defaultValue.doubleValue());
-            double majorTickUnit = (minMaxPair.get(1).doubleValue() - minMaxPair.get(0).doubleValue()) / 4.0;
-            slider.setMajorTickUnit(Math.floor(majorTickUnit));
+            slider.setMajorTickUnit(1);
             valueLabel.setText(Integer.toString(defaultValue.intValue()));
         }
 	}

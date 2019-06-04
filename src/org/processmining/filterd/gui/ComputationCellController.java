@@ -3,13 +3,13 @@ package org.processmining.filterd.gui;
 import java.awt.Dimension;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 
 import org.deckfour.uitopia.api.model.ViewType;
+import org.deckfour.xes.model.XLog;
 import org.processmining.filterd.configurations.FilterdAbstractConfig;
 import org.processmining.filterd.configurations.FilterdEventAttrConfig;
 import org.processmining.filterd.configurations.FilterdEventRateConfig;
@@ -35,6 +35,8 @@ import org.processmining.filterd.gui.ConfigurationModalController.ConfigurationS
 import org.processmining.filterd.models.YLog;
 import org.processmining.filterd.tools.EmptyLogException;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -87,14 +89,19 @@ public class ComputationCellController extends CellController {
 		// Load event logs in cmbEventLog and select "Initial input"
 		cmbEventLog.getItems().addAll(model.getInputLogs());
 		cmbEventLog.getSelectionModel().selectFirst();
-		model.setOutputLogs(new ArrayList<YLog>(
-				Arrays.asList(
-					new YLog[] { model.getInputLogs().get(0) }
-				)));
 		setXLog();
-
 		// Add listeners to the basic model components
 		cellModel.getProperty().addPropertyChangeListener(new CellModelListeners(this));
+		// binding for cell name
+		this.cellName.setText(this.cellModel.getCellName());
+		this.cellModel.cellNameProperty().addListener(new ChangeListener<String>() {
+
+			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+				if(!cellName.getText().equals(newValue)) {
+					cellName.setText(newValue);
+				}
+			}
+		});
 		// Add listeners for filter buttons
 		addFilterButtonListeners();
 		// bind the cell name to the cell name variable.
@@ -131,17 +138,14 @@ public class ComputationCellController extends CellController {
 		if (!this.isConfigurationModalShown
 				|| this.configurationModal.getConfigurationStep() != ConfigurationStep.ADD_FILTER) {
 			int index = getCellModel().getFilters().size(); // Index of the new cell, so that we can compute which XLogs are available
-			// each filter's input log is the output log of the previous filter (except for the first filter which always gets the cell's input log)
-			YLog inputLog;
-			if(index == 0) {
-				inputLog = getCellModel().getInputLog();
-				if(inputLog.get() == null) {
-					throw new IllegalStateException("Cannot create filters if the input log for the cell is not selected.");
-				}
-			} else {
-				inputLog = getCellModel().getFilters().get(index - 1).getOutputLog();
+			FilterButtonModel filterModel = new FilterButtonModel(index);
+			// if cell was already computed and is not out-of-date, we can set the input log of the new filter to be the output of the previous one 
+			if(index > 0 &&
+				getCellModel().getFilters().get(index - 1).getOutputLog() != null &&
+				getCellModel().getStatusBar() == CellStatus.IDLE) {
+				
+				filterModel.setInputLog(getCellModel().getFilters().get(index - 1).getOutputLog());
 			}
-			FilterButtonModel filterModel = new FilterButtonModel(index, inputLog);
 			getCellModel().addFilterModel(index, filterModel);
 			loadFilter(index, filterModel);
 		}
@@ -427,9 +431,23 @@ public class ComputationCellController extends CellController {
 		configurationModal.showFilterList(filterOptions, filterButtonController, new Callback<String, FilterdAbstractConfig>() {
 
 			public FilterdAbstractConfig call(String userSelection) {
+				// set the input log for the filter configuration
+				// this is either the input log for the cell if there was no computation done
+				// or it can be the output of the previous filter if there was computation done 
+				XLog inputLog;
 				ComputationCellModel model = (ComputationCellModel) cellModel;
+				// if the input log was selected, there was definitely no computation
 				if(model.getInputLog().get() == null) {
 					throw new IllegalStateException("No input log selected");
+				}
+				FilterButtonModel lastFilterButton = model
+						.getFilters()
+						.get(model.getFilters().size() - 1); // this is the filter button that we are currently configuring
+				// use the cell input log or the given input log for the filter button
+				if(lastFilterButton.getInputLog() != null) {
+					inputLog = lastFilterButton.getInputLog(); // input log is set in the addFilter() method in this class
+				} else {
+					inputLog = model.getInputLog().get(); // if filter input log is null, use the cell input log 
 				}
 				FilterdAbstractConfig filterConfig = null;
 				switch(userSelection) {
@@ -462,7 +480,7 @@ public class ComputationCellController extends CellController {
 						break;
 					case "Trace Sample":
 						try {
-							filterConfig = new FilterdTraceSampleConfig(model.getInputLog().get(),
+							filterConfig = new FilterdTraceSampleConfig(inputLog,
 									new FilterdTraceSampleFilter());
 						} catch (EmptyLogException e) {
 							// TODO Auto-generated catch block
