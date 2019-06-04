@@ -25,7 +25,8 @@ public class ConfigTraceFrequencyTest extends FilterdPackageTest {
 	 */
 	@Test
 	public void testGreaterOccurrence() throws Throwable {
-		XLog typed = parseLog("start-events", "test_check_validity_invalid.xes");
+		XLog typed = originalLog;	
+		XLog typed2 = parseLog("start-events", "test_check_validity_invalid.xes");
 		List<Double> pair = new ArrayList<>(Arrays.asList(0.0, 10.0));
 		FilterdTraceFrequencyConfig config = new FilterdTraceFrequencyConfig(typed,
 				new FilterdTraceFrequencyFilter());
@@ -33,7 +34,7 @@ public class ConfigTraceFrequencyTest extends FilterdPackageTest {
 		thresholdType.setChosen("occurrence");
 		ParameterRangeFromRange<Double> threshold = (ParameterRangeFromRange<Double>) config.getParameter("threshold");
 		threshold.setChosenPair(pair);
-		assert(!config.checkValidity(typed));
+		assert(!config.checkValidity(typed2));
 		
 	}
 	
