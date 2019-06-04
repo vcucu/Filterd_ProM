@@ -188,7 +188,7 @@ public class FilterStartEventsTest extends FilterdPackageTest{
 	 * selectionType = Filter out
 	 * Selects traces with start event "delivery", value = 423
 	 * 
-	 * Result: original log 
+	 * Result: empty log
 	 */
 	@Test
 	public void testStartAttribute_000() throws Throwable{
@@ -378,7 +378,7 @@ public class FilterStartEventsTest extends FilterdPackageTest{
 	 * selectionType = Filter out
 	 * Selects traces with start event "delivery", value = 423
 	 * 
-	 * Result: empty log
+	 * Result: original log
 	 */
 	@Test
 	public void testStartAttribute_100() throws Throwable{
@@ -426,7 +426,7 @@ public class FilterStartEventsTest extends FilterdPackageTest{
 	 * selectionType = Filter out
 	 * Selects traces with start event "delivery", value = 423
 	 * 
-	 * Result: empty log
+	 * Result: original log
 	 */
 	@Test
 	public void testStartAttribute_110() throws Throwable{
