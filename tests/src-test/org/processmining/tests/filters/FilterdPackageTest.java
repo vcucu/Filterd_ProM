@@ -10,6 +10,7 @@ import org.deckfour.xes.info.XLogInfoFactory;
 import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
+import org.junit.Ignore;
 
 import junit.framework.TestCase;
 
@@ -27,7 +28,7 @@ import junit.framework.TestCase;
  * 
  */
 
-
+@Ignore
 public class FilterdPackageTest extends TestCase {
 	public XUniversalParser parser;
 	public XLog originalLog; // original log file;
