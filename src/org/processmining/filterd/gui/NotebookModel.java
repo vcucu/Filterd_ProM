@@ -16,6 +16,7 @@ import org.processmining.contexts.uitopia.UIPluginContext;
 import org.processmining.contexts.uitopia.hub.ProMResourceManager;
 import org.processmining.contexts.uitopia.hub.ProMViewManager;
 import org.processmining.filterd.gui.adapters.NotebookModelAdapted;
+import org.processmining.filterd.gui.adapters.NotebookModelAdapter;
 import org.processmining.filterd.models.YLog;
 import org.processmining.filterd.tools.Toolbox;
 import org.processmining.framework.plugin.ProMCanceller;
@@ -34,7 +35,7 @@ import javafx.concurrent.Task;
  * @author Ewoud
  *
  */
-@XmlJavaTypeAdapter(NotebookModel.NotebookModelAdapter.class)
+@XmlJavaTypeAdapter(NotebookModelAdapter.class)
 public class NotebookModel {
 
 	/**
@@ -382,10 +383,9 @@ public class NotebookModel {
 	 * @Return The XML of the notebook.
 	 */
 	public String getXML() throws JAXBException {
-		JAXBContext jaxbContext = JAXBContext.newInstance(NotebookModelAdapted.class, TextCellModel.class,
-				ComputationCellModel.class, FilterButtonModel.class); // Create JAXB Context.
+		JAXBContext jaxbContext = JAXBContext.newInstance(NotebookModelAdapted.class); // Create JAXB Context.
 		Marshaller jaxbMarshaller = jaxbContext.createMarshaller(); // Create Marshaller.
-		jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE); // Format XML (otherwise it wil be a single line without spaces)
+		//jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE); // Format XML (otherwise it wil be a single line without spaces)
 		
 		NotebookModelAdapted adaptedModel = new NotebookModelAdapted(); // Create adapted notebook.
 		adaptedModel.setCells(getCells());
@@ -396,36 +396,6 @@ public class NotebookModel {
 		String xmlContent = sw.toString(); 
 		System.out.println(xmlContent); //print xml to console
 		return xmlContent;
-
-	}
-
-	/**
-	 * Converts the NotebookModel into a NotebokModelAdapted and vice versa.
-	 *
-	 */
-	public class NotebookModelAdapter extends AbstractJAXBAdapter<NotebookModelAdapted, NotebookModel> {
-
-		/**
-		 * Converts the NotebookMode into a NotebookModelAdapted.
-		 */
-		public NotebookModelAdapted marshal(NotebookModel model) throws Exception {
-			NotebookModelAdapted adaptedModel = new NotebookModelAdapted();
-			adaptedModel.setCells(model.getCells());
-			adaptedModel.setComputationMode(model.getComputationMode());
-			return adaptedModel;
-		}
-
-		/**
-		 * Converts a NotebookModelAdapted to a NotebookModel
-		 */
-		public NotebookModel unmarshal(NotebookModelAdapted adaptedModel) throws Exception {
-			// Parameters come from the static variables in AbstractJAXBAdapter
-			NotebookModel model = new NotebookModel(this.staticPromContext, this.staticInitialInput,
-					this.staticPromCanceller);
-			model.addCells(adaptedModel.getCells());
-			model.setComputationMode(adaptedModel.getComputationMode());
-			return model;
-		}
 
 	}
 
