@@ -1,8 +1,6 @@
 package org.processmining.filterd.configurations;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -14,56 +12,60 @@ import org.deckfour.xes.model.XTrace;
 import org.processmining.filterd.filters.Filter;
 import org.processmining.filterd.gui.AbstractFilterConfigPanelController;
 import org.processmining.filterd.gui.FilterConfigPanelController;
+import org.processmining.filterd.parameters.Parameter;
 import org.processmining.filterd.parameters.ParameterMultipleFromSet;
 import org.processmining.filterd.parameters.ParameterOneFromSet;
-import org.processmining.filterd.parameters.ParameterRangeFromRange;
-import org.processmining.filterd.parameters.ParameterText;
 import org.processmining.filterd.parameters.ParameterValueFromRange;
 import org.processmining.filterd.parameters.ParameterYesNo;
+import org.processmining.filterd.tools.EmptyLogException;
 import org.processmining.filterd.widgets.ParameterController;
 import org.processmining.filterd.widgets.ParameterMultipleFromSetController;
 import org.processmining.filterd.widgets.ParameterOneFromSetController;
-import org.processmining.filterd.widgets.ParameterOneFromSetExtendedController;
-import org.processmining.filterd.widgets.ParameterRangeFromRangeController;
-import org.processmining.filterd.widgets.ParameterTextController;
-import org.processmining.filterd.widgets.ParameterValueFromRangeController;
-import org.processmining.filterd.widgets.ParameterYesNoController;
 
-public class FilterdTraceFollowerConfig extends FilterdAbstractReferencingConfig {
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.scene.control.ComboBox;
 
-	public FilterdTraceFollowerConfig(XLog log, Filter filterType) {
+public class FilterdTraceFollowerConfig extends FilterdAbstractConfig {
+	
+	Set<String> eventAttributes;
+
+	public FilterdTraceFollowerConfig(XLog log, Filter filterType) throws EmptyLogException {
 		super(log, filterType);
+		this.log = log;
 		
 		// Initialize the configuration's parameters list.
 		parameters = new ArrayList<>();
 		
-		// Get all the attributes in the log
-		Set<String> globalAttributes = new HashSet<String>();
-		
 		// Do this by looping over every trace and collecting its attributes
-		// and adding this to the set.
+		// and adding this to the set, except for time:timestamp
+		eventAttributes = new HashSet<>();
 		for (XTrace trace : log) {
 			
-			XAttributeMap attributesMap = trace.getAttributes();
-			
-			for (String attribute : attributesMap.keySet()) {
-				globalAttributes.add(attribute);
+			for (XEvent event : trace) {
+
+				for (String key : event.getAttributes().keySet()) {
+					if (!key.equals("time:timestamp")) {
+						eventAttributes.add(key);
+					}
+				}
+				
 			}
-			
+		
 		}
 		
 		// Convert the set into an array list because ParameterOneFromSet takes
 		// a list as an argument.
-		List<String> globalAttributesList = 
-				new ArrayList<String>(globalAttributes);
+		List<String> eventAttributesList = 
+				new ArrayList<String>(eventAttributes);
 		
 		// Create the parameter for selecting the attribute.
 		ParameterOneFromSet attributeSelector = 
 				new ParameterOneFromSet(
-						"Attribute", 
+						"attrType", 
 						"Select attribute", 
-						globalAttributesList.get(0), 
-						globalAttributesList);
+						eventAttributesList.get(0), 
+						eventAttributesList);
 		
 		List<String> selectionTypeList = new ArrayList<String>();
 		selectionTypeList.add("Directly followed");
@@ -73,11 +75,52 @@ public class FilterdTraceFollowerConfig extends FilterdAbstractReferencingConfig
 		
 		// Create the parameter for selecting the type.
 		ParameterOneFromSet selectionType = new ParameterOneFromSet(
-								"Selection type", 
-								"Select selection type", 
+								"followType", 
+								"Select follow type", 
 								selectionTypeList.get(0), 
 								selectionTypeList);
 		
+		Set<String> attributeValues = new HashSet<>();
+		
+		for (XTrace trace : log) {
+			
+			for (XEvent event : trace) {
+				
+				XAttributeMap eventAttrs = event.getAttributes();
+				if (eventAttrs.containsKey(eventAttributesList.get(0))) {
+					attributeValues.add(eventAttrs.get(eventAttributesList.get(0)).toString());
+				}
+				
+			}
+			
+		}
+		
+		// To populate both the reference and follower event values with these
+		// attribute values to start with. If the attribute is changed, so will
+		// the values in both these parameters.
+		List<String> attributeValuesList = new ArrayList<String>(attributeValues);
+		
+		// Create parameter for reference event values.
+		
+		ParameterMultipleFromSet referenceParameter = 
+				new ParameterMultipleFromSet(
+					"attrValues",
+					"Desired values:",
+					Arrays.asList(attributeValuesList.get(0)),
+					attributeValuesList
+				);
+		
+		// Create parameter for follower event values.
+		ParameterMultipleFromSet followerParameters = 
+				new ParameterMultipleFromSet(
+					"attrValues",
+					"Desired values:",
+					Arrays.asList(attributeValuesList.get(0)),
+					attributeValuesList
+				);
+		
+		
+		// Create parameter for value matching.
 		ParameterYesNo valueMatchingParameter = new ParameterYesNo(
 				"Value matching", 
 				"Value matching", 
@@ -87,19 +130,23 @@ public class FilterdTraceFollowerConfig extends FilterdAbstractReferencingConfig
 		sameOrDifferentList.add("The same value");
 		sameOrDifferentList.add("Different values");
 		
+		// Create parameter for either same value or different value.
 		ParameterOneFromSet sameOrDifferentParameter = new ParameterOneFromSet(
 				"Same or Different value", 
 				"Select same or different value", 
 				sameOrDifferentList.get(0), 
 				sameOrDifferentList);
 		
+		// Create parameter for selecting the attribute whose value has to be
+		// matched.
 		ParameterOneFromSet valueMatchingAttributeParameter = 
 				new ParameterOneFromSet(
 				"Attribute for value matching", 
 				"Select attribute", 
-				globalAttributesList.get(0), 
-				globalAttributesList);
+				eventAttributesList.get(0), 
+				eventAttributesList);
 		
+		// Create parameter for a time restriction.
 		ParameterYesNo timeRestrictionParameter = new ParameterYesNo(
 				"Time restrictions", 
 				"Time restrictions", 
@@ -109,188 +156,121 @@ public class FilterdTraceFollowerConfig extends FilterdAbstractReferencingConfig
 		shorterOrLongerList.add("Shorter");
 		shorterOrLongerList.add("Longer");
 		
+		// Create parameter for selecting whether the time needs to be longer
+		// or shorter than the time selected.
 		ParameterOneFromSet shorterOrLongerParameter = new ParameterOneFromSet(
 				"Shorter or longer", 
 				"Select shorter or longer", 
 				shorterOrLongerList.get(0), 
 				shorterOrLongerList);
 		
-		double shortestTime = 0;
-		double longestTime = 0;
+	
+		// Create parameter for selecting time duration.
+		ParameterValueFromRange<Integer> timeDurationParameter = 
+				new ParameterValueFromRange<Integer>(
+				"duration", 
+				"Select time duration", 
+				1, 
+				Arrays.asList(1, 999),
+				Integer.TYPE);
 		
-		
-		for (XTrace trace : log) {
-			
-			// Use first and last event to calculate the total duration of
-			// the trace.
-			XEvent firstEvent = trace.get(0);
-			XEvent lastEvent = trace.get(trace.size());
-			
-			Date firstTimeStamp = getTimeStamp(firstEvent);
-			Date secondTimeStamp = getTimeStamp(lastEvent);
-			
-			// Duration = final time stamp - first time stamp.
-			long duration = secondTimeStamp.getTime()
-					- firstTimeStamp.getTime();
-			
-			// See if if is within thresholds set by the user.
-			// Otherwise, remove it.
-			if (duration > longestTime) {
-				longestTime = duration;
-			}
-			
-		}
-		
-		//initialize the threshold options list.
-		List<Double> thrOptions = new ArrayList<Double>();
-				
-		// Frequency is a percentage, therefore minimum value is 0 and maximum
-		// value is 100.
-		thrOptions.add(shortestTime);
-		thrOptions.add(longestTime);
-				
-		// Create parameter for selecting the threshold and set the outermost
-		// values as the default values.
-		ParameterRangeFromRange<Double> parameterThreshold = 
-				new ParameterRangeFromRange<Double>(
-				"Threshold", 
-				"Select threshold for duration", 
-				thrOptions, 
-				thrOptions
-				);
-		
-		
+		// Create parameter for selecting the time type.
+		ParameterOneFromSet timeTypeParameter = 
+				new ParameterOneFromSet(
+						"timeType", 
+						"Select time type", 
+						"millis", 
+						Arrays.asList(
+								"Millis",
+								"Seconds",
+								"Minutes",
+								"Hours",
+								"Days",
+								"Weeks",
+								"Years"));
 		
 		
 		parameters.add(attributeSelector);
 		parameters.add(selectionType);
-		parameters.add(valueMatchingParameter);
-		parameters.add(sameOrDifferentParameter);
-		parameters.add(valueMatchingAttributeParameter);
+		parameters.add(referenceParameter);
+		parameters.add(followerParameters);
 		parameters.add(timeRestrictionParameter);
+		parameters.add(valueMatchingParameter);
 		parameters.add(shorterOrLongerParameter);
-		parameters.add(parameterThreshold);
+		parameters.add(sameOrDifferentParameter);
+		parameters.add(timeDurationParameter);
+		parameters.add(valueMatchingAttributeParameter);
+		parameters.add(timeTypeParameter);
 	}
-	
-	private Date getTimeStamp(XEvent event) {
-		
-		// Initialize time stamp.
-		String timeStamp = "";
-		
-		// Get the time stamp of this event.
-		if (event.getAttributes().get("time:timestamp") != null) {
-			timeStamp = event.getAttributes().get("time:timestamp").toString();
-		}
-
-		/*
-		 * Time stamps are in this format in ProM:
-		 * "yyyy-MM-ddTHH:mm:ss.SSSZ"
-		 * yyyy: Corresponds to the year e.g. ("1900", "2019").
-		 * MM: Corresponds to the month e.g. ("01", "02", "12").
-		 * dd: Corresponds to the day e.g. ("01", "10", "30").
-		 *
-		 * HH: Corresponds to the hours e.g. ("00", "01", "23").
-		 * mm: Corresponds to the minutes e.g. ("00, "01", "59").
-		 * ss: Corresponds to the seconds e.g. ("00, "01", "59").
-		 * SSS: Corresponds to the milliseconds e.g. ("000, "001", "999").
-		 * Z: Corresponds to the time zone:
-		 * 	if "Z" 
-		 * 		Z: GMT
-		 * 	else
-		 * 		Z: Corresponds to the time zone relative to GMT e.g. 
-		 * 		   ("+01:30", "-02:00")  
-		 */
-		
-		return fixTimeZone(timeStamp);
-	}
-	
-	private Date fixTimeZone(String time) {
-		
-		// Set time format for the time stamp
-		SimpleDateFormat dateFormat = new SimpleDateFormat(
-				"yyyy-MM-dd-HH:mm:ss.SSS");
-		
-		Date date = null;
-
-		// Time is in GMT
-		if (time.contains("Z")) {
-			time.replace("Z", "");
-			
-			try {
-				date = dateFormat.parse(time);	
-			} catch (ParseException e) {
-				// Print the trace so we know what went wrong.
-				e.printStackTrace();
-			}
-		}
-		// Time is relative to GMT
-		else {
-			
-			// Represents the last 5 characters e.g. "02:00".
-			String lastFiveCharacters = time.substring(time.length() - 5, 
-					time.length() - 1);
-			
-			// Set time format for the hours relative to GMT.
-			SimpleDateFormat hourFormat = new SimpleDateFormat("hh:mm");
-			Date hourDate = null;
-			
-			// Parse the hours into a Date.
-			try {
-				hourDate = hourFormat.parse(lastFiveCharacters);	
-			} catch (ParseException e) {
-				// Print the trace so we know what went wrong.
-				e.printStackTrace();
-			}
-			
-			// Replace the T-separator with a colon.
-			time.replace("T", "-");
-			
-			// Get whether it was later or earlier relative to GMT.
-			char stringSign = time.charAt(time.length() - 3);
-			
-			// Remove The relative time as we already have it separated.
-			time = time.substring(0, time.length() - 7);
-
-			// Parse the time stamp into a Date.
-			try {
-				date = dateFormat.parse(time);	
-			} catch (ParseException e) {
-				// Print the trace so we know what went wrong.
-				e.printStackTrace();
-			}
-			
-			// Change the relative time to GMT
-			if (stringSign == '+') {
-				date.setTime(date.getTime() - hourDate.getTime());
-			} else {
-				date.setTime(date.getTime() + hourDate.getTime());
-			}
-		}
-		
-		return date;
-	}
-
-	
 
 	public boolean canPopulate(FilterConfigPanelController component) {
 		//check whether no params are empty if you populate with the component
 		return true;
 	};
 
-	public FilterConfigPanelController getConfigPanel() {
-		return new FilterConfigPanelController(
-				"Trace Follower Configuration", 
-				parameters, this);
-	}
-
-	public boolean checkValidity(XLog log) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
 	@Override
-	public FilterdAbstractConfig changeReference(ParameterOneFromSetExtendedController controller) {
-		// TODO Auto-generated method stub
-		return null;
+	public AbstractFilterConfigPanelController getConfigPanel() {
+		FilterConfigPanelController filterConfigPanel = new FilterConfigPanelController(
+				"Filter Traces follower filter", 
+				parameters, 
+				this);
+		for(ParameterController parameter : filterConfigPanel.getControllers()) {
+			if (parameter.getName().equals("attrType")) {
+				ParameterOneFromSetController casted = (ParameterOneFromSetController) parameter;
+				ComboBox<String> comboBox = casted.getComboBox();
+				comboBox.valueProperty().addListener(new ChangeListener<String>() {
+					@Override 
+					public void changed(ObservableValue ov, String oldValue, String newValue) {
+						final XLog Llog = log;
+						List<Parameter> params = parameters;
+						if (Llog != null) {
+						for (ParameterController changingParameter : filterConfigPanel.getControllers()) {
+							
+							if (changingParameter.getName().equals("attrValues")) {
+								
+								ParameterMultipleFromSetController castedChanging = 
+										(ParameterMultipleFromSetController) changingParameter;
+								Set<String> attributeValues = new HashSet<>();
+								
+								for (XTrace trace : Llog) {
+									
+									for (XEvent event : trace) {
+										
+										XAttributeMap eventAttrs = event.getAttributes();
+										if (eventAttrs.containsKey(newValue))
+											attributeValues.add(eventAttrs.get(newValue).toString());
+									}
+								}
+								List<String> attributeValuesList = new ArrayList<String>(attributeValues);
+								((ParameterMultipleFromSet) params.get(2))
+								.setOptions(attributeValuesList);
+								((ParameterMultipleFromSet) params.get(2))
+								.setChosen(attributeValuesList);
+								((ParameterMultipleFromSet) params.get(2))
+								.setDefaultChoice(attributeValuesList);
+								((ParameterMultipleFromSet) params.get(3))
+								.setOptions(attributeValuesList);
+								((ParameterMultipleFromSet) params.get(3))
+								.setChosen(attributeValuesList);
+								((ParameterMultipleFromSet) params.get(3))
+								.setDefaultChoice(attributeValuesList);
+								castedChanging.changeOptions(attributeValuesList);
+							
+							}
+						}
+						
+					}
+					}
+			});
+				
+		}
+		}
+		return filterConfigPanel;
+	}
+
+	public boolean checkValidity(XLog candidateLog) {
+		if( parameters == null || candidateLog.equals(log) )
+			return true;
+		return false;
 	}
 }

@@ -32,7 +32,7 @@ public class ConfigEventAttributeTest extends FilterdPackageTest {
 	}
 	
 	@Test
-	public void testOriginal() throws Exception {
+	public void testConcreteValid() throws Exception {
 		XLog typed = parseLog("event-attribute", "test_attribute_types.xes");
 		FilterdEventAttrConfig config = new FilterdEventAttrConfig(typed, new FilterdEventAttrFilter());
 		/* switch the reference to name - literal - categorical */
