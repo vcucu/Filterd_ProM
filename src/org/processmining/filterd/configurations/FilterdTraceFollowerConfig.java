@@ -15,7 +15,7 @@ import org.processmining.filterd.gui.FilterConfigPanelController;
 import org.processmining.filterd.parameters.Parameter;
 import org.processmining.filterd.parameters.ParameterMultipleFromSet;
 import org.processmining.filterd.parameters.ParameterOneFromSet;
-import org.processmining.filterd.parameters.ParameterRangeFromRange;
+import org.processmining.filterd.parameters.ParameterValueFromRange;
 import org.processmining.filterd.parameters.ParameterYesNo;
 import org.processmining.filterd.tools.EmptyLogException;
 import org.processmining.filterd.widgets.ParameterController;
@@ -75,8 +75,8 @@ public class FilterdTraceFollowerConfig extends FilterdAbstractConfig {
 		
 		// Create the parameter for selecting the type.
 		ParameterOneFromSet selectionType = new ParameterOneFromSet(
-								"Selection type", 
-								"Select selection type", 
+								"followType", 
+								"Select follow type", 
 								selectionTypeList.get(0), 
 								selectionTypeList);
 		
@@ -166,11 +166,11 @@ public class FilterdTraceFollowerConfig extends FilterdAbstractConfig {
 		
 	
 		// Create parameter for selecting time duration.
-		ParameterRangeFromRange<Integer> timeDurationParameter = 
-				new ParameterRangeFromRange<Integer>(
+		ParameterValueFromRange<Integer> timeDurationParameter = 
+				new ParameterValueFromRange<Integer>(
 				"duration", 
 				"Select time duration", 
-				Arrays.asList(1, 999), 
+				1, 
 				Arrays.asList(1, 999),
 				Integer.TYPE);
 		
@@ -181,13 +181,13 @@ public class FilterdTraceFollowerConfig extends FilterdAbstractConfig {
 						"Select time type", 
 						"millis", 
 						Arrays.asList(
-								"millis",
-								"seconds",
-								"minutes",
-								"hours",
-								"days",
-								"weeks",
-								"years"));
+								"Millis",
+								"Seconds",
+								"Minutes",
+								"Hours",
+								"Days",
+								"Weeks",
+								"Years"));
 		
 		
 		parameters.add(attributeSelector);
