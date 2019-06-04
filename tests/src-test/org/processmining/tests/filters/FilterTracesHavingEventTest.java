@@ -1,18 +1,15 @@
 package org.processmining.tests.filters;
 
-import org.deckfour.xes.model.XLog;
-import org.junit.Test;
-import org.processmining.filterd.filters.FilterdTraceAttrFilter;
-import org.processmining.filterd.filters.FilterdTracesHavingEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.deckfour.xes.model.XAttributeMap;
+import org.deckfour.xes.model.XLog;
+import org.junit.Test;
+import org.processmining.filterd.filters.FilterdTracesHavingEvent;
 import org.processmining.filterd.parameters.Parameter;
 import org.processmining.filterd.parameters.ParameterMultipleFromSet;
 import org.processmining.filterd.parameters.ParameterOneFromSet;
-import org.processmining.filterd.parameters.ParameterYesNo;
 
 public class FilterTracesHavingEventTest extends FilterdPackageTest {
 	public FilterTracesHavingEventTest() throws Exception {
@@ -27,7 +24,7 @@ public class FilterTracesHavingEventTest extends FilterdPackageTest {
 	 * 		 case 41 - 8 events.
 	 */
 	@Test
-	public void testLogAttribute1() throws Throwable {
+	public void testEventHasAttribute1() throws Throwable {
 		XLog expected = parseLog("trace-attribute", "test_log_attribute_delivery.xes");
 		XLog computed = null; // insert filter operation
 
@@ -44,7 +41,7 @@ public class FilterTracesHavingEventTest extends FilterdPackageTest {
 	 * Result: cases 56, 74, 75, 76 - 6 events.
 	 */
 	@Test
-	public void testLogAttribute2() throws Throwable {
+	public void testEventHasAttribute2() throws Throwable {
 		XLog expected = parseLog("trace-attribute", "test_log_attribute_abort.xes");
 		XLog computed = null; // insert filter operation
 
