@@ -22,6 +22,30 @@ public class FilterTimeframeTest extends FilterdPackageTest {
 		super();
 	}
 	
+	/* Corresponds to test case 30 from test_specification.xlsx.
+	 * Keeps trace contained in 01/01/2019 till end of log
+	 * 
+	 * Result: case 76 - 6 events.
+	 */
+	@Test
+	public void testTimeframeContains() throws Throwable {
+		XLog expected = parseLog("trace-timeframe", "test_timeframe_1.xes");
+		XLog computed = null; // insert filter operation
+		
+		FilterdTraceTimeframeFilter filter = 
+				new FilterdTraceTimeframeFilter();
+		
+		List<Parameter> parameters = getTestParameters(
+				43, 
+				99,
+				"Contained in timeframe",
+				originalLog);
+		
+		computed = filter.filter(originalLog, parameters);
+
+		assert equalLog(expected, computed);
+	}
+	
 	
 	/* Corresponds to test case 30 from test_specification.xlsx.
 	 * Keeps trace intersecting with 24/12/2018 0:00 - 26/12/2018 23:59:59.
@@ -46,6 +70,8 @@ public class FilterTimeframeTest extends FilterdPackageTest {
 
 		assert equalLog(expected, computed);
 	}
+	
+	
 	
 	private List<Parameter> getTestParameters(
 			int lowThreshold,

@@ -72,12 +72,11 @@ public class FilterdTraceStartEventFilter extends Filter {
 				XAttributeMap eventAttributes = trace.get(0).getAttributes();
 				/* check if the event has the given attribute */
 				if (!eventAttributes.containsKey(chosen)) {
-					if (keepEvents) add = choice; 
+					add = keepEvents; 
 				} else {
 					String value = eventAttributes.get(chosen).toString();
 					if (desiredEvents.getChosen().contains(value)) add = choice;
 				}
-
 				if (add) filteredLog.add(filteredTrace);
 			}
 			else {

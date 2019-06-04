@@ -2,7 +2,6 @@ package org.processmining.filterd.configurations;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.deckfour.xes.model.XAttribute;
 import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
@@ -11,16 +10,19 @@ import org.processmining.filterd.gui.FilterConfigPanelController;
 import org.processmining.filterd.parameters.ParameterMultipleFromSet;
 import org.processmining.filterd.parameters.ParameterOneFromSet;
 import org.processmining.filterd.parameters.ParameterYesNo;
+import org.processmining.filterd.tools.Toolbox;
 
 public class FilterdEventAttrCategoricalConfig extends FilterdAbstractReferenceableConfig{
 
 	List<String> optionList;
 	List<String> values;
 	List<String> defaultValues;
+	String key;
 	
 	
-	public FilterdEventAttrCategoricalConfig(XLog log, Filter filterType, XAttribute attrib) {
+	public FilterdEventAttrCategoricalConfig(XLog log, Filter filterType, String key) {
 		super(log, filterType);
+		this.key = key;
 		parameters = new ArrayList<>();
 		optionList = new ArrayList<>();
 		
@@ -41,8 +43,8 @@ public class FilterdEventAttrCategoricalConfig extends FilterdAbstractReferencea
 		values = new ArrayList<>();
 		for (XTrace trace: log) {
 			for (XEvent event : trace) {
-				if (!event.getAttributes().containsKey(attrib.getKey())) continue;
-				String value = event.getAttributes().get(attrib.getKey()).toString();
+				if (!event.getAttributes().containsKey(key)) continue;
+				String value = event.getAttributes().get(key).toString();
 				if(!values.contains(value)) {
 					values.add(value);						
 				}
@@ -61,8 +63,7 @@ public class FilterdEventAttrCategoricalConfig extends FilterdAbstractReferencea
 	}
 
 	public boolean checkValidity(XLog log) {
-		// TODO Auto-generated method stub
-		return true;
+		return Toolbox.computeAttributes(log).contains(key);
 	}
 	
 	public boolean canPopulate(FilterConfigPanelController component) {

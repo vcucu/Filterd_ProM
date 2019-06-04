@@ -26,11 +26,6 @@ public class FilterdEventAttrFilter extends Filter {
 
 	@Override
 	public XLog filter(XLog log, List<Parameter> parameters) {
-		// TODO Auto-generated method stub this method should just contain a switch for the following 4 methods
-		//that are invisible still :}
-		
-		System.out.println("i apply");
-
 		ParameterOneFromSet attribute = (ParameterOneFromSet) this.getParameter(parameters, "attribute");
 		key = attribute.getChosen();
 
