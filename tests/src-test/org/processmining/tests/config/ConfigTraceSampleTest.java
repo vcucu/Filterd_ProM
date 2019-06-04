@@ -21,15 +21,14 @@ public class ConfigTraceSampleTest extends FilterdPackageTest {
 	 */
 	@Test
 	public void testLogSizeSmaller() throws Throwable {
-		XLog typed = parseLog("start-events", "test_check_validity_invalid.xes");
+		XLog typed = originalLog;
 		FilterdTraceSampleConfig config = new FilterdTraceSampleConfig(typed, new FilterdTraceSampleFilter());
-		ParameterValueFromRange<Integer> valueFromRangeParam = 
-				new ParameterValueFromRange<Integer>("", "", 30, null, Integer.TYPE	);
 		
 		ParameterValueFromRange<Integer> casted = (ParameterValueFromRange<Integer>) config.getParameter("threshold");
 		casted.setChosen(10);
+		XLog cand = parseLog("start-events", "test_check_validity_invalid.xes");
 		
-		assert(!config.checkValidity(typed));
+		assert(!config.checkValidity(cand));
 	}
 	
 	public static void main(String[] args) {

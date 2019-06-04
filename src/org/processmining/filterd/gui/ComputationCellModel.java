@@ -20,6 +20,7 @@ import org.processmining.contexts.uitopia.hub.ProMResourceManager;
 import org.processmining.contexts.uitopia.hub.ProMViewManager;
 import org.processmining.filterd.models.YLog;
 import org.processmining.filterd.plugins.FilterdVisualizer;
+import org.processmining.filterd.tools.EmptyLogException;
 import org.processmining.filterd.tools.Toolbox;
 import org.processmining.framework.plugin.PluginParameterBinding;
 import org.processmining.framework.plugin.ProMCanceller;
@@ -71,6 +72,17 @@ public class ComputationCellModel extends CellModel {
 			}
 		});
 	}
+	
+	@Override
+	public void setCellName(String cellName) {
+		String oldState = this.cellName.getValue();
+		this.cellName.setValue(cellName);
+		property.firePropertyChange("setCellName", oldState, cellName);
+		// change name of the output log (downstream cells may be using it) 
+		if(this.outputLogs != null && this.outputLogs.size() > 0) {
+			this.outputLogs.get(0).setName(cellName + " output log");			
+		}
+	}
 
 	public ObservableList<FilterButtonModel> getFilters() {
 		return filters;
@@ -78,11 +90,6 @@ public class ComputationCellModel extends CellModel {
 
 	public void addFilterModel(int index, FilterButtonModel model) {
 		this.filters.add(index, model);
-		// set cell output to be the output of the last filter (the filter we just created)
-		this.outputLogs.clear();
-		YLog outputLog = model.getOutputLog();
-		outputLog.setName(getCellName() + " output log");
-		this.outputLogs.add(outputLog);
 	}
 	
 	public void removeFilter(FilterButtonModel filter) {
@@ -94,8 +101,10 @@ public class ComputationCellModel extends CellModel {
 			throw new IllegalArgumentException("Log cannot be null!");
 		}
 		this.inputLog = log;
-		if(filters.size() > 0) { // if there are any filters, the first one should have the new log as input
-			filters.get(0).setInputLog(log);
+		// set the output to be the input (when the cell is computed, this will change)
+		// this is needed so that downstream cells don't have null logs as their input
+		if(log.get() != null) {
+			this.outputLogs.get(0).setLog(log.get());
 		}
 	}
 	
@@ -136,7 +145,7 @@ public class ComputationCellModel extends CellModel {
 		ProMViewManager vm = ProMViewManager.initialize(context.getGlobalContext()); // Get current view manager
 		ProMResourceManager rm = ProMResourceManager.initialize(context.getGlobalContext()); // Get current resource manager
 		// Get the possible visualizers for the input event log.
-		List<ViewType> logViewTypes = vm.getViewTypes(rm.getResourceForInstance(inputLog.get()));
+		List<ViewType> logViewTypes = vm.getViewTypes(rm.getResourceForInstance(this.inputLogs.get(0).get()));
 		// Add all visualizer (except this one).
 		for (ViewType type : logViewTypes) {
 			if (!type.getTypeName().equals(FilterdVisualizer.NAME)) {
@@ -211,12 +220,19 @@ public class ComputationCellModel extends CellModel {
     			break;
     		}
     		try {
+    			filter.setInputLog(inputOutput);
     			filter.compute(); // no point in passing the task to the individual filter models (individual filters do not support canceling)
-    			inputOutput = filter.getOutputLog().get();
+    			inputOutput = filter.getOutputLog();
     		} catch(Exception e) {
-    			// TODO: used to display error message to the user (if this is not done, remove throw statements from FilterButtonModel::compute
+    			if(e instanceof EmptyLogException) {
+    				
+    			} else if(e instanceof InvalidConfigurationException) {
+    				
+    			} else {
+    				
+    			}
     		}
     	}
-    	
+    	this.outputLogs.get(0).setLog(inputOutput);
     }
 }

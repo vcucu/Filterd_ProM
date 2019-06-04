@@ -22,7 +22,7 @@ public class CellModel {
 	@XmlElement
 	private CellStatus statusBar;
 	// XML Annotated at the getter method because a conversion is needed.
-	private StringProperty cellName;
+	protected StringProperty cellName;
 	@XmlElement
 	private int index;
 	//property used to register property listeners for each bound property
@@ -36,8 +36,8 @@ public class CellModel {
 		this.property = new PropertyChangeSupport(this);
 		isHidden = false;
 		setStatusBar(CellStatus.IDLE); // set the initial cell status to idle
-		setCellName("Cell #" + Integer.toString((int) (Math.random() * 900 + 100))); // assign an initial name to the cell
 		cellName = new SimpleStringProperty(); // initialize the cellName
+		setCellName("Cell #" + Integer.toString((int) (Math.random() * 900 + 100))); // assign an initial name to the cell
 	}
 	
 	public CellModel(UIPluginContext context, int index) {
@@ -91,6 +91,10 @@ public class CellModel {
 	@XmlElement
 	public String getCellName() {
 		return cellName.getValue();
+	}
+	
+	public StringProperty cellNameProperty() {
+		return this.cellName;
 	}
 
 	/**
