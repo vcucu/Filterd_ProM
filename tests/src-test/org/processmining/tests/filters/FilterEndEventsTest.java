@@ -481,9 +481,9 @@ public class FilterEndEventsTest extends FilterdPackageTest{
 	 * eventHandling = FALSE
 	 * traceHandling = FALSE
 	 * selectionType = FALSE
-	 * Selects traces without a dummy attribute or nulls
+	 * filters out traces without a dummy attribute or with nulls
 	 * 
-	 * Result: original log
+	 * Result: empty log 
 	 * 
 	 */
 	@Test
