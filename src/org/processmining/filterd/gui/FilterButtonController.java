@@ -118,7 +118,7 @@ public class FilterButtonController {
 		enableEditFilterHandler();
 	}
 	
-	private void makeInvalid() {
+	public void makeInvalid() {
 		filterLayout.setStyle("-fx-background-color: #ecabab");
 	}
 

@@ -456,114 +456,63 @@ public class ComputationCellController extends CellController {
 					inputLog = model.getInputLog().get(); // if filter input log is null, use the cell input log 
 				}
 				FilterdAbstractConfig filterConfig = null;
+				// do not accept empty logs
+				if(inputLog.size() == 0) {
+					ComputationCellModel.handleError(new EmptyLogException(""));
+					getCellModel().getFilters()
+						.get(getCellModel().getFilters().size() - 1)
+						.isValidProperty()
+						.set(false);
+					return null;
+				}
 				switch(userSelection) {
 					case "Trace Start Event Filter":
-						try {
-							filterConfig = new FilterdTraceStartEventConfig(model.getInputLog().get(),
-									new FilterdTraceStartEventFilter());
-						} catch (EmptyLogException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+						filterConfig = new FilterdTraceStartEventConfig(inputLog,
+								new FilterdTraceStartEventFilter());
 						break;
 					case "Trace End Event Filter":
-						try {
-							filterConfig = new FilterdTraceEndEventConfig(model.getInputLog().get(),
-									new FilterdTraceEndEventFilter());
-						} catch (EmptyLogException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+						filterConfig = new FilterdTraceEndEventConfig(inputLog,
+								new FilterdTraceEndEventFilter());
 						break;
 					case "Trace Frequency":
-						try {
-							filterConfig = new FilterdTraceFrequencyConfig(model.getInputLog().get(),
-									new FilterdTraceFrequencyFilter());
-						} catch (EmptyLogException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+						filterConfig = new FilterdTraceFrequencyConfig(inputLog,
+								new FilterdTraceFrequencyFilter());
 						break;
 					case "Trace Sample":
-						try {
-							filterConfig = new FilterdTraceSampleConfig(inputLog,
-									new FilterdTraceSampleFilter());
-						} catch (EmptyLogException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+						filterConfig = new FilterdTraceSampleConfig(inputLog,
+								new FilterdTraceSampleFilter());
 						break;
 					case "Trace Performance":
-						try {
-							filterConfig = new FilterdTracePerformanceConfig(model.getInputLog().get(),
-									new FilterdTracePerformanceFilter());
-						} catch (EmptyLogException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+						filterConfig = new FilterdTracePerformanceConfig(inputLog,
+								new FilterdTracePerformanceFilter());
 						break;
 					case "Event Attributes":
-						try {
-							filterConfig = new FilterdEventAttrConfig(model.getInputLog().get(),
-									new FilterdEventAttrFilter());
-						} catch (EmptyLogException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+						filterConfig = new FilterdEventAttrConfig(inputLog,
+								new FilterdEventAttrFilter());
 						break;
 					case "Event Rate":
-						try {
-							filterConfig = new FilterdEventRateConfig(model.getInputLog().get(),
-									new FilterdEventRateFilter());
-						} catch (EmptyLogException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+						filterConfig = new FilterdEventRateConfig(inputLog,
+								new FilterdEventRateFilter());
 						break;
 					case "Trace Having Event":
-						try {
-							filterConfig = new FilterdTracesHavingEventConfig(model.getInputLog().get(),
-									new FilterdTracesHavingEvent());
-						} catch (EmptyLogException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+						filterConfig = new FilterdTracesHavingEventConfig(inputLog,
+								new FilterdTracesHavingEvent());
 						break;
 					case "Trace Attribute":
-						try {
-							filterConfig = new FilterdTraceAttrConfig(model.getInputLog().get(),
-									new FilterdTraceAttrFilter());
-						} catch (EmptyLogException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+						filterConfig = new FilterdTraceAttrConfig(inputLog,
+								new FilterdTraceAttrFilter());
 						break;
 					case "Trace Timeframe":
-						try {
-							filterConfig = new FilterdTraceTimeframeConfig(model.getInputLog().get(),
-									new FilterdTraceTimeframeFilter());
-						} catch (EmptyLogException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+						filterConfig = new FilterdTraceTimeframeConfig(inputLog,
+								new FilterdTraceTimeframeFilter());
 						break;
 					case "Merge Subsequent Events":
-						try {
-							filterConfig = new FilterdModifMergeSubsequentConfig(model.getInputLog().get(),
-									new FilterdModifMergeSubsequentFilter());
-						} catch (EmptyLogException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+						filterConfig = new FilterdModifMergeSubsequentConfig(inputLog,
+								new FilterdModifMergeSubsequentFilter());
 						break;
 					case "Trace Follower Filter":
-						try {
-							filterConfig = new FilterdTraceFollowerConfig(model.getInputLog().get(),
-									new FilterdTraceFollowerFilter());
-						} catch (EmptyLogException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+						filterConfig = new FilterdTraceFollowerConfig(inputLog,
+								new FilterdTraceFollowerFilter());
 						break;
 					default:
 						throw new IllegalArgumentException("Unsupported filter selected");
