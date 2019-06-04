@@ -101,7 +101,6 @@ public class FilterdTraceFollowerConfig extends FilterdAbstractConfig {
 		List<String> attributeValuesList = new ArrayList<String>(attributeValues);
 		
 		// Create parameter for reference event values.
-		
 		ParameterMultipleFromSet referenceParameter = 
 				new ParameterMultipleFromSet(
 					"attrValues",
@@ -111,7 +110,7 @@ public class FilterdTraceFollowerConfig extends FilterdAbstractConfig {
 				);
 		
 		// Create parameter for follower event values.
-		ParameterMultipleFromSet followerParameters = 
+		ParameterMultipleFromSet followerParameter = 
 				new ParameterMultipleFromSet(
 					"attrValues",
 					"Desired values:",
@@ -193,7 +192,7 @@ public class FilterdTraceFollowerConfig extends FilterdAbstractConfig {
 		parameters.add(attributeSelector);
 		parameters.add(selectionType);
 		parameters.add(referenceParameter);
-		parameters.add(followerParameters);
+		parameters.add(followerParameter);
 		parameters.add(timeRestrictionParameter);
 		parameters.add(valueMatchingParameter);
 		parameters.add(shorterOrLongerParameter);
