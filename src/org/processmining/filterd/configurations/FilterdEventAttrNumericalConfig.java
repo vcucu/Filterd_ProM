@@ -12,6 +12,7 @@ import org.processmining.filterd.parameters.ParameterMultipleFromSet;
 import org.processmining.filterd.parameters.ParameterOneFromSet;
 import org.processmining.filterd.parameters.ParameterRangeFromRange;
 import org.processmining.filterd.parameters.ParameterYesNo;
+import org.processmining.filterd.tools.Toolbox;
 
 public class FilterdEventAttrNumericalConfig extends FilterdAbstractReferenceableConfig {
 	String key;
@@ -85,7 +86,6 @@ public class FilterdEventAttrNumericalConfig extends FilterdAbstractReferenceabl
 
 
 	public boolean checkValidity(XLog log) {
-		// TODO Auto-generated method stub
-		return true;
+		return Toolbox.computeAttributes(log).contains(key);
 	}
 }

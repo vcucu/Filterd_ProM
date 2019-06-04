@@ -9,24 +9,11 @@ import org.deckfour.xes.info.impl.XLogInfoImpl;
 import org.deckfour.xes.model.XAttribute;
 import org.deckfour.xes.model.XLog;
 import org.processmining.filterd.filters.Filter;
-import org.processmining.filterd.gui.AbstractFilterConfigPanelController;
 import org.processmining.filterd.gui.FilterConfigPanelController;
 import org.processmining.filterd.parameters.Parameter;
-import org.processmining.filterd.parameters.ParameterMultipleFromSet;
 import org.processmining.filterd.parameters.ParameterOneFromSet;
-import org.processmining.filterd.parameters.ParameterRangeFromRange;
-import org.processmining.filterd.parameters.ParameterText;
-import org.processmining.filterd.parameters.ParameterValueFromRange;
-import org.processmining.filterd.parameters.ParameterYesNo;
 import org.processmining.filterd.tools.Toolbox;
-import org.processmining.filterd.widgets.ParameterController;
-import org.processmining.filterd.widgets.ParameterMultipleFromSetController;
-import org.processmining.filterd.widgets.ParameterOneFromSetController;
 import org.processmining.filterd.widgets.ParameterOneFromSetExtendedController;
-import org.processmining.filterd.widgets.ParameterRangeFromRangeController;
-import org.processmining.filterd.widgets.ParameterTextController;
-import org.processmining.filterd.widgets.ParameterValueFromRangeController;
-import org.processmining.filterd.widgets.ParameterYesNoController;
 
 public class FilterdEventAttrConfig extends FilterdAbstractReferencingConfig {
 
@@ -71,27 +58,28 @@ public class FilterdEventAttrConfig extends FilterdAbstractReferencingConfig {
 	
 	public void switchReference(String key) {
 		for (XAttribute a : eventAttributes) {
-			if (a.getKey().equals(key)) {
+			String k = a.getKey();
+			if (k.equals(key)) {
 				switch(Toolbox.getType(a)) {
 					case "Literal":
-						concreteReference = new FilterdEventAttrCategoricalConfig(log, filterType, a);
+						concreteReference = new FilterdEventAttrCategoricalConfig(log, filterType, k);
 						break;
 					case "Boolean":
-						concreteReference = new FilterdEventAttrCategoricalConfig(log, filterType, a);
+						concreteReference = new FilterdEventAttrCategoricalConfig(log, filterType, k);
 						break;
 					case "Continuous":
-						concreteReference = new FilterdEventAttrNumericalConfig(log, filterType, a.getKey());
+						concreteReference = new FilterdEventAttrNumericalConfig(log, filterType, k);
 						break;
 					case "Discrete":
-						concreteReference = new FilterdEventAttrNumericalConfig(log, filterType, a.getKey());
+						concreteReference = new FilterdEventAttrNumericalConfig(log, filterType, k);
 						break;
 					case "ID":
-						concreteReference = new FilterdEventAttrCategoricalConfig(log, filterType, a);
+						concreteReference = new FilterdEventAttrCategoricalConfig(log, filterType, k);
 						break;
 					case "Timestamp":
 						concreteReference = new FilterdEventAttrDateConfig(log, filterType);
 						break;
-					default: concreteReference = new FilterdEventAttrCategoricalConfig(log, filterType, a);
+					default: concreteReference = new FilterdEventAttrCategoricalConfig(log, filterType, k);
 						break;
 				}
 			}
