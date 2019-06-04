@@ -6,6 +6,7 @@ import org.deckfour.xes.model.XLog;
 import org.processmining.filterd.filters.Filter;
 import org.processmining.filterd.gui.AbstractFilterConfigPanelController;
 import org.processmining.filterd.gui.FilterConfigPanelController;
+import org.processmining.filterd.parameters.Parameter;
 import org.processmining.filterd.parameters.ParameterMultipleFromSet;
 import org.processmining.filterd.parameters.ParameterOneFromSet;
 import org.processmining.filterd.parameters.ParameterRangeFromRange;
@@ -42,12 +43,6 @@ public abstract class FilterdAbstractReferencingConfig extends FilterdAbstractCo
 
 	public abstract FilterdAbstractConfig changeReference(ParameterOneFromSetExtendedController controller);
 	
-	/*public FilterdAbstractConfig changeReference(ParameterOneFromSetExtendedController controller) {
-		concreteReference = new FilterdTraceStartEventCategoricalConfig(log, filterType,
-				controller.getValue(), Toolbox.computeComplexClassifiers(log));
-		return concreteReference;
-	}*/
-	
 	public FilterdAbstractReferenceableConfig getConcreteReference() {
 		return concreteReference;
 	}
@@ -62,7 +57,11 @@ public abstract class FilterdAbstractReferencingConfig extends FilterdAbstractCo
 			if(controller instanceof ParameterOneFromSetExtendedController) {
 				ParameterOneFromSetExtendedController casted = (ParameterOneFromSetExtendedController) controller;
 				concreteReference.populate(casted.getNestedConfigPanel());
-				
+				for (Parameter param : concreteReference.getParameters()) {
+					parameters.remove(param); //does this work?
+					parameters.add(param);
+				}
+	
 			} else if(controller instanceof ParameterYesNoController) {
 				ParameterYesNoController casted = (ParameterYesNoController) controller;
 				ParameterYesNo param = (ParameterYesNo) getParameter(controller.getName());

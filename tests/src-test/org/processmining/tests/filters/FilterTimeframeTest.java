@@ -1,20 +1,49 @@
 package org.processmining.tests.filters;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
+import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XLog;
+import org.deckfour.xes.model.XTrace;
 import org.junit.Test;
 import org.processmining.filterd.filters.FilterdTraceTimeframeFilter;
 import org.processmining.filterd.parameters.Parameter;
 import org.processmining.filterd.parameters.ParameterOneFromSet;
 import org.processmining.filterd.parameters.ParameterRangeFromRange;
+import org.processmining.filterd.tools.Toolbox;
 
 public class FilterTimeframeTest extends FilterdPackageTest {
 
 	public FilterTimeframeTest() throws Exception {
 		super();
+	}
+	
+	/* Corresponds to test case 30 from test_specification.xlsx.
+	 * Keeps trace contained in 01/01/2019 till end of log
+	 * 
+	 * Result: case 76 - 6 events.
+	 */
+	@Test
+	public void testTimeframeContains() throws Throwable {
+		XLog expected = parseLog("trace-timeframe", "test_timeframe_1.xes");
+		XLog computed = null; // insert filter operation
+		
+		FilterdTraceTimeframeFilter filter = 
+				new FilterdTraceTimeframeFilter();
+		
+		List<Parameter> parameters = getTestParameters(
+				43, 
+				99,
+				"Contained in timeframe",
+				originalLog);
+		
+		computed = filter.filter(originalLog, parameters);
+
+		assert equalLog(expected, computed);
 	}
 	
 	
@@ -32,34 +61,47 @@ public class FilterTimeframeTest extends FilterdPackageTest {
 				new FilterdTraceTimeframeFilter();
 		
 		List<Parameter> parameters = getTestParameters(
-				259199000d, 
-				565079000d,
-				"Intersecting timeframe");
+				25, 
+				31,
+				"Intersecting timeframe",
+				originalLog);
 		
 		computed = filter.filter(originalLog, parameters);
 
 		assert equalLog(expected, computed);
 	}
 	
+	
+	
 	private List<Parameter> getTestParameters(
-			double lowThreshold,
-			double highThreshold,
-			String keepTracesOption) {
+			int lowThreshold,
+			int highThreshold,
+			String keepTracesOption, XLog log) {
 		
 		List<Parameter> parameters = new ArrayList<>();
-		
-		// Create time frame parameter, the user can select here what time
-		// frame he wants.
-		ParameterRangeFromRange<Double> timeframeParameter = 
-				new ParameterRangeFromRange<Double>(
-						"timeframe", 
-						"Select timeframe", 
-						Arrays.asList(
-								lowThreshold,
-								highThreshold),
-						Arrays.asList(
-								lowThreshold,
-								highThreshold));
+		String key = "time:timestamp";
+
+		ArrayList<String> times = new ArrayList<>();
+		for (XTrace trace: log) {
+			for (XEvent event : trace) {
+				/* timestamp format YYYY-MM-DDTHH:MM:SS.ssssGMT with GMT = {Z, + , -} */
+				if (!event.getAttributes().containsKey(key)) continue;
+				String value = event.getAttributes().get(key).toString();
+				LocalDateTime time = Toolbox.synchronizeGMT(value);
+				if(time == null)
+					System.out.println("time is null");
+				if(value == null) {
+					System.out.println("value is null");
+				}
+				times.add(time.toString());
+			}
+		}
+		Collections.sort(times);
+		ParameterRangeFromRange<Integer>range = new ParameterRangeFromRange<Integer>("time-range",
+				"Select timeframe", Arrays.asList(lowThreshold, highThreshold),
+				Arrays.asList(0, times.size()-1), Integer.TYPE);
+	
+		range.setTimes(times);
 		
 		// Create the keep traces parameter, the user can select here how the
 		// traces should be kept based on the time frame.
@@ -75,7 +117,7 @@ public class FilterTimeframeTest extends FilterdPackageTest {
 								"Completed in timeframe",
 								"Trim to timeframe"));
 		
-		parameters.add(timeframeParameter);
+		parameters.add(range);
 		parameters.add(keepTracesParameter);
 		
 		return parameters;

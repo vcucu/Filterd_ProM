@@ -70,7 +70,9 @@ public class ConfigurationModalController {
 	public void showFilterConfiguration(FilterdAbstractConfig filterConfig,
 			FilterButtonController filterButtonController) {
 		if (filterConfig == null) {
-			throw new NullPointerException("Filter configuration cannot be null");
+			// if the filter config. is null the error was shown by the invoker -> gracefully cancel
+			cancel();
+			return;
 		}
 		resetModal();
 		// set internal variables
@@ -90,7 +92,7 @@ public class ConfigurationModalController {
 
 	@FXML
 	private void cancel() {
-		parent.hideConfigurationModal();
+		parent.hideConfigurationModal(true);
 		if (this.filterButtonController != null) {
 			filterButtonController.enableEditFilterHandler();
 		}
@@ -117,7 +119,7 @@ public class ConfigurationModalController {
 			// user is configuring a filter config. -> apply changes
 			FilterConfigPanelController casted = (FilterConfigPanelController) currentContentsController;
 			this.filterConfig.populate(casted);
-			parent.hideConfigurationModal();
+			parent.hideConfigurationModal(false);
 			if (this.filterButtonController != null) {
 				filterButtonController.enableEditFilterHandler();
 			}

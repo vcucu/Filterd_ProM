@@ -1,14 +1,20 @@
 package org.processmining.filterd.gui;
 
 import java.beans.PropertyChangeListener;
+import java.util.Optional;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonBar.ButtonData;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 public abstract class CellController {
 
@@ -26,11 +32,6 @@ public abstract class CellController {
 		this.controller = controller; 
 		this.cellModel = cellModel;
 	}
-
-//	public void intialize() {
-//		// add PropertyChangeListeners for each of cell model properties
-//		cellModel.getProperty().addPropertyChangeListener(new CellModelListeners(this));
-//	}
 
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
 		cellModel.getProperty().addPropertyChangeListener(listener);
@@ -57,7 +58,24 @@ public abstract class CellController {
 	 */
 	@FXML
 	public void remove() {
-		getNotebookController().removeCell(getCellModel());
+		//create pop up to confirm deletion
+		Alert alert = new Alert(AlertType.CONFIRMATION);
+		alert.setTitle("Delete cell");
+		//alert.setHeaderText("Look, a Confirmation Dialog");
+		alert.setContentText("Are you sure you want to delete this cell?");
+		ButtonType buttonYes = new ButtonType("Yes", ButtonData.OK_DONE);
+		ButtonType buttonNo = new ButtonType("No", ButtonData.CANCEL_CLOSE);
+		alert.getButtonTypes().setAll(buttonYes, buttonNo);
+		Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+		 stage.setAlwaysOnTop(true);// make sure window always at front when open
+
+		Optional<ButtonType> result = alert.showAndWait();
+		if (result.get() == buttonYes){
+		    //user chose Yes so remove cell
+			getNotebookController().removeCell(getCellModel());
+		}
+		//user chose No or closed the dialog don't remove cell
+		
 	}
 	
 	/**

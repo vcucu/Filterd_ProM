@@ -1,5 +1,7 @@
 package org.processmining.filterd.gui;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -28,9 +30,18 @@ import org.processmining.framework.plugin.annotations.Plugin;
 import org.processmining.framework.plugin.impl.PluginManagerImpl;
 import org.processmining.framework.util.Pair;
 
+import javafx.application.Platform;
 import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 
 @XmlAccessorType(XmlAccessType.NONE) // Makes sure only explicitly named elements get added to the XML.
@@ -71,6 +82,17 @@ public class ComputationCellModel extends CellModel {
 			}
 		});
 	}
+	
+	@Override
+	public void setCellName(String cellName) {
+		String oldState = this.cellName.getValue();
+		this.cellName.setValue(cellName);
+		property.firePropertyChange("setCellName", oldState, cellName);
+		// change name of the output log (downstream cells may be using it) 
+		if(this.outputLogs != null && this.outputLogs.size() > 0) {
+			this.outputLogs.get(0).setName(cellName + " output log");			
+		}
+	}
 
 	public ObservableList<FilterButtonModel> getFilters() {
 		return filters;
@@ -78,11 +100,6 @@ public class ComputationCellModel extends CellModel {
 
 	public void addFilterModel(int index, FilterButtonModel model) {
 		this.filters.add(index, model);
-		// set cell output to be the output of the last filter (the filter we just created)
-		this.outputLogs.clear();
-		YLog outputLog = model.getOutputLog();
-		outputLog.setName(getCellName() + " output log");
-		this.outputLogs.add(outputLog);
 	}
 	
 	public void removeFilter(FilterButtonModel filter) {
@@ -94,8 +111,10 @@ public class ComputationCellModel extends CellModel {
 			throw new IllegalArgumentException("Log cannot be null!");
 		}
 		this.inputLog = log;
-		if(filters.size() > 0) { // if there are any filters, the first one should have the new log as input
-			filters.get(0).setInputLog(log);
+		// set the output to be the input (when the cell is computed, this will change)
+		// this is needed so that downstream cells don't have null logs as their input
+		if(log.get() != null) {
+			this.outputLogs.get(0).setLog(log.get());
 		}
 	}
 	
@@ -136,7 +155,7 @@ public class ComputationCellModel extends CellModel {
 		ProMViewManager vm = ProMViewManager.initialize(context.getGlobalContext()); // Get current view manager
 		ProMResourceManager rm = ProMResourceManager.initialize(context.getGlobalContext()); // Get current resource manager
 		// Get the possible visualizers for the input event log.
-		List<ViewType> logViewTypes = vm.getViewTypes(rm.getResourceForInstance(inputLog.get()));
+		List<ViewType> logViewTypes = vm.getViewTypes(rm.getResourceForInstance(this.inputLogs.get(0).get()));
 		// Add all visualizer (except this one).
 		for (ViewType type : logViewTypes) {
 			if (!type.getTypeName().equals(FilterdVisualizer.NAME)) {
@@ -200,37 +219,99 @@ public class ComputationCellModel extends CellModel {
 		return new JLabel("Visualizer " + type.getTypeName() + " could not be found.");
 	}
     
-    public void compute() {
-    	System.out.println("Computation cell compute starting");
-    	
-    	XLog inputOutput = this.inputLog.get();
+    public static void handleError(Exception e) {
+        // This method is invoked on the JavaFX thread
+    	Alert alert = new Alert(AlertType.ERROR);
+		if(e instanceof EmptyLogException) {
+			//create pop up to warn user in case of empty xlog
+			alert.setTitle("Filter preset error");
+			alert.setHeaderText("Xlog is empty");
+			alert.setContentText("The input Xlog or intermediate Xlog is empty");
+			Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+			stage.setAlwaysOnTop(true);// make sure window always at front when open
+			alert.showAndWait();
+			//user chose No or closed the dialog don't export
+		} else if(e instanceof InvalidConfigurationException) {
+			//create pop up to warn user in case of impossible configuration
+			alert.setTitle("Invalid configuration error");
+			alert.setHeaderText("Invalid configuration");
+			alert.setContentText("The configuration that you have selected for the highlighted filter is"
+					+ " not valid with respect to its upstream filters. Please change the configuration "
+					+ "accordingly before trying to recompute.");
+			Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+			stage.setAlwaysOnTop(true);// make sure window always at front when open
+			alert.showAndWait();
+		} else {    				
+			alert.setTitle("Error");
+			alert.setHeaderText("Runtime exception");
+			alert.setContentText("The highlighted filter has caused a runtime exception to be thrown.");
+
+			// Create expandable Exception.
+			StringWriter sw = new StringWriter();
+			PrintWriter pw = new PrintWriter(sw);
+			e.printStackTrace(pw);
+			String exceptionText = sw.toString();
+
+			Label label = new Label("The exception stacktrace was:");
+
+			TextArea textArea = new TextArea(exceptionText);
+			textArea.setEditable(false);
+			textArea.setWrapText(true);
+
+			textArea.setMaxWidth(Double.MAX_VALUE);
+			textArea.setMaxHeight(Double.MAX_VALUE);
+			//fill in all available space
+			GridPane.setVgrow(textArea, Priority.ALWAYS);
+			GridPane.setHgrow(textArea, Priority.ALWAYS);
+
+			GridPane expContent = new GridPane();
+			expContent.setMaxWidth(Double.MAX_VALUE);
+			expContent.add(label, 0, 0);
+			expContent.add(textArea, 0, 1);
+
+			// Set expandable Exception into the dialog pane.
+			alert.getDialogPane().setExpandableContent(expContent);
+			Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+			stage.setAlwaysOnTop(true);// make sure window always at front when open
+			alert.showAndWait();
+		}
+    }
+    
+    /**
+     * Compute the cell by computing each of its individual filters in the appropriate order
+     * @param computeTask  javafx task which is used to check whether the user cancelled the compute task
+     */
+    public void compute(Task<Void> computeTask) {
+    	XLog inputOutput = this.inputLog.get(); // variable that stores the output of the previous filter (i.e. input for the next one)
     	if(inputOutput == null) {
+    		// this state can only be reached if the cells are not computed in order (i.e. this cell uses the output of another cell which is yet to be computed)
     		throw new IllegalStateException("Input log is null. "
     				+ "Cell has been requested to be computed, but its upstream cells have not been computed yet.");
     	}
+    	// go through all filters in order
     	for(FilterButtonModel filter : filters) {
+    		// check if the computation was cancelled by the user (if so, break out of the loop)
+    		if(computeTask.isCancelled()) {
+    			break;
+    		}
+    		// compute method may throw two expected exceptions:
+    		// - EmptyLogException  the of the previously computed filter is empty (i.e. it has 0 traces)
+    		// - InvalidConfigurationExcpetion  the selected configuration is not valid w.r.t. the output of the previous filter  
     		try {
-    			System.out.println("Starting with a filter");
-    			filter.compute();
-    			inputOutput = filter.getOutputLog().get();
-    			System.out.println("Done with a filter");
-    		} catch(InvalidConfigurationException e) {
-    			FilterButtonModel model = e.getFilterButtonModel();
-//    			FilterButtonController controller = filterControllers.get(model.getIndex());
-    			// TODO: set controller as invalid
-    			System.out.println("Invalid configuration");
-    		} catch(EmptyLogException e) {
-    			// TODO: handle this
-    			System.out.println("Empty log");
+    			filter.setInputLog(inputOutput);
+    			filter.compute(); // no point in passing the task to the individual filter models (individual filters do not support canceling)
+    			inputOutput = filter.getOutputLog(); // if this line is reached, the filter did not throw an error -> fetch the filter output
     		} catch(Exception e) {
-    			// if any other exception occurs, throw it
-    			throw e;
+    			computeTask.cancel(); // stop any further computation in the notebook
+    			filter.isValidProperty().set(false); // make this filter button invalid (filter button controllers will handle this property change)
+    			Platform.runLater(new Runnable() {
+		            @Override
+		            public void run() {
+		                handleError(e);
+		            }
+		       });  
     		}
     	}
-    	System.out.println("Output log name is " + this.outputLogs.get(0).getName());
-    	System.out.print("Output log size is ");
-    	System.out.println(this.outputLogs.get(0).get().size());
-    	System.out.println("Computation cell compute done.");
-    	
+    	this.outputLogs.get(0).setLog(inputOutput); // set the output of this cell to be the output of the last filter
     }
 }

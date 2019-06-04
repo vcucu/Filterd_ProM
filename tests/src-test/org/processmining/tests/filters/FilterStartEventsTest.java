@@ -188,13 +188,12 @@ public class FilterStartEventsTest extends FilterdPackageTest{
 	 * selectionType = Filter out
 	 * Selects traces with start event "delivery", value = 423
 	 * 
-	 * Result: original log 
+	 * Result: empty log
 	 */
 	@Test
 	public void testStartAttribute_000() throws Throwable{
 		XLog expected = parseLog("start-events", "test_start_event_attribute_000.xes");
 		List empty = Collections.EMPTY_LIST;
-		List<String> oneElement = new ArrayList<>();
 		/*manually instantiate the filter's parameters*/
 		ArrayList<Parameter> parameters = new ArrayList<>();
 
@@ -241,7 +240,6 @@ public class FilterStartEventsTest extends FilterdPackageTest{
 	public void testStartAttribute_001() throws Throwable{
 		XLog expected = parseLog("start-events", "test_start_event_attribute_001.xes");
 		List empty = Collections.EMPTY_LIST;
-		List<String> oneElement = new ArrayList<>();
 		/*manually instantiate the filter's parameters*/
 		ArrayList<Parameter> parameters = new ArrayList<>();
 
@@ -290,7 +288,6 @@ public class FilterStartEventsTest extends FilterdPackageTest{
 	public void testStartAttribute_010() throws Throwable{
 		XLog expected = parseLog("start-events", "test_start_event_attribute_010.xes");
 		List empty = Collections.EMPTY_LIST;
-		List<String> oneElement = new ArrayList<>();
 		/*manually instantiate the filter's parameters*/
 		ArrayList<Parameter> parameters = new ArrayList<>();
 
@@ -337,7 +334,6 @@ public class FilterStartEventsTest extends FilterdPackageTest{
 	public void testStartAttribute_011() throws Throwable{
 		XLog expected = parseLog("start-events", "test_start_event_attribute_011.xes");
 		List empty = Collections.EMPTY_LIST;
-		List<String> oneElement = new ArrayList<>();
 		/*manually instantiate the filter's parameters*/
 		ArrayList<Parameter> parameters = new ArrayList<>();
 
@@ -378,13 +374,12 @@ public class FilterStartEventsTest extends FilterdPackageTest{
 	 * selectionType = Filter out
 	 * Selects traces with start event "delivery", value = 423
 	 * 
-	 * Result: empty log
+	 * Result: original log
 	 */
 	@Test
 	public void testStartAttribute_100() throws Throwable{
 		XLog expected = parseLog("start-events", "test_start_event_attribute_100.xes");
 		List empty = Collections.EMPTY_LIST;
-		List<String> oneElement = new ArrayList<>();
 		/*manually instantiate the filter's parameters*/
 		ArrayList<Parameter> parameters = new ArrayList<>();
 
@@ -426,13 +421,12 @@ public class FilterStartEventsTest extends FilterdPackageTest{
 	 * selectionType = Filter out
 	 * Selects traces with start event "delivery", value = 423
 	 * 
-	 * Result: empty log
+	 * Result: original log
 	 */
 	@Test
 	public void testStartAttribute_110() throws Throwable{
 		XLog expected = parseLog("start-events", "test_start_event_attribute_110.xes");
 		List empty = Collections.EMPTY_LIST;
-		List<String> oneElement = new ArrayList<>();
 		/*manually instantiate the filter's parameters*/
 		ArrayList<Parameter> parameters = new ArrayList<>();
 

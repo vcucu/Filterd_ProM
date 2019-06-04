@@ -14,6 +14,8 @@ import org.processmining.filterd.models.YLog;
 import org.processmining.filterd.parameters.ParameterValueFromRange;
 import org.processmining.tests.filters.FilterdPackageTest;
 
+import javafx.concurrent.Task;
+
 public class ComputationCellModelTest extends FilterdPackageTest {
 
 	public ComputationCellModelTest() throws Exception {
@@ -48,7 +50,8 @@ public class ComputationCellModelTest extends FilterdPackageTest {
 		YLog initialLog = new YLog(0, "Original Log", originalLog);
 		
 		// Create new filter button model (to be added to the computation cell filter panel)
-		FilterButtonModel model = new FilterButtonModel(0, initialLog);
+		FilterButtonModel model = new FilterButtonModel(0);
+		model.setInputLog(originalLog);
 		
 		// Add model to the filter models list
 		cell.addFilterModel(0, model);
@@ -130,8 +133,10 @@ public class ComputationCellModelTest extends FilterdPackageTest {
 		YLog initialLog = new YLog(0, "Original Log", originalLog);
 		
 		// Create new filter button models (to be added to the computation cell filter panel)
-		FilterButtonModel model0 = new FilterButtonModel(0, initialLog);
-		FilterButtonModel model1 = new FilterButtonModel(1, initialLog);
+		FilterButtonModel model0 = new FilterButtonModel(0);
+		model0.setInputLog(originalLog);
+		FilterButtonModel model1 = new FilterButtonModel(0);
+		model1.setInputLog(originalLog);
 		
 		// Add models to the filter models list
 		cell.addFilterModel(0, model0);
@@ -171,22 +176,18 @@ public class ComputationCellModelTest extends FilterdPackageTest {
 	}
 	
 	@Test
-	public void testComputationCellCompute() {
+	public void testComputationCellComputeSimple() {
 		// Create new computation cell model instance
 		ComputationCellModel cell = new ComputationCellModel(null, 0, null, new ArrayList<>());
 		// Create new YLog
 		YLog initialLog = new YLog(0, "Original Log", originalLog);
 		// Set the initial log for the computation cell
 		cell.setInputLog(initialLog);
-		
 		// Create new filter button models
-		FilterButtonModel model0 = new FilterButtonModel(0, initialLog);
-		FilterButtonModel model1 = new FilterButtonModel(1, initialLog);
-		
+		FilterButtonModel model0 = new FilterButtonModel(0);
+		model0.setInputLog(originalLog);
 		// Add filter buttons to the computation cell filter list
 		cell.addFilterModel(0, model0);
-		cell.addFilterModel(1, model1);
-		
 		// Add filter configurations to the filter buttons
 		FilterdAbstractConfig config = new FilterdTraceSampleConfig(initialLog.get(),
 				new FilterdTraceSampleFilter());
@@ -194,11 +195,53 @@ public class ComputationCellModelTest extends FilterdPackageTest {
 		((ParameterValueFromRange<Integer>) config.getParameters().get(0)).setChosen(2);
 		// Set filter configurations for the filter buttons
 		model0.setFilterConfig(config);
-		model1.setFilterConfig(config);
-		
 		// Compute the cell's output
-		cell.compute();
+		cell.compute(new Task<Void> () {
+
+			protected Void call() throws Exception {
+				return null;
+			}
+			
+		});
 		// Check that the computation was successful
-		assertTrue(true);
+		assertEquals(cell.getOutputLogs().get(0).get().size(), 2);
+	}
+	
+	@Test
+	public void testComputationCellComputeInvalidConfiguration() {
+		// Create new computation cell model instance
+		ComputationCellModel cell = new ComputationCellModel(null, 0, null, new ArrayList<>());
+		// Create new YLog
+		YLog initialLog = new YLog(0, "Original Log", originalLog);
+		// Set the initial log for the computation cell
+		cell.setInputLog(initialLog);
+		// Create new filter button models
+		FilterButtonModel model0 = new FilterButtonModel(0);
+		model0.setInputLog(originalLog);
+		FilterButtonModel model1 = new FilterButtonModel(1);
+		model0.setInputLog(originalLog);
+		// Add filter buttons to the computation cell filter list
+		cell.addFilterModel(0, model0);
+		cell.addFilterModel(1, model1);
+		// Add filter configurations to the filter buttons
+		FilterdAbstractConfig config0 = new FilterdTraceSampleConfig(initialLog.get(),
+				new FilterdTraceSampleFilter());
+		FilterdAbstractConfig config1 = new FilterdTraceSampleConfig(initialLog.get(),
+				new FilterdTraceSampleFilter());
+		// Set the filter configuration parameters
+		((ParameterValueFromRange<Integer>) config0.getParameters().get(0)).setChosen(1);
+		((ParameterValueFromRange<Integer>) config1.getParameters().get(0)).setChosen(2);
+		// Set filter configurations for the filter buttons
+		model0.setFilterConfig(config0);
+		model0.setFilterConfig(config1);
+		// Compute the cell's output
+		cell.compute(new Task<Void> () {
+
+			protected Void call() throws Exception {
+				return null;
+			}
+			
+		});
+		// Check that the computation was unsuccessful (TODO: there should be a message displayed somewhere)
 	}
 }

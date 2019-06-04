@@ -3,36 +3,44 @@ package org.processmining.filterd.gui;
 import java.awt.Dimension;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 
 import org.deckfour.uitopia.api.model.ViewType;
+import org.deckfour.xes.model.XLog;
 import org.processmining.filterd.configurations.FilterdAbstractConfig;
 import org.processmining.filterd.configurations.FilterdEventAttrConfig;
 import org.processmining.filterd.configurations.FilterdEventRateConfig;
+import org.processmining.filterd.configurations.FilterdModifMergeSubsequentConfig;
 import org.processmining.filterd.configurations.FilterdTraceAttrConfig;
 import org.processmining.filterd.configurations.FilterdTraceEndEventConfig;
+import org.processmining.filterd.configurations.FilterdTraceFollowerConfig;
 import org.processmining.filterd.configurations.FilterdTraceFrequencyConfig;
 import org.processmining.filterd.configurations.FilterdTracePerformanceConfig;
 import org.processmining.filterd.configurations.FilterdTraceSampleConfig;
 import org.processmining.filterd.configurations.FilterdTraceStartEventConfig;
+import org.processmining.filterd.configurations.FilterdTraceTimeframeConfig;
 import org.processmining.filterd.configurations.FilterdTracesHavingEventConfig;
 import org.processmining.filterd.filters.FilterdEventAttrFilter;
 import org.processmining.filterd.filters.FilterdEventRateFilter;
+import org.processmining.filterd.filters.FilterdModifMergeSubsequentFilter;
 import org.processmining.filterd.filters.FilterdTraceAttrFilter;
 import org.processmining.filterd.filters.FilterdTraceEndEventFilter;
+import org.processmining.filterd.filters.FilterdTraceFollowerFilter;
 import org.processmining.filterd.filters.FilterdTraceFrequencyFilter;
 import org.processmining.filterd.filters.FilterdTracePerformanceFilter;
 import org.processmining.filterd.filters.FilterdTraceSampleFilter;
 import org.processmining.filterd.filters.FilterdTraceStartEventFilter;
+import org.processmining.filterd.filters.FilterdTraceTimeframeFilter;
 import org.processmining.filterd.filters.FilterdTracesHavingEvent;
 import org.processmining.filterd.gui.ConfigurationModalController.ConfigurationStep;
 import org.processmining.filterd.models.YLog;
 import org.processmining.filterd.tools.EmptyLogException;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -84,14 +92,19 @@ public class ComputationCellController extends CellController {
 		// Load event logs in cmbEventLog and select "Initial input"
 		cmbEventLog.getItems().addAll(model.getInputLogs());
 		cmbEventLog.getSelectionModel().selectFirst();
-		model.setOutputLogs(new ArrayList<YLog>(
-				Arrays.asList(
-					new YLog[] { model.getInputLogs().get(0) }
-				)));
 		setXLog();
-
 		// Add listeners to the basic model components
 		cellModel.getProperty().addPropertyChangeListener(new CellModelListeners(this));
+		// binding for cell name
+		this.cellName.setText(this.cellModel.getCellName());
+		this.cellModel.cellNameProperty().addListener(new ChangeListener<String>() {
+
+			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+				if(!cellName.getText().equals(newValue)) {
+					cellName.setText(newValue);
+				}
+			}
+		});
 		// Add listeners for filter buttons
 		addFilterButtonListeners();
 		// bind the cell name to the cell name variable.
@@ -128,17 +141,14 @@ public class ComputationCellController extends CellController {
 		if (!this.isConfigurationModalShown
 				|| this.configurationModal.getConfigurationStep() != ConfigurationStep.ADD_FILTER) {
 			int index = getCellModel().getFilters().size(); // Index of the new cell, so that we can compute which XLogs are available
-			// each filter's input log is the output log of the previous filter (except for the first filter which always gets the cell's input log)
-			YLog inputLog;
-			if(index == 0) {
-				inputLog = getCellModel().getInputLog();
-				if(inputLog.get() == null) {
-					throw new IllegalStateException("Cannot create filters if the input log for the cell is not selected.");
-				}
-			} else {
-				inputLog = getCellModel().getFilters().get(index - 1).getOutputLog();
+			FilterButtonModel filterModel = new FilterButtonModel(index);
+			// if cell was already computed and is not out-of-date, we can set the input log of the new filter to be the output of the previous one
+			if(index > 0 &&
+				getCellModel().getFilters().get(index - 1).getOutputLog() != null &&
+				getCellModel().getStatusBar() == CellStatus.IDLE) {
+
+				filterModel.setInputLog(getCellModel().getFilters().get(index - 1).getOutputLog());
 			}
-			FilterButtonModel filterModel = new FilterButtonModel(index, inputLog);
 			getCellModel().addFilterModel(index, filterModel);
 			loadFilter(index, filterModel);
 		}
@@ -195,6 +205,7 @@ public class ComputationCellController extends CellController {
 	}
 
 	public void removeFilter(FilterButtonModel filter) {
+		this.hideConfigurationModal(false);
 		int index = filter.getIndex();
 		getCellModel().removeFilter(filter); // Removes the cell from the model
 		panelLayout.getChildren().remove(index);	// Removes the layout
@@ -325,7 +336,8 @@ public class ComputationCellController extends CellController {
 		ComputationCellModel model = this.getCellModel();
 		if (cmbVisualizers.getValue() == Utilities.dummyViewType) {
 			// Remove visualizer if "None" is selected
-			visualizerPane.getChildren().remove(visualizerSwgWrap);
+//			visualizerPane.getChildren().remove(visualizerSwgWrap);
+			visualizerPane.getChildren().clear();
 			visualizerSwgWrap.setContent(null);
 			return;
 		}
@@ -353,10 +365,11 @@ public class ComputationCellController extends CellController {
 		});
 	}
 
-	public void hideConfigurationModal() {
+	public void hideConfigurationModal(boolean removeFilter) {
 		if (this.isConfigurationModalShown) {
 			ConfigurationStep configurationStep = configurationModal.getConfigurationStep();
-			visualizerPane.getChildren().remove(configurationModal.getRoot());
+//			visualizerPane.getChildren().remove(configurationModal.getRoot());
+			visualizerPane.getChildren().clear();
 			// set visualizer as the content
 			visualizerPane.getChildren().add(visualizerSwgWrap);
 			// Enable visualizer combobox
@@ -367,8 +380,9 @@ public class ComputationCellController extends CellController {
 			AnchorPane.setLeftAnchor(visualizerSwgWrap, 0.0);
 			AnchorPane.setRightAnchor(visualizerSwgWrap, 0.0);
 			// if filter selection was cancelled, delete the added button
-			if (configurationStep == ConfigurationStep.ADD_FILTER) {
-				// remove FilterButton
+			if (configurationStep == ConfigurationStep.ADD_FILTER &&
+					removeFilter) {
+				// remove FilterButton (its always the last in the list)
 				FilterButtonModel buttonToRemove = getCellModel().getFilters()
 						.get(getCellModel().getFilters().size() - 1);
 				removeFilter(buttonToRemove);
@@ -382,7 +396,8 @@ public class ComputationCellController extends CellController {
 			throw new IllegalArgumentException("Filter configuration cannot be null");
 		}
 		// Remove visualizer
-		visualizerPane.getChildren().remove(visualizerSwgWrap);
+//		visualizerPane.getChildren().remove(visualizerSwgWrap);
+		visualizerPane.getChildren().clear();
 		// Disable visualizer combobox
 		cmbVisualizers.setDisable(true);
 		// populate filter configuration modal
@@ -400,7 +415,8 @@ public class ComputationCellController extends CellController {
 
 	public void showModalFilterList(FilterButtonController filterButtonController, FilterButtonModel filterButtonModel) {
 		// Remove visualizer
-		visualizerPane.getChildren().remove(visualizerSwgWrap);
+//		visualizerPane.getChildren().remove(visualizerSwgWrap);
+		visualizerPane.getChildren().clear();
 		// Disable visualizer combobox
 		cmbVisualizers.setDisable(true);
 		List<String> filterOptions = new ArrayList<>();
@@ -411,99 +427,92 @@ public class ComputationCellController extends CellController {
 		filterOptions.add("Trace Performance");
 		filterOptions.add("Trace Having Event");
 		filterOptions.add("Trace Attribute");
+		filterOptions.add("Trace Timeframe");
 		filterOptions.add("Event Attributes");
 		filterOptions.add("Event Rate");
+		filterOptions.add("Merge Subsequent Events");
+		filterOptions.add("Trace Follower Filter");
 
 
 		configurationModal.showFilterList(filterOptions, filterButtonController, new Callback<String, FilterdAbstractConfig>() {
 
 			public FilterdAbstractConfig call(String userSelection) {
+				// set the input log for the filter configuration
+				// this is either the input log for the cell if there was no computation done
+				// or it can be the output of the previous filter if there was computation done
+				XLog inputLog;
 				ComputationCellModel model = (ComputationCellModel) cellModel;
+				// if the input log was selected, there was definitely no computation
 				if(model.getInputLog().get() == null) {
 					throw new IllegalStateException("No input log selected");
 				}
+				FilterButtonModel lastFilterButton = model
+						.getFilters()
+						.get(model.getFilters().size() - 1); // this is the filter button that we are currently configuring
+				// use the cell input log or the given input log for the filter button
+				if(lastFilterButton.getInputLog() != null) {
+					inputLog = lastFilterButton.getInputLog(); // input log is set in the addFilter() method in this class
+				} else {
+					inputLog = model.getInputLog().get(); // if filter input log is null, use the cell input log
+				}
 				FilterdAbstractConfig filterConfig = null;
+				// do not accept empty logs
+				if(inputLog.size() == 0) {
+					ComputationCellModel.handleError(new EmptyLogException(""));
+					getCellModel().getFilters()
+						.get(getCellModel().getFilters().size() - 1)
+						.isValidProperty()
+						.set(false);
+					return null;
+				}
 				switch(userSelection) {
 					case "Trace Start Event Filter":
-						try {
-							filterConfig = new FilterdTraceStartEventConfig(model.getInputLog().get(),
-									new FilterdTraceStartEventFilter());
-						} catch (EmptyLogException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+						filterConfig = new FilterdTraceStartEventConfig(inputLog,
+								new FilterdTraceStartEventFilter());
 						break;
 					case "Trace End Event Filter":
-						try {
-							filterConfig = new FilterdTraceEndEventConfig(model.getInputLog().get(),
-									new FilterdTraceEndEventFilter());
-						} catch (EmptyLogException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+						filterConfig = new FilterdTraceEndEventConfig(inputLog,
+								new FilterdTraceEndEventFilter());
 						break;
 					case "Trace Frequency":
-						try {
-							filterConfig = new FilterdTraceFrequencyConfig(model.getInputLog().get(),
-									new FilterdTraceFrequencyFilter());
-						} catch (EmptyLogException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+						filterConfig = new FilterdTraceFrequencyConfig(inputLog,
+								new FilterdTraceFrequencyFilter());
 						break;
 					case "Trace Sample":
-						try {
-							filterConfig = new FilterdTraceSampleConfig(model.getInputLog().get(),
-									new FilterdTraceSampleFilter());
-						} catch (EmptyLogException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+						filterConfig = new FilterdTraceSampleConfig(inputLog,
+								new FilterdTraceSampleFilter());
 						break;
 					case "Trace Performance":
-						try {
-							filterConfig = new FilterdTracePerformanceConfig(model.getInputLog().get(),
-									new FilterdTracePerformanceFilter());
-						} catch (EmptyLogException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+						filterConfig = new FilterdTracePerformanceConfig(inputLog,
+								new FilterdTracePerformanceFilter());
 						break;
 					case "Event Attributes":
-						try {
-							filterConfig = new FilterdEventAttrConfig(model.getInputLog().get(),
-									new FilterdEventAttrFilter());
-						} catch (EmptyLogException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+						filterConfig = new FilterdEventAttrConfig(inputLog,
+								new FilterdEventAttrFilter());
 						break;
 					case "Event Rate":
-						try {
-							filterConfig = new FilterdEventRateConfig(model.getInputLog().get(),
-									new FilterdEventRateFilter());
-						} catch (EmptyLogException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+						filterConfig = new FilterdEventRateConfig(inputLog,
+								new FilterdEventRateFilter());
 						break;
 					case "Trace Having Event":
-						try {
-							filterConfig = new FilterdTracesHavingEventConfig(model.getInputLog().get(),
-									new FilterdTracesHavingEvent());
-						} catch (EmptyLogException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+						filterConfig = new FilterdTracesHavingEventConfig(inputLog,
+								new FilterdTracesHavingEvent());
 						break;
 					case "Trace Attribute":
-						try {
-							filterConfig = new FilterdTraceAttrConfig(model.getInputLog().get(),
-									new FilterdTraceAttrFilter());
-						} catch (EmptyLogException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+						filterConfig = new FilterdTraceAttrConfig(inputLog,
+								new FilterdTraceAttrFilter());
+						break;
+					case "Trace Timeframe":
+						filterConfig = new FilterdTraceTimeframeConfig(inputLog,
+								new FilterdTraceTimeframeFilter());
+						break;
+					case "Merge Subsequent Events":
+						filterConfig = new FilterdModifMergeSubsequentConfig(inputLog,
+								new FilterdModifMergeSubsequentFilter());
+						break;
+					case "Trace Follower Filter":
+						filterConfig = new FilterdTraceFollowerConfig(inputLog,
+								new FilterdTraceFollowerFilter());
 						break;
 					default:
 						throw new IllegalArgumentException("Unsupported filter selected");

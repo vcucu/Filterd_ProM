@@ -1,20 +1,28 @@
 package org.processmining.filterd.gui;
-
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.Optional;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
+import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar.ButtonData;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 /**
  * This class contains the controller for the notebook.
@@ -29,21 +37,30 @@ public class NotebookController {
 	 * variables containing the (important) UI elements so they can be
 	 * interacted with in the code.
 	 */
-	@FXML private Button autoButton;
-	@FXML private Button manualButton;
-	@FXML private Button computeButton;
-	@FXML private Button exportButton;
-	@FXML private ScrollPane scrollPane;
-	@FXML private VBox cellsLayout;
-	@FXML private Button appendCellButton;
-	@FXML private HBox addCellHBox;
-	@FXML private Button addComputationCellButton;
-	@FXML private Button addTextCellButton;
-	@FXML private VBox notebookLayout;
-	@FXML private HBox toolbarLayout;
-	
- 
-	
+	@FXML
+	private Button autoButton;
+	@FXML
+	private Button manualButton;
+	@FXML
+	private Button computeButton;
+	@FXML
+	private Button exportButton;
+	@FXML
+	private ScrollPane scrollPane;
+	@FXML
+	private VBox cellsLayout;
+	@FXML
+	private Button appendCellButton;
+	@FXML
+	private HBox addCellHBox;
+	@FXML
+	private Button addComputationCellButton;
+	@FXML
+	private Button addTextCellButton;
+	@FXML
+	private VBox notebookLayout;
+	@FXML
+	private HBox toolbarLayout;
 
 	public ScrollPane getScrollPane() {
 		return scrollPane;
@@ -64,7 +81,7 @@ public class NotebookController {
 	public VBox getNotebookLayout() {
 		return notebookLayout;
 	}
-	
+
 	public VBox getCellsLayout() {
 		return cellsLayout;
 	}
@@ -89,9 +106,32 @@ public class NotebookController {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		// change compute button text (play / pause symbols) when the computation stops / starts
+		this.model.isComputingProperty().addListener(new ChangeListener<Boolean>() {
+
+			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+				if(newValue) {
+					Platform.runLater(new Runnable(){
+						@Override 
+						public void run() {
+							computeButton.setText("\u23F8"); // unicode for pause symbol
+//							computeButton.setText("pause"); // unicode for pause symbol
+		                 }
+					});
+				} else {
+					Platform.runLater(new Runnable(){
+						@Override 
+						public void run() {
+//							computeButton.setText("\u25B6"); // unicode for play symbol
+							computeButton.setText("▶"); // unicode for play symbol
+		                 }
+					});
+				}
+			}
+		});
 		
 	}
-	
+
 	public void cellListeners() {
 		model.getCells().addListener(new ListChangeListener<CellModel>() {
 			@Override
@@ -147,7 +187,12 @@ public class NotebookController {
 	 */
 	@FXML
 	private void computeButtonHandler() {
-		model.compute();
+		// TODO: set compute button icon to play / pause w.r.t. this.isComputing
+		if (model.isComputing()) {
+			model.cancelCompute();
+		} else {
+			model.compute();
+		}
 	}
 
 	/**
@@ -155,7 +200,24 @@ public class NotebookController {
 	 */
 	@FXML
 	private void exportButtonHandler() {
-		export();
+		//create pop up to confirm export
+		Alert alert = new Alert(AlertType.CONFIRMATION);
+		alert.setTitle("Export notebook");
+		//alert.setHeaderText("Look, a Confirmation Dialog");
+		alert.setContentText("Are you sure you want to export this notebook to workspace?");
+		ButtonType buttonYes = new ButtonType("Yes", ButtonData.OK_DONE);
+		ButtonType buttonNo = new ButtonType("No", ButtonData.CANCEL_CLOSE);
+		alert.getButtonTypes().setAll(buttonYes, buttonNo);
+		Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+		stage.setAlwaysOnTop(true);// make sure window always at front when open
+
+		Optional<ButtonType> result = alert.showAndWait();
+		if (result.get() == buttonYes) {
+			//user chose Yes so export cell
+			export();
+		}
+		//user chose No or closed the dialog don't export
+
 	}
 
 	/**
@@ -179,26 +241,18 @@ public class NotebookController {
 	}
 
 	/**
-	 * (Re)computes the entire notebook.
-	 */
-	public void compute() {
-		//TODO: implement. check out model.recomputeFrom.
-	}
-
-	/**
 	 * Exports the notebook to the workspace.
 	 */
 	public void export() {
-		printXML();
-		// model.saveNotebook();
+		model.saveNotebook();
 	}
 
 	/**
 	 * Creates a new ComputationCell model and adds it to the observable list.
 	 */
 	public void addComputationCell(int index) {
-		ComputationCellModel cellModel = new ComputationCellModel(model.getPromContext(), index, model.getPromCanceller(),
-				model.getOutputLogsTill(index));
+		ComputationCellModel cellModel = new ComputationCellModel(model.getPromContext(), index,
+				model.getPromCanceller(), model.getOutputLogsTill(index));
 		model.addCell(index, cellModel);
 		loadCell(cellModel);
 	}
@@ -238,11 +292,10 @@ public class NotebookController {
 			e.printStackTrace();
 		}
 	}
-	
-	
 
 	/**
-	 * Removes the input {@code cell} from the notebook model. Removal from the UI should happen through an actionListener.
+	 * Removes the input {@code cell} from the notebook model. Removal from the
+	 * UI should happen through an actionListener.
 	 * 
 	 * @param cell
 	 *            the cell to remove from the notebook.
@@ -250,7 +303,7 @@ public class NotebookController {
 	public void removeCell(CellModel cell) {
 		int index = cell.getIndex();
 		model.removeCell(cell); // Removes the cell from the model
-		cellsLayout.getChildren().remove(index);	// Removes the layout
+		cellsLayout.getChildren().remove(index); // Removes the layout
 	}
 
 	/**
@@ -261,9 +314,10 @@ public class NotebookController {
 	public NotebookModel getModel() {
 		return model;
 	}
-	
+
 	/**
 	 * Returns the scene of the notebook visualizer.
+	 * 
 	 * @return The scene of the notebook visualizer.
 	 */
 	public Scene getScene() {
@@ -290,7 +344,7 @@ public class NotebookController {
 										// Scene Builder.
 		cellsLayout.getChildren().add(index, addCellHBox);
 	}
-	
+
 	/**
 	 * Toggle the visibility of the add cell modal
 	 */
@@ -309,46 +363,47 @@ public class NotebookController {
 			}
 		}
 	}
-	
+
 	/**
 	 * Prints an XML of the notebook generated by JAXB
 	 */
 	@FXML
 	public void printXML() {
 		try {
-            //Create JAXB Context
-            JAXBContext jaxbContext = JAXBContext.newInstance(NotebookModel.class, TextCellModel.class, ComputationCellModel.class, FilterButtonModel.class);
-             
-            //Create Marshaller
-            Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
- 
-            //Required formatting??
-            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
- 
-            //Print XML String to Console
-            StringWriter sw = new StringWriter();
-             
-            //Write XML to StringWriter
-            jaxbMarshaller.marshal(model, sw);
-            
-            //Store XML to File
-//            File file = new File("test.xml");
-//            jaxbMarshaller.marshal(model, file);
-             
-            // Print the xml to the console
-            String xmlContent = sw.toString();
-            System.out.println( xmlContent );
- 
-        } catch (JAXBException e) {
-            e.printStackTrace();
-        }
+			//Create JAXB Context
+			JAXBContext jaxbContext = JAXBContext.newInstance(NotebookModel.class, TextCellModel.class,
+					ComputationCellModel.class, FilterButtonModel.class);
+
+			//Create Marshaller
+			Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+
+			//Required formatting??
+			jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+
+			//Print XML String to Console
+			StringWriter sw = new StringWriter();
+
+			//Write XML to StringWriter
+			jaxbMarshaller.marshal(model, sw);
+
+			//Store XML to File
+			//            File file = new File("test.xml");
+			//            jaxbMarshaller.marshal(model, file);
+
+			// Print the xml to the console
+			String xmlContent = sw.toString();
+			System.out.println(xmlContent);
+
+		} catch (JAXBException e) {
+			e.printStackTrace();
+		}
 	}
 
 	class AddCellController {
-		
+
 		/**
-		 * Handler for the add computation cell button. Adds a new computation cell
-		 * to the notebook and hides the add cell button modal.
+		 * Handler for the add computation cell button. Adds a new computation
+		 * cell to the notebook and hides the add cell button modal.
 		 */
 		@FXML
 		private void addComputationCellButtonHandler() {
@@ -367,8 +422,7 @@ public class NotebookController {
 			hideAddCellModal();
 			addTextCell(index);
 		}
-		
-	}
-	
-}
 
+	}
+
+}

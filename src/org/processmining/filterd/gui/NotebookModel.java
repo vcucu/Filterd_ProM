@@ -1,24 +1,28 @@
 package org.processmining.filterd.gui;
 
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.deckfour.xes.model.XLog;
 import org.processmining.contexts.uitopia.UIContext;
 import org.processmining.contexts.uitopia.UIPluginContext;
 import org.processmining.contexts.uitopia.hub.ProMResourceManager;
 import org.processmining.contexts.uitopia.hub.ProMViewManager;
+import org.processmining.filterd.gui.adapters.NotebookModelAdapted;
+import org.processmining.filterd.gui.adapters.NotebookModelAdapter;
 import org.processmining.filterd.models.YLog;
 import org.processmining.filterd.tools.Toolbox;
 import org.processmining.framework.plugin.ProMCanceller;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -31,13 +35,12 @@ import javafx.concurrent.Task;
  * @author Ewoud
  *
  */
-
-@XmlAccessorType(XmlAccessType.NONE) // Makes sure only explicitly named elements get added to the XML.
-@XmlRootElement(namespace = "org.processmining.filterd.gui") // set this class as the root of the XML file for this package.
+@XmlJavaTypeAdapter(NotebookModelAdapter.class)
 public class NotebookModel {
 
 	/**
-	 * TODO: IF YOU ADD A NEW VARIABLE, MAKE SURE TO UPDATE THE clone() METHOD!!!  
+	 * TODO: IF YOU ADD A NEW VARIABLE, MAKE SURE TO UPDATE THE clone()
+	 * METHOD!!!
 	 */
 	// objects from ProM
 	private UIPluginContext promContext; // The ProM context to communicate with the ProM framework.
@@ -47,20 +50,21 @@ public class NotebookModel {
 	private YLog initialInput; // the event log the notebook was initialized with.
 	// ObservableList allows for action listeners. ObeservableLists are provided by JavaFX
 	private ProMCanceller promCanceller;
-	@XmlElementWrapper(name = "cells")
-	@XmlElement(name = "cell")
 	private ObservableList<CellModel> cells; // the list of all cells currently in the notebook.
-	@XmlElement
 	private ComputationMode computationMode; // the computation mode the notebook is currently in.
-	
-	
+	private Task<Void> computeTask; // javafx task which is initialized every time a computation is requested (not anonymous variable so that the user can cancel the task)
+	private SimpleBooleanProperty isComputing; // boolean property stating whether the notebook is currently being computed
+
 	/**
-	 * Constructor for importing/exporting. This constructor needs to exist because JAXB needs a no-argument constructor for unmarshalling.
+	 * Constructor for importing/exporting. This constructor needs to exist
+	 * because JAXB needs a no-argument constructor for unmarshalling.
 	 * Properties set here could be overwritten during loading.
 	 */
 	public NotebookModel() {
 		this.cells = FXCollections.observableArrayList();
 		setComputationMode(ComputationMode.MANUAL);
+		this.isComputing = new SimpleBooleanProperty();
+		this.isComputing.set(false);
 	}
 
 	/**
@@ -76,7 +80,7 @@ public class NotebookModel {
 	public NotebookModel(UIPluginContext context, XLog log, ProMCanceller canceller) {
 		this.promContext = context;
 		this.initialInput = new YLog(Toolbox.getNextId(), "Initial input", log);
-		this.promCanceller = canceller; 
+		this.promCanceller = canceller;
 		this.cells = FXCollections.observableArrayList();
 		// set the computation mode to manual
 		setComputationMode(ComputationMode.MANUAL);
@@ -85,6 +89,8 @@ public class NotebookModel {
 		UIContext globalContext = context.getGlobalContext();
 		viewManager = ProMViewManager.initialize(globalContext);
 		resourceManager = ProMResourceManager.initialize(globalContext);
+		this.isComputing = new SimpleBooleanProperty();
+		this.isComputing.set(false);
 	}
 
 	/**
@@ -95,7 +101,7 @@ public class NotebookModel {
 	public UIPluginContext getPromContext() {
 		return promContext;
 	}
-	
+
 	/**
 	 * Returns the ProM canceller.
 	 * 
@@ -131,12 +137,12 @@ public class NotebookModel {
 	public YLog getInitialInput() {
 		return initialInput;
 	}
-	
+
 	/**
 	 * Set the initial event log for the notebook.
 	 * 
 	 * @param log
-	 * 			The event log the notebook is initialized with.
+	 *            The event log the notebook is initialized with.
 	 */
 	public void setInitialInput(YLog log) {
 		this.initialInput = log;
@@ -180,7 +186,7 @@ public class NotebookModel {
 	public void removeCell(CellModel cell) {
 		cells.remove(cell);
 	}
-	
+
 	/**
 	 * Adds a single cell to the list of cells in this model.
 	 * 
@@ -204,7 +210,7 @@ public class NotebookModel {
 	public void addCells(int index, List<CellModel> cells) {
 		this.cells.addAll(index, cells);
 	}
-	
+
 	/**
 	 * Removes a cell from the list of cells in this model.
 	 * 
@@ -262,11 +268,14 @@ public class NotebookModel {
 	 */
 	public void saveNotebook() {
 		//NOTE: shouldn't we give the notebook a name? 
-
-		NotebookModel newNotebook = clone();
-
-		promContext.getProvidedObjectManager().createProvidedObject("Notebook File", newNotebook, NotebookModel.class, promContext);
-		promContext.getGlobalContext().getResourceManager().getResourceForInstance(newNotebook).setFavorite(true);
+		try {
+			String xml = getXML(); // get the XML.
+			promContext.getProvidedObjectManager().createProvidedObject("Notebook File", xml, String.class,
+					promContext);
+			promContext.getGlobalContext().getResourceManager().getResourceForInstance(xml).setFavorite(true);
+		} catch (JAXBException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -278,7 +287,7 @@ public class NotebookModel {
 	public void loadNotebook(String name) {
 		//TODO: implement
 	}
-	
+
 	public List<YLog> getOutputLogsTill(int index) {
 		List<YLog> logs = new ArrayList<>();
 		logs.add(initialInput);
@@ -287,53 +296,107 @@ public class NotebookModel {
 				CellModel gCell = getCells().get(i);
 				if (getCells().get(i) instanceof ComputationCellModel) {
 					ComputationCellModel cell = (ComputationCellModel) gCell;
-					logs.addAll(cell.getOutputLogs());
+					// add all output logs (except the initial input log since we don't want it to be duplicated)
+					logs.addAll(cell.getOutputLogs()
+							.stream() // parse as a stream
+							.filter(l -> !l.getName().equals(initialInput.getName())) // filter all logs whose name is not the same as input log's
+							.collect(Collectors.toList())); // convert to a list
 				}
 			}
 		}
 		return logs;
 	}
-	
+
+	/**
+	 * Method that computes the whole notebook in a separate thread. 
+	 * Notebook is computed by computing each individual computation cell while respecting their order in the list.
+	 * Separate thread is used so that the UI thread is not blocked in long computation.
+	 */
 	public void compute() {
-		Task<Void> task = new Task<Void>() {
+		// computation is executed in a task which is passed to a thread
+		this.computeTask = new Task<Void>() {
 
 			@Override
 			protected Void call() throws Exception {
-				System.out.println("Starting compute");
+				isComputing.set(true); // let the controller know that the computation is starting
+				// transform the cells list into a new computation cells list (ordering is preserved)
 				List<ComputationCellModel> computeList = cells
 						.stream()
 						.filter(c -> c instanceof ComputationCellModel) // use only computation cells
 						.map(c -> (ComputationCellModel) c) // cast to computation cell model
 						.collect(Collectors.toList()); // transform steam to list
-				for(ComputationCellModel cellModel : computeList) {
-					cellModel.compute();
+				// compute cells in their order in the list
+				for (ComputationCellModel cellModel : computeList) {
+					// check if the computation was cancelled by the user (if so, break out of the loop) 
+					if (isCancelled()) {
+						break;
+					}
+					cellModel.compute(this); // compute 
 				}
-				System.out.println("Computation done");
+				isComputing.set(false); // let the controller know the computation is done
 				return null;
 			}
 		};
-		task.exceptionProperty().addListener(new ChangeListener<Throwable>() {
+		// javafx tasks do not report exceptions to the console (this is a feature)
+		// add a change listener to print the exception (needed for debugging)
+		this.computeTask.exceptionProperty().addListener(new ChangeListener<Throwable>() {
 
 			public void changed(ObservableValue<? extends Throwable> observable, Throwable oldValue,
 					Throwable newValue) {
-				if(newValue != null) {
+				if (newValue != null) {
 					Exception exception = (Exception) newValue;
 					exception.printStackTrace();
-				}	
+				}
 			}
 		});
-		Thread thread = new Thread(task);
+		// create and start a thread
+		Thread thread = new Thread(this.computeTask);
 		thread.start();
 	}
-	
-	
+
+	public void cancelCompute() {
+		if (this.computeTask != null) {
+			this.computeTask.cancel();
+		}
+	}
+
+	public boolean isComputing() {
+		return this.isComputing.get();
+	}
+
+	public BooleanProperty isComputingProperty() {
+		return this.isComputing;
+	}
+
 	@Override
 	public NotebookModel clone() {
 		NotebookModel newNotebook = new NotebookModel(promContext, initialInput.get(), promCanceller);
 		newNotebook.addCells(cells);
 		newNotebook.setComputationMode(computationMode);
-		
+
 		return newNotebook;
 	}
-	
+
+	/**
+	 * Prints an XML of the notebook generated by JAXB.
+	 * 
+	 * @Return The XML of the notebook.
+	 */
+	public String getXML() throws JAXBException {
+		JAXBContext jaxbContext = JAXBContext.newInstance(NotebookModelAdapted.class); // Create JAXB Context.
+		Marshaller jaxbMarshaller = jaxbContext.createMarshaller(); // Create Marshaller.
+		//jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE); // Format XML (otherwise it wil be a single line without spaces)
+		
+		NotebookModelAdapted adaptedModel = new NotebookModelAdapted(); // Create adapted notebook.
+		adaptedModel.setCells(getCells());
+		adaptedModel.setComputationMode(getComputationMode());
+		
+		StringWriter sw = new StringWriter();
+		jaxbMarshaller.marshal(adaptedModel, sw); // write XML to stringwriter.
+		String xmlContent = sw.toString(); 
+		System.out.println(xmlContent); //print xml to console
+		return xmlContent;
+
+	}
+
 }

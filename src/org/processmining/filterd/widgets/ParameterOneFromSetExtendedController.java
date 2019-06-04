@@ -42,6 +42,7 @@ public class ParameterOneFromSetExtendedController extends ParameterController {
         setNestedContent(owner.getConcreteReference());
 	}
 	
+	
 	public String getValue() {
 		return combobox.getSelectionModel().getSelectedItem();
 	}

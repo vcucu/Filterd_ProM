@@ -7,8 +7,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import org.deckfour.xes.model.XLog;
 import org.processmining.filterd.configurations.FilterdAbstractConfig;
-import org.processmining.filterd.models.YLog;
-import org.processmining.filterd.tools.Toolbox;
+import org.processmining.filterd.tools.EmptyLogException;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -25,8 +24,9 @@ public class FilterButtonModel {
 	private BooleanProperty selected;
 	//@XmlElement
 	private FilterdAbstractConfig filterConfig;
-	private YLog inputLog;
-	private YLog outputLog;
+	private XLog inputLog;
+	private XLog outputLog;
+	private SimpleBooleanProperty isValid;
 	
 	/**
 	 * Constructor for importing/exporting. This constructor needs to exist because JAXB needs a no-argument constructor for unmarshalling.
@@ -36,15 +36,16 @@ public class FilterButtonModel {
 		String filterName = "Filter #" + Integer.toString((int) (Math.random() * 900 + 100));
 		name = new SimpleStringProperty(filterName);
 		selected = new SimpleBooleanProperty(false);
+		isValid = new SimpleBooleanProperty(true);
 	}	
 	
-	public FilterButtonModel(int index, YLog inputLog) {
+	public FilterButtonModel(int index) {
 		String filterName = "Filter #" + Integer.toString((int) (Math.random() * 900 + 100));
 		name = new SimpleStringProperty(filterName);
 		selected = new SimpleBooleanProperty(false);
+		isValid = new SimpleBooleanProperty(true);
 		this.index = index;
-		this.inputLog = inputLog;
-		this.outputLog = new YLog(Toolbox.getNextId(), filterName + " output log", inputLog.get());
+		this.outputLog = null;
 	}
 	
 	@XmlElement
@@ -60,11 +61,15 @@ public class FilterButtonModel {
 		this.name.set(value);
 	}
 	
-	public void setInputLog(YLog inputLog) {
+	public XLog getInputLog() {
+		return this.inputLog;
+	}
+	
+	public void setInputLog(XLog inputLog) {
 		this.inputLog = inputLog;
 	}
 	
-	public YLog getOutputLog() {
+	public XLog getOutputLog() {
 		return this.outputLog;
 	}
 	
@@ -105,27 +110,29 @@ public class FilterButtonModel {
 		this.filterConfig = filterConfig;
 	}
 	
+	/**
+	 * Compute the output of this filter.
+	 */
 	public void compute() {
-		System.out.println("Filter button compute starting");
-		if(inputLog.get() == null) {
-			System.out.println("Filter button input log is null");
-			throw new IllegalStateException("Input log is null. Upstream filter was not computed.");
+		// check that the upstream filters have finished computation
+		if(inputLog == null) {
+			throw new NullPointerException("Input log is null. Upstream filter was not computed.");
 		}
-		System.out.println("Filter button setting config log");
-		filterConfig.setLog(inputLog.get());
-		System.out.println("Filter button set config log");
+		// if the input log is empty, setLog will throw an exception 
+		try {
+			filterConfig.setLog(inputLog);
+		} catch(EmptyLogException e) {
+			throw e; // throw exception to notify the computation cell (it will invalidate this filter button)
+		}
+		// if the filter config. is not valid, we have to inform the cell controller (throw an exception)
 		if(filterConfig.isValid()) {
-			// compute
-			System.out.println("Filter button computing");
-			XLog output = filterConfig.filter();
-			System.out.println("Filter button output setting log");
-			outputLog.setLog(output);
-			System.out.println("Filter button output log set");
+			this.outputLog = filterConfig.filter(); // compute
 		} else {
-			System.out.println("Filter button configuration became invalid after setting the log");
-			// throw exception to notify the user that the computation could not be completed
-			throw new InvalidConfigurationException("Configuration became invalid", this);
+			throw new InvalidConfigurationException("Configuration became invalid.", this); // throw exception to notify the computation cell (it will invalidate this filter button)
 		}
-		System.out.println("Filter button compute done");
+	}
+	
+	public BooleanProperty isValidProperty() {
+		return this.isValid;
 	}
 }

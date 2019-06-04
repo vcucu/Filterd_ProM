@@ -31,6 +31,18 @@ public abstract class Parameter {
 		this.name = name;
 	}
 	
+	public boolean equals(Parameter param) {
+		boolean check = false;
+	    if (param == null) return false;
+	    if (param == this) return true;
+	    if (param.getClass() == this.getClass()) {
+	    	if (param.getName().contentEquals(this.name)) {
+	    		check = true;
+	    	}
+	    }
+	    return check;
+	}
+	
 	
 	
 }

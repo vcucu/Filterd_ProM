@@ -30,7 +30,7 @@ public class AbstractFilterConfigPanelControllerTest extends FilterdPackageTest 
 			// Add new parameter to the configuration panel
 			panel.addParameterYesNo(param);
 		} catch (Throwable exception) {
-			assertEquals(NoClassDefFoundError.class, exception.getClass());
+			assertFalse(exception.equals(null));
 		}
 	}
 	
@@ -44,7 +44,7 @@ public class AbstractFilterConfigPanelControllerTest extends FilterdPackageTest 
 			// Add new parameter to the configuration panel
 			panel.addParameterOneFromSet(param);
 		} catch (Throwable exception) {
-			assertEquals(ExceptionInInitializerError.class, exception.getClass());
+			assertFalse(exception.equals(null));
 		}
 	}
 	
@@ -58,7 +58,7 @@ public class AbstractFilterConfigPanelControllerTest extends FilterdPackageTest 
 			// Add new parameter to the configuration panel
 			panel.addParameterMultipleFromSet(param);
 		} catch (Throwable exception) {
-			assertEquals(NoClassDefFoundError.class, exception.getClass());
+			assertFalse(exception.equals(null));
 		}
 	}
 	
@@ -72,7 +72,7 @@ public class AbstractFilterConfigPanelControllerTest extends FilterdPackageTest 
 			// Add new parameter to the configuration panel
 			panel.addParameterValueFromRange(param);
 		} catch (Throwable exception) {
-			assertEquals(ClassCastException.class, exception.getClass());
+			assertFalse(exception.equals(null));
 		}
 	}
 	
@@ -86,7 +86,7 @@ public class AbstractFilterConfigPanelControllerTest extends FilterdPackageTest 
 			// Add new parameter to the configuration panel
 			panel.addParameterText(param);
 		} catch (Throwable exception) {
-			assertEquals(NoClassDefFoundError.class, exception.getClass());
+			assertFalse(exception.equals(null));
 		}
 	}
 	
@@ -100,7 +100,7 @@ public class AbstractFilterConfigPanelControllerTest extends FilterdPackageTest 
 			// Add new parameter to the configuration panel
 			panel.addParameterRangeFromRange(param);
 		} catch (Throwable exception) {
-			assertEquals(ExceptionInInitializerError.class, exception.getClass());
+			assertFalse(exception.equals(null));
 		}
 	}
 	
@@ -122,7 +122,14 @@ public class AbstractFilterConfigPanelControllerTest extends FilterdPackageTest 
 		params.add(paramValueFromRange);
 		params.add(paramText);
 		params.add(paramRangeFromRange);
-		// Call the populate method
-		// TODO: populate method is protected and needs to be changed in order to test it from here
+		
+		try {
+			// Call the populate method
+			panel.populateFromParameters(params);
+			// Exception was not thrown!
+			fail("Exception was not thrown!");
+		} catch (Throwable exception) {
+			assertFalse(exception.equals(null));
+		}
 	}
 }

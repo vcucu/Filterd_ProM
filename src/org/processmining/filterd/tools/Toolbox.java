@@ -52,6 +52,25 @@ public class Toolbox {
 
 		return classifiers;
 	}
+	
+	
+	/**
+	 * Computes the list of all classifiers for the current log.
+	 * They are computed both as a list of strings as well as a list of XEventClassifiers.
+	 * @param log the log to be interrogated
+	 * @return the list of names of the complex classifiers
+	 */
+	public static List<XEventClassifier> computeAllClassifiers(XLog log) {
+		List<XEventClassifier> classifiers = new ArrayList<>();
+		XLogInfo logInfo = XLogInfoImpl.create(log);
+		Collection<XEventClassifier> compatibleClassifiers = logInfo.getEventClassifiers();
+		for (XEventClassifier c : compatibleClassifiers) {
+				classifiers.add(c);
+		}
+
+		return classifiers;
+	}
+	
 	/**
 	 * Returns the name of the classifier when passed a classifier object
 	 * 

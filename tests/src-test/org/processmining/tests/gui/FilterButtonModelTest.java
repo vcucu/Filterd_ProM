@@ -1,5 +1,6 @@
 package org.processmining.tests.gui;
 
+import org.deckfour.xes.model.XLog;
 import org.junit.Test;
 import org.processmining.filterd.configurations.FilterdAbstractConfig;
 import org.processmining.filterd.configurations.FilterdTraceSampleConfig;
@@ -27,7 +28,8 @@ public class FilterButtonModelTest extends FilterdPackageTest {
 		// Create new YLog
 		YLog initialLog = new YLog(0, "Original Log", originalLog);
 		// Create new filter button instance
-		FilterButtonModel filter = new FilterButtonModel(0, initialLog);
+		FilterButtonModel filter = new FilterButtonModel(0);
+		filter.setInputLog(originalLog);
 		// Check the filter button was created 
 		assertTrue(filter instanceof FilterButtonModel);
 		// Check the filter button is not null
@@ -45,7 +47,8 @@ public class FilterButtonModelTest extends FilterdPackageTest {
 		// Create new YLog
 		YLog initialLog = new YLog(0, "Original Log", originalLog);
 		// Create new filter button instance
-		FilterButtonModel filter = new FilterButtonModel(0, initialLog);
+		FilterButtonModel filter = new FilterButtonModel(0);
+		filter.setInputLog(originalLog);
 		// Set a new filter button name
 		filter.setName("Filterd");
 		// Get the new filter button name
@@ -61,7 +64,8 @@ public class FilterButtonModelTest extends FilterdPackageTest {
 		// Create new YLog
 		YLog initialLog = new YLog(0, "Original Log", originalLog);
 		// Create new filter button instance
-		FilterButtonModel filter = new FilterButtonModel(0, initialLog);
+		FilterButtonModel filter = new FilterButtonModel(0);
+		filter.setInputLog(originalLog);
 		// Set a new filter button index
 		filter.setIndex(10);
 		// Get the filter button index
@@ -75,7 +79,8 @@ public class FilterButtonModelTest extends FilterdPackageTest {
 		// Create new YLog
 		YLog initialLog = new YLog(0, "Original Log", originalLog);
 		// Create new filter button instance
-		FilterButtonModel filter = new FilterButtonModel(0, initialLog);
+		FilterButtonModel filter = new FilterButtonModel(0);
+		filter.setInputLog(originalLog);
 		// Set a new filter button selected variable
 		filter.setSelected(true);
 		// Get the filter button selected variable
@@ -91,7 +96,8 @@ public class FilterButtonModelTest extends FilterdPackageTest {
 		// Create new YLog
 		YLog initialLog = new YLog(0, "Original Log", originalLog);
 		// Create new filter button instance
-		FilterButtonModel filter = new FilterButtonModel(0, initialLog);
+		FilterButtonModel filter = new FilterButtonModel(0);
+		filter.setInputLog(originalLog);
 		// Create new abstract filter configuration
 		FilterdAbstractConfig config = new FilterdTraceStartEventConfig(originalLog,
 				new FilterdTraceStartEventFilter());
@@ -108,11 +114,12 @@ public class FilterButtonModelTest extends FilterdPackageTest {
 		// Create new YLog
 		YLog initialLog = new YLog(0, "Original Log", originalLog);
 		// Create new filter button instance
-		FilterButtonModel filter = new FilterButtonModel(0, initialLog);
+		FilterButtonModel filter = new FilterButtonModel(0);
+		filter.setInputLog(originalLog);
 		// Get the output log of the filter button
-		YLog outputLog = filter.getOutputLog();
+		XLog outputLog = filter.getOutputLog();
 		// Check the output log is not null
-		assertTrue(outputLog != null);
+		assertTrue(outputLog == null);
 	}
 	
 	@Test
@@ -120,7 +127,8 @@ public class FilterButtonModelTest extends FilterdPackageTest {
 		// Create new YLog
 		YLog initialLog = new YLog(0, "Original Log", originalLog);
 		// Create new filter button instance
-		FilterButtonModel filter = new FilterButtonModel(0, initialLog);
+		FilterButtonModel filter = new FilterButtonModel(0);
+		filter.setInputLog(originalLog);
 		// Create new configuration for the button instance
 		FilterdAbstractConfig config = new FilterdTraceSampleConfig(initialLog.get(),
 				new FilterdTraceSampleFilter());
@@ -135,6 +143,32 @@ public class FilterButtonModelTest extends FilterdPackageTest {
 			fail("InvalidConfigurationException was NOT thrown!");
 		} catch (Throwable exception) {
 			assertEquals(InvalidConfigurationException.class, exception.getClass());
+		}
+	}
+	
+	@Test
+	public void testFilterButtonComputeNullLog() {
+		// Create new YLog
+		YLog initialLog = new YLog(0, "Original Log", originalLog);
+		// Create new filter button instance
+		FilterButtonModel filter = new FilterButtonModel(0);
+		// Create new configuration for the button instance
+		FilterdAbstractConfig config = new FilterdTraceSampleConfig(initialLog.get(),
+				new FilterdTraceSampleFilter());
+		// Set the filter configuration parameters
+		((ParameterValueFromRange<Integer>) config.getParameters().get(0)).setChosen(initialLog.get().size()+5);
+		// Set the configuration for the filter button
+		filter.setFilterConfig(config);
+		
+		// Set the initial log to null
+		initialLog.setLog(null);
+		
+		try {
+			// Compute the cell's output
+			filter.compute();
+			fail("NullPointerException was NOT thrown!");
+		} catch (Throwable exception) {
+			assertEquals(NullPointerException.class, exception.getClass());
 		}
 	}
 }
