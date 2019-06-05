@@ -64,7 +64,7 @@ public class FilterdTraceTrimConfig extends FilterdAbstractConfig {
 			// Create the parameter for selecting the type.
 			ParameterOneFromSet selectionType = new ParameterOneFromSet(
 									"followType", 
-									"Select follow type", 
+									"Select trim type", 
 									selectionTypeList.get(0), 
 									selectionTypeList);
 			
@@ -91,7 +91,7 @@ public class FilterdTraceTrimConfig extends FilterdAbstractConfig {
 			// Create parameter for reference event values.
 			ParameterMultipleFromSet firstEvents = 
 					new ParameterMultipleFromSet(
-						"attrValues",
+						"firstattrValues",
 						"Desired values:",
 						Arrays.asList(attributeValuesList.get(0)),
 						attributeValuesList
@@ -100,7 +100,7 @@ public class FilterdTraceTrimConfig extends FilterdAbstractConfig {
 			// Create parameter for follower event values.
 			ParameterMultipleFromSet endEvents = 
 					new ParameterMultipleFromSet(
-						"attrValues",
+						"endattrValues",
 						"Desired values:",
 						Arrays.asList(attributeValuesList.get(0)),
 						attributeValuesList
@@ -132,7 +132,7 @@ public class FilterdTraceTrimConfig extends FilterdAbstractConfig {
 						if (Llog != null) {
 						for (ParameterController changingParameter : filterConfigPanel.getControllers()) {
 							
-							if (changingParameter.getName().equals("attrValues")) {
+							if (changingParameter.getName().equals("firstattrValues")) {
 								
 								ParameterMultipleFromSetController castedChanging = 
 										(ParameterMultipleFromSetController) changingParameter;
@@ -154,6 +154,25 @@ public class FilterdTraceTrimConfig extends FilterdAbstractConfig {
 								.setChosen(attributeValuesList);
 								((ParameterMultipleFromSet) params.get(2))
 								.setDefaultChoice(attributeValuesList);
+								castedChanging.changeOptions(attributeValuesList);
+							
+							}
+							if (changingParameter.getName().equals("endattrValues")) {
+								
+								ParameterMultipleFromSetController castedChanging = 
+										(ParameterMultipleFromSetController) changingParameter;
+								Set<String> attributeValues = new HashSet<>();
+								
+								for (XTrace trace : Llog) {
+									
+									for (XEvent event : trace) {
+										
+										XAttributeMap eventAttrs = event.getAttributes();
+										if (eventAttrs.containsKey(newValue))
+											attributeValues.add(eventAttrs.get(newValue).toString());
+									}
+								}
+								List<String> attributeValuesList = new ArrayList<String>(attributeValues);
 								((ParameterMultipleFromSet) params.get(3))
 								.setOptions(attributeValuesList);
 								((ParameterMultipleFromSet) params.get(3))

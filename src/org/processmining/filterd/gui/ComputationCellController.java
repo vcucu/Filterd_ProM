@@ -22,6 +22,7 @@ import org.processmining.filterd.configurations.FilterdTracePerformanceConfig;
 import org.processmining.filterd.configurations.FilterdTraceSampleConfig;
 import org.processmining.filterd.configurations.FilterdTraceStartEventConfig;
 import org.processmining.filterd.configurations.FilterdTraceTimeframeConfig;
+import org.processmining.filterd.configurations.FilterdTraceTrimConfig;
 import org.processmining.filterd.configurations.FilterdTracesHavingEventConfig;
 import org.processmining.filterd.filters.FilterdEventAttrFilter;
 import org.processmining.filterd.filters.FilterdEventRateFilter;
@@ -34,6 +35,7 @@ import org.processmining.filterd.filters.FilterdTracePerformanceFilter;
 import org.processmining.filterd.filters.FilterdTraceSampleFilter;
 import org.processmining.filterd.filters.FilterdTraceStartEventFilter;
 import org.processmining.filterd.filters.FilterdTraceTimeframeFilter;
+import org.processmining.filterd.filters.FilterdTraceTrimFilter;
 import org.processmining.filterd.filters.FilterdTracesHavingEvent;
 import org.processmining.filterd.gui.ConfigurationModalController.ConfigurationStep;
 import org.processmining.filterd.models.YLog;
@@ -437,10 +439,12 @@ public class ComputationCellController extends CellController {
 		filterOptions.add("Trace Having Event");
 		filterOptions.add("Trace Attribute");
 		filterOptions.add("Trace Timeframe");
+		filterOptions.add("Trace Follower Filter");
+		filterOptions.add("Trace Trim Filter");
 		filterOptions.add("Event Attributes");
 		filterOptions.add("Event Rate");
 		filterOptions.add("Merge Subsequent Events");
-		filterOptions.add("Trace Follower Filter");
+		
 
 		// callback is called when the user chooses which filter she wants to use
 		// it should map the chosen string to a concrete class which is initialized 
@@ -524,6 +528,10 @@ public class ComputationCellController extends CellController {
 					case "Trace Follower Filter":
 						filterConfig = new FilterdTraceFollowerConfig(inputLog,
 								new FilterdTraceFollowerFilter());
+						break;
+					case "Trace Trim Filter":
+						filterConfig = new FilterdTraceTrimConfig(inputLog,
+								new FilterdTraceTrimFilter());
 						break;
 					default:
 						throw new IllegalArgumentException("Unsupported filter selected");
