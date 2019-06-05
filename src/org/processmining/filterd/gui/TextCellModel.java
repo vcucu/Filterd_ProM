@@ -1,9 +1,6 @@
 package org.processmining.filterd.gui;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 
 import org.processmining.contexts.uitopia.UIPluginContext;
 
@@ -11,8 +8,6 @@ import javafx.beans.property.Property;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-@XmlAccessorType(XmlAccessType.NONE) // Makes sure only explicitly named elements get added to the XML.
-@XmlRootElement(name = "TextCellModel") // Needed by JAXB to generate an XML.
 public class TextCellModel extends CellModel{
 	
 	// Annotated at the getter method because a conversion is needed.

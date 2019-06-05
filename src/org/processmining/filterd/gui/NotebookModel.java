@@ -15,8 +15,10 @@ import org.processmining.contexts.uitopia.UIContext;
 import org.processmining.contexts.uitopia.UIPluginContext;
 import org.processmining.contexts.uitopia.hub.ProMResourceManager;
 import org.processmining.contexts.uitopia.hub.ProMViewManager;
+import org.processmining.filterd.gui.adapters.ComputationCellModelAdapted;
 import org.processmining.filterd.gui.adapters.NotebookModelAdapted;
 import org.processmining.filterd.gui.adapters.NotebookModelAdapter;
+import org.processmining.filterd.gui.adapters.TextCellModelAdapted;
 import org.processmining.filterd.models.YLog;
 import org.processmining.filterd.tools.Toolbox;
 import org.processmining.framework.plugin.ProMCanceller;
@@ -383,9 +385,9 @@ public class NotebookModel {
 	 * @Return The XML of the notebook.
 	 */
 	public String getXML() throws JAXBException {
-		JAXBContext jaxbContext = JAXBContext.newInstance(NotebookModelAdapted.class); // Create JAXB Context.
+		JAXBContext jaxbContext = JAXBContext.newInstance(NotebookModelAdapted.class, TextCellModelAdapted.class, ComputationCellModelAdapted.class); // Create JAXB Context.
 		Marshaller jaxbMarshaller = jaxbContext.createMarshaller(); // Create Marshaller.
-		//jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE); // Format XML (otherwise it wil be a single line without spaces)
+		jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE); // Format XML (otherwise it wil be a single line without spaces)
 		
 		NotebookModelAdapted adaptedModel = new NotebookModelAdapted(); // Create adapted notebook.
 		adaptedModel.setCells(getCells());

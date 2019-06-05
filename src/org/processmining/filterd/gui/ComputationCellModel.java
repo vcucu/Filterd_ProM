@@ -8,10 +8,6 @@ import java.util.Set;
 
 import javax.swing.JComponent;
 import javax.swing.JLabel;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 
 import org.deckfour.uitopia.api.model.ViewType;
 import org.deckfour.xes.model.XLog;
@@ -44,15 +40,12 @@ import javafx.scene.layout.Priority;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
-@XmlAccessorType(XmlAccessType.NONE) // Makes sure only explicitly named elements get added to the XML.
-@XmlRootElement(name = "ComputationCellModel") // Needed by JAXB to generate an XML.
 public class ComputationCellModel extends CellModel {
 
 	private ProMCanceller canceller;
 	private YLog inputLog;
 	private List<YLog> inputLogs;
 	private List<YLog> outputLogs;
-	@XmlElement
 	private ObservableList<FilterButtonModel> filters;
 	
 	/**
@@ -100,6 +93,14 @@ public class ComputationCellModel extends CellModel {
 
 	public void addFilterModel(int index, FilterButtonModel model) {
 		this.filters.add(index, model);
+	}
+	
+	/**
+	 * Adds all FilterButtonModels in a collection to this model.
+	 * @param models collection of FilterButtonModels.
+	 */
+	public void addFilterModels(List<FilterButtonModel> models) {
+		this.filters.addAll(models);
 	}
 	
 	public void removeFilter(FilterButtonModel filter) {

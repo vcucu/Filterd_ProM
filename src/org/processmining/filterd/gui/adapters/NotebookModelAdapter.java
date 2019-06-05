@@ -34,7 +34,7 @@ public class NotebookModelAdapter extends AbstractJAXBAdapter<NotebookModelAdapt
 			"org.processmining.filterd.gui.AbstractJAXBAdapter.staticInitialInput is null");
 		}
 		NotebookModel model = new NotebookModel(staticPromContext, staticInitialInput, null);
-		//model.addCells(adaptedModel.getCells());
+		model.addCells(adaptedModel.getCells());
 		model.setComputationMode(adaptedModel.getComputationMode());
 		return model;
 	}

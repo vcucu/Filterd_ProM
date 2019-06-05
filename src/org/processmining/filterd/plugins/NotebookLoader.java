@@ -11,8 +11,10 @@ import org.processmining.contexts.uitopia.UIPluginContext;
 import org.processmining.contexts.uitopia.annotations.UITopiaVariant;
 import org.processmining.filterd.gui.AbstractJAXBAdapter;
 import org.processmining.filterd.gui.NotebookModel;
+import org.processmining.filterd.gui.adapters.ComputationCellModelAdapted;
 import org.processmining.filterd.gui.adapters.NotebookModelAdapted;
 import org.processmining.filterd.gui.adapters.NotebookModelAdapter;
+import org.processmining.filterd.gui.adapters.TextCellModelAdapted;
 import org.processmining.framework.plugin.annotations.Plugin;
 import org.processmining.framework.plugin.annotations.PluginVariant;
 
@@ -29,11 +31,12 @@ public class NotebookLoader {
 			AbstractJAXBAdapter.setInitialInput(log);
 			
 			// read the XML.
-			JAXBContext jaxbContext= JAXBContext.newInstance(NotebookModelAdapted.class);
+			// add all the classes which have a XmlRootElement annotation in the newInstance method.
+			JAXBContext jaxbContext= JAXBContext.newInstance(NotebookModelAdapted.class, TextCellModelAdapted.class, ComputationCellModelAdapted.class);
 			Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
 			
 			StringReader reader = new StringReader(imported);
-			NotebookModelAdapted adaptedModel = (NotebookModelAdapted) jaxbUnmarshaller.unmarshal(reader);
+			NotebookModelAdapted adaptedModel = (NotebookModelAdapted) jaxbUnmarshaller.unmarshal(reader); // NullPointer error happens here
 			
 			// convert the adapted model to a notebook model.
 			NotebookModelAdapter adapter = new NotebookModelAdapter();		
@@ -43,9 +46,5 @@ public class NotebookLoader {
 			notebookModel = new NotebookModel(context, log, null);
 		}
 		return notebookModel;
-//		
-//		NotebookModel notebook = new NotebookModel(context, log, null); //added null for no error
-//		notebook.addCells(imported.getCells());
-//		return notebook;
 	}
 }
