@@ -32,7 +32,7 @@ public class FilterdTraceTrimFilter extends Filter {
 		ArrayList<XTrace> tracesToRemove = new ArrayList<>();
 		Map<XTrace, ArrayList<XEvent>> eventsToRemove =
 				new HashMap<>();
-		for (XTrace trace : log) {
+		for (XTrace trace : clonedLog) {
 			XEvent referenceEvent = null;
 		
 			boolean noEnd = true;
@@ -50,7 +50,7 @@ public class FilterdTraceTrimFilter extends Filter {
 					
 				}		
 			}
-			if (referenceEvent != null && referenceEvent != event) {
+			if (referenceEvent != null) {
 				switch (selectionType.getChosen()) {
 				case "Trim longest": {
 					
@@ -58,11 +58,13 @@ public class FilterdTraceTrimFilter extends Filter {
 					int endIndex = trace.size();
 					boolean found = false;
 					while (--endIndex >= eventIndex) {
-						if (event.getAttributes().containsKey(attributeSelector.getChosen())) {
-							String value = event.getAttributes().get(attributeSelector.getChosen()).toString();
+						XEvent currentEvent = trace.get(endIndex);
+						if (currentEvent.getAttributes().containsKey(attributeSelector.getChosen())) {
+							String value = currentEvent.getAttributes().get(attributeSelector.getChosen()).toString();
 							
 							if (followerParameter.getChosen().contains(value)) {
 								found = true;
+								noEnd = false;
 								break;
 							}
 						}
@@ -81,23 +83,25 @@ public class FilterdTraceTrimFilter extends Filter {
 								eventsToRemoveList.add(itEvent);
 							}
 						}
-						while(++eventIndex < trace.size()) {
-							eventsToRemoveList.add(trace.get(eventIndex));
+						while(++endIndex < trace.size()) {
+							eventsToRemoveList.add(trace.get(endIndex));
 						}
 						eventsToRemove.put(trace, eventsToRemoveList);
 						
 					}
 				}
-					
+					break;
 				case "Trim first": {
 					int eventIndex = trace.indexOf(event);
 					boolean found = false;
 					while (eventIndex < trace.size()) {
-						if (event.getAttributes().containsKey(attributeSelector.getChosen())) {
-							String value = event.getAttributes().get(attributeSelector.getChosen()).toString();
+						XEvent currentEvent = trace.get(eventIndex);
+						if (currentEvent.getAttributes().containsKey(attributeSelector.getChosen())) {
+							String value = currentEvent.getAttributes().get(attributeSelector.getChosen()).toString();
 							
 							if (followerParameter.getChosen().contains(value)) {
 								found = true;
+								noEnd = false;
 								break;
 							}
 						}
@@ -123,19 +127,23 @@ public class FilterdTraceTrimFilter extends Filter {
 					}
 					
 				}
+				break;
 				}
 				break;
 			}
+			
 			}
 			if (referenceEvent == null || noEnd) {
 				tracesToRemove.add(trace);
 			}
+			
 		}
-		clonedLog.removeAll(tracesToRemove);
 		for (XTrace trace : eventsToRemove.keySet()) {
 			clonedLog.get(clonedLog.indexOf(trace))
 					 	.removeAll(eventsToRemove.get(trace));
 		}
+		clonedLog.removeAll(tracesToRemove);
+		
 		
 		return clonedLog;
 	}
