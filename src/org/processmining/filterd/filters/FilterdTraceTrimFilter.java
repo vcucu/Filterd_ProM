@@ -54,7 +54,39 @@ public class FilterdTraceTrimFilter extends Filter {
 				switch (selectionType.getChosen()) {
 				case "Trim longest": {
 					
-					
+					int eventIndex = trace.indexOf(event);
+					int endIndex = trace.size();
+					boolean found = false;
+					while (--endIndex >= eventIndex) {
+						if (event.getAttributes().containsKey(attributeSelector.getChosen())) {
+							String value = event.getAttributes().get(attributeSelector.getChosen()).toString();
+							
+							if (followerParameter.getChosen().contains(value)) {
+								found = true;
+								break;
+							}
+						}
+					}
+					if (!found) {
+						tracesToRemove.add(trace);
+					}
+					else {
+						
+						ArrayList<XEvent> eventsToRemoveList = new ArrayList<>();
+						for (XEvent itEvent : trace) {
+							if (itEvent == referenceEvent) {
+								break;
+							}
+							else {
+								eventsToRemoveList.add(itEvent);
+							}
+						}
+						while(++eventIndex < trace.size()) {
+							eventsToRemoveList.add(trace.get(eventIndex));
+						}
+						eventsToRemove.put(trace, eventsToRemoveList);
+						
+					}
 				}
 					
 				case "Trim first": {
@@ -64,7 +96,7 @@ public class FilterdTraceTrimFilter extends Filter {
 						if (event.getAttributes().containsKey(attributeSelector.getChosen())) {
 							String value = event.getAttributes().get(attributeSelector.getChosen()).toString();
 							
-							if (referenceParameter.getChosen().contains(value)) {
+							if (followerParameter.getChosen().contains(value)) {
 								found = true;
 								break;
 							}
@@ -98,6 +130,11 @@ public class FilterdTraceTrimFilter extends Filter {
 			if (referenceEvent == null || noEnd) {
 				tracesToRemove.add(trace);
 			}
+		}
+		clonedLog.removeAll(tracesToRemove);
+		for (XTrace trace : eventsToRemove.keySet()) {
+			clonedLog.get(clonedLog.indexOf(trace))
+					 	.removeAll(eventsToRemove.get(trace));
 		}
 		
 		return clonedLog;
