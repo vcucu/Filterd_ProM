@@ -1,0 +1,51 @@
+root { 
+    display: block;
+}
+
+.cell-toolbar {
+	-fx-background-color: #646464;
+}
+
+.prepend-cell-button {
+	-fx-opacity: 0%;
+}
+
+.prepend-cell-button:hover {
+	-fx-opacity: 100%;
+}
+
+.round-button {
+	-fx-fill: #787878;
+	-fx-background-radius: 100;
+	-fx-background-color:  #787878;
+}
+
+.dropdown-button {
+	-fx-shape: "M96 184c39.8 0 72 32.2 72 72s-32.2 72-72 72-72-32.2-72-72 32.2-72 72-72zM24 80c0 39.8 32.2 72 72 72s72-32.2 72-72S135.8 8 96 8 24 40.2 24 80zm0 352c0 39.8 32.2 72 72 72s72-32.2 72-72-32.2-72-72-72-72 32.2-72 72z";
+	-fx-background-color: #FFFFFF;
+}
+
+.dropdown-button .arrow-button  {
+    -fx-opacity: 0.0;
+}
+
+.cell-panel {
+	-fx-border-width: 0 1 1 0;
+    -fx-border-color: #707070;
+}
+
+.cell-name {
+	-fx-background-color:  #646464;
+	-fx-border-width: 0;
+	-fx-text-fill:  #FFFFFF;
+	-fx-font-size: 14;
+}
+
+.panel-content {
+	-fx-background-color: #FFFFFF;
+}
+
+.icon-svg {
+	-fx-scale-x: 0.025;
+	-fx-scale-y: 0.025;
+}

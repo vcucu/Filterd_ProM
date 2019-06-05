@@ -198,4 +198,77 @@ public class NotebookModelTest extends FilterdPackageTest {
 		// Check the log was properly set
 		assertTrue(equalLog(log.get(), originalLog));
 	}
+	
+	// TODO: This test keeps failing because the JUnit thread terminates before the computation thread is done
+//	@Test
+//	public void testNotebookComputeOneCell() {
+//		// Create new notebook model instance
+//		NotebookModel model = new NotebookModel();
+//		// Create new YLog
+//		YLog initialLog = new YLog(0, "Original Log", originalLog);
+//		// Set the initial input log for the notebook
+//		model.setInitialInput(initialLog);
+//		// Create new computation cell model instance
+//		ComputationCellModel cellModel0 = new ComputationCellModel(null, 0, null, new ArrayList<>());
+//		// Set the initial log for the computation cell
+//		cellModel0.setInputLog(model.getInitialInput());
+//		// Add cell model to the notebook model
+//		model.addCell(cellModel0);
+//		// Create new filter button models
+//		FilterButtonModel filterModel0 = new FilterButtonModel(0);
+//		// Add filter buttons to the computation cell filter list
+//		cellModel0.addFilterModel(0, filterModel0);
+//		// Add filter configurations to the filter buttons
+//		FilterdAbstractConfig filterConfig0 = new FilterdTraceSampleConfig(cellModel0.getInputLog().get(),
+//				new FilterdTraceSampleFilter());
+//		// Set the filter configuration parameters
+//		((ParameterValueFromRange<Integer>) filterConfig0.getParameters().get(0)).setChosen(2);
+//		// Set filter configurations for the filter buttons
+//		filterModel0.setFilterConfig(filterConfig0);
+//		// Compute the cell's output
+//		model.compute();
+//		// Check that the computation was successful
+//		assertEquals(2, cellModel0.getOutputLogs().get(0).get().size());
+//	}
+	
+	// TODO: This test keeps failing because the JUnit thread terminates before the computation thread is done
+//	@Test
+//	public void testNotebookComputeTwoCells() {
+//		// Create new notebook model instance
+//		NotebookModel model = new NotebookModel();
+//		// Create new YLog
+//		YLog initialLog = new YLog(0, "Initial Log", originalLog);
+//		// Set the initial input log for the notebook
+//		model.setInitialInput(initialLog);
+//		// Create new computation cell model instance
+//		ComputationCellModel cellModel0 = new ComputationCellModel(null, 0, null, new ArrayList<>());
+//		ComputationCellModel cellModel1 = new ComputationCellModel(null, 0, null, new ArrayList<>());
+//		// Set the initial log for the computation cell
+//		cellModel0.setInputLog(model.getInitialInput());
+//		cellModel1.setInputLog(cellModel0.getOutputLogs().get(0));
+//		// Add cell model to the notebook model
+//		model.addCell(cellModel0);
+//		model.addCell(cellModel1);
+//		// Create new filter button models
+//		FilterButtonModel filterModel0 = new FilterButtonModel(0);
+//		FilterButtonModel filterModel1 = new FilterButtonModel(0);
+//		// Add filter buttons to the computation cell filter list
+//		cellModel0.addFilterModel(0, filterModel0);
+//		cellModel1.addFilterModel(0, filterModel1);
+//		// Add filter configurations to the filter buttons
+//		FilterdAbstractConfig filterConfig0 = new FilterdTraceSampleConfig(cellModel0.getInputLog().get(),
+//				new FilterdTraceSampleFilter());
+//		FilterdAbstractConfig filterConfig1 = new FilterdTraceSampleConfig(cellModel1.getInputLog().get(),
+//				new FilterdTraceSampleFilter());
+//		// Set the filter configuration parameters
+//		((ParameterValueFromRange<Integer>) filterConfig0.getParameters().get(0)).setChosen(2);
+//		((ParameterValueFromRange<Integer>) filterConfig1.getParameters().get(0)).setChosen(1);
+//		// Set filter configurations for the filter buttons
+//		filterModel0.setFilterConfig(filterConfig0);
+//		filterModel1.setFilterConfig(filterConfig1);
+//		// Compute the cell's output
+//		model.compute();
+//		// Check that the computation was successful
+//		assertEquals(1, cellModel1.getOutputLogs().get(0).get().size());
+//	}
 }
