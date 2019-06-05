@@ -365,15 +365,18 @@ public class ComputationCellController extends CellController {
 		});
 	}
 
+	/**
+	 * Method called when the configuration modal has to be hidden. It replaces the configuration modal with the visualizer.
+	 * 
+	 * @param removeFilter  boolean stating whether the last filter button should be removed (when the user cancels the configuration)
+	 */
 	public void hideConfigurationModal(boolean removeFilter) {
+		// if configuration modal is not shown at all, do not do anything
 		if (this.isConfigurationModalShown) {
 			ConfigurationStep configurationStep = configurationModal.getConfigurationStep();
-//			visualizerPane.getChildren().remove(configurationModal.getRoot());
-			visualizerPane.getChildren().clear();
-			// set visualizer as the content
-			visualizerPane.getChildren().add(visualizerSwgWrap);
-			// Enable visualizer combobox
-			cmbVisualizers.setDisable(false);
+			visualizerPane.getChildren().clear(); // remove configuration modal from the visualizer pane
+			visualizerPane.getChildren().add(visualizerSwgWrap); // add the visualizer to the vistualizer pane
+			cmbVisualizers.setDisable(false); // enable visualizer combobox
 			// set properties w.r.t. parent node (AnchorPane)
 			AnchorPane.setTopAnchor(visualizerSwgWrap, 0.0);
 			AnchorPane.setBottomAnchor(visualizerSwgWrap, 0.0);
@@ -391,18 +394,20 @@ public class ComputationCellController extends CellController {
 		this.isConfigurationModalShown = false;
 	}
 
+	/**
+	 * Method called when the filter configuration dialog should be shown in the configuration modal.
+	 * 
+	 * @param filterConfig  Filter configuration whose configuration panel should be shown
+	 * @param filterConfigController  Filter button whose filter is being configured 
+	 */
 	public void showModalFilterConfiguration(FilterdAbstractConfig filterConfig, FilterButtonController filterConfigController) {
 		if (filterConfig == null) {
 			throw new IllegalArgumentException("Filter configuration cannot be null");
 		}
-		// Remove visualizer
-//		visualizerPane.getChildren().remove(visualizerSwgWrap);
-		visualizerPane.getChildren().clear();
-		// Disable visualizer combobox
-		cmbVisualizers.setDisable(true);
-		// populate filter configuration modal
-		configurationModal.showFilterConfiguration(filterConfig, filterConfigController);
-		// get root component of the configuration modal
+		visualizerPane.getChildren().clear(); // Remove visualizer
+		cmbVisualizers.setDisable(true); // Disable visualizer combobox
+		configurationModal.showFilterConfiguration(filterConfig, filterConfigController); // populate filter configuration modal
+		// get and set the root component of the configuration modal
 		VBox configurationModalRoot = configurationModal.getRoot();
 		visualizerPane.getChildren().add(configurationModalRoot);
 		// set properties w.r.t. parent node (AnchorPane)
@@ -413,12 +418,16 @@ public class ComputationCellController extends CellController {
 		this.isConfigurationModalShown = true;
 	}
 
+	/**
+	 * Method called when the list of available filters should be shown in the configuration modal.
+	 * 
+	 * @param filterButtonController  Filter button for which the user wants to pick the filter
+	 * @param filterButtonModel  Filter button model which should be populated with the chosen configuration
+	 */
 	public void showModalFilterList(FilterButtonController filterButtonController, FilterButtonModel filterButtonModel) {
-		// Remove visualizer
-//		visualizerPane.getChildren().remove(visualizerSwgWrap);
-		visualizerPane.getChildren().clear();
-		// Disable visualizer combobox
-		cmbVisualizers.setDisable(true);
+		visualizerPane.getChildren().clear(); // Remove visualizer
+		cmbVisualizers.setDisable(true); // Disable visualizer combobox
+		// populate the options list that is passed to the ConfigurationModalController
 		List<String> filterOptions = new ArrayList<>();
 		filterOptions.add("Trace Start Event Filter");
 		filterOptions.add("Trace End Event Filter");
@@ -433,7 +442,8 @@ public class ComputationCellController extends CellController {
 		filterOptions.add("Merge Subsequent Events");
 		filterOptions.add("Trace Follower Filter");
 
-
+		// callback is called when the user chooses which filter she wants to use
+		// it should map the chosen string to a concrete class which is initialized 
 		configurationModal.showFilterList(filterOptions, filterButtonController, new Callback<String, FilterdAbstractConfig>() {
 
 			public FilterdAbstractConfig call(String userSelection) {
@@ -465,6 +475,7 @@ public class ComputationCellController extends CellController {
 						.set(false);
 					return null;
 				}
+				// map string to class
 				switch(userSelection) {
 					case "Trace Start Event Filter":
 						filterConfig = new FilterdTraceStartEventConfig(inputLog,

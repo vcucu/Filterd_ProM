@@ -19,7 +19,7 @@ import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 
 /**
- * Controller for the modal that displays the configuration dialog for filters. 
+ * Controller for the modal that displays the configuration dialog for filters. This UI component is meant to be used within the computation cell! 
  * It is shown in the computation cell's visualizer pane, and displays two types of dialogs:
  * - list of available filters which can be initialized by the user,
  * - configuration panel for individual filters.
