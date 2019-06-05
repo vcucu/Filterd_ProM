@@ -2,6 +2,10 @@ root {
     display: block;
 }
 
-.notebook-toolbar {
+.bg-black {
 	-fx-background-color: #000000;
+}
+
+.notebook-toolbar {
+	
 }
