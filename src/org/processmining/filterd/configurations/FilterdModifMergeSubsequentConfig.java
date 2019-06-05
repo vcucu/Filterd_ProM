@@ -8,8 +8,10 @@ import org.deckfour.xes.model.XLog;
 import org.processmining.filterd.filters.Filter;
 import org.processmining.filterd.gui.FilterConfigPanelController;
 import org.processmining.filterd.parameters.Parameter;
+import org.processmining.filterd.parameters.ParameterMultipleFromSet;
 import org.processmining.filterd.parameters.ParameterOneFromSet;
 import org.processmining.filterd.tools.Toolbox;
+import org.processmining.filterd.widgets.ParameterController;
 import org.processmining.filterd.widgets.ParameterOneFromSetExtendedController;
 
 public class FilterdModifMergeSubsequentConfig extends FilterdAbstractReferencingConfig {
@@ -19,6 +21,7 @@ public class FilterdModifMergeSubsequentConfig extends FilterdAbstractReferencin
 		parameters = new ArrayList<Parameter>();
 		List<XEventClassifier> classifiers = Toolbox.computeAllClassifiers(log);
 		List<String> classifiersNames = Toolbox.getClassifiersName(classifiers);
+		List<String> attributeNames = Toolbox.computeAttributes(log);
 		List<String> comparisonTypes = new ArrayList<>(Arrays.asList
 				("Compare event class", 
 				"Compare event timestamps", 
@@ -53,10 +56,19 @@ public class FilterdModifMergeSubsequentConfig extends FilterdAbstractReferencin
 				mergeTypes.get(0),
 				mergeTypes);
 		
+		//Create relevant attributes parameter
+		ParameterMultipleFromSet relevantAttributes = new ParameterMultipleFromSet(
+				"relevantAttributes",
+				"Select which attributes should be considered in the comparison",
+				attributeNames,
+				attributeNames);
+				
+		
 		//Add all parameters to the list of parameters
 		parameters.add(classifierParam);
 		parameters.add(comparisonType);
 		parameters.add(mergeType);
+		parameters.add(relevantAttributes);
 	}
 
 
@@ -67,7 +79,20 @@ public class FilterdModifMergeSubsequentConfig extends FilterdAbstractReferencin
 	};
 
 	public FilterConfigPanelController getConfigPanel() {
-		return new FilterConfigPanelController("Merge Subsequent Events Configuration", parameters, this);
+		FilterConfigPanelController filterConfigPanel =
+				new FilterConfigPanelController("Merge Subsequent Events Configuration", parameters, this);
+		
+		for (ParameterController parameter : filterConfigPanel.getControllers() ) {
+			if (parameter.getName().contentEquals("comparisonType")) {
+				for (ParameterController parameter2 : filterConfigPanel.getControllers()) {
+					if (parameter2.getName().contentEquals("relevantAttributes")) {
+						System.out.println("");
+					}
+				}
+			}
+		}
+		
+		return filterConfigPanel;
 	}
 	
 

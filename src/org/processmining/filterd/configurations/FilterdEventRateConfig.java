@@ -149,7 +149,7 @@ public class FilterdEventRateConfig extends FilterdAbstractConfig {
 								 //the parameter is only used because thats the interface in toolbox
 								 //but nice solution would also be making it string & number, cos this is kinda workaround
 								 ParameterOneFromSet rate = new ParameterOneFromSet(
-										 "frequency","frequency","frequency",null );
+										 "Frequency","Frequency","Frequency",null );
 								 threshold = new ParameterValueFromRange<Integer>(
 											"Frequency threshold", "threshold", 100, null, Integer.TYPE);
 								 threshold.setChosen(newValue.intValue());
