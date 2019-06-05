@@ -231,9 +231,13 @@ public class FilterdTraceFollowerFilter extends Filter {
 						}
 						case "Eventually followed": {
 							
+							// Get the value for the selected attribute key, any
+							// event after the reference event eventually follows it.
 							String value = event.getAttributes().get(attributeSelector.getChosen()).toString();
 							
+							// Check if it is present in the follower parameter.
 							if (followerParameter.getChosen().contains(value)) {
+								// If time restriction is imposed on the reference event.
 								if (timeRestrictionParameter.getChosen()) {
 									if (timeRestrictionHolds(
 											referenceEvent, 
@@ -242,26 +246,37 @@ public class FilterdTraceFollowerFilter extends Filter {
 											timeDurationParameter.getChosen(), 
 											timeTypeParameter.getChosen())) {
 										if (valueMatchingParameter.getChosen()) {
+											// If value matching is imposed on the reference event.
 											if (valueMatchingHolds(
 													referenceEvent, 
 													event, 
 													sameOrDifferentParameter.getChosen().equals("The same value"), 
 													valueMatchingAttributeParameter.getChosen())) {
+												// Time and value matching restriction imposed.
+												// Follower event found!
 												removeFromLog = false;
 											}
 										} else {
+											// Time restriction imposed.
+											// Follower event found!
 											removeFromLog = false;
 										}
 									}
-								} else if (valueMatchingParameter.getChosen()) {
+								}
+								// If value matching is imposed on the reference event.
+								else if (valueMatchingParameter.getChosen()) {
 									if (valueMatchingHolds(
 											referenceEvent, 
 											event, 
 											sameOrDifferentParameter.getChosen().equals("The same value"), 
 											valueMatchingAttributeParameter.getChosen())) {
+										// Value matching restriction imposed.
+										// Follower event found!
 										removeFromLog = false;
 									}
 								} else {
+									// No time or value matching restrictions imposed.
+									// Follower event found!
 									removeFromLog = false;
 								}
 							}
@@ -270,9 +285,13 @@ public class FilterdTraceFollowerFilter extends Filter {
 						}
 						case "Never eventually followed": {
 							
+							// Get the value for the selected attribute key, any
+							// event after the reference event eventually follows it.
 							String value = event.getAttributes().get(attributeSelector.getChosen()).toString();
 							
+							// Check if it is present in the follower parameter.
 							if (followerParameter.getChosen().contains(value)) {
+								// If time restriction is imposed on the reference event.
 								if (timeRestrictionParameter.getChosen()) {
 									if (timeRestrictionHolds(
 											referenceEvent, 
@@ -280,27 +299,38 @@ public class FilterdTraceFollowerFilter extends Filter {
 											shorterOrLongerParameter.getChosen().equals("Shorter"), 
 											timeDurationParameter.getChosen(), 
 											timeTypeParameter.getChosen())) {
+										// If value matching is imposed on the reference event.
 										if (valueMatchingParameter.getChosen()) {
 											if (valueMatchingHolds(
 													referenceEvent, 
 													event, 
 													sameOrDifferentParameter.getChosen().equals("The same value"), 
 													valueMatchingAttributeParameter.getChosen())) {
+												// Time and value matching restriction imposed.
+												// Follower event found, thus we need to remove the trace.
 												foundEventualEvent = true;
 											}
 										} else {
+											// Time restriction imposed.
+											// Follower event found, thus we need to remove the trace.
 											foundEventualEvent = true;
 										}
 									}
-								} else if (valueMatchingParameter.getChosen()) {
+								}
+								// If value matching is imposed on the reference event.
+								else if (valueMatchingParameter.getChosen()) {
 									if (valueMatchingHolds(
 											referenceEvent, 
 											event, 
 											sameOrDifferentParameter.getChosen().equals("The same value"), 
 											valueMatchingAttributeParameter.getChosen())) {
+										// Value matching restriction imposed.
+										// Follower event found, thus we need to remove the trace.
 										removeFromLog = false;
 									}
 								} else {
+									// No time or value matching restrictions imposed.
+									// Follower event found, thus we need to remove the trace.
 									foundEventualEvent = true;
 								}
 							}
@@ -315,7 +345,10 @@ public class FilterdTraceFollowerFilter extends Filter {
 
 			}
 			
+			// Found an eventual event while we want traces that never eventually 
+			// follow.
 			if (!foundEventualEvent && selectionType.getChosen().equals("Never eventually followed")) {
+				// Thus, we need to remove it.
 				removeFromLog = false;
 			}
 			
@@ -338,65 +371,76 @@ public class FilterdTraceFollowerFilter extends Filter {
 			int duration, 
 			String durationType) {
 		
-		
+		// Get timestamps of both events.
 		LocalDateTime referenceTime = Toolbox.synchronizeGMT(
 				referenceEvent.getAttributes().get("time:timestamp").toString());
 		LocalDateTime followerTime = Toolbox.synchronizeGMT(
 				followerEvent.getAttributes().get("time:timestamp").toString());
 		
+		// Get the duration in between the events.
 		Duration durationBetween = Duration.between(referenceTime, followerTime);
 		
+		// Build the duration set for the threshold.
 		Duration durationThreshold;
 		
 		switch (durationType) {
 			case "Millis": {
 				
+				// In milliseconds.
 				durationThreshold = Duration.of(duration, ChronoUnit.MILLIS);
 				
 				break;
 			}
 			case "Seconds": {
 				
+				// In seconds.
 				durationThreshold = Duration.of(duration, ChronoUnit.SECONDS);
 				
 				break;
 			}
 			case "Minutes": {
 				
+				// In minutes.
 				durationThreshold = Duration.of(duration, ChronoUnit.MINUTES);
 				
 				break;
 			}
 			case "Hours": {
 				
+				// In hours.
 				durationThreshold = Duration.of(duration, ChronoUnit.HOURS);
 				
 				break;
 			}
 			case "Days": {
 				
+				// In days.
 				durationThreshold = Duration.of(duration, ChronoUnit.DAYS);
 				
 				break;
 			}
 			case "Weeks": {
 				
+				// In weeks.
 				durationThreshold = Duration.of(duration, ChronoUnit.WEEKS);
 				
 				break;
 			}
 			case "Years": {
 				
+				// In years.
 				durationThreshold = Duration.of(duration, ChronoUnit.MILLIS);
 				
 				break;
 			}
 			default: {
+				// Something went wrong, return false.
 				return false;
 			}
 		}
 		
-		
+		// Switch based on whether the time between the events should be shorter
+		// or longer than the selected duration.
 		if (shouldBeShorter) {
 			return (durationBetween.compareTo(durationThreshold) == -1);
 		} else {
@@ -410,10 +454,12 @@ public class FilterdTraceFollowerFilter extends Filter {
 			boolean shouldBeSame, 
 			String attributeToCompare) {
 		
-		
+		// Check if both events contain the attribute to compare.
 		if (referenceEvent.getAttributes().keySet().contains(attributeToCompare)
 				&& followerEvent.getAttributes().keySet().contains(attributeToCompare)) {
 			
+			// Get both values of the reference and the follower event of the
+			// attribute, the key.
 			String referenceValue = referenceEvent
 					.getAttributes()
 					.get(attributeToCompare)
@@ -423,6 +469,8 @@ public class FilterdTraceFollowerFilter extends Filter {
 					.get(attributeToCompare)
 					.toString();
 			
+			// Switch based on whether the values should be equal to each other
+			// or not.
 			if (shouldBeSame) {
 				
 				return referenceValue.equals(followerValue);
