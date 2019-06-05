@@ -8,6 +8,7 @@ public class ParameterYesNo extends Parameter {
 	public ParameterYesNo(String name, String nameDisplayed, boolean defaultChoice) {
 		super(name, nameDisplayed);
 		this.defaultChoice = defaultChoice;
+		this.chosen = defaultChoice;
 	
 	}
 	public boolean getDefaultChoice() {
