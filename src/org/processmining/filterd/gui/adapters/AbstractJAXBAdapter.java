@@ -1,4 +1,4 @@
-package org.processmining.filterd.gui;
+package org.processmining.filterd.gui.adapters;
 
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 

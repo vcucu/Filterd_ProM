@@ -1,6 +1,5 @@
 package org.processmining.filterd.gui.adapters;
 
-import org.processmining.filterd.gui.AbstractJAXBAdapter;
 import org.processmining.filterd.gui.CellModel;
 import org.processmining.filterd.gui.ComputationCellModel;
 import org.processmining.filterd.gui.TextCellModel;
