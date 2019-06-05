@@ -286,7 +286,7 @@ public class ComputationCellController extends CellController {
 			//add the toolbar and visualiser to their original cell parent
 			cellBody.getChildren().add(visualizerPane);
 			cellToolbar.getChildren().add(cellToolbar.getChildren().size() - 1, fullToolbar);
-			fullToolbar.setStyle(null);
+			fullToolbar.getStyleClass().remove("bg-black");
 			fullToolbar.setPadding(new Insets(0, 0, 0, 0));
 
 			//make the notebook toolbar and scrollpane visible
@@ -305,7 +305,7 @@ public class ComputationCellController extends CellController {
 			notebookToolbar.setManaged(isFullScreen);
 			notebookScrollPane.setVisible(isFullScreen);
 			notebookScrollPane.setManaged(isFullScreen);
-			fullToolbar.setStyle("-fx-background-color: #000000;");
+			fullToolbar.getStyleClass().add("bg-black");
 			fullToolbar.setPadding(new Insets(5, 20, 5, 10));
 
 			//add the toolbar and visualiser to the notebook
