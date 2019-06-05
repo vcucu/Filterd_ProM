@@ -2,6 +2,10 @@ package org.processmining.filterd.configurations;
 import org.processmining.filterd.parameters.*;
 import org.processmining.filterd.widgets.*;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.scene.control.ComboBox;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -113,8 +117,61 @@ public class FilterdTraceTrimConfig extends FilterdAbstractConfig {
 	}
 
 	public FilterConfigPanelController getConfigPanel() {
-		return new FilterConfigPanelController("Trace Trim Configuration", 
+		FilterConfigPanelController filterConfigPanel =
+				new FilterConfigPanelController("Trace Trim Configuration", 
 				parameters, this);
+		for(ParameterController parameter : filterConfigPanel.getControllers()) {
+			if (parameter.getName().equals("attrType")) {
+				ParameterOneFromSetController casted = (ParameterOneFromSetController) parameter;
+				ComboBox<String> comboBox = casted.getComboBox();
+				comboBox.valueProperty().addListener(new ChangeListener<String>() {
+					@Override 
+					public void changed(ObservableValue ov, String oldValue, String newValue) {
+						final XLog Llog = log;
+						List<Parameter> params = parameters;
+						if (Llog != null) {
+						for (ParameterController changingParameter : filterConfigPanel.getControllers()) {
+							
+							if (changingParameter.getName().equals("attrValues")) {
+								
+								ParameterMultipleFromSetController castedChanging = 
+										(ParameterMultipleFromSetController) changingParameter;
+								Set<String> attributeValues = new HashSet<>();
+								
+								for (XTrace trace : Llog) {
+									
+									for (XEvent event : trace) {
+										
+										XAttributeMap eventAttrs = event.getAttributes();
+										if (eventAttrs.containsKey(newValue))
+											attributeValues.add(eventAttrs.get(newValue).toString());
+									}
+								}
+								List<String> attributeValuesList = new ArrayList<String>(attributeValues);
+								((ParameterMultipleFromSet) params.get(2))
+								.setOptions(attributeValuesList);
+								((ParameterMultipleFromSet) params.get(2))
+								.setChosen(attributeValuesList);
+								((ParameterMultipleFromSet) params.get(2))
+								.setDefaultChoice(attributeValuesList);
+								((ParameterMultipleFromSet) params.get(3))
+								.setOptions(attributeValuesList);
+								((ParameterMultipleFromSet) params.get(3))
+								.setChosen(attributeValuesList);
+								((ParameterMultipleFromSet) params.get(3))
+								.setDefaultChoice(attributeValuesList);
+								castedChanging.changeOptions(attributeValuesList);
+							
+							}
+						}
+						
+					}
+					}
+			});
+				
+		}
+		}
+		return filterConfigPanel;
 	}
 	
 	public boolean checkValidity(XLog candidateLog) {
