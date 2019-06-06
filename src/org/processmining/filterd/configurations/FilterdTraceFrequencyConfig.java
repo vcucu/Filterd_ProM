@@ -19,87 +19,92 @@ import javafx.beans.value.ObservableValue;
 import javafx.scene.control.ComboBox;
 
 public class FilterdTraceFrequencyConfig extends FilterdAbstractConfig {
-	
+
 	private List<Double> logMinAndMaxSize;
 
 	public FilterdTraceFrequencyConfig(XLog log, Filter filterType) {
 		super(log, filterType);
-		
+
 		//initialize the configuration's parameters list
 		parameters = new ArrayList<>();
-		
+
 		// Initialize the threshold type parameter and add it to the parameters 
 		// list
 		List<String> foOptions = new ArrayList<String>();
-		
+
 		foOptions.add("frequency");
 		foOptions.add("occurrance");
-		
+
 		ParameterOneFromSet frequencyOccurranceParameter = 
 				new ParameterOneFromSet(
 						"FreqOcc", 
 						"Threshold type", 
 						foOptions.get(0), 
 						foOptions);
-		
+
 		Map<XTrace, List<Integer>> variantsToTraceIndices = 
 				Toolbox.getVariantsToTraceIndices(log);
-		
+
 		int minOccurrence = Integer.MAX_VALUE;
 		int maxOccurrence = Integer.MIN_VALUE;
-		
+
 		for (List<Integer> list : variantsToTraceIndices.values()) {
-			
+
 			if (list.size() < minOccurrence) {
 				minOccurrence = list.size();
 			}
-			
+
 			if (list.size() > maxOccurrence) {
 				maxOccurrence = list.size();
 			}
-			
+
 		}
-		
+
 		logMinAndMaxSize = new ArrayList<>();
 		logMinAndMaxSize.add(new Integer(minOccurrence).doubleValue());
 		logMinAndMaxSize.add(new Integer(maxOccurrence).doubleValue());
-		
+
 		// Initialize the threshold options parameter and add it to the 
 		// parameters list
 		List<Double> thrOptions = new ArrayList<>();
-		
+
 		//since the default option is "frequency", it goes from 1% to 100%
 		thrOptions.add(0.0);
 		thrOptions.add(100.0);
-		
+
 		ParameterRangeFromRange<Double> threshold = 
 				new ParameterRangeFromRange<>(
-				"threshold",
-				"Threshold",
-				thrOptions,
-				thrOptions,
-				Double.TYPE
-				);
-		
-		
-		
+						"threshold",
+						"Threshold",
+						thrOptions,
+						thrOptions,
+						Double.TYPE
+						);
+
+
+
 		// Initialize the filter mode options parameter and add it to the 
 		// parameters list
 		List<String> fModeOptions = new ArrayList<String>();
 		fModeOptions.add("in");
 		fModeOptions.add("out");
-		
+
 		ParameterOneFromSet filterInOut = new ParameterOneFromSet(
 				"filterInOut",
 				"Filter mode",
 				"in",
 				fModeOptions
 				);
-		
+
 		parameters.add(frequencyOccurranceParameter);
 		parameters.add(threshold);
 		parameters.add(filterInOut);
-				
+
+		this.configPanel = new FilterConfigPanelController(
+				"Filter Trace Frequency Configuration", 
+				parameters, 
+				this);
+		parameterListeners();
 	}
 
 	public boolean canPopulate(FilterConfigPanelController component) {
@@ -107,28 +112,21 @@ public class FilterdTraceFrequencyConfig extends FilterdAbstractConfig {
 		return true;
 	};
 
-	public FilterConfigPanelController getConfigPanel() {
-		// Return a new panel for this configuration with the relevant name and 
-		// parameters.
-		FilterConfigPanelController filterConfigPanel = new FilterConfigPanelController(
-				"Filter Trace Frequency Configuration", 
-				parameters, 
-				this);
-		for(ParameterController parameter : filterConfigPanel.getControllers()) {
+	public void parameterListeners() {
+		for(ParameterController parameter : configPanel.getControllers()) {
 			if (parameter.getName().equals("FreqOcc")) {
 				ParameterOneFromSetController casted = (ParameterOneFromSetController) parameter;
 				ComboBox<String> comboBox = casted.getComboBox();
 				comboBox.valueProperty().addListener(new ChangeListener<String>() {
 					@Override 
 					public void changed(ObservableValue ov, String oldValue, String newValue) {
-						
-						for (ParameterController changingParameter : filterConfigPanel.getControllers()) {
-							
+						for (ParameterController changingParameter : configPanel.getControllers()) {
+
 							if (changingParameter.getName().equals("threshold")) {
-								
+
 								ParameterRangeFromRangeController<Double> castedChanging = 
 										(ParameterRangeFromRangeController<Double>) changingParameter;
-								
+
 								if (newValue.equals("frequency")) {
 									List<Double> defaultValue = new ArrayList<>();
 									defaultValue.add(0.0);
@@ -136,28 +134,27 @@ public class FilterdTraceFrequencyConfig extends FilterdAbstractConfig {
 									List<Double> minMaxPair = new ArrayList<>();
 									minMaxPair.add(0.0);
 									minMaxPair.add(100.0);
-									castedChanging.setSliderConfig(defaultValue, minMaxPair);
-									
 									castedChanging.actLikeDouble(minMaxPair);
-									
+									castedChanging.setSliderConfig(defaultValue, minMaxPair);
+
+
 									ParameterRangeFromRange<Double> castedParameter = (ParameterRangeFromRange<Double>) getParameter("threshold");
 									castedParameter.setDefaultPair(defaultValue);
 									castedParameter.setOptionsPair(minMaxPair);
 								} else {
-									castedChanging.setSliderConfig(logMinAndMaxSize, logMinAndMaxSize);
-									
 									castedChanging.actLikeInteger(logMinAndMaxSize);
-									
+									castedChanging.setSliderConfig(logMinAndMaxSize, logMinAndMaxSize);
+
 									ParameterRangeFromRange<Double> castedParameter = (ParameterRangeFromRange<Double>) getParameter("threshold");
 									castedParameter.setDefaultPair(logMinAndMaxSize);
 									castedParameter.setOptionsPair(logMinAndMaxSize);
 								}
-								
+
 							}
-							
+
 						}
-						
-			        }
+
+					}
 				});
 			}
 			if(parameter.getName().equals("threshold")) {
@@ -165,10 +162,9 @@ public class FilterdTraceFrequencyConfig extends FilterdAbstractConfig {
 				ParameterRangeFromRange<Double> castedParameter = (ParameterRangeFromRange<Double>) getParameter("threshold");
 				casted.setSliderConfig(castedParameter.getChosenPair().size() == 0 ? 
 						castedParameter.getDefaultPair() : 
-						castedParameter.getChosenPair(), castedParameter.getOptionsPair());
+							castedParameter.getChosenPair(), castedParameter.getOptionsPair());
 			}
 		}
-		return filterConfigPanel;
 	}
 
 	public boolean checkValidity(XLog log) {
@@ -182,9 +178,9 @@ public class FilterdTraceFrequencyConfig extends FilterdAbstractConfig {
 				.getChosen()
 				.contains("occ")) {
 			if (((ParameterRangeFromRange<Double>) parameters.get(1))
-				.getChosenPair()
-				.get(1)
-				.intValue() > log.size()) {
+					.getChosenPair()
+					.get(1)
+					.intValue() > log.size()) {
 				return false;
 			}
 		}

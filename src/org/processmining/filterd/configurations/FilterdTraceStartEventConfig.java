@@ -6,7 +6,6 @@ import java.util.List;
 import org.deckfour.xes.classification.XEventClassifier;
 import org.deckfour.xes.model.XLog;
 import org.processmining.filterd.filters.Filter;
-import org.processmining.filterd.gui.AbstractFilterConfigPanelController;
 import org.processmining.filterd.gui.FilterConfigPanelController;
 import org.processmining.filterd.parameters.Parameter;
 import org.processmining.filterd.parameters.ParameterOneFromSet;
@@ -15,8 +14,6 @@ import org.processmining.filterd.widgets.ParameterOneFromSetExtendedController;
 
 public class FilterdTraceStartEventConfig extends FilterdAbstractReferencingConfig {
 
-	FilterConfigPanelController configPanel; 
-	
 	public FilterdTraceStartEventConfig(XLog log, Filter filterType) {
 		super(log, filterType);
 		parameters = new ArrayList<Parameter>();
@@ -46,7 +43,7 @@ public class FilterdTraceStartEventConfig extends FilterdAbstractReferencingConf
 		parameters.add(selectionType);
 		//parameters.addAll(concreteReference.getParameters());
 		
-		configPanel = new FilterConfigPanelController("Trace Start Event Configuration",
+		this.configPanel = new FilterConfigPanelController("Trace Start Event Configuration",
 				parameters, this);
 
 	}
@@ -55,10 +52,6 @@ public class FilterdTraceStartEventConfig extends FilterdAbstractReferencingConf
 		//check whether no params are empty if you populate with the component
 		return true;
 	};
-
-	public AbstractFilterConfigPanelController getConfigPanel() {
-		return configPanel;
-	}
 
 	/*
 	 * The candidateLog is invalid if the event attributes list does not 

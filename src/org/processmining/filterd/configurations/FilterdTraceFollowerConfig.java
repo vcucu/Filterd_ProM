@@ -10,7 +10,6 @@ import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
 import org.processmining.filterd.filters.Filter;
-import org.processmining.filterd.gui.AbstractFilterConfigPanelController;
 import org.processmining.filterd.gui.FilterConfigPanelController;
 import org.processmining.filterd.parameters.Parameter;
 import org.processmining.filterd.parameters.ParameterMultipleFromSet;
@@ -27,21 +26,21 @@ import javafx.beans.value.ObservableValue;
 import javafx.scene.control.ComboBox;
 
 public class FilterdTraceFollowerConfig extends FilterdAbstractConfig {
-	
+
 	Set<String> eventAttributes;
 
 	public FilterdTraceFollowerConfig(XLog log, Filter filterType) throws EmptyLogException {
 		super(log, filterType);
 		this.log = log;
-		
+
 		// Initialize the configuration's parameters list.
 		parameters = new ArrayList<>();
-		
+
 		// Do this by looping over every trace and collecting its attributes
 		// and adding this to the set, except for time:timestamp
 		eventAttributes = new HashSet<>();
 		for (XTrace trace : log) {
-			
+
 			for (XEvent event : trace) {
 
 				for (String key : event.getAttributes().keySet()) {
@@ -49,16 +48,16 @@ public class FilterdTraceFollowerConfig extends FilterdAbstractConfig {
 						eventAttributes.add(key);
 					}
 				}
-				
+
 			}
-		
+
 		}
-		
+
 		// Convert the set into an array list because ParameterOneFromSet takes
 		// a list as an argument.
 		List<String> eventAttributesList = 
 				new ArrayList<String>(eventAttributes);
-		
+
 		// Create the parameter for selecting the attribute.
 		ParameterOneFromSet attributeSelector = 
 				new ParameterOneFromSet(
@@ -66,95 +65,95 @@ public class FilterdTraceFollowerConfig extends FilterdAbstractConfig {
 						"Select attribute", 
 						eventAttributesList.get(0), 
 						eventAttributesList);
-		
+
 		List<String> selectionTypeList = new ArrayList<String>();
 		selectionTypeList.add("Directly followed");
 		selectionTypeList.add("Never directly followed");
 		selectionTypeList.add("Eventually followed");
 		selectionTypeList.add("Never eventually followed");
-		
+
 		// Create the parameter for selecting the type.
 		ParameterOneFromSet selectionType = new ParameterOneFromSet(
-								"followType", 
-								"Select follow type", 
-								selectionTypeList.get(0), 
-								selectionTypeList);
-		
+				"followType", 
+				"Select follow type", 
+				selectionTypeList.get(0), 
+				selectionTypeList);
+
 		Set<String> attributeValues = new HashSet<>();
-		
+
 		for (XTrace trace : log) {
-			
+
 			for (XEvent event : trace) {
-				
+
 				XAttributeMap eventAttrs = event.getAttributes();
 				if (eventAttrs.containsKey(eventAttributesList.get(0))) {
 					attributeValues.add(eventAttrs.get(eventAttributesList.get(0)).toString());
 				}
-				
+
 			}
-			
+
 		}
-		
+
 		// To populate both the reference and follower event values with these
 		// attribute values to start with. If the attribute is changed, so will
 		// the values in both these parameters.
 		List<String> attributeValuesList = new ArrayList<String>(attributeValues);
-		
+
 		// Create parameter for reference event values.
 		ParameterMultipleFromSet referenceParameter = 
 				new ParameterMultipleFromSet(
-					"firstattrValues",
-					"Desired values:",
-					Arrays.asList(attributeValuesList.get(0)),
-					attributeValuesList
-				);
-		
+						"firstattrValues",
+						"Desired values:",
+						Arrays.asList(attributeValuesList.get(0)),
+						attributeValuesList
+						);
+
 		// Create parameter for follower event values.
 		ParameterMultipleFromSet followerParameter = 
 				new ParameterMultipleFromSet(
-					"endattrValues",
-					"Desired values:",
-					Arrays.asList(attributeValuesList.get(0)),
-					attributeValuesList
-				);
-		
-		
+						"endattrValues",
+						"Desired values:",
+						Arrays.asList(attributeValuesList.get(0)),
+						attributeValuesList
+						);
+
+
 		// Create parameter for value matching.
 		ParameterYesNo valueMatchingParameter = new ParameterYesNo(
 				"Value matching", 
 				"Value matching", 
 				false);
-		
+
 		List<String> sameOrDifferentList = new ArrayList<String>();
 		sameOrDifferentList.add("The same value");
 		sameOrDifferentList.add("Different values");
-		
+
 		// Create parameter for either same value or different value.
 		ParameterOneFromSet sameOrDifferentParameter = new ParameterOneFromSet(
 				"Same or Different value", 
 				"Select same or different value", 
 				sameOrDifferentList.get(0), 
 				sameOrDifferentList);
-		
+
 		// Create parameter for selecting the attribute whose value has to be
 		// matched.
 		ParameterOneFromSet valueMatchingAttributeParameter = 
 				new ParameterOneFromSet(
-				"Attribute for value matching", 
-				"Select attribute", 
-				eventAttributesList.get(0), 
-				eventAttributesList);
-		
+						"Attribute for value matching", 
+						"Select attribute", 
+						eventAttributesList.get(0), 
+						eventAttributesList);
+
 		// Create parameter for a time restriction.
 		ParameterYesNo timeRestrictionParameter = new ParameterYesNo(
 				"Time restrictions", 
 				"Time restrictions", 
 				false);
-		
+
 		List<String> shorterOrLongerList = new ArrayList<String>();
 		shorterOrLongerList.add("Shorter");
 		shorterOrLongerList.add("Longer");
-		
+
 		// Create parameter for selecting whether the time needs to be longer
 		// or shorter than the time selected.
 		ParameterOneFromSet shorterOrLongerParameter = new ParameterOneFromSet(
@@ -162,17 +161,17 @@ public class FilterdTraceFollowerConfig extends FilterdAbstractConfig {
 				"Select shorter or longer", 
 				shorterOrLongerList.get(0), 
 				shorterOrLongerList);
-		
-	
+
+
 		// Create parameter for selecting time duration.
 		ParameterValueFromRange<Integer> timeDurationParameter = 
 				new ParameterValueFromRange<Integer>(
-				"duration", 
-				"Select time duration", 
-				1, 
-				Arrays.asList(1, 999),
-				Integer.TYPE);
-		
+						"duration", 
+						"Select time duration", 
+						1, 
+						Arrays.asList(1, 999),
+						Integer.TYPE);
+
 		// Create parameter for selecting the time type.
 		ParameterOneFromSet timeTypeParameter = 
 				new ParameterOneFromSet(
@@ -187,8 +186,8 @@ public class FilterdTraceFollowerConfig extends FilterdAbstractConfig {
 								"Days",
 								"Weeks",
 								"Years"));
-		
-		
+
+
 		parameters.add(attributeSelector);
 		parameters.add(selectionType);
 		parameters.add(referenceParameter);
@@ -200,6 +199,12 @@ public class FilterdTraceFollowerConfig extends FilterdAbstractConfig {
 		parameters.add(timeDurationParameter);
 		parameters.add(valueMatchingAttributeParameter);
 		parameters.add(timeTypeParameter);
+
+		configPanel = new FilterConfigPanelController(
+				"Filter Traces follower filter", 
+				parameters, 
+				this);
+		parameterListeners();
 	}
 
 	public boolean canPopulate(FilterConfigPanelController component) {
@@ -207,13 +212,8 @@ public class FilterdTraceFollowerConfig extends FilterdAbstractConfig {
 		return true;
 	};
 
-	@Override
-	public AbstractFilterConfigPanelController getConfigPanel() {
-		FilterConfigPanelController filterConfigPanel = new FilterConfigPanelController(
-				"Filter Traces follower filter", 
-				parameters, 
-				this);
-		for(ParameterController parameter : filterConfigPanel.getControllers()) {
+	public void parameterListeners() {
+		for(ParameterController parameter : configPanel.getControllers()) {
 			if (parameter.getName().equals("attrType")) {
 				ParameterOneFromSetController casted = (ParameterOneFromSetController) parameter;
 				ComboBox<String> comboBox = casted.getComboBox();
@@ -223,67 +223,66 @@ public class FilterdTraceFollowerConfig extends FilterdAbstractConfig {
 						final XLog Llog = log;
 						List<Parameter> params = parameters;
 						if (Llog != null) {
-						for (ParameterController changingParameter : filterConfigPanel.getControllers()) {
-							
-							if (changingParameter.getName().equals("firstattrValues")) {
-								
-								ParameterMultipleFromSetController castedChanging = 
-										(ParameterMultipleFromSetController) changingParameter;
-								Set<String> attributeValues = new HashSet<>();
-								
-								for (XTrace trace : Llog) {
-									
-									for (XEvent event : trace) {
-										
-										XAttributeMap eventAttrs = event.getAttributes();
-										if (eventAttrs.containsKey(newValue))
-											attributeValues.add(eventAttrs.get(newValue).toString());
+							for (ParameterController changingParameter : configPanel.getControllers()) {
+
+								if (changingParameter.getName().equals("firstattrValues")) {
+
+									ParameterMultipleFromSetController castedChanging = 
+											(ParameterMultipleFromSetController) changingParameter;
+									Set<String> attributeValues = new HashSet<>();
+
+									for (XTrace trace : Llog) {
+
+										for (XEvent event : trace) {
+
+											XAttributeMap eventAttrs = event.getAttributes();
+											if (eventAttrs.containsKey(newValue))
+												attributeValues.add(eventAttrs.get(newValue).toString());
+										}
 									}
+									List<String> attributeValuesList = new ArrayList<String>(attributeValues);
+									((ParameterMultipleFromSet) params.get(2))
+									.setOptions(attributeValuesList);
+									((ParameterMultipleFromSet) params.get(2))
+									.setChosen(attributeValuesList);
+									((ParameterMultipleFromSet) params.get(2))
+									.setDefaultChoice(attributeValuesList);
+									castedChanging.changeOptions(attributeValuesList);
+
 								}
-								List<String> attributeValuesList = new ArrayList<String>(attributeValues);
-								((ParameterMultipleFromSet) params.get(2))
-								.setOptions(attributeValuesList);
-								((ParameterMultipleFromSet) params.get(2))
-								.setChosen(attributeValuesList);
-								((ParameterMultipleFromSet) params.get(2))
-								.setDefaultChoice(attributeValuesList);
-								castedChanging.changeOptions(attributeValuesList);
-							
-							}
-							if (changingParameter.getName().equals("endattrValues")) {
-								
-								ParameterMultipleFromSetController castedChanging = 
-										(ParameterMultipleFromSetController) changingParameter;
-								Set<String> attributeValues = new HashSet<>();
-								
-								for (XTrace trace : Llog) {
-									
-									for (XEvent event : trace) {
-										
-										XAttributeMap eventAttrs = event.getAttributes();
-										if (eventAttrs.containsKey(newValue))
-											attributeValues.add(eventAttrs.get(newValue).toString());
+								if (changingParameter.getName().equals("endattrValues")) {
+
+									ParameterMultipleFromSetController castedChanging = 
+											(ParameterMultipleFromSetController) changingParameter;
+									Set<String> attributeValues = new HashSet<>();
+
+									for (XTrace trace : Llog) {
+
+										for (XEvent event : trace) {
+
+											XAttributeMap eventAttrs = event.getAttributes();
+											if (eventAttrs.containsKey(newValue))
+												attributeValues.add(eventAttrs.get(newValue).toString());
+										}
 									}
+									List<String> attributeValuesList = new ArrayList<String>(attributeValues);
+									((ParameterMultipleFromSet) params.get(3))
+									.setOptions(attributeValuesList);
+									((ParameterMultipleFromSet) params.get(3))
+									.setChosen(attributeValuesList);
+									((ParameterMultipleFromSet) params.get(3))
+									.setDefaultChoice(attributeValuesList);
+									castedChanging.changeOptions(attributeValuesList);
+
 								}
-								List<String> attributeValuesList = new ArrayList<String>(attributeValues);
-								((ParameterMultipleFromSet) params.get(3))
-								.setOptions(attributeValuesList);
-								((ParameterMultipleFromSet) params.get(3))
-								.setChosen(attributeValuesList);
-								((ParameterMultipleFromSet) params.get(3))
-								.setDefaultChoice(attributeValuesList);
-								castedChanging.changeOptions(attributeValuesList);
-							
 							}
+
 						}
-						
 					}
-					}
-			});
-				
+				});
+
+			}
 		}
-		}
-		return filterConfigPanel;
 	}
 
 	public boolean checkValidity(XLog candidateLog) {

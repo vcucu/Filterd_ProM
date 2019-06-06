@@ -18,7 +18,6 @@ import org.processmining.filterd.widgets.ParameterOneFromSetExtendedController;
 public class FilterdEventAttrConfig extends FilterdAbstractReferencingConfig {
 
 	Collection<XAttribute> eventAttributes;
-	FilterConfigPanelController configPanel;
 	
 	public FilterdEventAttrConfig(XLog log, Filter filterType) {
 		super(log, filterType);
@@ -43,16 +42,10 @@ public class FilterdEventAttrConfig extends FilterdAbstractReferencingConfig {
 		this.configPanel =  new FilterConfigPanelController("Event Attribute Configuration", parameters, this);
 	}
 
-	
-	
 	public boolean canPopulate(FilterConfigPanelController component) {
 		//check whether no params are empty if you populate with the component
 		return true;
 	};
-
-	public FilterConfigPanelController getConfigPanel() {
-		return configPanel;
-	}
 	
 	public FilterdAbstractConfig changeReference(ParameterOneFromSetExtendedController chosen) {
 		switchReference(chosen.getValue());

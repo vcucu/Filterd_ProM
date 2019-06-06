@@ -8,6 +8,7 @@ public class FilterdTracePCLConfig extends FilterdAbstractConfig {
 	public FilterdTracePCLConfig(XLog log, Filter filterType) {
 		super(log, filterType);
 		// TODO Auto-generated constructor stub
+		this.configPanel = new FilterConfigPanelController("Trace PCL Configuration", parameters, this);
 	}
 
 
@@ -16,9 +17,6 @@ public class FilterdTracePCLConfig extends FilterdAbstractConfig {
 		return true;
 	};
 
-	public FilterConfigPanelController getConfigPanel() {
-		return new FilterConfigPanelController("Trace PCL Configuration", parameters, this);
-	}
 
 	public boolean checkValidity(XLog log) {
 		// TODO Auto-generated method stub
