@@ -13,7 +13,6 @@ import org.processmining.filterd.parameters.ParameterRangeFromRange;
 import org.processmining.filterd.parameters.ParameterText;
 import org.processmining.filterd.parameters.ParameterValueFromRange;
 import org.processmining.filterd.parameters.ParameterYesNo;
-import org.processmining.filterd.tools.Toolbox;
 import org.processmining.filterd.widgets.ParameterController;
 import org.processmining.filterd.widgets.ParameterMultipleFromSetController;
 import org.processmining.filterd.widgets.ParameterOneFromSetController;
@@ -56,11 +55,14 @@ public abstract class FilterdAbstractReferencingConfig extends FilterdAbstractCo
 			//all cases assume that the controller has a name corresponding to the parameter name
 			if(controller instanceof ParameterOneFromSetExtendedController) {
 				ParameterOneFromSetExtendedController casted = (ParameterOneFromSetExtendedController) controller;
+				System.out.println(casted.getValue());
 				concreteReference.populate(casted.getNestedConfigPanel());
 				for (Parameter param : concreteReference.getParameters()) {
 					parameters.remove(param); //does this work?
 					parameters.add(param);
 				}
+				ParameterOneFromSet param = (ParameterOneFromSet) getParameter(casted.getName());
+				param.setChosen(casted.getValue());
 	
 			} else if(controller instanceof ParameterYesNoController) {
 				ParameterYesNoController casted = (ParameterYesNoController) controller;
