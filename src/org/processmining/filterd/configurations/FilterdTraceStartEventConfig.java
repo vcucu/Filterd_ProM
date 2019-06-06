@@ -15,7 +15,8 @@ import org.processmining.filterd.widgets.ParameterOneFromSetExtendedController;
 
 public class FilterdTraceStartEventConfig extends FilterdAbstractReferencingConfig {
 
-
+	FilterConfigPanelController configPanel; 
+	
 	public FilterdTraceStartEventConfig(XLog log, Filter filterType) {
 		super(log, filterType);
 		parameters = new ArrayList<Parameter>();
@@ -44,11 +45,11 @@ public class FilterdTraceStartEventConfig extends FilterdAbstractReferencingConf
 		parameters.add(attribute);
 		parameters.add(selectionType);
 		//parameters.addAll(concreteReference.getParameters());
+		
+		configPanel = new FilterConfigPanelController("Trace Start Event Configuration",
+				parameters, this);
 
 	}
-	
-	
-
 
 	public boolean canPopulate(FilterConfigPanelController component) {
 		//check whether no params are empty if you populate with the component
@@ -56,8 +57,7 @@ public class FilterdTraceStartEventConfig extends FilterdAbstractReferencingConf
 	};
 
 	public AbstractFilterConfigPanelController getConfigPanel() {
-		return new FilterConfigPanelController("Trace Start Event Configuration",
-				parameters, this);
+		return configPanel;
 	}
 
 	/*
