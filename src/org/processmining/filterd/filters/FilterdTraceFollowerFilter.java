@@ -2,6 +2,7 @@ package org.processmining.filterd.filters;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.Period;
 import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
 import java.util.List;
@@ -345,6 +346,10 @@ public class FilterdTraceFollowerFilter extends Filter {
 
 			}
 			
+			if (referenceEvent == null && selectionType.getChosen().contains("Never")) {
+				removeFromLog = false;
+			}
+			
 			// Found an eventual event while we want traces that never eventually 
 			// follow.
 			if (!foundEventualEvent && selectionType.getChosen().equals("Never eventually followed")) {
@@ -381,55 +386,58 @@ public class FilterdTraceFollowerFilter extends Filter {
 		Duration durationBetween = Duration.between(referenceTime, followerTime);
 		
 		// Build the duration set for the threshold.
-		Duration durationThreshold;
+		Duration treshold;
 		
 		switch (durationType) {
 			case "Millis": {
 				
 				// In milliseconds.
-				durationThreshold = Duration.of(duration, ChronoUnit.MILLIS);
+				treshold = Duration.of(duration, ChronoUnit.MILLIS);
 				
 				break;
 			}
 			case "Seconds": {
 				
 				// In seconds.
-				durationThreshold = Duration.of(duration, ChronoUnit.SECONDS);
+				treshold = Duration.of(duration, ChronoUnit.SECONDS);
 				
 				break;
 			}
 			case "Minutes": {
 				
 				// In minutes.
-				durationThreshold = Duration.of(duration, ChronoUnit.MINUTES);
+				treshold = Duration.of(duration, ChronoUnit.MINUTES);
 				
 				break;
 			}
 			case "Hours": {
 				
 				// In hours.
-				durationThreshold = Duration.of(duration, ChronoUnit.HOURS);
+				treshold = Duration.of(duration, ChronoUnit.HOURS);
 				
 				break;
 			}
 			case "Days": {
 				
 				// In days.
-				durationThreshold = Duration.of(duration, ChronoUnit.DAYS);
+				Period period = Period.ofDays(duration);
+				treshold = Duration.ofDays((period.getDays()));
 				
 				break;
 			}
 			case "Weeks": {
 				
 				// In weeks.
-				durationThreshold = Duration.of(duration, ChronoUnit.WEEKS);
+				Period period = Period.ofDays(duration * 7);
+				treshold = Duration.ofDays((period.getDays()));
 				
 				break;
 			}
 			case "Years": {
 				
 				// In years.
-				durationThreshold = Duration.of(duration, ChronoUnit.MILLIS);
+				Period period = Period.ofDays((int)(duration * 365.2425));
+				treshold = Duration.ofDays((period.getDays()));
 				
 				break;
 			}
@@ -442,9 +450,9 @@ public class FilterdTraceFollowerFilter extends Filter {
 		// Switch based on whether the time between the events should be shorter
 		// or longer than the selected duration.
 		if (shouldBeShorter) {
-			return (durationBetween.compareTo(durationThreshold) == -1);
+			return (durationBetween.compareTo(treshold) < 0);
 		} else {
-			return (durationBetween.compareTo(durationThreshold) == 1);
+			return (durationBetween.compareTo(treshold) > 0);
 		}
 	}
 	
