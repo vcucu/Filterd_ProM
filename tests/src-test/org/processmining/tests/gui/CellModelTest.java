@@ -7,6 +7,8 @@ import org.processmining.contexts.uitopia.UIPluginContext;
 import org.processmining.filterd.gui.CellModel;
 import org.processmining.filterd.gui.CellStatus;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import junit.framework.TestCase;
 
 public class CellModelTest extends TestCase {
@@ -18,6 +20,18 @@ public class CellModelTest extends TestCase {
 		// Get the property change support of the newly created cell
 		PropertyChangeSupport property = cell.getProperty();
 		// Check if the property change support variable was initialized properly
+		assertTrue(property != null);
+		// Check the isHidden variable is properly initialized
+		assertFalse(cell.isHidden());
+	}
+	
+	@Test
+	public void testNewEmptyCellModel() {
+		// Create new cell model instance (empty constructor)
+		CellModel cell = new CellModel();
+		// Get the property change support of the newly created cell
+		PropertyChangeSupport property = cell.getProperty();
+		// Check if the property support variable was initialized properly
 		assertTrue(property != null);
 		// Check the isHidden variable is properly initialized
 		assertFalse(cell.isHidden());
@@ -88,6 +102,20 @@ public class CellModelTest extends TestCase {
 		cell.setIndex(10);
 		// Check the index was properly set
 		assertEquals(cell.getIndex(), 10);
+	}
+	
+	@Test
+	public void testBindCellName() {
+		// Create new cell model instance
+		CellModel cell = new CellModel(null, 0);
+		// Create new string property
+		StringProperty stringProperty = new SimpleStringProperty("Filterd");
+		// Set the new string property to the text cell
+		cell.bindCellName(stringProperty);
+		// Get the previously set string property
+		StringProperty newStringProperty = cell.cellNameProperty();
+		// Check that the property was properly set
+		assertTrue(newStringProperty.getValue().equals("Filterd"));
 	}
 
 }

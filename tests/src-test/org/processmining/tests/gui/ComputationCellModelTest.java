@@ -234,14 +234,19 @@ public class ComputationCellModelTest extends FilterdPackageTest {
 		// Set filter configurations for the filter buttons
 		model0.setFilterConfig(config0);
 		model0.setFilterConfig(config1);
-		// Compute the cell's output
-		cell.compute(new Task<Void> () {
+		
+		try {
+			// Compute the cell's output
+			cell.compute(new Task<Void> () {
 
-			protected Void call() throws Exception {
-				return null;
-			}
-			
-		});
-		// Check that the computation was unsuccessful (TODO: there should be a message displayed somewhere)
+				protected Void call() throws Exception {
+					return null;
+				}
+				
+			});
+		} catch (Throwable exception) {
+			// Check that the computation was unsuccessful (TODO: there should be a message displayed somewhere)
+			assertFalse(exception.equals(null));
+		}
 	}
 }

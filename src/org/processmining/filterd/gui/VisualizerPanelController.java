@@ -83,7 +83,7 @@ public class VisualizerPanelController {
 	 * @param content
 	 *            the content to set to the swing node.
 	 */
-	private void setSwingNode(JComponent content) {
+	public void setSwingNode(JComponent content) {
 		// The invokeLater method is required so the swing content is set using the Swing AWT event queue instead of the JavaFX Platform dispatch loop.
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
