@@ -1,6 +1,7 @@
 package org.processmining.filterd.configurations;
 import org.deckfour.xes.model.XLog;
 import org.processmining.filterd.filters.Filter;
+import org.processmining.filterd.gui.AbstractFilterConfigPanelController;
 import org.processmining.filterd.gui.FilterConfigPanelController;
 
 public class FilterdModifArtificialEventsConfig extends FilterdAbstractConfig {
@@ -15,6 +16,15 @@ public class FilterdModifArtificialEventsConfig extends FilterdAbstractConfig {
 		//check whether no params are empty if you populate with the component
 		return true;
 	};
+
+	@Override
+	public AbstractFilterConfigPanelController getConfigPanel() {
+		if (this.configPanel == null) {
+			this.configPanel = new FilterConfigPanelController("Artificial Events Configuration", parameters, this);
+		}
+		
+		return configPanel;
+	}
 
 	public boolean checkValidity(XLog log) {
 		// TODO Auto-generated method stub

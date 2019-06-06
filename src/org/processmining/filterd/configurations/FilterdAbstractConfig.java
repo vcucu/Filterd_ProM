@@ -38,7 +38,7 @@ public abstract class FilterdAbstractConfig {
 	protected XEventClassifier classifier;
 	protected List<XExtension> standardExtensions;
 	protected boolean isAttribute; // checks whether selected string is attribute or complex classifier
-	protected FilterConfigPanelController configPanel;
+	protected FilterConfigPanelController configPanel = null;
 
 	public FilterdAbstractConfig(XLog log, Filter filterType ) throws EmptyLogException{
 		
@@ -193,9 +193,7 @@ public abstract class FilterdAbstractConfig {
 	 * 
 	 * @return the concrete configuration panel
 	 */
-	public AbstractFilterConfigPanelController getConfigPanel() {
-			return configPanel;
-		}
+	public abstract AbstractFilterConfigPanelController getConfigPanel();
 	
 	/**
 	 * Invokes the {@filter(PluginContext context, XLog log, List<Parameter> parameters)} 

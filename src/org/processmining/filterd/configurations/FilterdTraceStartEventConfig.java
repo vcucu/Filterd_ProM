@@ -6,6 +6,7 @@ import java.util.List;
 import org.deckfour.xes.classification.XEventClassifier;
 import org.deckfour.xes.model.XLog;
 import org.processmining.filterd.filters.Filter;
+import org.processmining.filterd.gui.AbstractFilterConfigPanelController;
 import org.processmining.filterd.gui.FilterConfigPanelController;
 import org.processmining.filterd.parameters.Parameter;
 import org.processmining.filterd.parameters.ParameterOneFromSet;
@@ -42,10 +43,16 @@ public class FilterdTraceStartEventConfig extends FilterdAbstractReferencingConf
 		parameters.add(attribute);
 		parameters.add(selectionType);
 		//parameters.addAll(concreteReference.getParameters());
+	}
+	
+	@Override
+	public AbstractFilterConfigPanelController getConfigPanel() {
+		if (this.configPanel == null) {
+			this.configPanel = new FilterConfigPanelController("Trace Start Event Configuration",
+					parameters, this);
+		}
 		
-		this.configPanel = new FilterConfigPanelController("Trace Start Event Configuration",
-				parameters, this);
-
+		return configPanel;
 	}
 
 	public boolean canPopulate(FilterConfigPanelController component) {

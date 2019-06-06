@@ -1,6 +1,7 @@
 package org.processmining.filterd.configurations;
 import org.deckfour.xes.model.XLog;
 import org.processmining.filterd.filters.Filter;
+import org.processmining.filterd.gui.AbstractFilterConfigPanelController;
 import org.processmining.filterd.gui.FilterConfigPanelController;
 
 public class FilterdTracePCLConfig extends FilterdAbstractConfig {
@@ -8,9 +9,17 @@ public class FilterdTracePCLConfig extends FilterdAbstractConfig {
 	public FilterdTracePCLConfig(XLog log, Filter filterType) {
 		super(log, filterType);
 		// TODO Auto-generated constructor stub
-		this.configPanel = new FilterConfigPanelController("Trace PCL Configuration", parameters, this);
+		
 	}
 
+	@Override
+	public AbstractFilterConfigPanelController getConfigPanel() {
+		if (this.configPanel == null) {
+			this.configPanel = new FilterConfigPanelController("Trace PCL Configuration", parameters, this);
+		}
+		
+		return configPanel;
+	}
 
 	public boolean canPopulate(FilterConfigPanelController component) {
 		//check whether no params are empty if you populate with the component

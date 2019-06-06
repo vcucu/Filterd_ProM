@@ -9,6 +9,7 @@ import org.deckfour.xes.info.XLogInfo;
 import org.deckfour.xes.info.impl.XLogInfoImpl;
 import org.deckfour.xes.model.XLog;
 import org.processmining.filterd.filters.Filter;
+import org.processmining.filterd.gui.AbstractFilterConfigPanelController;
 import org.processmining.filterd.gui.FilterConfigPanelController;
 import org.processmining.filterd.parameters.ParameterMultipleFromSet;
 import org.processmining.filterd.parameters.ParameterOneFromSet;
@@ -76,14 +77,21 @@ public class FilterdEventRateConfig extends FilterdAbstractConfig {
 		parameters.add(threshold);
 		parameters.add(selectionType);
 		parameters.add(desiredEvents);
-
-		this.configPanel = new FilterConfigPanelController("Filter Event Rate Configuration",
-				parameters, this);
-		parameterListeners();
 	}
 
 	public boolean canPopulate(FilterConfigPanelController component) {
 		return true;
+	}
+	
+	@Override
+	public AbstractFilterConfigPanelController getConfigPanel() {
+		if (this.configPanel == null) {
+			this.configPanel = new FilterConfigPanelController("Filter Event Rate Configuration",
+					parameters, this);
+			parameterListeners();
+		}
+		
+		return configPanel;
 	}
 
 	public void parameterListeners() {

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.deckfour.xes.model.XLog;
 import org.processmining.filterd.filters.Filter;
+import org.processmining.filterd.gui.AbstractFilterConfigPanelController;
 import org.processmining.filterd.gui.FilterConfigPanelController;
 import org.processmining.filterd.parameters.ParameterValueFromRange;
 
@@ -33,9 +34,16 @@ public class FilterdTraceSampleConfig extends FilterdAbstractConfig {
 						);
 
 		parameters.add(valueFromRangeParam);
-
-		this.configPanel = new FilterConfigPanelController(
-				"Filter Trace Sample Configuration", parameters, this);
+	}
+	
+	@Override
+	public AbstractFilterConfigPanelController getConfigPanel() {
+		if (this.configPanel == null) {
+			this.configPanel = new FilterConfigPanelController(
+					"Filter Trace Sample Configuration", parameters, this);
+		}
+		
+		return configPanel;
 	}
 
 	public boolean canPopulate(FilterConfigPanelController component) {

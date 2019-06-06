@@ -6,6 +6,7 @@ import java.util.Map;
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
 import org.processmining.filterd.filters.Filter;
+import org.processmining.filterd.gui.AbstractFilterConfigPanelController;
 import org.processmining.filterd.gui.FilterConfigPanelController;
 import org.processmining.filterd.parameters.ParameterOneFromSet;
 import org.processmining.filterd.parameters.ParameterRangeFromRange;
@@ -99,18 +100,25 @@ public class FilterdTraceFrequencyConfig extends FilterdAbstractConfig {
 		parameters.add(frequencyOccurranceParameter);
 		parameters.add(threshold);
 		parameters.add(filterInOut);
-
-		this.configPanel = new FilterConfigPanelController(
-				"Filter Trace Frequency Configuration", 
-				parameters, 
-				this);
-		parameterListeners();
 	}
 
 	public boolean canPopulate(FilterConfigPanelController component) {
 		//check whether no params are empty if you populate with the component
 		return true;
 	};
+	
+	@Override
+	public AbstractFilterConfigPanelController getConfigPanel() {
+		if (this.configPanel == null) {
+			this.configPanel = new FilterConfigPanelController(
+					"Filter Trace Frequency Configuration", 
+					parameters, 
+					this);
+			parameterListeners();
+		}
+		
+		return configPanel;
+	}
 
 	public void parameterListeners() {
 		for(ParameterController parameter : configPanel.getControllers()) {

@@ -10,6 +10,7 @@ import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
 import org.processmining.filterd.filters.Filter;
+import org.processmining.filterd.gui.AbstractFilterConfigPanelController;
 import org.processmining.filterd.gui.FilterConfigPanelController;
 import org.processmining.filterd.parameters.Parameter;
 import org.processmining.filterd.parameters.ParameterMultipleFromSet;
@@ -110,9 +111,17 @@ public class FilterdTraceTrimConfig extends FilterdAbstractConfig {
 
 		parameters = Arrays.asList(attributeSelector, selectionType,
 				firstEvents, endEvents); 
-		this.configPanel = new FilterConfigPanelController("Trace Trim Configuration", 
-				parameters, this);
-		parameterListeners();
+	}
+
+	@Override
+	public AbstractFilterConfigPanelController getConfigPanel() {
+		if (this.configPanel == null) {
+			this.configPanel = new FilterConfigPanelController("Trace Trim Configuration", 
+					parameters, this);
+			parameterListeners();
+		}
+
+		return configPanel;
 	}
 
 

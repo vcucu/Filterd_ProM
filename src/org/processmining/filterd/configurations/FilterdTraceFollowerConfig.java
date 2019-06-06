@@ -10,6 +10,7 @@ import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
 import org.processmining.filterd.filters.Filter;
+import org.processmining.filterd.gui.AbstractFilterConfigPanelController;
 import org.processmining.filterd.gui.FilterConfigPanelController;
 import org.processmining.filterd.parameters.Parameter;
 import org.processmining.filterd.parameters.ParameterMultipleFromSet;
@@ -199,18 +200,25 @@ public class FilterdTraceFollowerConfig extends FilterdAbstractConfig {
 		parameters.add(timeDurationParameter);
 		parameters.add(valueMatchingAttributeParameter);
 		parameters.add(timeTypeParameter);
-
-		this.configPanel = new FilterConfigPanelController(
-				"Filter Traces follower filter", 
-				parameters, 
-				this);
-		parameterListeners();
 	}
 
 	public boolean canPopulate(FilterConfigPanelController component) {
 		//check whether no params are empty if you populate with the component
 		return true;
 	};
+	
+	@Override
+	public AbstractFilterConfigPanelController getConfigPanel() {
+		if (this.configPanel == null) {
+			this.configPanel = new FilterConfigPanelController(
+					"Filter Traces follower filter", 
+					parameters, 
+					this);
+			parameterListeners();
+		}
+		
+		return configPanel;
+	}
 
 	public void parameterListeners() {
 		for(ParameterController parameter : configPanel.getControllers()) {

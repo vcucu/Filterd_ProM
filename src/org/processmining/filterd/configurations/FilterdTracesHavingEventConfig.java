@@ -11,6 +11,7 @@ import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
 import org.processmining.filterd.filters.Filter;
+import org.processmining.filterd.gui.AbstractFilterConfigPanelController;
 import org.processmining.filterd.gui.FilterConfigPanelController;
 import org.processmining.filterd.parameters.Parameter;
 import org.processmining.filterd.parameters.ParameterMultipleFromSet;
@@ -72,13 +73,22 @@ public class FilterdTracesHavingEventConfig extends FilterdAbstractConfig {
 				);
 
 		this.parameters = Arrays.asList(attrType, attrValues, selectionType);
-		this.configPanel = new FilterConfigPanelController(
-				"Filter Traces Having Event Configuration", 
-				parameters, 
-				this);
-		parameterListeners();
+		
 	}
 
+	@Override
+	public AbstractFilterConfigPanelController getConfigPanel() {
+		if (this.configPanel == null) {
+			this.configPanel = new FilterConfigPanelController(
+					"Filter Traces Having Event Configuration", 
+					parameters, 
+					this);
+			parameterListeners();
+		}
+		
+		return configPanel;
+	}
+	
 	@Override
 	public boolean checkValidity(XLog candidateLog) {
 		if (parameters == null || candidateLog.equals(log))
