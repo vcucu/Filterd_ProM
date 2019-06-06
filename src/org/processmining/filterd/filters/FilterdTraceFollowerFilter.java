@@ -2,6 +2,7 @@ package org.processmining.filterd.filters;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.Period;
 import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
 import java.util.List;
@@ -81,11 +82,12 @@ public class FilterdTraceFollowerFilter extends Filter {
 			boolean foundEventualEvent = false;
 			
 			XEvent referenceEvent = null;
+			XEvent followerEvent = null;
 			
 			for (XEvent event : trace) {
 				
 				// We already found a reference event, move to the next trace.
-				if (!removeFromLog) {
+				if (followerEvent != null) {
 					break;
 				}
 				
@@ -141,11 +143,13 @@ public class FilterdTraceFollowerFilter extends Filter {
 													// Time and value matching restriction imposed.
 													// Follower event found!
 													removeFromLog = false;
+													followerEvent = event;
 												}
 											} else {
 												// Time restriction imposed.
 												// Follower event found!
 												removeFromLog = false;
+												followerEvent = event;
 											}
 										}
 									}
@@ -159,11 +163,13 @@ public class FilterdTraceFollowerFilter extends Filter {
 											// Value matching restriction imposed.
 											// Follower event found!
 											removeFromLog = false;
+											followerEvent = event;
 										}
 									} else {
 										// No time or value matching restrictions imposed.
 										// Follower event found!
 										removeFromLog = false;
+										followerEvent = event;
 									}
 								}
 								
@@ -173,57 +179,118 @@ public class FilterdTraceFollowerFilter extends Filter {
 						}
 						case "Never directly followed": {
 							
+							removeFromLog = false;
+							
 							// If this is the event directly following the reference event.
 							if (trace.indexOf(referenceEvent) == trace.indexOf(event) - 1) {
 								
 								// Get the value for the selected attribute key.
 								String value = event.getAttributes().get(attributeSelector.getChosen()).toString();
 								
-								// Check if it is not present in the follower parameter.
-								if (!followerParameter.getChosen().contains(value)) {
-									// If time restriction is imposed on the reference event.
-									if (timeRestrictionParameter.getChosen()) {
-										if (timeRestrictionHolds(
-												referenceEvent, 
-												event, 
-												shorterOrLongerParameter.getChosen().equals("Shorter"), 
-												timeDurationParameter.getChosen(), 
-												timeTypeParameter.getChosen())) {
-											// If value matching is imposed on the reference event.
-											if (valueMatchingParameter.getChosen()) {
-												if (valueMatchingHolds(
-														referenceEvent, 
-														event, 
-														sameOrDifferentParameter.getChosen().equals("The same value"), 
-														valueMatchingAttributeParameter.getChosen())) {
-													// Time and value matching restriction imposed.
+								// If time restriction is imposed on the reference event.
+								if (timeRestrictionParameter.getChosen()) {
+									if (timeRestrictionHolds(
+											referenceEvent, 
+											event, 
+											shorterOrLongerParameter.getChosen().equals("Shorter"), 
+											timeDurationParameter.getChosen(), 
+											timeTypeParameter.getChosen())) {
+										// If value matching is imposed on the reference event.
+										if (valueMatchingParameter.getChosen()) {
+											if (valueMatchingHolds(
+													referenceEvent, 
+													event, 
+													sameOrDifferentParameter.getChosen().equals("The same value"), 
+													valueMatchingAttributeParameter.getChosen())) {
+												// Check if it is not present in the follower parameter.
+												if (followerParameter.getChosen().contains(value)) {
+													// Time and value matching restrictions imposed.
 													// Follower event found!
-													removeFromLog = false;
+													removeFromLog = true;
+													followerEvent = event;
 												}
-											} else {
-												// Time restriction imposed.
+											}
+										} else {
+											// Check if it is not present in the follower parameter.
+											if (followerParameter.getChosen().contains(value)) {
+												// Time restrictions imposed.
 												// Follower event found!
-												removeFromLog = false;
+												removeFromLog = true;
+												followerEvent = event;
 											}
 										}
 									}
-									// If value matching is imposed on the reference event.
-									else if (valueMatchingParameter.getChosen()) {
-										if (valueMatchingHolds(
-												referenceEvent, 
-												event, 
-												sameOrDifferentParameter.getChosen().equals("The same value"), 
-												valueMatchingAttributeParameter.getChosen())) {
+								}
+								// If value matching is imposed on the reference event.
+								else if (valueMatchingParameter.getChosen()) {
+									if (valueMatchingHolds(
+											referenceEvent, 
+											event, 
+											sameOrDifferentParameter.getChosen().equals("The same value"), 
+											valueMatchingAttributeParameter.getChosen())) {
+										// Check if it is not present in the follower parameter.
+										if (followerParameter.getChosen().contains(value)) {
 											// Value matching restriction imposed.
 											// Follower event found!
-											removeFromLog = false;
+											removeFromLog = true;
+											followerEvent = event;
 										}
-									} else {
+									}
+								} else {
+									// Check if it is not present in the follower parameter.
+									if (followerParameter.getChosen().contains(value)) {
 										// No time or value matching restrictions imposed.
 										// Follower event found!
-										removeFromLog = false;
+										removeFromLog = true;
+										followerEvent = event;
 									}
 								}
+								
+								// Check if it is not present in the follower parameter.
+//								if (!followerParameter.getChosen().contains(value)) {
+//									// If time restriction is imposed on the reference event.
+//									if (timeRestrictionParameter.getChosen()) {
+//										if (timeRestrictionHolds(
+//												referenceEvent, 
+//												event, 
+//												shorterOrLongerParameter.getChosen().equals("Shorter"), 
+//												timeDurationParameter.getChosen(), 
+//												timeTypeParameter.getChosen())) {
+//											// If value matching is imposed on the reference event.
+//											if (valueMatchingParameter.getChosen()) {
+//												if (valueMatchingHolds(
+//														referenceEvent, 
+//														event, 
+//														sameOrDifferentParameter.getChosen().equals("The same value"), 
+//														valueMatchingAttributeParameter.getChosen())) {
+//													// Time and value matching restriction imposed.
+//													// Follower event found!
+//													removeFromLog = false;
+//												}
+//											} else {
+//												// Time restriction imposed.
+//												// Follower event found!
+//												removeFromLog = false;
+//											}
+//										}
+//									}
+//									// If value matching is imposed on the reference event.
+//									else if (valueMatchingParameter.getChosen()) {
+//										if (valueMatchingHolds(
+//												referenceEvent, 
+//												event, 
+//												sameOrDifferentParameter.getChosen().equals("The same value"), 
+//												valueMatchingAttributeParameter.getChosen())) {
+//											// Value matching restriction imposed.
+//											// Follower event found!
+//											removeFromLog = false;
+//										}
+//									} else {
+//										// No time or value matching restrictions imposed.
+//										// Follower event found!
+//										removeFromLog = false;
+//									}
+//								}
 								
 							}
 							
@@ -255,11 +322,13 @@ public class FilterdTraceFollowerFilter extends Filter {
 												// Time and value matching restriction imposed.
 												// Follower event found!
 												removeFromLog = false;
+												followerEvent = event;
 											}
 										} else {
 											// Time restriction imposed.
 											// Follower event found!
 											removeFromLog = false;
+											followerEvent = event;
 										}
 									}
 								}
@@ -273,11 +342,13 @@ public class FilterdTraceFollowerFilter extends Filter {
 										// Value matching restriction imposed.
 										// Follower event found!
 										removeFromLog = false;
+										followerEvent = event;
 									}
 								} else {
 									// No time or value matching restrictions imposed.
 									// Follower event found!
 									removeFromLog = false;
+									followerEvent = event;
 								}
 							}
 							
@@ -309,11 +380,13 @@ public class FilterdTraceFollowerFilter extends Filter {
 												// Time and value matching restriction imposed.
 												// Follower event found, thus we need to remove the trace.
 												foundEventualEvent = true;
+												followerEvent = event;
 											}
 										} else {
 											// Time restriction imposed.
 											// Follower event found, thus we need to remove the trace.
 											foundEventualEvent = true;
+											followerEvent = event;
 										}
 									}
 								}
@@ -327,11 +400,13 @@ public class FilterdTraceFollowerFilter extends Filter {
 										// Value matching restriction imposed.
 										// Follower event found, thus we need to remove the trace.
 										removeFromLog = false;
+										followerEvent = event;
 									}
 								} else {
 									// No time or value matching restrictions imposed.
 									// Follower event found, thus we need to remove the trace.
 									foundEventualEvent = true;
+									followerEvent = event;
 								}
 							}
 							
@@ -343,6 +418,10 @@ public class FilterdTraceFollowerFilter extends Filter {
 					
 				}
 
+			}
+			
+			if (referenceEvent == null && selectionType.getChosen().contains("Never")) {
+				removeFromLog = false;
 			}
 			
 			// Found an eventual event while we want traces that never eventually 
@@ -381,55 +460,58 @@ public class FilterdTraceFollowerFilter extends Filter {
 		Duration durationBetween = Duration.between(referenceTime, followerTime);
 		
 		// Build the duration set for the threshold.
-		Duration durationThreshold;
+		Duration treshold;
 		
 		switch (durationType) {
 			case "Millis": {
 				
 				// In milliseconds.
-				durationThreshold = Duration.of(duration, ChronoUnit.MILLIS);
+				treshold = Duration.of(duration, ChronoUnit.MILLIS);
 				
 				break;
 			}
 			case "Seconds": {
 				
 				// In seconds.
-				durationThreshold = Duration.of(duration, ChronoUnit.SECONDS);
+				treshold = Duration.of(duration, ChronoUnit.SECONDS);
 				
 				break;
 			}
 			case "Minutes": {
 				
 				// In minutes.
-				durationThreshold = Duration.of(duration, ChronoUnit.MINUTES);
+				treshold = Duration.of(duration, ChronoUnit.MINUTES);
 				
 				break;
 			}
 			case "Hours": {
 				
 				// In hours.
-				durationThreshold = Duration.of(duration, ChronoUnit.HOURS);
+				treshold = Duration.of(duration, ChronoUnit.HOURS);
 				
 				break;
 			}
 			case "Days": {
 				
 				// In days.
-				durationThreshold = Duration.of(duration, ChronoUnit.DAYS);
+				Period period = Period.ofDays(duration);
+				treshold = Duration.ofDays((period.getDays()));
 				
 				break;
 			}
 			case "Weeks": {
 				
 				// In weeks.
-				durationThreshold = Duration.of(duration, ChronoUnit.WEEKS);
+				Period period = Period.ofDays(duration * 7);
+				treshold = Duration.ofDays((period.getDays()));
 				
 				break;
 			}
 			case "Years": {
 				
 				// In years.
-				durationThreshold = Duration.of(duration, ChronoUnit.MILLIS);
+				Period period = Period.ofDays((int)(duration * 365.2425));
+				treshold = Duration.ofDays((period.getDays()));
 				
 				break;
 			}
@@ -442,9 +524,9 @@ public class FilterdTraceFollowerFilter extends Filter {
 		// Switch based on whether the time between the events should be shorter
 		// or longer than the selected duration.
 		if (shouldBeShorter) {
-			return (durationBetween.compareTo(durationThreshold) == -1);
+			return (durationBetween.compareTo(treshold) < 0);
 		} else {
-			return (durationBetween.compareTo(durationThreshold) == 1);
+			return (durationBetween.compareTo(treshold) > 0);
 		}
 	}
 	

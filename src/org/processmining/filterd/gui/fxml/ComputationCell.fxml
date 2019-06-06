@@ -13,20 +13,28 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.shape.SVGPath?>
 <?import javafx.scene.text.Font?>
 
 <VBox fx:id="cell" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="940.0" spacing="5.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Label fx:id="prependCellButton" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#prependCellButtonHandler" prefHeight="16.0" prefWidth="16.0">
-         <graphic>
-            <SVGPath content="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z" fill="WHITE" scaleX="0.02" scaleY="0.02" styleClass="icon-svg" translateX="-216.0" />
-         </graphic>
-         <styleClass>
-            <String fx:value="prepend-cell-button" />
-            <String fx:value="round-button" />
-         </styleClass>
-      </Label>
+      <VBox fx:id="prependCellVBox" alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="prepend-cell-vbox">
+         <children>
+            <Label fx:id="prependCellButton" alignment="CENTER" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#prependCellButtonHandler" prefHeight="24.0" prefWidth="24.0" stylesheets="@../css/Icons.css">
+               <graphic>
+                  <Region prefHeight="200.0" prefWidth="200.0">
+                     <styleClass>
+                        <String fx:value="plus-solid" />
+                        <String fx:value="icon-svg" />
+                     </styleClass>
+                  </Region>
+               </graphic>
+               <styleClass>
+                  <String fx:value="round-button" />
+                  <String fx:value="prepend-cell-button" />
+               </styleClass>
+            </Label>
+         </children>
+      </VBox>
       <HBox fx:id="panel" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="cell-panel" VBox.vgrow="ALWAYS">
          <children>
             <Region fx:id="statusBar" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minWidth="-Infinity" onMouseClicked="#handleStatusBar" prefWidth="14.0" style="-fx-background-color: #67A767;" HBox.hgrow="ALWAYS" />
@@ -35,9 +43,14 @@
                   <HBox fx:id="cellToolbar" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="35.0" spacing="10.0" styleClass="cell-toolbar" VBox.vgrow="ALWAYS">
                      <children>
                         <ComboBox fx:id="cmbEventLog" maxHeight="-Infinity" minHeight="-Infinity" onAction="#setXLog" prefHeight="24.0" prefWidth="150.0" styleClass="round-combobox" HBox.hgrow="ALWAYS" />
-                        <Label fx:id="playButton" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="24.0" prefWidth="24.0" styleClass="round-button">
+                        <Label fx:id="playButton" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="24.0" prefWidth="24.0" styleClass="round-button" stylesheets="@../css/Icons.css">
                            <graphic>
-                              <SVGPath content="M424.4 214.7L72.4 6.6C43.8-10.3 0 6.1 0 47.9V464c0 37.5 40.7 60.1 72.4 41.3l352-208c31.4-18.5 31.5-64.1 0-82.6z" fill="WHITE" scaleX="0.025" scaleY="0.025" styleClass="icon-svg" translateX="-211.0" />
+                              <Region prefHeight="200.0" prefWidth="200.0">
+                                 <styleClass>
+                                    <String fx:value="play-solid" />
+                                    <String fx:value="icon-svg" />
+                                 </styleClass>
+                              </Region>
                            </graphic>
                         </Label>
                         <Region maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
@@ -49,17 +62,19 @@
                            <children>
                               <Region maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
                               <ComboBox fx:id="cmbVisualizers" maxHeight="-Infinity" minHeight="-Infinity" onAction="#loadVisualizer" prefHeight="24.0" prefWidth="150.0" styleClass="round-combobox" />
-                              <Label fx:id="fullScreenButton" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#handleFullScreen" prefHeight="24.0" prefWidth="24.0">
+                              <Label fx:id="fullScreenButton" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#handleFullScreen" prefHeight="24.0" prefWidth="24.0" stylesheets="@../css/Icons.css">
                                  <graphic>
-                                    <SVGPath content="M0 180V56c0-13.3 10.7-24 24-24h124c6.6 0 12 5.4 12 12v40c0 6.6-5.4 12-12 12H64v84c0 6.6-5.4 12-12 12H12c-6.6 0-12-5.4-12-12zM288 44v40c0 6.6 5.4 12 12 12h84v84c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12V56c0-13.3-10.7-24-24-24H300c-6.6 0-12 5.4-12 12zm148 276h-40c-6.6 0-12 5.4-12 12v84h-84c-6.6 0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h124c13.3 0 24-10.7 24-24V332c0-6.6-5.4-12-12-12zM160 468v-40c0-6.6-5.4-12-12-12H64v-84c0-6.6-5.4-12-12-12H12c-6.6 0-12 5.4-12 12v124c0 13.3 10.7 24 24 24h124c6.6 0 12-5.4 12-12z" fill="WHITE" scaleX="0.025" scaleY="0.025" styleClass="icon-svg" translateX="-212.0" />
+                                    <Region prefHeight="200.0" prefWidth="200.0">
+                                       <styleClass>
+                                          <String fx:value="expand-solid" />
+                                          <String fx:value="icon-svg" />
+                                       </styleClass>
+                                    </Region>
                                  </graphic>
-                                 <HBox.margin>
-                                    <Insets />
-                                 </HBox.margin>
                               </Label>
                            </children>
                         </HBox>
-                        <MenuButton fx:id="menuBtnCellSettings" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="12.0" prefWidth="4.0" styleClass="dropdown-button">
+                        <MenuButton fx:id="menuBtnCellSettings" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="12.0" prefWidth="4.0" stylesheets="@../css/Icons.css">
                           <items>
                           	<MenuItem mnemonicParsing="false" onAction="#moveUp" text="Move up" />
                           	<MenuItem mnemonicParsing="false" onAction="#moveDown" text="Move down" />
@@ -68,6 +83,10 @@
                            <HBox.margin>
                               <Insets top="5.0" />
                            </HBox.margin>
+                           <styleClass>
+                              <String fx:value="dropdown-button" />
+                              <String fx:value="ellipsis-v-solid" />
+                           </styleClass>
                         </MenuButton>
                      </children>
                      <VBox.margin>
@@ -97,9 +116,14 @@
                               </VBox>
                            </content>
                         </ScrollPane>
-                        <Label fx:id="expandButton" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#handleExpandVisualiser" prefHeight="46.0" prefWidth="11.0" styleClass="expand-button">
+                        <Label fx:id="expandButton" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#handleExpandVisualiser" prefHeight="46.0" prefWidth="11.0" styleClass="expand-button" stylesheets="@../css/Icons.css">
                            <graphic>
-                              <SVGPath content="M31.7 239l136-136c9.4-9.4 24.6-9.4 33.9 0l22.6 22.6c9.4 9.4 9.4 24.6 0 33.9L127.9 256l96.4 96.4c9.4 9.4 9.4 24.6 0 33.9L201.7 409c-9.4 9.4-24.6 9.4-33.9 0l-136-136c-9.5-9.4-9.5-24.6-.1-34z" fill="WHITE" scaleX="0.025" scaleY="0.025" styleClass="icon-svg" translateX="-98.0" />
+                              <Region prefHeight="200.0" prefWidth="200.0">
+                                 <styleClass>
+                                    <String fx:value="angle-left-solid" />
+                                    <String fx:value="icon-svg" />
+                                 </styleClass>
+                              </Region>
                            </graphic>
                            <HBox.margin>
                               <Insets left="20.0" />

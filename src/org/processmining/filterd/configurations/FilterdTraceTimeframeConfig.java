@@ -1,6 +1,5 @@
 package org.processmining.filterd.configurations;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,6 +22,7 @@ public class FilterdTraceTimeframeConfig extends FilterdAbstractConfig {
 	private ArrayList<String> times; 
 	private ArrayList<Integer> defaultPair;
 	private ArrayList<Integer> optionsPair;
+	private FilterConfigPanelController configPanel;
 
 	ArrayList<String> optionList;
 	ParameterRangeFromRange<Integer> range;
@@ -41,24 +41,6 @@ public class FilterdTraceTimeframeConfig extends FilterdAbstractConfig {
 		optionsPair = new ArrayList<>();
 		parameters = new ArrayList<>();
 		
-		// Create time frame parameter, the user can select here what time
-		// frame he wants.
-//		ParameterRangeFromRange<Double> timeframeParameter = 
-//				new ParameterRangeFromRange<Double>(
-//						"timeframe", 
-//						"Select timeframe", 
-//						Arrays.asList(
-//								0d,
-//								(double) Duration.between(
-//										firstAndlastTimestamp.get(0), 
-//										firstAndlastTimestamp.get(1))
-//								.toMillis()), 
-//						Arrays.asList(
-//								0d,
-//								(double) Duration.between(
-//										firstAndlastTimestamp.get(0), 
-//										firstAndlastTimestamp.get(1))
-//								.toMillis()));
 		/*populate the array times with the ordered date&time of all events */
 		for (XTrace trace: log) {
 			for (XEvent event : trace) {
@@ -94,6 +76,8 @@ public class FilterdTraceTimeframeConfig extends FilterdAbstractConfig {
 		
 		parameters.add(range);
 		parameters.add(keepTracesParameter);
+		configPanel = new FilterConfigPanelController(
+				"Filter Trace Timeframe Configuration", parameters, this);
 	}
 
 	public boolean checkValidity(XLog candidateLog) {
@@ -107,11 +91,7 @@ public class FilterdTraceTimeframeConfig extends FilterdAbstractConfig {
 	}
 
 	public AbstractFilterConfigPanelController getConfigPanel() {
-		
-		
-		
-		return new FilterConfigPanelController(
-				"Filter Trace Timeframe Configuration", parameters, this);
+		return configPanel;
 	}
 	
 	
