@@ -4,7 +4,9 @@ import org.deckfour.xes.model.XLog;
 import org.junit.Test;
 import org.processmining.filterd.configurations.FilterdAbstractConfig;
 import org.processmining.filterd.configurations.FilterdTraceSampleConfig;
+import org.processmining.filterd.configurations.FilterdTraceStartEventConfig;
 import org.processmining.filterd.filters.FilterdTraceSampleFilter;
+import org.processmining.filterd.filters.FilterdTraceStartEventFilter;
 import org.processmining.filterd.gui.FilterButtonModel;
 import org.processmining.filterd.gui.InvalidConfigurationException;
 import org.processmining.filterd.models.YLog;
@@ -96,10 +98,15 @@ public class FilterButtonModelTest extends FilterdPackageTest {
 		// Create new filter button instance
 		FilterButtonModel filter = new FilterButtonModel(0);
 		filter.setInputLog(originalLog);
+		// Create new abstract filter configuration
+		FilterdAbstractConfig config = new FilterdTraceStartEventConfig(originalLog,
+				new FilterdTraceStartEventFilter());
 		// Set a new filter button configuration
-		filter.setFilterConfig(null);
+		filter.setFilterConfig(config);
 		// Check the filter button configuration
-		assertEquals(filter.getFilterConfig(), null);
+		assertTrue(config == filter.getFilterConfig());
+		// Check the type of the filter button configuration
+		assertTrue(filter.getFilterConfig() instanceof FilterdAbstractConfig);
 	}
 	
 	@Test
