@@ -412,6 +412,8 @@ public class FilterTraceFollowerTest extends FilterdPackageTest {
 	/* 
 	 * traces with key: "concept:name" and value: "add item" 
 	 * event never directly followed by key: "concept:name" and value: "add item".
+	 * Follower and reference event should have the same value for the key 
+	 * "org:resource"
 	 * 
 	 * Result: cases 34, 41, 56, 72, 73, 74, 75, 76
 	 */
@@ -427,8 +429,8 @@ public class FilterTraceFollowerTest extends FilterdPackageTest {
 				"Never directly followed", 
 				Arrays.asList("add item"), 
 				Arrays.asList("add item"), 
-				false, 
-				"Different values", 
+				true, 
+				"The same value", 
 				"org:resource", 
 				false, 
 				"Longer", 
@@ -443,8 +445,10 @@ public class FilterTraceFollowerTest extends FilterdPackageTest {
 	/* 
 	 * traces with key: "concept:name" and value: "add item" 
 	 * event never directly followed by key: "concept:name" and value: "add item".
+	 * Follower and reference event should have different values for the key 
+	 * "org:resource"
 	 * 
-	 * Result: cases 34, 41, 56, 72, 73, 74, 75, 76
+	 * Result: cases 34, 35, 41, 56, 72, 73, 74, 75, 76: original log
 	 */
 	@Test
 	public void testFollowerNeverDirectly5() throws Throwable {
@@ -458,7 +462,7 @@ public class FilterTraceFollowerTest extends FilterdPackageTest {
 				"Never directly followed", 
 				Arrays.asList("add item"), 
 				Arrays.asList("add item"), 
-				false, 
+				true, 
 				"Different values", 
 				"org:resource", 
 				false, 
@@ -474,6 +478,9 @@ public class FilterTraceFollowerTest extends FilterdPackageTest {
 	/* 
 	 * traces with key: "concept:name" and value: "add item" 
 	 * event never directly followed by key: "concept:name" and value: "add item".
+	 * 	Follower and reference event should have the same value for the key 
+	 * "org:resource" and the duration in between the events should be shorter
+	 * than 999 milliseconds.
 	 * 
 	 * Result: cases 34, 41, 56, 72, 73, 74, 75, 76
 	 */
@@ -489,13 +496,13 @@ public class FilterTraceFollowerTest extends FilterdPackageTest {
 				"Never directly followed", 
 				Arrays.asList("add item"), 
 				Arrays.asList("add item"), 
-				false, 
-				"Different values", 
+				true, 
+				"The same value", 
 				"org:resource", 
-				false, 
-				"Longer", 
+				true, 
+				"Shorter", 
 				999, 
-				"Years");
+				"Millis");
 		
 		computed = filter.filter(originalLog, parameters);
 
@@ -505,8 +512,11 @@ public class FilterTraceFollowerTest extends FilterdPackageTest {
 	/* 
 	 * traces with key: "concept:name" and value: "add item" 
 	 * event never directly followed by key: "concept:name" and value: "add item".
+	 * Follower and reference event should have different values for the key 
+	 * "org:resource" and the duration in between the events should be shorter
+	 * than 999 milliseconds.
 	 * 
-	 * Result: cases 34, 41, 56, 72, 73, 74, 75, 76
+	 * Result: cases 34, 35, 41, 56, 72, 73, 74, 75, 76: original log
 	 */
 	@Test
 	public void testFollowerNeverDirectly7() throws Throwable {
@@ -520,13 +530,81 @@ public class FilterTraceFollowerTest extends FilterdPackageTest {
 				"Never directly followed", 
 				Arrays.asList("add item"), 
 				Arrays.asList("add item"), 
-				false, 
+				true, 
 				"Different values", 
 				"org:resource", 
-				false, 
-				"Longer", 
+				true, 
+				"Shorter", 
 				999, 
-				"Years");
+				"Millis");
+		
+		computed = filter.filter(originalLog, parameters);
+
+		assert equalLog(expected, computed);
+	}
+	
+	/* 
+	 * traces with key: "concept:name" and value: "add item" 
+	 * event never directly followed by key: "concept:name" and value: "add item".
+	 * Follower and reference event should have the same value for the key 
+	 * "org:resource" and the duration in between the events should be longer
+	 * than 999 milliseconds.
+	 * 
+	 * Result: cases 34, 35, 41, 56, 72, 73, 74, 75, 76: original log
+	 */
+	@Test
+	public void testFollowerNeverDirectly8() throws Throwable {
+		XLog expected = parseLog("trace-follower", "test_follower_never_directly_8.xes");
+		XLog computed = null; // insert filter operation
+		
+		FilterdTraceFollowerFilter filter = new FilterdTraceFollowerFilter();
+		
+		List<Parameter> parameters = getParameters(
+				"concept:name", 
+				"Never directly followed", 
+				Arrays.asList("add item"), 
+				Arrays.asList("add item"), 
+				true, 
+				"Different values", 
+				"org:resource", 
+				true, 
+				"Shorter", 
+				999, 
+				"Millis");
+		
+		computed = filter.filter(originalLog, parameters);
+
+		assert equalLog(expected, computed);
+	}
+	
+	/* 
+	 * traces with key: "concept:name" and value: "add item" 
+	 * event never directly followed by key: "concept:name" and value: "add item".
+	 * Follower and reference event should have different values for the key 
+	 * "org:resource" and the duration in between the events should be longer
+	 * than 999 milliseconds.
+	 * 
+	 * Result: cases 34, 35, 41, 56, 72, 73, 74, 75, 76: original log
+	 */
+	@Test
+	public void testFollowerNeverDirectly9() throws Throwable {
+		XLog expected = parseLog("trace-follower", "test_follower_never_directly_9.xes");
+		XLog computed = null; // insert filter operation
+		
+		FilterdTraceFollowerFilter filter = new FilterdTraceFollowerFilter();
+		
+		List<Parameter> parameters = getParameters(
+				"concept:name", 
+				"Never directly followed", 
+				Arrays.asList("add item"), 
+				Arrays.asList("add item"), 
+				true, 
+				"Different values", 
+				"org:resource", 
+				true, 
+				"Shorter", 
+				999, 
+				"Millis");
 		
 		computed = filter.filter(originalLog, parameters);
 
@@ -562,6 +640,22 @@ public class FilterTraceFollowerTest extends FilterdPackageTest {
 
 		assert equalLog(expected, computed);
 	}
+	
+//	/* 
+//	 * 
+//	 * Result: cases 35, 41, 72, 73.
+//	 */
+//	@Test
+//	public void testFollowerEventually2() throws Throwable {
+//		XLog expected = parseLog("trace-follower", "test_follower_eventually_1.xes");
+//		XLog computed = null; // insert filter operation
+//		
+//		FilterdTraceFollowerFilter filter = new FilterdTraceFollowerFilter();
+//		
+//		computed = filter.filter(originalLog, parameters);
+//
+//		assert equalLog(expected, computed);
+//	}
 
 	/* Corresponds to test case 40 from test_specification.xlsx.
 	 * See Disco Follower - traces with "add item" event eventually followed by "add item" 
@@ -569,7 +663,7 @@ public class FilterTraceFollowerTest extends FilterdPackageTest {
 	 * Result: case 72, 73.
 	 */
 	@Test
-	public void testFollowerEventually2() throws Throwable {
+	public void testFollowerEventually3() throws Throwable {
 		XLog expected = parseLog("trace-follower", "test_follower_eventually_2.xes");
 		XLog computed = null; // insert filter operation
 		
@@ -593,13 +687,44 @@ public class FilterTraceFollowerTest extends FilterdPackageTest {
 		assert equalLog(expected, computed);
 	}
 	
+	/* Corresponds to test case 43 from test_specification.xlsx.
+	 * See Disco Follower - traces with "add item" event eventually followed by "add item" 
+	 * same delivery.
+	 * 
+	 * Result: case 35, 72, 73.
+	 */
+	@Test
+	public void testFollowerEventually4() throws Throwable {
+		XLog expected = parseLog("trace-follower", "test_follower_eventually_5.xes");
+		XLog computed = null; // insert filter operation
+		
+		FilterdTraceFollowerFilter filter = new FilterdTraceFollowerFilter();
+		
+		List<Parameter> parameters = getParameters(
+				"concept:name", 
+				"Eventually followed", 
+				Arrays.asList("add item"), 
+				Arrays.asList("add item"), 
+				true, 
+				"The same value", 
+				"delivery", 
+				false, 
+				"Longer", 
+				1, 
+				"Hours");
+		
+		computed = filter.filter(originalLog, parameters);
+
+		assert equalLog(expected, computed);
+	}
+	
 	/* Corresponds to test case 41 from test_specification.xlsx.
 	 * See Disco Follower - traces with "add item" event eventually followed by "add item" different resource.
 	 * 
 	 * Result: no case.
 	 */
 	@Test
-	public void testFollowerEventually3() throws Throwable {
+	public void testFollowerEventually5() throws Throwable {
 		XLog expected = parseLog("trace-follower", "test_follower_eventually_3.xes");
 		XLog computed = null; // insert filter operation
 		
@@ -623,6 +748,8 @@ public class FilterTraceFollowerTest extends FilterdPackageTest {
 		assert equalLog(expected, computed);
 	}
 
+	
+	
 	/* Corresponds to test case 42 from test_specification.xlsx.
 	 * See Disco Follower - traces with "add item" event eventually followed by "add item" 
 	 * different delivery.
@@ -630,7 +757,7 @@ public class FilterTraceFollowerTest extends FilterdPackageTest {
 	 * Result: case 41.
 	 */
 	@Test
-	public void testFollowerEventually4() throws Throwable {
+	public void testFollowerEventually10() throws Throwable {
 		XLog expected = parseLog("trace-follower", "test_follower_eventually_4.xes");
 		XLog computed = null; // insert filter operation
 		
@@ -643,37 +770,6 @@ public class FilterTraceFollowerTest extends FilterdPackageTest {
 				Arrays.asList("add item"), 
 				true, 
 				"Different values", 
-				"delivery", 
-				false, 
-				"Longer", 
-				1, 
-				"Hours");
-		
-		computed = filter.filter(originalLog, parameters);
-
-		assert equalLog(expected, computed);
-	}
-
-	/* Corresponds to test case 43 from test_specification.xlsx.
-	 * See Disco Follower - traces with "add item" event eventually followed by "add item" 
-	 * same delivery.
-	 * 
-	 * Result: case 35, 72, 73.
-	 */
-	@Test
-	public void testFollowerEventually5() throws Throwable {
-		XLog expected = parseLog("trace-follower", "test_follower_eventually_5.xes");
-		XLog computed = null; // insert filter operation
-		
-		FilterdTraceFollowerFilter filter = new FilterdTraceFollowerFilter();
-		
-		List<Parameter> parameters = getParameters(
-				"concept:name", 
-				"Eventually followed", 
-				Arrays.asList("add item"), 
-				Arrays.asList("add item"), 
-				true, 
-				"The same value", 
 				"delivery", 
 				false, 
 				"Longer", 

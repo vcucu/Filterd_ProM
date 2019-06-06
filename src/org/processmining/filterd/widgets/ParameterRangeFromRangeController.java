@@ -133,13 +133,13 @@ public class ParameterRangeFromRangeController<N extends Number> extends Paramet
 	public void setSliderConfig(List<N> defaultValue, List<N> minMaxPair) {
 		if (genericTypeClass.equals(Double.TYPE)) {
 			double majorTickUnit = ((Double) minMaxPair.get(1) - (Double) minMaxPair.get(0)) / 4.0;
-			slider.setMajorTickUnit(majorTickUnit);
 			slider.setMin((Double) minMaxPair.get(0));
 			slider.setMax((Double) minMaxPair.get(1));
 			slider.setLowValue((Double) defaultValue.get(0));
 			slider.setHighValue((Double) defaultValue.get(1));
 			slider.setBlockIncrement(0.1);
 			if (isActingLikeInteger) {
+				majorTickUnit = Math.max(1, Math.floor(majorTickUnit)); //unit must be > 0
 				lowValueLabel.setText(Integer.toString(defaultValue.get(0).intValue()));
 				highValueLabel.setText(Integer.toString(defaultValue.get(1).intValue()));
 			} else {
@@ -147,6 +147,7 @@ public class ParameterRangeFromRangeController<N extends Number> extends Paramet
 				lowValueLabel.setText(df.format((Double) defaultValue.get(0)));
 				highValueLabel.setText(df.format((Double) defaultValue.get(1)));
 			}
+			slider.setMajorTickUnit(majorTickUnit);
 		} else if (genericTypeClass.equals(Integer.TYPE)) {
 			double majorTickUnit = (minMaxPair.get(1).doubleValue() - minMaxPair.get(0).doubleValue()) / 4.0;
 			majorTickUnit = Math.max(1, Math.floor(majorTickUnit)); //unit must be > 0

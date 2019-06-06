@@ -6,6 +6,7 @@ import java.util.List;
 import org.deckfour.xes.classification.XEventClassifier;
 import org.deckfour.xes.model.XLog;
 import org.processmining.filterd.filters.Filter;
+import org.processmining.filterd.gui.AbstractFilterConfigPanelController;
 import org.processmining.filterd.gui.FilterConfigPanelController;
 import org.processmining.filterd.parameters.Parameter;
 import org.processmining.filterd.parameters.ParameterOneFromSet;
@@ -13,8 +14,6 @@ import org.processmining.filterd.tools.Toolbox;
 import org.processmining.filterd.widgets.ParameterOneFromSetExtendedController;
 
 public class FilterdTraceEndEventConfig extends FilterdAbstractReferencingConfig {
-
-	FilterConfigPanelController configPanel; 
 	
 	public FilterdTraceEndEventConfig(XLog log, Filter filterType) {
 		super(log, filterType);
@@ -46,18 +45,22 @@ public class FilterdTraceEndEventConfig extends FilterdAbstractReferencingConfig
 		parameters.add(selectionType);
 		//parameters.addAll(concreteReference.getParameters());
 		
-		configPanel = new FilterConfigPanelController("Trace End Event Configuration", parameters, this);
+		
 	}
 
 	public boolean canPopulate(FilterConfigPanelController component) {
 		//check whether no params are empty if you populate with the component
 		return true;
 	};
-
-	public FilterConfigPanelController getConfigPanel() {
+	
+	@Override
+	public AbstractFilterConfigPanelController getConfigPanel() {
+		if (this.configPanel == null) {
+			this.configPanel = new FilterConfigPanelController("Trace End Event Configuration", parameters, this);
+		}
+		
 		return configPanel;
 	}
-	
 	
 	@Override
 	public boolean checkValidity(XLog candidateLog) {

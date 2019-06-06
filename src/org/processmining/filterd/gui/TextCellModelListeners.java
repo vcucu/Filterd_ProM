@@ -4,7 +4,7 @@ import java.beans.PropertyChangeEvent;
 
 public class TextCellModelListeners extends CellModelListeners{
 
-	TextCellModelListeners(CellController controller) {
+	public TextCellModelListeners(CellController controller) {
 		super(controller);
 		// TODO Auto-generated constructor stub
 	}

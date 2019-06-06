@@ -16,6 +16,8 @@ import org.processmining.filterd.models.YLog;
 import org.processmining.framework.plugin.ProMCanceller;
 import org.processmining.tests.filters.FilterdPackageTest;
 
+import javafx.beans.property.BooleanProperty;
+
 public class NotebookModelTest extends FilterdPackageTest {
 
 	public NotebookModelTest() throws Exception {
@@ -197,6 +199,20 @@ public class NotebookModelTest extends FilterdPackageTest {
 		YLog log = model.getInitialInput();
 		// Check the log was properly set
 		assertTrue(equalLog(log.get(), originalLog));
+	}
+	
+	@Test
+	public void testNotebookModelComputingProperty() {
+		// Create new notebook model instance
+		NotebookModel model = new NotebookModel();
+		// Get the computing variable from the notebook
+		Boolean computing = model.isComputing();
+		// Check that the computing variable is properly returned
+		assertFalse(computing);
+		// Get the computing property
+		BooleanProperty computingProperty = model.isComputingProperty();
+		// Check that the computing property is properly returned
+		assertFalse(computingProperty.get());
 	}
 	
 	// TODO: This test keeps failing because the JUnit thread terminates before the computation thread is done

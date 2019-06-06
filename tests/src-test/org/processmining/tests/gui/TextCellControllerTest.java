@@ -1,7 +1,6 @@
 package org.processmining.tests.gui;
 
 import org.junit.Test;
-import org.processmining.filterd.gui.CellController;
 import org.processmining.filterd.gui.CellModel;
 import org.processmining.filterd.gui.NotebookController;
 import org.processmining.filterd.gui.NotebookModel;
@@ -14,7 +13,7 @@ public class TextCellControllerTest extends TestCase {
 	
 	NotebookModel model;
 	NotebookController controller;
-	CellController cellController;
+	TextCellController cellController;
 	
 	
 	public void setupTextCellController() {
@@ -122,7 +121,7 @@ public class TextCellControllerTest extends TestCase {
 	}
 	
 	@Test
-	public void testChangeComment() {
+	public void testChangeCellName() {
 		// Setup new text cell controller
 		setupTextCellController();
 		try {
@@ -131,6 +130,33 @@ public class TextCellControllerTest extends TestCase {
 		} catch (Throwable exception) {
 			// Check null pointer is thrown (since the view is not initialized)
 			assertFalse(exception.equals(null));
+		}
+	}
+	
+	@Test
+	public void testChangeComment() {
+		// Setup new text cell controller
+		setupTextCellController();
+		try {
+			cellController.changeComment("Filterd");
+			fail("NullPointerException was NOT thrown!");
+		} catch (Throwable exception) {
+			// Check null pointer is thrown (since the view is not initialized)
+			assertFalse(exception.equals(null));
+		}
+	}
+	
+	@Test
+	public void testTextCellControllerInitialize() {
+		// Setup new text cell controller
+		setupTextCellController();
+		try {
+			// Initialize the text cell controller
+			cellController.initialize();	
+			// Should throw error since the view is not initialized
+			fail("NullPointerException was NOT thrown!");
+		} catch (Throwable exception) {
+			assertEquals(NullPointerException.class, exception.getClass());
 		}
 	}
 

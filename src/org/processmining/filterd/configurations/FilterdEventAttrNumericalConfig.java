@@ -13,6 +13,12 @@ import org.processmining.filterd.parameters.ParameterOneFromSet;
 import org.processmining.filterd.parameters.ParameterRangeFromRange;
 import org.processmining.filterd.parameters.ParameterYesNo;
 import org.processmining.filterd.tools.Toolbox;
+import org.processmining.filterd.widgets.ParameterController;
+import org.processmining.filterd.widgets.ParameterOneFromSetController;
+
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.scene.control.ComboBox;
 
 public class FilterdEventAttrNumericalConfig extends FilterdAbstractReferenceableConfig {
 	String key;
@@ -55,11 +61,11 @@ public class FilterdEventAttrNumericalConfig extends FilterdAbstractReferenceabl
 				if (!values.contains(value)) values.add(value);
 			}
 		}
-		
+
 		Collections.sort(values);
 		ParameterMultipleFromSet desiredValues = new ParameterMultipleFromSet(
 				"desiredValues", "Choose values:", values, values);
-		
+
 		/* populate the parameters */
 		defaultPair.add(Double.parseDouble(values.get(0)));
 		defaultPair.add(Double.parseDouble(values.get(values.size() - 1)));
@@ -68,15 +74,35 @@ public class FilterdEventAttrNumericalConfig extends FilterdAbstractReferenceabl
 		// slider values parameter
 		ParameterRangeFromRange<Double> range = new ParameterRangeFromRange<>("range",
 				"Select interval to choose from.", defaultPair, optionsPair, Double.TYPE);
-		
+
 		/* add the parameters */
 		parameters.add(selectionType);
 		parameters.add(parameterType);
 		parameters.add(desiredValues);
-		parameters.add(range);
+		//parameters.add(range);
 		parameters.add(traceHandling);
 		parameters.add(eventHandling);
-		
+
+		for(ParameterController parameter : this.getConfigPanel().getControllers()) {
+			if (parameter.getName().equals("parameterType")) {
+				System.out.println("im here");
+				ParameterOneFromSetController casted = (ParameterOneFromSetController) parameter;
+				ComboBox<String> comboBox = casted.getComboBox();
+				comboBox.valueProperty().addListener(new ChangeListener<String>() {
+					@Override 
+					public void changed(ObservableValue ov, String oldValue, String newValue) {
+						System.out.println("i work");
+						if (parameters.contains(range) && !newValue.contains("interval")) {
+							parameters.remove(range);
+							parameters.add(desiredValues);
+						} else if (parameters.contains(desiredValues) && newValue.contains("interval")) {
+							parameters.remove(desiredValues);
+							parameters.add(range);
+						}
+					}
+				});
+			}
+		}
 	}
 
 	public boolean canPopulate(FilterConfigPanelController component) {

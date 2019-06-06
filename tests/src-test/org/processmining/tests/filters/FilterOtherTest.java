@@ -1,12 +1,17 @@
 package org.processmining.tests.filters;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.deckfour.xes.model.XLog;
 import org.junit.Test;
+import org.processmining.filterd.filters.FilterdModifMergeSubsequentFilter;
 import org.processmining.filterd.filters.FilterdTraceSampleFilter;
 import org.processmining.filterd.parameters.Parameter;
+import org.processmining.filterd.parameters.ParameterMultipleFromSet;
+import org.processmining.filterd.parameters.ParameterOneFromSet;
 import org.processmining.filterd.parameters.ParameterValueFromRange;
 
 /* Test cases for other filters.
@@ -25,8 +30,36 @@ public class FilterOtherTest extends FilterdPackageTest {
 	@Test
 	public void testMergeEvents() throws Throwable {
 		XLog expected = parseLog("others", "test_merge_events.xes");
-		XLog computed = null; // insert filter operation
+		/*manually instantiate the filter's parameters*/
+		ArrayList<Parameter> parameters = new ArrayList<>();
+		List empty = Collections.EMPTY_LIST;
+		List<String> desiredEvents = new ArrayList<>(Arrays.asList("ship parcel", "add item",
+				"receive order", "receiver payment", "archive", "pack order" ));
 
+		
+		ParameterOneFromSet classifierParam = new ParameterOneFromSet("classifier", "classifier", "", empty );
+		ParameterMultipleFromSet desiredEventsParam = new ParameterMultipleFromSet("desiredEvents", "desiredEvents", empty, empty);
+		ParameterOneFromSet comparisonTypeParam = new ParameterOneFromSet("comparisonType", "comparisonType", "", empty);
+		ParameterMultipleFromSet relevantAttributesParam = 
+				new ParameterMultipleFromSet("relevantAttributes", "relevantAttributes", empty, empty );
+		ParameterOneFromSet mergeTypeParam = new ParameterOneFromSet("mergeType", "mergeType", "", empty);
+		
+		
+		
+		classifierParam.setChosen("Event Name");
+		desiredEventsParam.setChosen(desiredEvents);
+		comparisonTypeParam.setChosen("Compare event class");
+		mergeTypeParam.setChosen("Merge taking last event");
+		
+		parameters.add(classifierParam);
+		parameters.add(desiredEventsParam);
+		parameters.add(comparisonTypeParam);
+		parameters.add(mergeTypeParam);
+		parameters.add(relevantAttributesParam);
+		
+		//instantiate the filter class
+		FilterdModifMergeSubsequentFilter filter = new FilterdModifMergeSubsequentFilter();
+		XLog computed = filter.filter(originalLog, parameters);	
 		assert equalLog(expected, computed);
 	}
 

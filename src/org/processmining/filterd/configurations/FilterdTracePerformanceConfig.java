@@ -20,18 +20,18 @@ import javafx.beans.value.ObservableValue;
 import javafx.scene.control.ComboBox;
 
 public class FilterdTracePerformanceConfig extends FilterdAbstractConfig {
-	
+
 	List<Integer> minAndMaxDuration;
 	List<Integer> minAndMaxEvents;
-	
+
 	public FilterdTracePerformanceConfig(XLog log, Filter filterType) {
 		super(log, filterType);
-		
+
 		parameters = new ArrayList<>();
 		// Initialize members based on the log.
 		minAndMaxDuration = Toolbox.getMinAnMaxDuration(log);
 		minAndMaxEvents = Toolbox.getminAdnMaxEventSize(log);
-		
+
 		// Create performance options parameter and set the option to duration
 		// as default.
 		ParameterOneFromSet performanceOptionsParameter = 
@@ -52,14 +52,16 @@ public class FilterdTracePerformanceConfig extends FilterdAbstractConfig {
 						minAndMaxDuration, 
 						minAndMaxDuration,
 						Integer.TYPE);
-		
+
 		// Add the created parameters.
 		parameters.add(performanceOptionsParameter);
 		parameters.add(valueParameter);
+
+		
 	}
 
 	public boolean checkValidity(XLog candidateLog) {
-		
+
 		return true;
 	}
 
@@ -67,27 +69,36 @@ public class FilterdTracePerformanceConfig extends FilterdAbstractConfig {
 		// TODO Auto-generated method stub
 		return true;
 	}
-
+	
+	@Override
 	public AbstractFilterConfigPanelController getConfigPanel() {
-		FilterConfigPanelController filterConfigPanel = new FilterConfigPanelController(
-				"Filter Trace Performance Configuration", 
-				parameters, 
-				this);
-		for(ParameterController parameter : filterConfigPanel.getControllers()) {
+		if (this.configPanel == null) {
+			this.configPanel = new FilterConfigPanelController(
+					"Filter Trace Performance Configuration", 
+					parameters, 
+					this);
+			parameterListeners();
+		}
+		
+		return configPanel;
+	}
+
+	public void parameterListeners() {
+		for(ParameterController parameter : configPanel.getControllers()) {
 			if (parameter.getName().equals("performanceOptions")) {
 				ParameterOneFromSetController casted = (ParameterOneFromSetController) parameter;
 				ComboBox<String> comboBox = casted.getComboBox();
 				comboBox.valueProperty().addListener(new ChangeListener<String>() {
 					@Override 
 					public void changed(ObservableValue ov, String oldValue, String newValue) {
-						
-						for (ParameterController changingParameter : filterConfigPanel.getControllers()) {
-							
+
+						for (ParameterController changingParameter : configPanel.getControllers()) {
+
 							if (changingParameter.getName().equals("threshold")) {
-								
+
 								ParameterRangeFromRangeController<Integer> castedChanging = 
 										(ParameterRangeFromRangeController<Integer>) changingParameter;
-								
+
 								if (newValue.equals("filter on duration")) {
 									List<Integer> defaultValue = new ArrayList<>();
 									defaultValue.add(minAndMaxDuration.get(0));
@@ -96,23 +107,23 @@ public class FilterdTracePerformanceConfig extends FilterdAbstractConfig {
 									minMaxPair.add(minAndMaxDuration.get(0));
 									minMaxPair.add(minAndMaxDuration.get(1));
 									castedChanging.setSliderConfig(defaultValue, minMaxPair);
-									
+
 									ParameterRangeFromRange<Integer> castedParameter = (ParameterRangeFromRange<Integer>) getParameter("threshold");
 									castedParameter.setDefaultPair(defaultValue);
 									castedParameter.setOptionsPair(minMaxPair);
 								} else {
 									castedChanging.setSliderConfig(minAndMaxEvents, minAndMaxEvents);
-									
+
 									ParameterRangeFromRange<Integer> castedParameter = (ParameterRangeFromRange<Integer>) getParameter("threshold");
 									castedParameter.setDefaultPair(minAndMaxEvents);
 									castedParameter.setOptionsPair(minAndMaxEvents);
 								}
-								
+
 							}
-							
+
 						}
-						
-			        }
+
+					}
 				});
 			}
 			if(parameter.getName().equals("threshold")) {
@@ -120,10 +131,9 @@ public class FilterdTracePerformanceConfig extends FilterdAbstractConfig {
 				ParameterRangeFromRange<Integer> castedParameter = (ParameterRangeFromRange<Integer>) getParameter("threshold");
 				casted.setSliderConfig(castedParameter.getChosenPair().size() == 0 ? 
 						castedParameter.getDefaultPair() : 
-						castedParameter.getChosenPair(), castedParameter.getOptionsPair());
+							castedParameter.getChosenPair(), castedParameter.getOptionsPair());
 			}
 		}
-		return filterConfigPanel;
 	}
 
 }

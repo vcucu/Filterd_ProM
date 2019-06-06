@@ -37,9 +37,6 @@ public abstract class FilterdAbstractReferencingConfig extends FilterdAbstractCo
 	@Override
 	public abstract boolean canPopulate(FilterConfigPanelController component) ;
 
-	@Override
-	public abstract AbstractFilterConfigPanelController getConfigPanel() ;
-
 	public abstract FilterdAbstractConfig changeReference(ParameterOneFromSetExtendedController controller);
 	
 	public FilterdAbstractReferenceableConfig getConcreteReference() {
