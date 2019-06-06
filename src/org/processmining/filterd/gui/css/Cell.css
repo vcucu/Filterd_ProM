@@ -11,6 +11,10 @@ root {
 	-fx-pref-height: 24;
 }
 
+.icon-button > .icon-svg {
+	-fx-background-color: white;
+}
+
 .prepend-cell-vbox > .prepend-cell-button {
 	-fx-opacity: 0%;
 	-fx-cursor: hand;
@@ -34,7 +38,7 @@ root {
 	-fx-background-color:  #646464;
 	-fx-border-width: 0;
 	-fx-text-fill:  #FFFFFF;
-	-fx-font-size: 14;
+	-fx-font-size: 12;
 }
 
 .panel-content {

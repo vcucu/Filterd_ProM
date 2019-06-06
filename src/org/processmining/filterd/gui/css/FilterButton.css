@@ -1,3 +1,23 @@
-.root {
-	-fx-background-color: #eeeeee;
+.bg-gray {
+	-fx-background-color: #F5F5F5;
+}
+
+.icon-svg {
+	-fx-background-color: #707070;
+}
+
+.selected {
+	-fx-background-color: #009800;
+}
+
+.invalid {
+	-fx-background-color: #CC0000;
+}
+
+.selected .icon-svg, .invalid .icon-svg {
+	-fx-background-color: #FFFFFF;
+}
+
+.selected .filter-name, .invalid .filter-name {
+	-fx-text-fill: #FFFFFF;
 }

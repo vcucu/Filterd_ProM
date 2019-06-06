@@ -62,7 +62,7 @@
                            <children>
                               <Region maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
                               <ComboBox fx:id="cmbVisualizers" maxHeight="-Infinity" minHeight="-Infinity" onAction="#loadVisualizer" prefHeight="24.0" prefWidth="150.0" styleClass="round-combobox" />
-                              <Label fx:id="fullScreenButton" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#handleFullScreen" prefHeight="24.0" prefWidth="24.0" stylesheets="@../css/Icons.css">
+                              <Label fx:id="fullScreenButton" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#handleFullScreen" prefHeight="24.0" prefWidth="24.0" styleClass="icon-button" stylesheets="@../css/Icons.css">
                                  <graphic>
                                     <Region prefHeight="200.0" prefWidth="200.0">
                                        <styleClass>
@@ -116,7 +116,7 @@
                               </VBox>
                            </content>
                         </ScrollPane>
-                        <Label fx:id="expandButton" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#handleExpandVisualiser" prefHeight="46.0" prefWidth="11.0" styleClass="expand-button" stylesheets="@../css/Icons.css">
+                        <Label fx:id="expandButton" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#handleExpandVisualiser" prefHeight="46.0" prefWidth="11.0" stylesheets="@../css/Icons.css">
                            <graphic>
                               <Region prefHeight="200.0" prefWidth="200.0">
                                  <styleClass>
@@ -128,6 +128,10 @@
                            <HBox.margin>
                               <Insets left="20.0" />
                            </HBox.margin>
+                           <styleClass>
+                              <String fx:value="expand-button" />
+                              <String fx:value="icon-button" />
+                           </styleClass>
                         </Label>
                         <AnchorPane fx:id="visualizerPane" maxHeight="1.7976931348623157E308" minHeight="390.0" minWidth="600.0" HBox.hgrow="ALWAYS" />
                      </children>
