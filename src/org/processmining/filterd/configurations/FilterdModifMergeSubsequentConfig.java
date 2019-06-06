@@ -6,6 +6,7 @@ import java.util.List;
 import org.deckfour.xes.classification.XEventClassifier;
 import org.deckfour.xes.model.XLog;
 import org.processmining.filterd.filters.Filter;
+import org.processmining.filterd.gui.AbstractFilterConfigPanelController;
 import org.processmining.filterd.gui.FilterConfigPanelController;
 import org.processmining.filterd.parameters.Parameter;
 import org.processmining.filterd.parameters.ParameterMultipleFromSet;
@@ -14,6 +15,8 @@ import org.processmining.filterd.tools.Toolbox;
 import org.processmining.filterd.widgets.ParameterOneFromSetExtendedController;
 
 public class FilterdModifMergeSubsequentConfig extends FilterdAbstractReferencingConfig {
+	
+	FilterConfigPanelController configPanel;
 	
 	public FilterdModifMergeSubsequentConfig(XLog log, Filter filterType) {
 		super(log, filterType);
@@ -69,7 +72,7 @@ public class FilterdModifMergeSubsequentConfig extends FilterdAbstractReferencin
 		parameters.add(mergeType);
 		parameters.add(relevantAttributes);
 		
-		this.configPanel = new NestedFilterdConfigPanelController(parameters);
+		this.configPanel = new FilterConfigPanelController("Merge Subsequent Events Configuration", parameters, this);
 	}
 
 
@@ -93,6 +96,12 @@ public class FilterdModifMergeSubsequentConfig extends FilterdAbstractReferencin
 		concreteReference = new FilterdModifMergeSubsequentCategoricalConfig
 				(log, filterType, controller.getValue(), Toolbox.computeAllClassifiers(log));
 		return concreteReference;
+	}
+
+
+
+	public AbstractFilterConfigPanelController getConfigPanel() {
+		return configPanel;
 	}
 
 
