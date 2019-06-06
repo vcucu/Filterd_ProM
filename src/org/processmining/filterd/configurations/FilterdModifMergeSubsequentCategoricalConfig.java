@@ -35,8 +35,9 @@ public class FilterdModifMergeSubsequentCategoricalConfig extends FilterdAbstrac
 		// Create desiredEvents parameters
 		ParameterMultipleFromSet desiredEvents = new ParameterMultipleFromSet
 				("desiredEvents", "Select events", allValues, allValues);
-		System.out.println("allValues " + allValues.size());
 		parameters.add(desiredEvents);
+		
+
 	}
 
 	public boolean canPopulate(FilterConfigPanelController component) {

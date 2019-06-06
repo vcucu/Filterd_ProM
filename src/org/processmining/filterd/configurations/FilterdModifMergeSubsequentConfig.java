@@ -11,7 +11,6 @@ import org.processmining.filterd.parameters.Parameter;
 import org.processmining.filterd.parameters.ParameterMultipleFromSet;
 import org.processmining.filterd.parameters.ParameterOneFromSet;
 import org.processmining.filterd.tools.Toolbox;
-import org.processmining.filterd.widgets.ParameterController;
 import org.processmining.filterd.widgets.ParameterOneFromSetExtendedController;
 
 public class FilterdModifMergeSubsequentConfig extends FilterdAbstractReferencingConfig {
@@ -69,6 +68,8 @@ public class FilterdModifMergeSubsequentConfig extends FilterdAbstractReferencin
 		parameters.add(comparisonType);
 		parameters.add(mergeType);
 		parameters.add(relevantAttributes);
+		
+		this.configPanel = new NestedFilterdConfigPanelController(parameters);
 	}
 
 
@@ -78,22 +79,6 @@ public class FilterdModifMergeSubsequentConfig extends FilterdAbstractReferencin
 		return true;
 	};
 
-	public FilterConfigPanelController getConfigPanel() {
-		FilterConfigPanelController filterConfigPanel =
-				new FilterConfigPanelController("Merge Subsequent Events Configuration", parameters, this);
-		
-		for (ParameterController parameter : filterConfigPanel.getControllers() ) {
-			if (parameter.getName().contentEquals("comparisonType")) {
-				for (ParameterController parameter2 : filterConfigPanel.getControllers()) {
-					if (parameter2.getName().contentEquals("relevantAttributes")) {
-						System.out.println("");
-					}
-				}
-			}
-		}
-		
-		return filterConfigPanel;
-	}
 	
 
 	public boolean checkValidity(XLog log) {
