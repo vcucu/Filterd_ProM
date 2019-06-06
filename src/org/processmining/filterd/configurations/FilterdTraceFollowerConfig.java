@@ -200,7 +200,7 @@ public class FilterdTraceFollowerConfig extends FilterdAbstractConfig {
 		parameters.add(valueMatchingAttributeParameter);
 		parameters.add(timeTypeParameter);
 
-		configPanel = new FilterConfigPanelController(
+		this.configPanel = new FilterConfigPanelController(
 				"Filter Traces follower filter", 
 				parameters, 
 				this);
