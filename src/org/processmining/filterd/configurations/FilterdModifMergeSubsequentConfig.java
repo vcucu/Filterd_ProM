@@ -1,6 +1,7 @@
 package org.processmining.filterd.configurations;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.deckfour.xes.classification.XEventClassifier;
@@ -12,7 +13,15 @@ import org.processmining.filterd.parameters.Parameter;
 import org.processmining.filterd.parameters.ParameterMultipleFromSet;
 import org.processmining.filterd.parameters.ParameterOneFromSet;
 import org.processmining.filterd.tools.Toolbox;
+import org.processmining.filterd.widgets.ParameterController;
+import org.processmining.filterd.widgets.ParameterMultipleFromSetController;
+import org.processmining.filterd.widgets.ParameterOneFromSetController;
 import org.processmining.filterd.widgets.ParameterOneFromSetExtendedController;
+
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.scene.control.ComboBox;
+
 
 public class FilterdModifMergeSubsequentConfig extends FilterdAbstractReferencingConfig {
 	
@@ -99,8 +108,42 @@ public class FilterdModifMergeSubsequentConfig extends FilterdAbstractReferencin
 	}
 
 
-
 	public AbstractFilterConfigPanelController getConfigPanel() {
+
+		for (ParameterController parameter : configPanel.getControllers()) {
+			if (parameter.getName().equals("comparisonType")) {
+				ParameterOneFromSetController casted = (ParameterOneFromSetController) parameter;
+					ComboBox<String> comboBox = casted.getComboBox();
+					comboBox.valueProperty().addListener(new ChangeListener<String>() {
+						@Override
+						public void changed(ObservableValue ov, String oldValue, String newValue) {
+							final XLog Llog = log;
+							List<Parameter> params = parameters;
+							if (Llog != null) {
+								List empty = Collections.EMPTY_LIST;
+								if (!casted.getValue().equals("Compare event class & attributes")) {
+									for (ParameterController changingParameter : configPanel.getControllers()) {
+										if (changingParameter.getName().equals("relevantAttributes")) {	
+											ParameterMultipleFromSetController castedChanging = (ParameterMultipleFromSetController) changingParameter;
+											castedChanging.getContents().setVisible(false);
+											
+										}
+								}
+							} else {
+								for (ParameterController changingParameter : configPanel.getControllers()) {
+									if (changingParameter.getName().equals("relevantAttributes")) {	
+										ParameterMultipleFromSetController castedChanging = (ParameterMultipleFromSetController) changingParameter;
+										castedChanging.getContents().setVisible(false);
+										
+									}
+								}
+							}
+							}
+						}
+					});
+				
+			}
+		}
 		return configPanel;
 	}
 
