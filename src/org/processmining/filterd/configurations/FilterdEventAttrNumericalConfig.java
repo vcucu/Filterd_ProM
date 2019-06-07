@@ -154,6 +154,8 @@ public class FilterdEventAttrNumericalConfig extends FilterdAbstractReferenceabl
 
 
 	public boolean checkValidity(XLog log) {
+		if (key == null) return true;
+		
 		if (!Toolbox.computeAttributes(log).contains(key)) {
 			return false;
 		}

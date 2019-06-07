@@ -7,8 +7,6 @@ import org.deckfour.xes.classification.XEventClasses;
 import org.deckfour.xes.classification.XEventClassifier;
 import org.deckfour.xes.factory.XFactory;
 import org.deckfour.xes.factory.XFactoryRegistry;
-import org.deckfour.xes.info.XLogInfo;
-import org.deckfour.xes.info.impl.XLogInfoImpl;
 import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
@@ -77,7 +75,7 @@ public class FilterdTraceEndEventCategoricalConfig extends FilterdAbstractRefere
 		
 		// Create desiredEvents parameter	
 		ParameterMultipleFromSet desiredEvents = new ParameterMultipleFromSet(
-				"desiredEvents", "Select end event values", allValues, allValues);
+				"desiredEvents", "Select end event values", new ArrayList<>(), allValues);
 		
 		// Should you keep empty traces
 		ParameterYesNo traceHandling = new ParameterYesNo("traceHandling", 
