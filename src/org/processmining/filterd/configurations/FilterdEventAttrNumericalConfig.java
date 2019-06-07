@@ -1,20 +1,24 @@
 package org.processmining.filterd.configurations;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
 import org.processmining.filterd.filters.Filter;
 import org.processmining.filterd.gui.FilterConfigPanelController;
+import org.processmining.filterd.gui.NestedFilterConfigPanelController;
 import org.processmining.filterd.parameters.Parameter;
 import org.processmining.filterd.parameters.ParameterMultipleFromSet;
 import org.processmining.filterd.parameters.ParameterOneFromSet;
 import org.processmining.filterd.parameters.ParameterRangeFromRange;
 import org.processmining.filterd.parameters.ParameterYesNo;
 import org.processmining.filterd.tools.Toolbox;
-import org.processmining.filterd.widgets.ParameterController;
+import org.processmining.filterd.widgets.ParameterMultipleFromSetController;
 import org.processmining.filterd.widgets.ParameterOneFromSetController;
+import org.processmining.filterd.widgets.ParameterRangeFromRangeController;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -22,6 +26,8 @@ import javafx.scene.control.ComboBox;
 
 public class FilterdEventAttrNumericalConfig extends FilterdAbstractReferenceableConfig {
 	String key;
+	ParameterRangeFromRange<Double> range;
+	ParameterMultipleFromSet desiredValues;
 
 	public FilterdEventAttrNumericalConfig(XLog log, Filter filterType, String key) {
 		super(log, filterType);
@@ -29,6 +35,7 @@ public class FilterdEventAttrNumericalConfig extends FilterdAbstractReferenceabl
 		parameters = new ArrayList<Parameter>();
 		ArrayList<Double> defaultPair = new ArrayList<>();
 		ArrayList<Double> optionsPair = new ArrayList<>();
+
 
 		String defaultSelect = "Choose different values.";
 		ArrayList<String> selectList = new ArrayList<>();
@@ -52,57 +59,91 @@ public class FilterdEventAttrNumericalConfig extends FilterdAbstractReferenceabl
 		ParameterYesNo eventHandling = new ParameterYesNo("eventHandling", 
 				"Keep events if attribute not specified.", false);
 
-		ArrayList<String> values = new ArrayList<>();
+		ArrayList<Double> values = new ArrayList<>();
 		/*populate the array times with the numerical values of all events */
 		for (XTrace trace: log) {
 			for (XEvent event : trace) {
 				if (!event.getAttributes().containsKey(key)) continue;
-				String value = event.getAttributes().get(key).toString();
+				Double value = Double.parseDouble(event.getAttributes().get(key).toString());
 				if (!values.contains(value)) values.add(value);
 			}
 		}
 
 		Collections.sort(values);
-		ParameterMultipleFromSet desiredValues = new ParameterMultipleFromSet(
-				"desiredValues", "Choose values:", values, values);
+		
+		List<String> stringValues = values.stream().map(x -> x.toString())
+		        .collect(Collectors.toList());
+		
+		desiredValues = new ParameterMultipleFromSet(
+				"desiredValues", "Choose values:", stringValues, stringValues);
 
 		/* populate the parameters */
-		defaultPair.add(Double.parseDouble(values.get(0)));
-		defaultPair.add(Double.parseDouble(values.get(values.size() - 1)));
-		optionsPair.add(Double.parseDouble(values.get(0)));
-		optionsPair.add(Double.parseDouble(values.get(values.size() - 1)));
+		defaultPair.add(values.get(0));
+		defaultPair.add(values.get(values.size() - 1));
+		optionsPair.add(values.get(0));
+		optionsPair.add(values.get(values.size() - 1));
 		// slider values parameter
-		ParameterRangeFromRange<Double> range = new ParameterRangeFromRange<>("range",
+		range = new ParameterRangeFromRange<Double>("range",
 				"Select interval to choose from.", defaultPair, optionsPair, Double.TYPE);
 
 		/* add the parameters */
 		parameters.add(selectionType);
 		parameters.add(parameterType);
 		parameters.add(desiredValues);
-		//parameters.add(range);
+		parameters.add(range);
 		parameters.add(traceHandling);
 		parameters.add(eventHandling);
+	}
 
-		for(ParameterController parameter : this.getConfigPanel().getControllers()) {
-			if (parameter.getName().equals("parameterType")) {
-				System.out.println("im here");
-				ParameterOneFromSetController casted = (ParameterOneFromSetController) parameter;
-				ComboBox<String> comboBox = casted.getComboBox();
-				comboBox.valueProperty().addListener(new ChangeListener<String>() {
-					@Override 
-					public void changed(ObservableValue ov, String oldValue, String newValue) {
-						System.out.println("i work");
-						if (parameters.contains(range) && !newValue.contains("interval")) {
-							parameters.remove(range);
-							parameters.add(desiredValues);
-						} else if (parameters.contains(desiredValues) && newValue.contains("interval")) {
-							parameters.remove(desiredValues);
-							parameters.add(range);
-						}
-					}
-				});
-			}
+	@Override
+	public NestedFilterConfigPanelController getConfigPanel() {
+		NestedFilterConfigPanelController nestedPanel =  new NestedFilterConfigPanelController(parameters);
+
+		ParameterOneFromSetController parameterControl = (ParameterOneFromSetController)
+				nestedPanel.getControllers().stream()
+				.filter(c -> c.getName().equals("parameterType"))
+				.findFirst()
+				.get();
+		ComboBox<String> comboBox = parameterControl.getComboBox();
+		
+		if (!comboBox.getValue().contains("interval")) {
+		ParameterRangeFromRangeController<Double> rangeControl;
+		 rangeControl = 
+				(ParameterRangeFromRangeController<Double>)
+				nestedPanel.getControllers().stream()
+				.filter(c -> c.getName().equals("range"))
+				.findFirst()
+				.get();
+		 rangeControl.getContents().setVisible(false);
 		}
+
+		comboBox.valueProperty().addListener(new ChangeListener<String>() {
+			@Override 
+			public void changed(ObservableValue ov, String oldValue, String newValue) {
+				ParameterMultipleFromSetController desiredControl = (ParameterMultipleFromSetController)
+						nestedPanel.getControllers().stream()
+						.filter(c -> c.getName().equals("desiredValues"))
+						.findFirst()
+						.get();
+				
+				ParameterRangeFromRangeController<Double> rangeControl;
+				 rangeControl = 
+						(ParameterRangeFromRangeController<Double>)
+						nestedPanel.getControllers().stream()
+						.filter(c -> c.getName().equals("range"))
+						.findFirst()
+						.get();
+
+				if (!newValue.contains("interval") && parameters.contains(range)) {
+					desiredControl.getContents().setVisible(true);
+					rangeControl.getContents().setVisible(false);
+				} else if (newValue.contains("interval") && parameters.contains(desiredValues)) {
+					desiredControl.getContents().setVisible(false);
+					rangeControl.getContents().setVisible(true);
+				}
+			}
+		});
+		return nestedPanel;
 	}
 
 	public boolean canPopulate(FilterConfigPanelController component) {
