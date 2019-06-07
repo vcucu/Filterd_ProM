@@ -17,6 +17,8 @@ public class FilterdEventAttrCategoricalConfig extends FilterdAbstractReferencea
 	List<String> optionList;
 	List<String> values;
 	List<String> defaultValues;
+	ParameterMultipleFromSet desiredValues;
+	
 	String key;
 	
 	
@@ -53,7 +55,7 @@ public class FilterdEventAttrCategoricalConfig extends FilterdAbstractReferencea
 		defaultValues = new ArrayList<>();
 		defaultValues.add(values.get(0));
 		
-		ParameterMultipleFromSet desiredValues = new ParameterMultipleFromSet(
+		desiredValues = new ParameterMultipleFromSet(
 				"desiredValues", "Choose values:", defaultValues, values);
 
 		parameters.add(selectionType);
@@ -63,7 +65,21 @@ public class FilterdEventAttrCategoricalConfig extends FilterdAbstractReferencea
 	}
 
 	public boolean checkValidity(XLog log) {
-		return Toolbox.computeAttributes(log).contains(key);
+        		
+		if(key == null) return true;
+		if(!Toolbox.computeAttributes(log).contains(key)) return false;
+		
+		for (XTrace trace : log) {
+			for (XEvent event : trace) {
+				for (String choice : desiredValues.getChosen()) {
+					if (event.getAttributes().get(key).toString().contains(choice)) {
+						return true;
+					}
+				}
+			}
+		}
+		
+		return false;	
 	}
 	
 	public boolean canPopulate(FilterConfigPanelController component) {

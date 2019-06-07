@@ -100,7 +100,7 @@ public class FilterdEventAttrDateConfig extends FilterdAbstractReferenceableConf
 		String upper = times.get(pair.get(1));
 		Boolean hasTime = false;
 
-		/* check if each event of the log is in those timebounds */
+		/* check if at least one of the events is in those timebounds */
 		for (XTrace trace : log) {
 			for (XEvent event : trace) {
 				if (!event.getAttributes().containsKey(key)) continue;
