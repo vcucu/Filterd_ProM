@@ -58,7 +58,7 @@ public class ParameterValueFromRangeController<N extends Number> extends Paramet
             slider.setMinorTickCount(4);
             slider.setValue((Double) defaultValue);
             double majorTickUnit = ((Double) minMaxPair.get(1) - (Double) minMaxPair.get(0)) / 4.0;
-            slider.setMajorTickUnit(Math.floor(majorTickUnit));
+            slider.setMajorTickUnit(Math.max(1, Math.floor(majorTickUnit)));
             DecimalFormat df = new DecimalFormat("0.00");
             valueLabel.setText(df.format((Double) defaultValue));
         } else if(genericTypeClass.equals(Integer.TYPE)) {
@@ -67,7 +67,7 @@ public class ParameterValueFromRangeController<N extends Number> extends Paramet
             slider.setMinorTickCount(4);
             slider.setValue(defaultValue.doubleValue());
             int majorTickUnit = (int) (((Integer) minMaxPair.get(1) - (Integer) minMaxPair.get(0)) / 4.0);
-            slider.setMajorTickUnit(majorTickUnit);
+            slider.setMajorTickUnit(Math.max(1, majorTickUnit));
             valueLabel.setText(Integer.toString(defaultValue.intValue()));
         }
 	}
