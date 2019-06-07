@@ -105,14 +105,14 @@ public class FilterdEventAttrFilter extends Filter {
 		ParameterOneFromSet selectionType = (ParameterOneFromSet) this.getParameter(parameters, "selectionType");
 		ParameterOneFromSet parameterType = (ParameterOneFromSet) this.getParameter(parameters, "parameterType");
 		ParameterMultipleFromSet desiredValues = (ParameterMultipleFromSet) this.getParameter(parameters, "desiredValues");
-		ParameterRangeFromRange<Integer> range = (ParameterRangeFromRange<Integer>) this.getParameter(parameters,"range");
+		ParameterRangeFromRange<Double> range = (ParameterRangeFromRange<Double>) this.getParameter(parameters,"range");
 
 		boolean choice = selectionType.getChosen().contains("Filter in");
 		boolean selectionChoice = parameterType.getChosen().contains("interval");
 		boolean keepTraces = traceHandling.getChosen();
 		boolean keepEvent = eventHandling.getChosen();
-		int lower = range.getChosenPair().get(0);
-		int upper = range.getChosenPair().get(1);
+		double lower = range.getChosenPair().get(0);
+		double upper = range.getChosenPair().get(1);
 
 		filteredLog = Toolbox.initializeLog(log);
 		XFactory factory = XFactoryRegistry.instance().currentDefault();
@@ -129,7 +129,7 @@ public class FilterdEventAttrFilter extends Filter {
 					continue;
 				}
 
-				int value = Integer.parseInt(event.getAttributes().get(key).toString());
+				double value = Double.parseDouble(event.getAttributes().get(key).toString());
 
 				/* selection type: range from range */
 				if (selectionChoice) {
@@ -138,14 +138,16 @@ public class FilterdEventAttrFilter extends Filter {
 					}
 				} else {
 					/* selection type: multiple from set */
-					if (desiredValues.getChosen().contains(Integer.toString(value)))
+					if (desiredValues.getChosen()
+							.stream()
+							.anyMatch(y -> Double.parseDouble(y) == value))
 						add = choice;
 				}
-				
+
 				if (add) {
 					filteredTrace.add(event);
 				}
-				
+
 			}
 
 			if (!filteredTrace.isEmpty() || keepTraces) filteredLog.add(filteredTrace);
@@ -164,7 +166,7 @@ public class FilterdEventAttrFilter extends Filter {
 		boolean choice = selectionType.getChosen().contains("Filter in");
 		boolean keepNull = traceHandling.getChosen();
 		boolean keepEmpty = eventHandling.getChosen();
-		
+
 		ArrayList<String> times = range.getTimes();
 
 		filteredLog = Toolbox.initializeLog(log);

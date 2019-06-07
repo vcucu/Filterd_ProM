@@ -52,7 +52,6 @@ public abstract class FilterdAbstractReferencingConfig extends FilterdAbstractCo
 			//all cases assume that the controller has a name corresponding to the parameter name
 			if(controller instanceof ParameterOneFromSetExtendedController) {
 				ParameterOneFromSetExtendedController casted = (ParameterOneFromSetExtendedController) controller;
-				System.out.println(casted.getValue());
 				concreteReference.populate(casted.getNestedConfigPanel());
 				for (Parameter param : concreteReference.getParameters()) {
 					parameters.remove(param); //does this work?

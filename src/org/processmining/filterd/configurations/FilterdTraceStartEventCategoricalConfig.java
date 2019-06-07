@@ -75,7 +75,7 @@ public class FilterdTraceStartEventCategoricalConfig extends FilterdAbstractRefe
 		
 		// Create desiredEvents parameter	
 		ParameterMultipleFromSet desiredEvents = new ParameterMultipleFromSet(
-				"desiredEvents", "Select start event values", allValues, allValues);
+				"desiredEvents", "Select start event values", new ArrayList<>(), allValues);
 		
 		// Should you keep empty traces
 		ParameterYesNo traceHandling = new ParameterYesNo("traceHandling", 
