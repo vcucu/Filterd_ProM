@@ -57,6 +57,8 @@ public class FilterButtonController {
 			}
 		});
 		
+		// edit disabled property
+		editButton.disableProperty().bind(model.isEditDisabledProperty());
 	}
 	
 	public void setSelected(boolean selected) {
@@ -112,15 +114,16 @@ public class FilterButtonController {
 	}
 	
 	public void enableEditFilterHandler() {
-		this.editButton.setDisable(false);
+		this.model.setIsEditDisabled(false);
 	}
 
 	@FXML
 	private void editFilterHandler() {
 		selectFilterButton();
+		this.controller.enableAllFilterButtonsBut(this.model.getIndex());
 		if(this.model.getFilterConfig() != null) {
 			this.controller.showModalFilterConfiguration(this.model.getFilterConfig(), this);
-			this.editButton.setDisable(true);
+			this.model.setIsEditDisabled(true);
 		}
 	}
 	

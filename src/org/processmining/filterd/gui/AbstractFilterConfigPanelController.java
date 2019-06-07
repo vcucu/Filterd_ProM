@@ -44,16 +44,12 @@ public abstract class AbstractFilterConfigPanelController {
 	}
 	
 	public void addParameterMultipleFromSet(ParameterMultipleFromSet parameter) {
-		System.out.println("[+] Started creating multiple from set");
 		ParameterController controller = new ParameterMultipleFromSetController(parameter.getNameDisplayed(), 
 				parameter.getName(), 
 				parameter.getChosen(), 
 				parameter.getOptions());
-		System.out.println("[+] Created multiple from set");
 		getNextContainer().getChildren().add(controller.getContents());
-		System.out.println("[+] Started adding multiple from set");
 		controllers.add(controller);
-		System.out.println("[+] Added multiple from set");
 	}
 	
 	public <N extends Number> void addParameterValueFromRange(ParameterValueFromRange<N> parameter) {
