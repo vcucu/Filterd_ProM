@@ -641,21 +641,35 @@ public class FilterTraceFollowerTest extends FilterdPackageTest {
 		assert equalLog(expected, computed);
 	}
 	
-//	/* 
-//	 * 
-//	 * Result: cases 35, 41, 72, 73.
-//	 */
-//	@Test
-//	public void testFollowerEventually2() throws Throwable {
-//		XLog expected = parseLog("trace-follower", "test_follower_eventually_1.xes");
-//		XLog computed = null; // insert filter operation
-//		
-//		FilterdTraceFollowerFilter filter = new FilterdTraceFollowerFilter();
-//		
-//		computed = filter.filter(originalLog, parameters);
-//
-//		assert equalLog(expected, computed);
-//	}
+	/* 
+	 * traces with "add item" event eventually followed by "add item" 
+	 * shorter than 999 milliseconds.
+	 * Result: cases 35
+	 */
+	@Test
+	public void testFollowerEventually2() throws Throwable {
+		XLog expected = parseLog("trace-follower", "test_follower_eventually_2.xes");
+		XLog computed = null; // insert filter operation
+		
+		FilterdTraceFollowerFilter filter = new FilterdTraceFollowerFilter();
+		
+		List<Parameter> parameters = getParameters(
+				"concept:name", 
+				"Eventually followed", 
+				Arrays.asList("add item"), 
+				Arrays.asList("add item"), 
+				false, 
+				"The same value", 
+				"concept:name", 
+				true, 
+				"Shorter", 
+				999, 
+				"Millis");
+		
+		computed = filter.filter(originalLog, parameters);
+
+		assert equalLog(expected, computed);
+	}
 
 	/* Corresponds to test case 40 from test_specification.xlsx.
 	 * See Disco Follower - traces with "add item" event eventually followed by "add item" 
@@ -664,7 +678,7 @@ public class FilterTraceFollowerTest extends FilterdPackageTest {
 	 */
 	@Test
 	public void testFollowerEventually3() throws Throwable {
-		XLog expected = parseLog("trace-follower", "test_follower_eventually_2.xes");
+		XLog expected = parseLog("trace-follower", "test_follower_eventually_3.xes");
 		XLog computed = null; // insert filter operation
 		
 		FilterdTraceFollowerFilter filter = new FilterdTraceFollowerFilter();
@@ -695,7 +709,7 @@ public class FilterTraceFollowerTest extends FilterdPackageTest {
 	 */
 	@Test
 	public void testFollowerEventually4() throws Throwable {
-		XLog expected = parseLog("trace-follower", "test_follower_eventually_5.xes");
+		XLog expected = parseLog("trace-follower", "test_follower_eventually_4.xes");
 		XLog computed = null; // insert filter operation
 		
 		FilterdTraceFollowerFilter filter = new FilterdTraceFollowerFilter();
@@ -725,7 +739,7 @@ public class FilterTraceFollowerTest extends FilterdPackageTest {
 	 */
 	@Test
 	public void testFollowerEventually5() throws Throwable {
-		XLog expected = parseLog("trace-follower", "test_follower_eventually_3.xes");
+		XLog expected = parseLog("trace-follower", "test_follower_eventually_5.xes");
 		XLog computed = null; // insert filter operation
 		
 		FilterdTraceFollowerFilter filter = new FilterdTraceFollowerFilter();
@@ -747,6 +761,130 @@ public class FilterTraceFollowerTest extends FilterdPackageTest {
 
 		assert equalLog(expected, computed);
 	}
+	
+	/* 
+	 * traces with "add item" event eventually followed by "add item" 
+	 * shorter than 999 milliseconds and having the same value for key
+	 * "concept:name".
+	 * Result: cases 35
+	 */
+	@Test
+	public void testFollowerEventually6() throws Throwable {
+		XLog expected = parseLog("trace-follower", "test_follower_eventually_6.xes");
+		XLog computed = null; // insert filter operation
+		
+		FilterdTraceFollowerFilter filter = new FilterdTraceFollowerFilter();
+		
+		List<Parameter> parameters = getParameters(
+				"concept:name", 
+				"Eventually followed", 
+				Arrays.asList("add item"), 
+				Arrays.asList("add item"), 
+				true, 
+				"The same value", 
+				"concept:name", 
+				true, 
+				"Shorter", 
+				999, 
+				"Millis");
+		
+		computed = filter.filter(originalLog, parameters);
+
+		assert equalLog(expected, computed);
+	}
+	
+	/* 
+	 * traces with "add item" event eventually followed by "add item" 
+	 * shorter than 999 milliseconds and having different values for key
+	 * "concept:name".
+	 * Result: empty log
+	 */
+	@Test
+	public void testFollowerEventually7() throws Throwable {
+		XLog expected = parseLog("trace-follower", "test_follower_eventually_7.xes");
+		XLog computed = null; // insert filter operation
+		
+		FilterdTraceFollowerFilter filter = new FilterdTraceFollowerFilter();
+		
+		List<Parameter> parameters = getParameters(
+				"concept:name", 
+				"Eventually followed", 
+				Arrays.asList("add item"), 
+				Arrays.asList("add item"), 
+				true, 
+				"Different values", 
+				"concept:name", 
+				true, 
+				"Shorter", 
+				999, 
+				"Millis");
+		
+		computed = filter.filter(originalLog, parameters);
+
+		assert equalLog(expected, computed);
+	}
+	
+	/* 
+	 * traces with "add item" event eventually followed by "add item" 
+	 * longer than 999 milliseconds and having the same value for key
+	 * "concept:name".
+	 * Result: cases 41, 72, 73
+	 */
+	@Test
+	public void testFollowerEventually8() throws Throwable {
+		XLog expected = parseLog("trace-follower", "test_follower_eventually_8.xes");
+		XLog computed = null; // insert filter operation
+		
+		FilterdTraceFollowerFilter filter = new FilterdTraceFollowerFilter();
+		
+		List<Parameter> parameters = getParameters(
+				"concept:name", 
+				"Eventually followed", 
+				Arrays.asList("add item"), 
+				Arrays.asList("add item"), 
+				true, 
+				"The same value", 
+				"concept:name", 
+				true, 
+				"Longer", 
+				999, 
+				"Millis");
+		
+		computed = filter.filter(originalLog, parameters);
+
+		assert equalLog(expected, computed);
+	}
+	
+	/* 
+	 * traces with "add item" event eventually followed by "add item" 
+	 * longer than 999 milliseconds and having different values for key
+	 * "concept:name".
+	 * Result: empty log
+	 */
+	@Test
+	public void testFollowerEventually9() throws Throwable {
+		XLog expected = parseLog("trace-follower", "test_follower_eventually_9.xes");
+		XLog computed = null; // insert filter operation
+		
+		FilterdTraceFollowerFilter filter = new FilterdTraceFollowerFilter();
+		
+		List<Parameter> parameters = getParameters(
+				"concept:name", 
+				"Eventually followed", 
+				Arrays.asList("add item"), 
+				Arrays.asList("add item"), 
+				true, 
+				"Different values", 
+				"concept:name", 
+				true, 
+				"Later", 
+				999, 
+				"Millis");
+		
+		computed = filter.filter(originalLog, parameters);
+
+		assert equalLog(expected, computed);
+	}
 
 	
 	
@@ -758,7 +896,7 @@ public class FilterTraceFollowerTest extends FilterdPackageTest {
 	 */
 	@Test
 	public void testFollowerEventually10() throws Throwable {
-		XLog expected = parseLog("trace-follower", "test_follower_eventually_4.xes");
+		XLog expected = parseLog("trace-follower", "test_follower_eventually_10.xes");
 		XLog computed = null; // insert filter operation
 		
 		FilterdTraceFollowerFilter filter = new FilterdTraceFollowerFilter();
@@ -780,6 +918,290 @@ public class FilterTraceFollowerTest extends FilterdPackageTest {
 
 		assert equalLog(expected, computed);
 	}
+	
+	
+	/* 
+	 * traces with "add item" event never eventually followed by "add item".
+	 * 
+	 * Result: cases 34, 56, 74, 75, 76
+	 */
+	@Test
+	public void testFollowerNeverEventually1() throws Throwable {
+		XLog expected = parseLog("trace-follower", "test_follower_never_eventually_1.xes");
+		XLog computed = null; // insert filter operation
+		
+		FilterdTraceFollowerFilter filter = new FilterdTraceFollowerFilter();
+		
+		List<Parameter> parameters = getParameters(
+				"concept:name", 
+				"Never eventually followed", 
+				Arrays.asList("add item"), 
+				Arrays.asList("add item"), 
+				false, 
+				"The same value", 
+				"concept:name", 
+				false, 
+				"Shorter", 
+				999, 
+				"Millis");
+		
+		computed = filter.filter(originalLog, parameters);
+
+		assert equalLog(expected, computed);
+	}
+	
+	/* 
+	 * traces with "add item" event never eventually followed by "add item".
+	 * The duration between the reference and the follower event should be less
+	 * than 999 milliseconds.
+	 * 
+	 * Result: cases 34, 41, 56, 72, 73 74, 75, 76
+	 */
+	@Test
+	public void testFollowerNeverEventually2() throws Throwable {
+		XLog expected = parseLog("trace-follower", "test_follower_never_eventually_2.xes");
+		XLog computed = null; // insert filter operation
+		
+		FilterdTraceFollowerFilter filter = new FilterdTraceFollowerFilter();
+		
+		List<Parameter> parameters = getParameters(
+				"concept:name", 
+				"Never eventually followed", 
+				Arrays.asList("add item"), 
+				Arrays.asList("add item"), 
+				false, 
+				"The same value", 
+				"concept:name", 
+				true, 
+				"Shorter", 
+				999, 
+				"Millis");
+		
+		computed = filter.filter(originalLog, parameters);
+
+		assert equalLog(expected, computed);
+	}
+	
+	/* 
+	 * traces with "add item" event never eventually followed by "add item".
+	 * The duration between the reference and the follower event should be 
+	 * longer than 999 milliseconds.
+	 * 
+	 * Result: cases 34, 35, 56, 74, 75, 76
+	 */
+	@Test
+	public void testFollowerNeverEventually3() throws Throwable {
+		XLog expected = parseLog("trace-follower", "test_follower_never_eventually_3.xes");
+		XLog computed = null; // insert filter operation
+		
+		FilterdTraceFollowerFilter filter = new FilterdTraceFollowerFilter();
+		
+		List<Parameter> parameters = getParameters(
+				"concept:name", 
+				"Never eventually followed", 
+				Arrays.asList("add item"), 
+				Arrays.asList("add item"), 
+				false, 
+				"The same value", 
+				"concept:name", 
+				true, 
+				"Longer", 
+				999, 
+				"Millis");
+		
+		computed = filter.filter(originalLog, parameters);
+
+		assert equalLog(expected, computed);
+	}
+	
+	/* 
+	 * traces with "add item" event never eventually followed by "add item".
+	 * The follower and reference event should have the same value for the key
+	 * "concept:name"
+	 * 
+	 * Result: cases 34, 56, 74, 75, 76
+	 */
+	@Test
+	public void testFollowerNeverEventually4() throws Throwable {
+		XLog expected = parseLog("trace-follower", "test_follower_never_eventually_4.xes");
+		XLog computed = null; // insert filter operation
+		
+		FilterdTraceFollowerFilter filter = new FilterdTraceFollowerFilter();
+		
+		List<Parameter> parameters = getParameters(
+				"concept:name", 
+				"Never eventually followed", 
+				Arrays.asList("add item"), 
+				Arrays.asList("add item"), 
+				true, 
+				"The same value", 
+				"concept:name", 
+				false, 
+				"Shorter", 
+				999, 
+				"Millis");
+		
+		computed = filter.filter(originalLog, parameters);
+
+		assert equalLog(expected, computed);
+	}
+	
+	/* 
+	 * traces with "add item" event never eventually followed by "add item".
+	 * The follower and reference event should have different values for the key
+	 * "concept:name"
+	 * 
+	 * Result: cases 34, 35, 41, 56, 72, 73, 74, 75, 76: initial log
+	 */
+	@Test
+	public void testFollowerNeverEventually5() throws Throwable {
+		XLog expected = parseLog("trace-follower", "test_follower_never_eventually_5.xes");
+		XLog computed = null; // insert filter operation
+		
+		FilterdTraceFollowerFilter filter = new FilterdTraceFollowerFilter();
+		
+		List<Parameter> parameters = getParameters(
+				"concept:name", 
+				"Never eventually followed", 
+				Arrays.asList("add item"), 
+				Arrays.asList("add item"), 
+				true, 
+				"Different values", 
+				"concept:name", 
+				false, 
+				"Shorter", 
+				999, 
+				"Millis");
+		
+		computed = filter.filter(originalLog, parameters);
+
+		assert equalLog(expected, computed);
+	}
+	
+	/* 
+	 * traces with "add item" event never eventually followed by "add item".
+	 * The follower and reference event should have the same value for the key
+	 * "concept:name" and have a duration less than 999 milliseconds.
+	 * 
+	 * Result: cases 34, 41, 56, 72, 73 74, 75, 76
+	 */
+	@Test
+	public void testFollowerNeverEventually6() throws Throwable {
+		XLog expected = parseLog("trace-follower", "test_follower_never_eventually_6.xes");
+		XLog computed = null; // insert filter operation
+		
+		FilterdTraceFollowerFilter filter = new FilterdTraceFollowerFilter();
+		
+		List<Parameter> parameters = getParameters(
+				"concept:name", 
+				"Never eventually followed", 
+				Arrays.asList("add item"), 
+				Arrays.asList("add item"), 
+				true, 
+				"The same value", 
+				"concept:name", 
+				true, 
+				"Shorter", 
+				999, 
+				"Millis");
+		
+		computed = filter.filter(originalLog, parameters);
+
+		assert equalLog(expected, computed);
+	}
+	
+	/* 
+	 * traces with "add item" event never eventually followed by "add item".
+	 * The follower and reference event should have different values for the key
+	 * "concept:name" and have a duration less than 999 milliseconds.
+	 * 
+	 * Result: cases 34, 35, 41, 56, 72, 73 74, 75, 76: initial log
+	 */
+	@Test
+	public void testFollowerNeverEventually7() throws Throwable {
+		XLog expected = parseLog("trace-follower", "test_follower_never_eventually_7.xes");
+		XLog computed = null; // insert filter operation
+		
+		FilterdTraceFollowerFilter filter = new FilterdTraceFollowerFilter();
+		
+		List<Parameter> parameters = getParameters(
+				"concept:name", 
+				"Never eventually followed", 
+				Arrays.asList("add item"), 
+				Arrays.asList("add item"), 
+				true, 
+				"Different values", 
+				"concept:name", 
+				true, 
+				"Shorter", 
+				999, 
+				"Millis");
+		
+		computed = filter.filter(originalLog, parameters);
+
+		assert equalLog(expected, computed);
+	}
+	
+	/* 
+	 * traces with "add item" event never eventually followed by "add item".
+	 * 
+	 * Result: cases 34, 56, 74, 75, 76
+	 */
+	@Test
+	public void testFollowerNeverEventually8() throws Throwable {
+		XLog expected = parseLog("trace-follower", "test_follower_never_eventually_8.xes");
+		XLog computed = null; // insert filter operation
+		
+		FilterdTraceFollowerFilter filter = new FilterdTraceFollowerFilter();
+		
+		List<Parameter> parameters = getParameters(
+				"concept:name", 
+				"Never eventually followed", 
+				Arrays.asList("add item"), 
+				Arrays.asList("add item"), 
+				true, 
+				"The same value", 
+				"concept:name", 
+				true, 
+				"Longer", 
+				999, 
+				"Millis");
+		
+		computed = filter.filter(originalLog, parameters);
+
+		assert equalLog(expected, computed);
+	}
+	
+	/* 
+	 * traces with "add item" event never eventually followed by "add item".
+	 * 
+	 * Result: cases 34, 35, 41, 56, 72, 73, 74, 75, 76: initial log.
+	 */
+	@Test
+	public void testFollowerNeverEventually9() throws Throwable {
+		XLog expected = parseLog("trace-follower", "test_follower_never_eventually_9.xes");
+		XLog computed = null; // insert filter operation
+		
+		FilterdTraceFollowerFilter filter = new FilterdTraceFollowerFilter();
+		
+		List<Parameter> parameters = getParameters(
+				"concept:name", 
+				"Never eventually followed", 
+				Arrays.asList("add item"), 
+				Arrays.asList("add item"), 
+				true, 
+				"Different values", 
+				"concept:name", 
+				true, 
+				"Longer", 
+				999, 
+				"Millis");
+		
+		computed = filter.filter(originalLog, parameters);
+
+		assert equalLog(expected, computed);
+	}
+	
 	
 	private List<Parameter> getParameters(
 			String filterByAttribute,

@@ -244,54 +244,7 @@ public class FilterdTraceFollowerFilter extends Filter {
 										removeFromLog = true;
 										followerEvent = event;
 									}
-								}
-								
-								// Check if it is not present in the follower parameter.
-//								if (!followerParameter.getChosen().contains(value)) {
-//									// If time restriction is imposed on the reference event.
-//									if (timeRestrictionParameter.getChosen()) {
-//										if (timeRestrictionHolds(
-//												referenceEvent, 
-//												event, 
-//												shorterOrLongerParameter.getChosen().equals("Shorter"), 
-//												timeDurationParameter.getChosen(), 
-//												timeTypeParameter.getChosen())) {
-//											// If value matching is imposed on the reference event.
-//											if (valueMatchingParameter.getChosen()) {
-//												if (valueMatchingHolds(
-//														referenceEvent, 
-//														event, 
-//														sameOrDifferentParameter.getChosen().equals("The same value"), 
-//														valueMatchingAttributeParameter.getChosen())) {
-//													// Time and value matching restriction imposed.
-//													// Follower event found!
-//													removeFromLog = false;
-//												}
-//											} else {
-//												// Time restriction imposed.
-//												// Follower event found!
-//												removeFromLog = false;
-//											}
-//										}
-//									}
-//									// If value matching is imposed on the reference event.
-//									else if (valueMatchingParameter.getChosen()) {
-//										if (valueMatchingHolds(
-//												referenceEvent, 
-//												event, 
-//												sameOrDifferentParameter.getChosen().equals("The same value"), 
-//												valueMatchingAttributeParameter.getChosen())) {
-//											// Value matching restriction imposed.
-//											// Follower event found!
-//											removeFromLog = false;
-//										}
-//									} else {
-//										// No time or value matching restrictions imposed.
-//										// Follower event found!
-//										removeFromLog = false;
-//									}
-//								}
-								
+								}							
 							}
 							
 							break;
@@ -399,7 +352,7 @@ public class FilterdTraceFollowerFilter extends Filter {
 											valueMatchingAttributeParameter.getChosen())) {
 										// Value matching restriction imposed.
 										// Follower event found, thus we need to remove the trace.
-										removeFromLog = false;
+										foundEventualEvent = true;
 										followerEvent = event;
 									}
 								} else {
@@ -460,7 +413,7 @@ public class FilterdTraceFollowerFilter extends Filter {
 		Duration durationBetween = Duration.between(referenceTime, followerTime);
 		
 		// Build the duration set for the threshold.
-		Duration treshold;
+		Duration treshold = null;
 		
 		switch (durationType) {
 			case "Millis": {
@@ -514,10 +467,6 @@ public class FilterdTraceFollowerFilter extends Filter {
 				treshold = Duration.ofDays((period.getDays()));
 				
 				break;
-			}
-			default: {
-				// Something went wrong, return false.
-				return false;
 			}
 		}
 		
