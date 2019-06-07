@@ -1,7 +1,6 @@
 package org.processmining.filterd.configurations;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import org.deckfour.xes.classification.XEventClassifier;
@@ -13,7 +12,6 @@ import org.processmining.filterd.parameters.Parameter;
 import org.processmining.filterd.parameters.ParameterMultipleFromSet;
 import org.processmining.filterd.parameters.ParameterOneFromSet;
 import org.processmining.filterd.tools.Toolbox;
-import org.processmining.filterd.widgets.ParameterController;
 import org.processmining.filterd.widgets.ParameterMultipleFromSetController;
 import org.processmining.filterd.widgets.ParameterOneFromSetController;
 import org.processmining.filterd.widgets.ParameterOneFromSetExtendedController;
@@ -108,45 +106,38 @@ public class FilterdModifMergeSubsequentConfig extends FilterdAbstractReferencin
 	}
 
 
+	
 	public AbstractFilterConfigPanelController getConfigPanel() {
 
-		for (ParameterController parameter : configPanel.getControllers()) {
-			if (parameter.getName().equals("comparisonType")) {
-				ParameterOneFromSetController casted = (ParameterOneFromSetController) parameter;
-					ComboBox<String> comboBox = casted.getComboBox();
-					comboBox.valueProperty().addListener(new ChangeListener<String>() {
-						@Override
-						public void changed(ObservableValue ov, String oldValue, String newValue) {
-							final XLog Llog = log;
-							List<Parameter> params = parameters;
-							if (Llog != null) {
-								List empty = Collections.EMPTY_LIST;
-								if (!casted.getValue().equals("Compare event class & attributes")) {
-									for (ParameterController changingParameter : configPanel.getControllers()) {
-										if (changingParameter.getName().equals("relevantAttributes")) {	
-											ParameterMultipleFromSetController castedChanging = (ParameterMultipleFromSetController) changingParameter;
-											castedChanging.getContents().setVisible(false);
-											
-										}
-								}
-							} else {
-								for (ParameterController changingParameter : configPanel.getControllers()) {
-									if (changingParameter.getName().equals("relevantAttributes")) {	
-										ParameterMultipleFromSetController castedChanging = (ParameterMultipleFromSetController) changingParameter;
-										castedChanging.getContents().setVisible(false);
-										
-									}
-								}
-							}
-							}
-						}
-					});
-				
-			}
+		/*
+		 * if the comparison type is "Compare event class & attributes" then the parameter
+		 * relevantAttributes is displayed.
+		 * Otherwise, keep it hidden.
+		 */
+		ParameterOneFromSetController comparisonTypeController =  (ParameterOneFromSetController)
+				configPanel.getControllers().stream().
+				filter(c->c.getName().equals("comparisonType")).
+				findFirst().get();
+		
+		ParameterMultipleFromSetController relevantAttributesController = (ParameterMultipleFromSetController)
+				configPanel.getControllers().stream().
+				filter(c-> c.getName().equals("relevantAttributes")).
+				findFirst().get();
+		if (!comparisonTypeController.getValue().equals("Compare event class & attributes")) {
+			relevantAttributesController.getContents().setVisible(false);
 		}
+		
+		ComboBox<String> comboBox = comparisonTypeController.getComboBox();
+		comboBox.valueProperty().addListener(new ChangeListener<String>() {
+			@Override
+			public void changed(ObservableValue ov, String oldValue, String newValue) {
+				if (!comparisonTypeController.getValue().equals("Compare event class & attributes")) {
+					relevantAttributesController.getContents().setVisible(false);				
+				} else {
+					relevantAttributesController.getContents().setVisible(true);	
+				}
+			}
+		});			
 		return configPanel;
 	}
-
-
-
 }
