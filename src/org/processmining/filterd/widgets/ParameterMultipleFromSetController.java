@@ -29,18 +29,12 @@ public class ParameterMultipleFromSetController extends ParameterController {
         // set specifics
         label.setText(nameDisplayed);
         list.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        System.out.println("[-] Creating observable list");
         ObservableList<String> observableList = FXCollections.observableList(options);
-        System.out.println("[-] Created observable list");
-        System.out.println("[-] Setting items");
         list.setItems(observableList);
-        System.out.println("[-] Set items");
-        System.out.print("[-] Selecting options. There are: ");
         System.out.println(defaultValues.size());
         for(String option : defaultValues) {
         	list.getSelectionModel().select(option);
         }
-        System.out.println("[-] Selected options");
         if(defaultValues.size() > 0) {
         	list.scrollTo(defaultValues.get(0));        	
         }

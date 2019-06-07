@@ -596,6 +596,14 @@ public class ComputationCellController extends CellController {
 		AnchorPane.setRightAnchor(configurationModalRoot, 0.0);
 		this.isConfigurationModalShown = true;
 	}
+	
+	public void enableAllFilterButtonsBut(int index) {
+		for(int i = 0; i < getCellModel().getFilters().size(); i++) {
+			if(i != index) {
+				getCellModel().getFilters().get(i).setIsEditDisabled(false);
+			}
+		}
+	}
 
 	@Override
 	public void show() {
