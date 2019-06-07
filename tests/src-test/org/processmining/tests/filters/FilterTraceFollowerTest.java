@@ -388,7 +388,7 @@ public class FilterTraceFollowerTest extends FilterdPackageTest {
 	 */
 	@Test
 	public void testFollowerDirectly12() throws Throwable {
-		XLog expected = parseLog("trace-follower", "test_follower_directly_11.xes");
+		XLog expected = parseLog("trace-follower", "test_follower_directly_12.xes");
 		XLog computed = null; // insert filter operation
 		
 		FilterdTraceFollowerFilter filter = new FilterdTraceFollowerFilter();
