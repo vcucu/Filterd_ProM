@@ -208,7 +208,7 @@ public class FilterdTraceFollowerFilter extends Filter {
 													// Follower event found!
 													removeFromLog = true;
 													followerEvent = event;
-												}
+												} 
 											}
 										} else {
 											// Check if it is not present in the follower parameter.

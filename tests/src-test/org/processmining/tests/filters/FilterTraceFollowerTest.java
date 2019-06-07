@@ -87,7 +87,7 @@ public class FilterTraceFollowerTest extends FilterdPackageTest {
 	 * traces with key: "concept:name" and value: "add item" 
 	 * event directly followed by key: "concept:name" and value: "add item". 
 	 * Duration between reference and follower event longer than 999 
-	 * milliseconds.
+	 * seconds.
 	 * 
 	 * Result: empty log.
 	 */
@@ -185,7 +185,7 @@ public class FilterTraceFollowerTest extends FilterdPackageTest {
 	 * event directly followed by key: "concept:name" and value: "add item". 
 	 * Reference and follower event having the same value for key "org:resource"
 	 * and duration between reference and follower event shorter than 999 
-	 * milliseconds.
+	 * minutes.
 	 * 
 	 * Result: case 35.
 	 */
@@ -219,7 +219,7 @@ public class FilterTraceFollowerTest extends FilterdPackageTest {
 	 * event directly followed by key: "concept:name" and value: "add item". 
 	 * Reference and follower event having different values for key "org:resource"
 	 * and duration between reference and follower event shorter than 999 
-	 * milliseconds.
+	 * days.
 	 * 
 	 * Result: empty log.
 	 */
@@ -253,7 +253,7 @@ public class FilterTraceFollowerTest extends FilterdPackageTest {
 	 * event directly followed by key: "concept:name" and value: "add item". 
 	 * Reference and follower event having the same value for key "org:resource"
 	 * and duration between reference and follower event longer than 999 
-	 * milliseconds.
+	 * weeks.
 	 * 
 	 * Result: empty log.
 	 */
@@ -287,7 +287,7 @@ public class FilterTraceFollowerTest extends FilterdPackageTest {
 	 * event directly followed by key: "concept:name" and value: "add item". 
 	 * Reference and follower event having the same value for key "org:resource"
 	 * and duration between reference and follower event longer than 999 
-	 * milliseconds.
+	 * years.
 	 * 
 	 * Result: empty log.
 	 */
@@ -317,8 +317,104 @@ public class FilterTraceFollowerTest extends FilterdPackageTest {
 	}
 	
 	/* 
-	 * traces with key: "concept:name" and value: "add item" 
-	 * event never directly followed by key: "concept:name" and value: "add item".
+	 * traces with key: "concept:name" and value: "pack order" 
+	 * event directly followed by key: "concept:name" and value: "add item". 
+	 * Reference and follower event having the same value for key "delivery".
+	 * 
+	 * Result: empty log.
+	 */
+	@Test
+	public void testFollowerDirectly10() throws Throwable {
+		XLog expected = parseLog("trace-follower", "test_follower_directly_10.xes");
+		XLog computed = null; // insert filter operation
+		
+		FilterdTraceFollowerFilter filter = new FilterdTraceFollowerFilter();
+		
+		List<Parameter> parameters = getParameters(
+				"concept:name", 
+				"Directly followed", 
+				Arrays.asList("pack order"), 
+				Arrays.asList("add item"), 
+				true, 
+				"The same value", 
+				"delivery", 
+				false, 
+				"Longer", 
+				999, 
+				"Years");
+		
+		computed = filter.filter(originalLog, parameters);
+
+		assert equalLog(expected, computed);
+	}
+	
+	/* 
+	 * traces with key: "concept:name" and value: "ship parcel" 
+	 * event directly followed by key: "concept:name" and value: "pack order". 
+	 * Reference and follower event having the same value for key "delivery".
+	 * 
+	 * Result: empty log.
+	 */
+	@Test
+	public void testFollowerDirectly11() throws Throwable {
+		XLog expected = parseLog("trace-follower", "test_follower_directly_11.xes");
+		XLog computed = null; // insert filter operation
+		
+		FilterdTraceFollowerFilter filter = new FilterdTraceFollowerFilter();
+		
+		List<Parameter> parameters = getParameters(
+				"concept:name", 
+				"Directly followed", 
+				Arrays.asList("ship parcel"), 
+				Arrays.asList("pack order"), 
+				true, 
+				"The same value", 
+				"delivery", 
+				false, 
+				"Longer", 
+				999, 
+				"Years");
+		
+		computed = filter.filter(originalLog, parameters);
+
+		assert equalLog(expected, computed);
+	}
+	
+	/* 
+	 * traces with key: "delivery" and value: "ship parcel" 
+	 * event directly followed by key: "delivery" and value: "pack order". 
+	 * 
+	 * Result: empty log.
+	 */
+	@Test
+	public void testFollowerDirectly12() throws Throwable {
+		XLog expected = parseLog("trace-follower", "test_follower_directly_11.xes");
+		XLog computed = null; // insert filter operation
+		
+		FilterdTraceFollowerFilter filter = new FilterdTraceFollowerFilter();
+		
+		List<Parameter> parameters = getParameters(
+				"delivery", 
+				"Directly followed", 
+				Arrays.asList("ship parcel"), 
+				Arrays.asList("pack order"), 
+				false, 
+				"The same value", 
+				"delivery", 
+				false, 
+				"Longer", 
+				999, 
+				"Years");
+		
+		computed = filter.filter(originalLog, parameters);
+
+		assert equalLog(expected, computed);
+	}
+	
+	/* 
+	 * traces with key: "concept:name" and value: "add item". 
+	 * Follower event never directly followed by event with key: "concept:name" 
+	 * and value: "add item".
 	 * 
 	 * Result: cases 34, 41, 56, 72, 73, 74, 75, 76
 	 */
@@ -348,8 +444,10 @@ public class FilterTraceFollowerTest extends FilterdPackageTest {
 	}
 	
 	/* 
-	 * traces with key: "concept:name" and value: "add item" 
-	 * event never directly followed by key: "concept:name" and value: "add item".
+	 * traces with key: "concept:name" and value: "add item". 
+	 * Follower event never directly followed by reference event with key: 
+	 * "concept:name" and value: "add item".
+	 * Duration between follower and reference event should be less than 999 hours.
 	 * 
 	 * Result: cases 34, 41, 56, 72, 73, 74, 75, 76
 	 */
@@ -379,8 +477,11 @@ public class FilterTraceFollowerTest extends FilterdPackageTest {
 	}
 	
 	/* 
-	 * traces with key: "concept:name" and value: "add item" 
-	 * event never directly followed by key: "concept:name" and value: "add item".
+	 * traces with key: "concept:name" and value: "add item". 
+	 * Follower event never directly followed reference event with key: 
+	 * "concept:name" and value: "add item".
+	 * Duration between follower and reference event should be longer than 999 
+	 * milliseconds.
 	 * 
 	 * Result: cases 34, 35, 41, 56, 72, 73, 74, 75, 76: original log
 	 */
@@ -410,10 +511,11 @@ public class FilterTraceFollowerTest extends FilterdPackageTest {
 	}
 	
 	/* 
-	 * traces with key: "concept:name" and value: "add item" 
-	 * event never directly followed by key: "concept:name" and value: "add item".
+	 * traces with key: "concept:name" and value: "add item". 
+	 * Follower event never directly followed by reference event with key: 
+	 * "concept:name" and value: "add item".
 	 * Follower and reference event should have the same value for the key 
-	 * "org:resource"
+	 * "org:resource".
 	 * 
 	 * Result: cases 34, 41, 56, 72, 73, 74, 75, 76
 	 */
@@ -443,8 +545,9 @@ public class FilterTraceFollowerTest extends FilterdPackageTest {
 	}
 	
 	/* 
-	 * traces with key: "concept:name" and value: "add item" 
-	 * event never directly followed by key: "concept:name" and value: "add item".
+	 * traces with key: "concept:name" and value: "add item". 
+	 * Follower event never directly followed by reference event with key: 
+	 * "concept:name" and value: "add item".
 	 * Follower and reference event should have different values for the key 
 	 * "org:resource"
 	 * 
@@ -476,9 +579,9 @@ public class FilterTraceFollowerTest extends FilterdPackageTest {
 	}
 	
 	/* 
-	 * traces with key: "concept:name" and value: "add item" 
-	 * event never directly followed by key: "concept:name" and value: "add item".
-	 * 	Follower and reference event should have the same value for the key 
+	 * traces with key: "concept:name" and value: "add item". 
+	 * Follower event never directly followed by reference event key: "concept:name" and value: "add item".
+	 * Follower and reference event should have the same value for the key 
 	 * "org:resource" and the duration in between the events should be shorter
 	 * than 999 milliseconds.
 	 * 
@@ -510,8 +613,9 @@ public class FilterTraceFollowerTest extends FilterdPackageTest {
 	}
 	
 	/* 
-	 * traces with key: "concept:name" and value: "add item" 
-	 * event never directly followed by key: "concept:name" and value: "add item".
+	 * traces with key: "concept:name" and value: "add item". 
+	 * Follower event never directly followed by reference event with key: 
+	 * "concept:name" and value: "add item".
 	 * Follower and reference event should have different values for the key 
 	 * "org:resource" and the duration in between the events should be shorter
 	 * than 999 milliseconds.
@@ -544,8 +648,9 @@ public class FilterTraceFollowerTest extends FilterdPackageTest {
 	}
 	
 	/* 
-	 * traces with key: "concept:name" and value: "add item" 
-	 * event never directly followed by key: "concept:name" and value: "add item".
+	 * traces with key: "concept:name" and value: "add item". 
+	 * Follower event never directly followed by reference event with key: 
+	 * "concept:name" and value: "add item".
 	 * Follower and reference event should have the same value for the key 
 	 * "org:resource" and the duration in between the events should be longer
 	 * than 999 milliseconds.
@@ -578,8 +683,9 @@ public class FilterTraceFollowerTest extends FilterdPackageTest {
 	}
 	
 	/* 
-	 * traces with key: "concept:name" and value: "add item" 
-	 * event never directly followed by key: "concept:name" and value: "add item".
+	 * traces with key: "concept:name" and value: "add item". 
+	 * Follower event never directly followed by reference event with key: 
+	 * "concept:name" and value: "add item".
 	 * Follower and reference event should have different values for the key 
 	 * "org:resource" and the duration in between the events should be longer
 	 * than 999 milliseconds.
@@ -605,6 +711,41 @@ public class FilterTraceFollowerTest extends FilterdPackageTest {
 				"Shorter", 
 				999, 
 				"Millis");
+		
+		computed = filter.filter(originalLog, parameters);
+
+		assert equalLog(expected, computed);
+	}
+	
+	/* 
+	 * traces with key: "concept:name" and value: "add item". 
+	 * Follower event never directly followed by reference event with key: 
+	 * "concept:name" and value: "add item".
+	 * Follower and reference event should have different values for the key 
+	 * "org:resource" and the duration in between the events should be longer
+	 * than 999 milliseconds.
+	 * 
+	 * Result: cases 34, 35, 41, 56, 72, 73, 74, 75, 76: original log
+	 */
+	@Test
+	public void testFollowerNeverDirectly10() throws Throwable {
+		XLog expected = parseLog("trace-follower", "test_follower_never_directly_9.xes");
+		XLog computed = null; // insert filter operation
+		
+		FilterdTraceFollowerFilter filter = new FilterdTraceFollowerFilter();
+		
+		List<Parameter> parameters = getParameters(
+				"concept:name", 
+				"Never directly followed", 
+				Arrays.asList("add item"), 
+				Arrays.asList("add"), 
+				true, 
+				"The same value", 
+				"org:resource", 
+				true, 
+				"Shorter", 
+				999, 
+				"Years");
 		
 		computed = filter.filter(originalLog, parameters);
 
@@ -642,8 +783,8 @@ public class FilterTraceFollowerTest extends FilterdPackageTest {
 	}
 	
 	/* 
-	 * traces with "add item" event eventually followed by "add item" 
-	 * shorter than 999 milliseconds.
+	 * traces with "add item" event eventually followed by "add item". 
+	 * Duration shorter than 999 milliseconds.
 	 * Result: cases 35
 	 */
 	@Test
@@ -763,8 +904,8 @@ public class FilterTraceFollowerTest extends FilterdPackageTest {
 	}
 	
 	/* 
-	 * traces with "add item" event eventually followed by "add item" 
-	 * shorter than 999 milliseconds and having the same value for key
+	 * traces with "add item" event eventually followed by "add item". 
+	 * Duration shorter than 999 milliseconds and having the same value for key
 	 * "concept:name".
 	 * Result: cases 35
 	 */
@@ -794,8 +935,8 @@ public class FilterTraceFollowerTest extends FilterdPackageTest {
 	}
 	
 	/* 
-	 * traces with "add item" event eventually followed by "add item" 
-	 * shorter than 999 milliseconds and having different values for key
+	 * traces with "add item" event eventually followed by "add item". 
+	 * Duration shorter than 999 milliseconds and having different values for key
 	 * "concept:name".
 	 * Result: empty log
 	 */
@@ -825,8 +966,8 @@ public class FilterTraceFollowerTest extends FilterdPackageTest {
 	}
 	
 	/* 
-	 * traces with "add item" event eventually followed by "add item" 
-	 * longer than 999 milliseconds and having the same value for key
+	 * traces with "add item" event eventually followed by "add item". 
+	 * Duration longer than 999 milliseconds and having the same value for key
 	 * "concept:name".
 	 * Result: cases 41, 72, 73
 	 */
@@ -856,8 +997,8 @@ public class FilterTraceFollowerTest extends FilterdPackageTest {
 	}
 	
 	/* 
-	 * traces with "add item" event eventually followed by "add item" 
-	 * longer than 999 milliseconds and having different values for key
+	 * traces with "add item" event eventually followed by "add item".
+	 * Duration longer than 999 milliseconds and having different values for key
 	 * "concept:name".
 	 * Result: empty log
 	 */
@@ -1144,6 +1285,8 @@ public class FilterTraceFollowerTest extends FilterdPackageTest {
 	
 	/* 
 	 * traces with "add item" event never eventually followed by "add item".
+	 * The follower and reference event should have the same value for the key
+	 * "concept:name" and have a duration longer than 999 milliseconds.
 	 * 
 	 * Result: cases 34, 56, 74, 75, 76
 	 */
@@ -1174,6 +1317,8 @@ public class FilterTraceFollowerTest extends FilterdPackageTest {
 	
 	/* 
 	 * traces with "add item" event never eventually followed by "add item".
+	 * The follower and reference event should have different values for the key
+	 * "concept:name" and have a duration longer than 999 milliseconds.
 	 * 
 	 * Result: cases 34, 35, 41, 56, 72, 73, 74, 75, 76: initial log.
 	 */
