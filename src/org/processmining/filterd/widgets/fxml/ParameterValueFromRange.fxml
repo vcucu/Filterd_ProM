@@ -25,7 +25,10 @@
                   <HBox>
                      <children>
                         <Slider fx:id="slider" maxWidth="1.7976931348623157E308" showTickLabels="true" HBox.hgrow="ALWAYS" />
-                        <Label fx:id="valueLabel" alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" prefWidth="50.0" text="10.99" />
+                        <Label fx:id="valueLabel" alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" prefWidth="100.0" text="2019-06-07T09:06:32" wrapText="true">
+                           <HBox.margin>
+                              <Insets left="10.0" />
+                           </HBox.margin></Label>
                      </children>
                      <GridPane.margin>
                         <Insets right="5.0" />

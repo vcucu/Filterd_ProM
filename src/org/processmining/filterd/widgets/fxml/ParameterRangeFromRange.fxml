@@ -26,25 +26,35 @@
                      <children>
                         <Label fx:id="label" alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="ParameterRangeFromRange" VBox.vgrow="ALWAYS">
                            <VBox.margin>
-                              <Insets left="5.0" />
+                              <Insets left="10.0" />
                            </VBox.margin></Label>
                      </children>
                   </VBox>
-                  <HBox>
+                  <VBox>
                      <children>
-                        <Label fx:id="lowValueLabel" maxHeight="1.7976931348623157E308" prefWidth="50.0" text="10.99">
-                           <HBox.margin>
-                              <Insets right="5.0" />
-                           </HBox.margin>
-                        </Label>
-                        <RangeSlider fx:id="slider" blockIncrement="1.0" highValue="75.0" lowValue="25.0" max="100.0" maxWidth="1.7976931348623157E308" showTickLabels="true" HBox.hgrow="ALWAYS" />
-                        <Label fx:id="highValueLabel" alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" prefWidth="50.0" text="15.99">
-                           <HBox.margin>
-                              <Insets left="5.0" right="5.0" />
-                           </HBox.margin>
-                        </Label>
+                        <HBox>
+                           <children>
+                              <RangeSlider fx:id="slider" blockIncrement="1.0" highValue="75.0" lowValue="25.0" max="100.0" maxWidth="1.7976931348623157E308" showTickLabels="true" HBox.hgrow="ALWAYS" />
+                           </children>
+                        </HBox>
+                        <GridPane>
+                          <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                           <children>
+                              <Label fx:id="lowValueLabel" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="2019-06-07T09:06:32" wrapText="true" GridPane.hgrow="ALWAYS" />
+                              <Label fx:id="highValueLabel" alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="2019-06-07T09:06:32" wrapText="true" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" />
+                           </children>
+                        </GridPane>
                      </children>
-                  </HBox>
+                     <GridPane.margin>
+                        <Insets left="5.0" />
+                     </GridPane.margin>
+                  </VBox>
                </children>
             </GridPane>
          </children>

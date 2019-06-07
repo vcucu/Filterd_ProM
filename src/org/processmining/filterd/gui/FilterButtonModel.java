@@ -26,7 +26,7 @@ public class FilterButtonModel {
 	private FilterdAbstractConfig filterConfig;
 	private XLog inputLog;
 	private XLog outputLog;
-	private SimpleBooleanProperty isValid;
+	private BooleanProperty isValid;
 	
 	/**
 	 * Constructor for importing/exporting. This constructor needs to exist because JAXB needs a no-argument constructor for unmarshalling.
