@@ -1,7 +1,9 @@
 package org.processmining.filterd.configurations;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.deckfour.xes.classification.XEventClassifier;
 import org.deckfour.xes.model.XLog;
@@ -15,6 +17,7 @@ import org.processmining.filterd.tools.Toolbox;
 import org.processmining.filterd.widgets.ParameterMultipleFromSetController;
 import org.processmining.filterd.widgets.ParameterOneFromSetController;
 import org.processmining.filterd.widgets.ParameterOneFromSetExtendedController;
+import org.python.google.common.collect.Sets;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -69,7 +72,7 @@ public class FilterdModifMergeSubsequentConfig extends FilterdAbstractReferencin
 		ParameterMultipleFromSet relevantAttributes = new ParameterMultipleFromSet(
 				"relevantAttributes",
 				"Select which attributes should be considered in the comparison",
-				attributeNames,
+				new ArrayList<>(),
 				attributeNames);
 				
 		
@@ -90,12 +93,30 @@ public class FilterdModifMergeSubsequentConfig extends FilterdAbstractReferencin
 	};
 
 	
-
-	public boolean checkValidity(XLog log) {
-		if (parameters == null) {
+   /*
+    * The candidate log is invalid if
+    * the selected relevant attributes and the log relevant attributes
+    * have an intersection that is null
+    */
+	public boolean checkValidity(XLog candidateLog) {
+		
+		if( parameters == null || candidateLog.equals(log) )
 			return true;
+		if (concreteReference == null) 
+			return true;
+		ParameterMultipleFromSet relevantAttributes = (ParameterMultipleFromSet) this.getParameter("relevantAttributes");
+		Set<String> chosenSet = new HashSet<>(relevantAttributes.getChosen());
+		Set<String> candLogAttributeNames = new HashSet<>(Toolbox.computeAttributes(candidateLog));
+		if (Sets.intersection(chosenSet, candLogAttributeNames).size() == 0 ) {
+			return false;
+		} else {
+			// make sure to only filter on event values that exist in the candidateLog
+			List<String> intersection = new ArrayList<>(Sets.intersection(chosenSet, candLogAttributeNames).size());
+			relevantAttributes.setChosen(intersection);
 		}
-		return true;
+		
+		return concreteReference.checkValidity(log);
+	
 	}
 
 	@Override

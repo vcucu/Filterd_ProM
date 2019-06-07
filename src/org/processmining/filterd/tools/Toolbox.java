@@ -65,7 +65,9 @@ public class Toolbox {
 		XLogInfo logInfo = XLogInfoImpl.create(log);
 		Collection<XEventClassifier> compatibleClassifiers = logInfo.getEventClassifiers();
 		for (XEventClassifier c : compatibleClassifiers) {
+			if (!classifiers.contains(c)) {
 				classifiers.add(c);
+			}
 		}
 
 		return classifiers;
