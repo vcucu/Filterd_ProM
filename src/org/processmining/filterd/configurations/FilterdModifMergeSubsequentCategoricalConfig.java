@@ -82,13 +82,7 @@ public class FilterdModifMergeSubsequentCategoricalConfig extends FilterdAbstrac
 			Set<String> desiredEventsSet = new HashSet<>(desiredEvents);
 			if(Sets.intersection(candLogDesiredEvents, desiredEventsSet).size() == 0) {
 				return false;
-			} else {
-				// make sure to only filter on event values that exist in the candidateLog
-				Set<String> intersection = Sets.intersection(candLogDesiredEvents, desiredEventsSet);
-				((ParameterMultipleFromSet)
-						this.getParameter("desiredEvents")).setChosen(new ArrayList<>(intersection));
 			}
-			
 		}
 		
 		return true;

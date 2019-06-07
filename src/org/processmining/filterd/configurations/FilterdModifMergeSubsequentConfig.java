@@ -109,10 +109,6 @@ public class FilterdModifMergeSubsequentConfig extends FilterdAbstractReferencin
 		Set<String> candLogAttributeNames = new HashSet<>(Toolbox.computeAttributes(candidateLog));
 		if (Sets.intersection(chosenSet, candLogAttributeNames).size() == 0 ) {
 			return false;
-		} else {
-			// make sure to only filter on event values that exist in the candidateLog
-			List<String> intersection = new ArrayList<>(Sets.intersection(chosenSet, candLogAttributeNames).size());
-			relevantAttributes.setChosen(intersection);
 		}
 		
 		return concreteReference.checkValidity(log);
