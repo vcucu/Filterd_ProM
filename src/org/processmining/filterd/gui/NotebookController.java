@@ -1,4 +1,5 @@
 package org.processmining.filterd.gui;
+
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Optional;
@@ -94,13 +95,14 @@ public class NotebookController {
 	 * Gets executed after the constructor. Has access to the @FXML annotated
 	 * fields, thus UI elements can be manipulated here.
 	 */
-	public void initialize() {	
+	public void initialize() {
 		// Add cell listener 
 		cellListeners();
-		
+
 		// Initialize AddCellModal
 		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/processmining/filterd/gui/fxml/AddCell.fxml"));
+			FXMLLoader loader = new FXMLLoader(
+					getClass().getResource("/org/processmining/filterd/gui/fxml/AddCell.fxml"));
 			loader.setController(new AddCellController());
 			addCellHBox.getChildren().add((HBox) loader.load());
 		} catch (IOException e) {
@@ -110,26 +112,26 @@ public class NotebookController {
 		this.model.isComputingProperty().addListener(new ChangeListener<Boolean>() {
 
 			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-				if(newValue) {
-					Platform.runLater(new Runnable(){
-						@Override 
+				if (newValue) {
+					Platform.runLater(new Runnable() {
+						@Override
 						public void run() {
 							computeButton.setText("\u23F8"); // unicode for pause symbol
-//							computeButton.setText("pause"); // unicode for pause symbol
-		                 }
+							//									computeButton.setText("pause"); // unicode for pause symbol
+						}
 					});
 				} else {
-					Platform.runLater(new Runnable(){
-						@Override 
+					Platform.runLater(new Runnable() {
+						@Override
 						public void run() {
-//							computeButton.setText("\u25B6"); // unicode for play symbol
+							//									computeButton.setText("\u25B6"); // unicode for play symbol
 							computeButton.setText("▶"); // unicode for play symbol
-		                 }
+						}
 					});
 				}
 			}
 		});
-		
+
 	}
 
 	public void cellListeners() {

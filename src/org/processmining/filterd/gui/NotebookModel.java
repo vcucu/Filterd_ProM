@@ -333,7 +333,7 @@ public class NotebookModel {
 					if (isCancelled()) {
 						break;
 					}
-					cellModel.compute(this); // compute 
+					cellModel.computeWithTask(this); // compute 
 				}
 				isComputing.set(false); // let the controller know the computation is done
 				return null;

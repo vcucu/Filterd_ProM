@@ -28,6 +28,10 @@ import org.processmining.framework.util.Pair;
 
 import javafx.application.Platform;
 import javafx.beans.Observable;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -47,6 +51,8 @@ public class ComputationCellModel extends CellModel {
 	private List<YLog> inputLogs;
 	private List<YLog> outputLogs;
 	private ObservableList<FilterButtonModel> filters;
+	private SimpleBooleanProperty isComputing;
+	private Task<Void> computeTask;
 	
 	/**
 	 * Constructor for importing/exporting. This constructor needs to exist because JAXB needs a no-argument constructor for unmarshalling.
@@ -59,6 +65,7 @@ public class ComputationCellModel extends CellModel {
 				return new Observable[] { temp.nameProperty(), temp.selectedProperty() };
 			}
 		});
+		this.isComputing = new SimpleBooleanProperty(false);
 	}
 
 	public ComputationCellModel(UIPluginContext context, int index, ProMCanceller canceller, List<YLog> eventLogs) {
@@ -74,6 +81,7 @@ public class ComputationCellModel extends CellModel {
 				return new Observable[] { temp.nameProperty(), temp.selectedProperty() };
 			}
 		});
+		this.isComputing = new SimpleBooleanProperty(false);
 	}
 	
 	@Override
@@ -137,6 +145,14 @@ public class ComputationCellModel extends CellModel {
 	
 	public List<YLog> getOutputLogs() {
 		return outputLogs;
+	}
+	
+	public boolean isComputing() {
+		return this.isComputing.get();
+	}
+	
+	public BooleanProperty isComputingProperty() {
+		return this.isComputing;
 	}
 
 	public void selectFilter(FilterButtonModel model) {
@@ -278,11 +294,40 @@ public class ComputationCellModel extends CellModel {
 		}
     }
     
+    public void compute() {
+    	// computation is executed in a task which is passed to a thread
+		this.computeTask = new Task<Void>() {
+
+			@Override
+			protected Void call() throws Exception {
+				computeWithTask(this);
+				return null;
+			}
+		};
+		// javafx tasks do not report exceptions to the console (this is a feature)
+		// add a change listener to print the exception (needed for debugging)
+		this.computeTask.exceptionProperty().addListener(new ChangeListener<Throwable>() {
+
+			public void changed(ObservableValue<? extends Throwable> observable, Throwable oldValue,
+					Throwable newValue) {
+				if (newValue != null) {
+					Exception exception = (Exception) newValue;
+					exception.printStackTrace();
+				}
+			}
+		});
+		// create and start a thread
+		Thread thread = new Thread(this.computeTask);
+		thread.start();
+    }
+    
     /**
      * Compute the cell by computing each of its individual filters in the appropriate order
      * @param computeTask  javafx task which is used to check whether the user cancelled the compute task
      */
-    public void compute(Task<Void> computeTask) {
+    public void computeWithTask(Task<Void> computeTask) {
+    	this.computeTask = computeTask;
+    	this.isComputing.set(true);
     	XLog inputOutput = this.inputLog.get(); // variable that stores the output of the previous filter (i.e. input for the next one)
     	if(inputOutput == null) {
     		// this state can only be reached if the cells are not computed in order (i.e. this cell uses the output of another cell which is yet to be computed)
@@ -313,6 +358,15 @@ public class ComputationCellModel extends CellModel {
 		       });  
     		}
     	}
+    	this.isComputing.set(false);
     	this.outputLogs.get(0).setLog(inputOutput); // set the output of this cell to be the output of the last filter
+    }
+    
+
+    public void cancelCompute() {
+    	if(this.computeTask != null) {
+    		this.computeTask.cancel();    		
+    	}
+    	this.isComputing.set(false);
     }
 }

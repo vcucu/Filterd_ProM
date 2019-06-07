@@ -41,6 +41,7 @@ import org.processmining.filterd.gui.ConfigurationModalController.ConfigurationS
 import org.processmining.filterd.models.YLog;
 import org.processmining.filterd.tools.EmptyLogException;
 
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
@@ -70,20 +71,36 @@ public class ComputationCellController extends CellController {
 	private SwingWrap visualizerSwgWrap;
 	private ConfigurationModalController configurationModal;
 
-	@FXML private VBox panelLayout;
-	@FXML private AnchorPane visualizerPane;
-	@FXML private ComboBox<YLog> cmbEventLog;
-	@FXML private ComboBox<ViewType> cmbVisualizers;
-	@FXML private Label expandButton;
-	@FXML private ScrollPane filterPanelScroll;
-	@FXML private VBox cell;
-	@FXML private HBox cellBody;
-	@FXML private Label fullScreenButton;
-	@FXML private Label playButton;
-	@FXML private MenuButton menuBtnCellSettings;
-	@FXML private Label prependCellButton;
-	@FXML private HBox fullToolbar;
-	@FXML private HBox cellToolbar;
+	@FXML
+	private VBox panelLayout;
+	@FXML
+	private AnchorPane visualizerPane;
+	@FXML
+	private ComboBox<YLog> cmbEventLog;
+	@FXML
+	private ComboBox<ViewType> cmbVisualizers;
+	@FXML
+	private Label expandButton;
+	@FXML
+	private ScrollPane filterPanelScroll;
+	@FXML
+	private VBox cell;
+	@FXML
+	private HBox cellBody;
+	@FXML
+	private Label fullScreenButton;
+	@FXML
+	private Label playButton;
+	@FXML
+	private Region computeButtonImage;
+	@FXML
+	private MenuButton menuBtnCellSettings;
+	@FXML
+	private Label prependCellButton;
+	@FXML
+	private HBox fullToolbar;
+	@FXML
+	private HBox cellToolbar;
 
 	/**
 	 * Gets executed after the constructor. Has access to the @FXML annotated
@@ -102,7 +119,7 @@ public class ComputationCellController extends CellController {
 		this.cellModel.cellNameProperty().addListener(new ChangeListener<String>() {
 
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				if(!cellName.getText().equals(newValue)) {
+				if (!cellName.getText().equals(newValue)) {
 					cellName.setText(newValue);
 				}
 			}
@@ -122,9 +139,6 @@ public class ComputationCellController extends CellController {
 		cellBody.maxWidthProperty().bind(controller.getScene().widthProperty().subtract(64));
 	}
 
-
-
-
 	public ComputationCellController(NotebookController controller, ComputationCellModel model) {
 		super(controller, model);
 
@@ -136,6 +150,29 @@ public class ComputationCellController extends CellController {
 		notebookLayout = controller.getNotebookLayout();
 		notebookToolbar = controller.getToolbarLayout();
 		notebookScrollPane = controller.getScrollPane();
+		// change compute button text (play / pause symbols) when the computation stops / starts
+		this.getCellModel().isComputingProperty().addListener(new ChangeListener<Boolean>() {
+
+			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+				if (newValue) {
+					Platform.runLater(new Runnable() {
+						@Override
+						public void run() {
+							computeButtonImage.getStyleClass().remove("play-solid");
+							computeButtonImage.getStyleClass().add("pause-solid");
+						}
+					});
+				} else {
+					Platform.runLater(new Runnable() {
+						@Override
+						public void run() {
+							computeButtonImage.getStyleClass().remove("pause-solid");
+							computeButtonImage.getStyleClass().add("play-solid");
+						}
+					});
+				}
+			}
+		});
 	}
 
 	@FXML
@@ -145,9 +182,8 @@ public class ComputationCellController extends CellController {
 			int index = getCellModel().getFilters().size(); // Index of the new cell, so that we can compute which XLogs are available
 			FilterButtonModel filterModel = new FilterButtonModel(index);
 			// if cell was already computed and is not out-of-date, we can set the input log of the new filter to be the output of the previous one
-			if(index > 0 &&
-				getCellModel().getFilters().get(index - 1).getOutputLog() != null &&
-				getCellModel().getStatusBar() == CellStatus.IDLE) {
+			if (index > 0 && getCellModel().getFilters().get(index - 1).getOutputLog() != null
+					&& getCellModel().getStatusBar() == CellStatus.IDLE) {
 
 				filterModel.setInputLog(getCellModel().getFilters().get(index - 1).getOutputLog());
 			}
@@ -210,7 +246,7 @@ public class ComputationCellController extends CellController {
 		this.hideConfigurationModal(false);
 		int index = filter.getIndex();
 		getCellModel().removeFilter(filter); // Removes the cell from the model
-		panelLayout.getChildren().remove(index);	// Removes the layout
+		panelLayout.getChildren().remove(index); // Removes the layout
 	}
 
 	public VBox getPanelLayout() {
@@ -270,8 +306,7 @@ public class ComputationCellController extends CellController {
 		} else if (!isExpanded && !isConfigurationModalShown) {
 			isExpanded = true;
 			//set height of cell to be the size of the 'window'
-			cell.prefHeightProperty()
-			.bind(notebookLayout.heightProperty().subtract(notebookToolbar.heightProperty()));
+			cell.prefHeightProperty().bind(notebookLayout.heightProperty().subtract(notebookToolbar.heightProperty()));
 		}
 		//extend visualizerPane over the filter pane
 		filterPanelScroll.setVisible(!isExpanded);
@@ -322,6 +357,15 @@ public class ComputationCellController extends CellController {
 		}
 	}
 
+	@FXML
+	public void computeHandler() {
+		if (getCellModel().isComputing()) {
+			getCellModel().cancelCompute();
+		} else {
+			getCellModel().compute();
+		}
+	}
+
 	// Set XLog
 	@FXML
 	public void setXLog() {
@@ -338,7 +382,7 @@ public class ComputationCellController extends CellController {
 		ComputationCellModel model = this.getCellModel();
 		if (cmbVisualizers.getValue() == Utilities.dummyViewType) {
 			// Remove visualizer if "None" is selected
-//			visualizerPane.getChildren().remove(visualizerSwgWrap);
+			//			visualizerPane.getChildren().remove(visualizerSwgWrap);
 			visualizerPane.getChildren().clear();
 			visualizerSwgWrap.setContent(null);
 			return;
@@ -368,9 +412,12 @@ public class ComputationCellController extends CellController {
 	}
 
 	/**
-	 * Method called when the configuration modal has to be hidden. It replaces the configuration modal with the visualizer.
+	 * Method called when the configuration modal has to be hidden. It replaces
+	 * the configuration modal with the visualizer.
 	 * 
-	 * @param removeFilter  boolean stating whether the last filter button should be removed (when the user cancels the configuration)
+	 * @param removeFilter
+	 *            boolean stating whether the last filter button should be
+	 *            removed (when the user cancels the configuration)
 	 */
 	public void hideConfigurationModal(boolean removeFilter) {
 		// if configuration modal is not shown at all, do not do anything
@@ -385,8 +432,7 @@ public class ComputationCellController extends CellController {
 			AnchorPane.setLeftAnchor(visualizerSwgWrap, 0.0);
 			AnchorPane.setRightAnchor(visualizerSwgWrap, 0.0);
 			// if filter selection was cancelled, delete the added button
-			if (configurationStep == ConfigurationStep.ADD_FILTER &&
-					removeFilter) {
+			if (configurationStep == ConfigurationStep.ADD_FILTER && removeFilter) {
 				// remove FilterButton (its always the last in the list)
 				FilterButtonModel buttonToRemove = getCellModel().getFilters()
 						.get(getCellModel().getFilters().size() - 1);
@@ -397,12 +443,16 @@ public class ComputationCellController extends CellController {
 	}
 
 	/**
-	 * Method called when the filter configuration dialog should be shown in the configuration modal.
+	 * Method called when the filter configuration dialog should be shown in the
+	 * configuration modal.
 	 * 
-	 * @param filterConfig  Filter configuration whose configuration panel should be shown
-	 * @param filterConfigController  Filter button whose filter is being configured 
+	 * @param filterConfig
+	 *            Filter configuration whose configuration panel should be shown
+	 * @param filterConfigController
+	 *            Filter button whose filter is being configured
 	 */
-	public void showModalFilterConfiguration(FilterdAbstractConfig filterConfig, FilterButtonController filterConfigController) {
+	public void showModalFilterConfiguration(FilterdAbstractConfig filterConfig,
+			FilterButtonController filterConfigController) {
 		if (filterConfig == null) {
 			throw new IllegalArgumentException("Filter configuration cannot be null");
 		}
@@ -421,12 +471,17 @@ public class ComputationCellController extends CellController {
 	}
 
 	/**
-	 * Method called when the list of available filters should be shown in the configuration modal.
+	 * Method called when the list of available filters should be shown in the
+	 * configuration modal.
 	 * 
-	 * @param filterButtonController  Filter button for which the user wants to pick the filter
-	 * @param filterButtonModel  Filter button model which should be populated with the chosen configuration
+	 * @param filterButtonController
+	 *            Filter button for which the user wants to pick the filter
+	 * @param filterButtonModel
+	 *            Filter button model which should be populated with the chosen
+	 *            configuration
 	 */
-	public void showModalFilterList(FilterButtonController filterButtonController, FilterButtonModel filterButtonModel) {
+	public void showModalFilterList(FilterButtonController filterButtonController,
+			FilterButtonModel filterButtonModel) {
 		visualizerPane.getChildren().clear(); // Remove visualizer
 		cmbVisualizers.setDisable(true); // Disable visualizer combobox
 		// populate the options list that is passed to the ConfigurationModalController
@@ -444,104 +499,95 @@ public class ComputationCellController extends CellController {
 		filterOptions.add("Event Attributes");
 		filterOptions.add("Event Rate");
 		filterOptions.add("Merge Subsequent Events");
-		
 
 		// callback is called when the user chooses which filter she wants to use
 		// it should map the chosen string to a concrete class which is initialized 
-		configurationModal.showFilterList(filterOptions, filterButtonController, new Callback<String, FilterdAbstractConfig>() {
+		configurationModal.showFilterList(filterOptions, filterButtonController,
+				new Callback<String, FilterdAbstractConfig>() {
 
-			public FilterdAbstractConfig call(String userSelection) {
-				// set the input log for the filter configuration
-				// this is either the input log for the cell if there was no computation done
-				// or it can be the output of the previous filter if there was computation done
-				XLog inputLog;
-				ComputationCellModel model = (ComputationCellModel) cellModel;
-				// if the input log was selected, there was definitely no computation
-				if(model.getInputLog().get() == null) {
-					throw new IllegalStateException("No input log selected");
-				}
-				FilterButtonModel lastFilterButton = model
-						.getFilters()
-						.get(model.getFilters().size() - 1); // this is the filter button that we are currently configuring
-				// use the cell input log or the given input log for the filter button
-				if(lastFilterButton.getInputLog() != null) {
-					inputLog = lastFilterButton.getInputLog(); // input log is set in the addFilter() method in this class
-				} else {
-					inputLog = model.getInputLog().get(); // if filter input log is null, use the cell input log
-				}
-				FilterdAbstractConfig filterConfig = null;
-				// do not accept empty logs
-				if(inputLog.size() == 0) {
-					ComputationCellModel.handleError(new EmptyLogException(""));
-					getCellModel().getFilters()
-						.get(getCellModel().getFilters().size() - 1)
-						.isValidProperty()
-						.set(false);
-					return null;
-				}
-				// map string to class
-				switch(userSelection) {
-					case "Trace Start Event Filter":
-						filterConfig = new FilterdTraceStartEventConfig(inputLog,
-								new FilterdTraceStartEventFilter());
-						break;
-					case "Trace End Event Filter":
-						filterConfig = new FilterdTraceEndEventConfig(inputLog,
-								new FilterdTraceEndEventFilter());
-						break;
-					case "Trace Frequency":
-						filterConfig = new FilterdTraceFrequencyConfig(inputLog,
-								new FilterdTraceFrequencyFilter());
-						break;
-					case "Trace Sample":
-						filterConfig = new FilterdTraceSampleConfig(inputLog,
-								new FilterdTraceSampleFilter());
-						break;
-					case "Trace Performance":
-						filterConfig = new FilterdTracePerformanceConfig(inputLog,
-								new FilterdTracePerformanceFilter());
-						break;
-					case "Event Attributes":
-						filterConfig = new FilterdEventAttrConfig(inputLog,
-								new FilterdEventAttrFilter());
-						break;
-					case "Event Rate":
-						filterConfig = new FilterdEventRateConfig(inputLog,
-								new FilterdEventRateFilter());
-						break;
-					case "Trace Having Event":
-						filterConfig = new FilterdTracesHavingEventConfig(inputLog,
-								new FilterdTracesHavingEvent());
-						break;
-					case "Trace Attribute":
-						filterConfig = new FilterdTraceAttrConfig(inputLog,
-								new FilterdTraceAttrFilter());
-						break;
-					case "Trace Timeframe":
-						filterConfig = new FilterdTraceTimeframeConfig(inputLog,
-								new FilterdTraceTimeframeFilter());
-						break;
-					case "Merge Subsequent Events":
-						filterConfig = new FilterdModifMergeSubsequentConfig(inputLog,
-								new FilterdModifMergeSubsequentFilter());
-						break;
-					case "Trace Follower Filter":
-						filterConfig = new FilterdTraceFollowerConfig(inputLog,
-								new FilterdTraceFollowerFilter());
-						break;
-					case "Trace Trim Filter":
-						filterConfig = new FilterdTraceTrimConfig(inputLog,
-								new FilterdTraceTrimFilter());
-						break;
-					default:
-						throw new IllegalArgumentException("Unsupported filter selected");
-				}
-				// TODO: set cell status to OUT_OF_DATE
-				filterButtonModel.setFilterConfig(filterConfig);
-				return filterConfig;
-			}
+					public FilterdAbstractConfig call(String userSelection) {
+						// set the input log for the filter configuration
+						// this is either the input log for the cell if there was no computation done
+						// or it can be the output of the previous filter if there was computation done
+						XLog inputLog;
+						ComputationCellModel model = (ComputationCellModel) cellModel;
+						// if the input log was selected, there was definitely no computation
+						if (model.getInputLog().get() == null) {
+							throw new IllegalStateException("No input log selected");
+						}
+						FilterButtonModel lastFilterButton = model.getFilters().get(model.getFilters().size() - 1); // this is the filter button that we are currently configuring
+						// use the cell input log or the given input log for the filter button
+						if (lastFilterButton.getInputLog() != null) {
+							inputLog = lastFilterButton.getInputLog(); // input log is set in the addFilter() method in this class
+						} else {
+							inputLog = model.getInputLog().get(); // if filter input log is null, use the cell input log
+						}
+						FilterdAbstractConfig filterConfig = null;
+						// do not accept empty logs
+						if (inputLog.size() == 0) {
+							ComputationCellModel.handleError(new EmptyLogException(""));
+							getCellModel().getFilters().get(getCellModel().getFilters().size() - 1).isValidProperty()
+									.set(false);
+							return null;
+						}
+						// map string to class
+						switch (userSelection) {
+							case "Trace Start Event Filter" :
+								filterConfig = new FilterdTraceStartEventConfig(inputLog,
+										new FilterdTraceStartEventFilter());
+								break;
+							case "Trace End Event Filter" :
+								filterConfig = new FilterdTraceEndEventConfig(inputLog,
+										new FilterdTraceEndEventFilter());
+								break;
+							case "Trace Frequency" :
+								filterConfig = new FilterdTraceFrequencyConfig(inputLog,
+										new FilterdTraceFrequencyFilter());
+								break;
+							case "Trace Sample" :
+								filterConfig = new FilterdTraceSampleConfig(inputLog, new FilterdTraceSampleFilter());
+								break;
+							case "Trace Performance" :
+								filterConfig = new FilterdTracePerformanceConfig(inputLog,
+										new FilterdTracePerformanceFilter());
+								break;
+							case "Event Attributes" :
+								filterConfig = new FilterdEventAttrConfig(inputLog, new FilterdEventAttrFilter());
+								break;
+							case "Event Rate" :
+								filterConfig = new FilterdEventRateConfig(inputLog, new FilterdEventRateFilter());
+								break;
+							case "Trace Having Event" :
+								filterConfig = new FilterdTracesHavingEventConfig(inputLog,
+										new FilterdTracesHavingEvent());
+								break;
+							case "Trace Attribute" :
+								filterConfig = new FilterdTraceAttrConfig(inputLog, new FilterdTraceAttrFilter());
+								break;
+							case "Trace Timeframe" :
+								filterConfig = new FilterdTraceTimeframeConfig(inputLog,
+										new FilterdTraceTimeframeFilter());
+								break;
+							case "Merge Subsequent Events" :
+								filterConfig = new FilterdModifMergeSubsequentConfig(inputLog,
+										new FilterdModifMergeSubsequentFilter());
+								break;
+							case "Trace Follower Filter" :
+								filterConfig = new FilterdTraceFollowerConfig(inputLog,
+										new FilterdTraceFollowerFilter());
+								break;
+							case "Trace Trim Filter" :
+								filterConfig = new FilterdTraceTrimConfig(inputLog, new FilterdTraceTrimFilter());
+								break;
+							default :
+								throw new IllegalArgumentException("Unsupported filter selected");
+						}
+						// TODO: set cell status to OUT_OF_DATE
+						filterButtonModel.setFilterConfig(filterConfig);
+						return filterConfig;
+					}
 
-		});
+				});
 		VBox configurationModalRoot = configurationModal.getRoot();
 		visualizerPane.getChildren().add(configurationModalRoot);
 		AnchorPane.setTopAnchor(configurationModalRoot, 0.0);
@@ -555,8 +601,7 @@ public class ComputationCellController extends CellController {
 	public void show() {
 		super.show();
 		if (isExpanded) {
-			cell.prefHeightProperty()
-			.bind(notebookLayout.heightProperty().subtract(notebookToolbar.heightProperty()));
+			cell.prefHeightProperty().bind(notebookLayout.heightProperty().subtract(notebookToolbar.heightProperty()));
 		}
 	}
 
