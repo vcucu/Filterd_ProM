@@ -28,6 +28,7 @@ public class FilterdEventAttrNumericalConfig extends FilterdAbstractReferenceabl
 	String key;
 	ParameterRangeFromRange<Double> range;
 	ParameterMultipleFromSet desiredValues;
+	ParameterOneFromSet parameterType;
 
 	public FilterdEventAttrNumericalConfig(XLog log, Filter filterType, String key) {
 		super(log, filterType);
@@ -41,7 +42,7 @@ public class FilterdEventAttrNumericalConfig extends FilterdAbstractReferenceabl
 		ArrayList<String> selectList = new ArrayList<>();
 		selectList.add(defaultSelect);
 		selectList.add("Choose from interval.");// filter in or filter out
-		ParameterOneFromSet parameterType = new ParameterOneFromSet("parameterType",
+		parameterType = new ParameterOneFromSet("parameterType",
 				"", defaultSelect, selectList);
 
 		String defaultOption = "Filter in";
@@ -153,6 +154,63 @@ public class FilterdEventAttrNumericalConfig extends FilterdAbstractReferenceabl
 
 
 	public boolean checkValidity(XLog log) {
-		return Toolbox.computeAttributes(log).contains(key);
+		if (!Toolbox.computeAttributes(log).contains(key)) {
+			return false;
+		}
+		
+		String parameter;
+		
+		/* check if the parameters are populated */
+		try {
+			parameter = parameterType.getChosen();
+		} catch(Exception e) {
+			return true;
+		}
+		
+		/* if using the interval configuration.. */
+		if (parameter.contains("interval")) {
+			ArrayList<Double> pair = new ArrayList<>();
+			
+			/* check if the parameters are populated */
+			try {
+				pair.addAll(range.getChosenPair());
+			} catch(Exception e) {
+				return true;
+			}
+			
+			/* get the chosen values */
+			Double lower = pair.get(0);
+			Double upper = pair.get(1);
+
+			/* check if at least one of the events is in those bounds */
+			for (XTrace trace : log) {
+				for (XEvent event : trace) {
+					if (!event.getAttributes().containsKey(key)) continue;
+					Double value = Double.parseDouble(event.getAttributes().get(key).toString());
+					if (lower <= value  && upper >= value) return true;
+				}
+			}
+		} else {
+			List<Double> values = new ArrayList<>();
+			
+			try {
+				values = desiredValues.getChosen()
+						.stream().map(x -> Double.parseDouble(x))
+				        .collect(Collectors.toList());
+			} catch(Exception e) {
+				return true;
+			}
+			
+			/* check if at least one of the events has one of the values */
+			for (XTrace trace : log) {
+				for (XEvent event : trace) {
+					if (!event.getAttributes().containsKey(key)) continue;
+					Double value = Double.parseDouble(event.getAttributes().get(key).toString());
+					if (values.contains(value)) return true;
+				}
+			}
+		}
+	
+		return false;
 	}
 }
