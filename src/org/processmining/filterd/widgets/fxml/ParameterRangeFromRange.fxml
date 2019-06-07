@@ -32,13 +32,13 @@
                   </VBox>
                   <HBox>
                      <children>
-                        <Label fx:id="lowValueLabel" maxHeight="1.7976931348623157E308" prefWidth="50.0" text="10.99">
+                        <Label fx:id="lowValueLabel" maxHeight="1.7976931348623157E308" prefWidth="75.0" text="2019-06-07T09:06:32" wrapText="true">
                            <HBox.margin>
                               <Insets right="5.0" />
                            </HBox.margin>
                         </Label>
                         <RangeSlider fx:id="slider" blockIncrement="1.0" highValue="75.0" lowValue="25.0" max="100.0" maxWidth="1.7976931348623157E308" showTickLabels="true" HBox.hgrow="ALWAYS" />
-                        <Label fx:id="highValueLabel" alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" prefWidth="50.0" text="15.99">
+                        <Label fx:id="highValueLabel" alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" prefWidth="75.0" text="2019-06-07T09:06:32" wrapText="true">
                            <HBox.margin>
                               <Insets left="5.0" right="5.0" />
                            </HBox.margin>
