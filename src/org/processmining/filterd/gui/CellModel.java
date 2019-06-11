@@ -100,6 +100,14 @@ public class CellModel {
 	public UIPluginContext getContext() {
 		return context;
 	}
+	
+	/**
+	 * Sets the ProM context. Used when loading a notebook from File.
+	 * @param context
+	 */
+	public void setContext(UIPluginContext context) {
+		this.context = context;
+	}
 
 	public int getIndex() {
 		return index;

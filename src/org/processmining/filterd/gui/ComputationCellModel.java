@@ -163,6 +163,14 @@ public class ComputationCellModel extends CellModel {
 		}
 		model.setSelected(true);
 	}
+	
+	/**
+	 * Sets the canceller of this Model. Used when loading a notebook from File.
+	 * @param canceller
+	 */
+	public void setCanceller(ProMCanceller canceller) {
+		this.canceller = canceller;
+	}
 
     // Get visualizer names
 	// LET OP! Log must be set first.
