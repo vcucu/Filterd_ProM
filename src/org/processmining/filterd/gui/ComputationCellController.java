@@ -43,6 +43,7 @@ import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -149,9 +150,10 @@ public class ComputationCellController extends CellController {
 		// Load event logs in cmbEventLog and select "Initial input"
 		cmbEventLog.getItems().addAll(model.getInputLogs());
 		cmbEventLog.getSelectionModel().selectFirst();
+		System.out.println("!!!! WE ARE GONNA SET THE XLOG RN !!!!");
 		setXLog();
 		// Add listeners to the basic model components
-		cellModel.getProperty().addPropertyChangeListener(new CellModelListeners(this));
+		cellModel.getProperty().addPropertyChangeListener(new ComputationCellModelListeners(this));
 		// binding for cell name
 		this.cellName.setText(this.cellModel.getCellName());
 		this.cellModel.cellNameProperty().addListener(new ChangeListener<String>() {
@@ -270,6 +272,13 @@ public class ComputationCellController extends CellController {
 	public void setPanelLayout(VBox panelLayout) {
 		this.panelLayout = panelLayout;
 	}
+	
+	
+	public void changeInputLogsCombo(List <YLog> logs){
+		System.out.println("selected value BEFORE setting the items " + cmbEventLog.getValue().getName() + (cmbEventLog.getValue()==null));
+		cmbEventLog.setItems((ObservableList<YLog>) logs);
+		System.out.println("selected value AFTER setting the items " + cmbEventLog.getValue().getName() + (cmbEventLog.getValue()==null));
+	}
 
 	/**
 	 * Sets the cell model of the current cell. This method is overridden so it
@@ -383,6 +392,7 @@ public class ComputationCellController extends CellController {
 	// Set XLog
 	@FXML
 	public void setXLog() {
+		System.out.println("WE ARE SETTING THE XLOG");
 		ComputationCellModel model = this.getCellModel();
 		YLog eventLog = cmbEventLog.getValue();
 		model.setInputLog(eventLog);
@@ -619,4 +629,5 @@ public class ComputationCellController extends CellController {
 	public ConfigurationModalController getConfigurationModal() {
 		return this.configurationModal;
 	}
+	
 }
