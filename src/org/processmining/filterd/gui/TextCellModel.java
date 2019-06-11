@@ -13,6 +13,13 @@ public class TextCellModel extends CellModel{
 	// Annotated at the getter method because a conversion is needed.
 	private StringProperty comment; // StringProperty is used because it can be bound.
 
+	/**
+	 * Constructor for importing/exporting. This constructor needs to exist because JAXB needs a no-argument constructor for unmarshalling.
+	 * Properties set here could be overwritten during loading.
+	 */
+	public TextCellModel() {
+	}
+	
 	public TextCellModel(UIPluginContext context, int index) {
 		super(context, index);
 		comment = new SimpleStringProperty();

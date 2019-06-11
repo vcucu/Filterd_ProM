@@ -54,6 +54,20 @@ public class ComputationCellModel extends CellModel {
 	private SimpleBooleanProperty isComputing;
 	private Task<Void> computeTask;
 	
+	/**
+	 * Constructor for importing/exporting. This constructor needs to exist because JAXB needs a no-argument constructor for unmarshalling.
+	 * Properties set here could be overwritten during loading.
+	 */
+	public ComputationCellModel() {
+		filters = FXCollections.observableArrayList(new Callback<FilterButtonModel, Observable[]>() {
+			@Override
+			public Observable[] call(FilterButtonModel temp) {
+				return new Observable[] { temp.nameProperty(), temp.selectedProperty() };
+			}
+		});
+		this.isComputing = new SimpleBooleanProperty(false);
+	}
+
 	public ComputationCellModel(UIPluginContext context, int index, ProMCanceller canceller, List<YLog> eventLogs) {
 		super(context, index);
 		this.canceller = canceller;
