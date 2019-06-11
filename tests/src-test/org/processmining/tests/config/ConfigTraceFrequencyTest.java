@@ -8,6 +8,8 @@ import org.deckfour.xes.model.XLog;
 import org.junit.Test;
 import org.processmining.filterd.configurations.FilterdTraceFrequencyConfig;
 import org.processmining.filterd.filters.FilterdTraceFrequencyFilter;
+import org.processmining.filterd.gui.AbstractFilterConfigPanelController;
+import org.processmining.filterd.gui.FilterConfigPanelController;
 import org.processmining.filterd.parameters.ParameterOneFromSet;
 import org.processmining.filterd.parameters.ParameterRangeFromRange;
 import org.processmining.tests.filters.FilterdPackageTest;
@@ -38,6 +40,17 @@ public class ConfigTraceFrequencyTest extends FilterdPackageTest {
 		
 	}
 	
+	@Test
+	/*
+	 * canPopulate is always true for this filter.
+	 */
+	public void testCanPopulate() throws Throwable {
+		XLog typed = originalLog;	
+		FilterdTraceFrequencyConfig config = new FilterdTraceFrequencyConfig(typed,
+				new FilterdTraceFrequencyFilter());
+		assertTrue(config.canPopulate(new FilterConfigPanelController()));
+		
+	}
 	public static void main(String[] args) {
 		junit.textui.TestRunner.run(ConfigTraceFrequencyTest.class);
 	}
