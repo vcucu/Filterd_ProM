@@ -193,7 +193,7 @@ public class NotebookController {
 	 * Handler for the compute button. (Re)computes the entire notebook.
 	 */
 	@FXML
-	private void computeButtonHandler() {
+	public void computeButtonHandler() {
 		// TODO: set compute button icon to play / pause w.r.t. this.isComputing
 		if (model.isComputing()) {
 			model.cancelCompute();
@@ -232,7 +232,7 @@ public class NotebookController {
 	 * button modal.
 	 */
 	@FXML
-	private void appendCellButtonHandler() {
+	public void appendCellButtonHandler() {
 		int index = model.getCells().size();
 		toggleAddCellModal(index);
 	}

@@ -370,6 +370,10 @@ public class NotebookModel {
 	public boolean isComputing() {
 		return this.isComputing.get();
 	}
+	
+	public void setComputing(boolean value) {
+		this.isComputing.setValue(value);
+	}
 
 	public BooleanProperty isComputingProperty() {
 		return this.isComputing;
