@@ -170,13 +170,16 @@ public class NotebookModel {
 	}
 
 	/**
-	 * Appends a list of cells to the list of cells in this model.
+	 * Appends a list of cells to the list of cells in this model. Ignores empty cells and null.
 	 * 
 	 * @param cells
 	 *            The list of cells to append to the cells in this model.
 	 */
 	public void addCells(List<CellModel> cells) {
-		this.cells.addAll(cells);
+		if (cells != null && !cells.isEmpty()) {
+			// if cells is not null and is not empty
+			this.cells.addAll(cells);
+		}		
 	}
 
 	/**
