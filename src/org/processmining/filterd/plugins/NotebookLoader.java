@@ -3,7 +3,6 @@ package org.processmining.filterd.plugins;
 import java.io.StringReader;
 
 import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
 import org.deckfour.xes.model.XLog;
@@ -36,12 +35,12 @@ public class NotebookLoader {
 			Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
 			
 			StringReader reader = new StringReader(imported);
-			NotebookModelAdapted adaptedModel = (NotebookModelAdapted) jaxbUnmarshaller.unmarshal(reader); // NullPointer error happens here
+			NotebookModelAdapted adaptedModel = (NotebookModelAdapted) jaxbUnmarshaller.unmarshal(reader);
 			
 			// convert the adapted model to a notebook model.
 			NotebookModelAdapter adapter = new NotebookModelAdapter();		
 			notebookModel = adapter.unmarshal(adaptedModel);
-		} catch (JAXBException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			notebookModel = new NotebookModel(context, log, null);
 		}
