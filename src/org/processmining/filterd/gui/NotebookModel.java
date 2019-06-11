@@ -305,6 +305,8 @@ public class NotebookModel {
 							.collect(Collectors.toList())); // convert to a list
 				}
 			}
+		} else {
+			return logs;
 		}
 		return logs;
 	}

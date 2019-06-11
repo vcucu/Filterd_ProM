@@ -171,4 +171,16 @@ public class FilterButtonModelTest extends FilterdPackageTest {
 			assertEquals(NullPointerException.class, exception.getClass());
 		}
 	}
+	
+	@Test
+	public void testInvalidConfigurationException() {
+		// Create new filter button instance
+		FilterButtonModel model = new FilterButtonModel(0);
+		// Create new invalid configuration exception object
+		InvalidConfigurationException exception = new InvalidConfigurationException("Message", model);
+		// Get the filter button model
+		FilterButtonModel newModel = exception.getFilterButtonModel();
+		// Check that the filter button model was properly set
+		assertTrue(model.equals(newModel));
+	}
 }

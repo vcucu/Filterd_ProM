@@ -24,7 +24,7 @@ public abstract class AbstractFilterConfigPanelController {
 	protected List<ParameterController> controllers;
 	protected VBox root; // top-level box which contains all components in this config. panel
 	
-	abstract protected VBox getNextContainer();
+	abstract public VBox getNextContainer();
 	
 	public void addParameterYesNo(ParameterYesNo parameter) {
 		ParameterController controller = new ParameterYesNoController(parameter.getNameDisplayed(), 

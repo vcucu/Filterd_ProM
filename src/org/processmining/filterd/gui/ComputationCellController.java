@@ -101,6 +101,46 @@ public class ComputationCellController extends CellController {
 	private HBox fullToolbar;
 	@FXML
 	private HBox cellToolbar;
+	
+	public ComputationCellController(ComputationCellModel model) {
+		super(null, model);
+	}
+	
+	public ComputationCellController(NotebookController controller, ComputationCellModel model) {
+		super(controller, model);
+
+		configurationModal = new ConfigurationModalController(this);
+		this.isConfigurationModalShown = false;
+
+		isExpanded = false;
+		isFullScreen = false;
+		notebookLayout = controller.getNotebookLayout();
+		notebookToolbar = controller.getToolbarLayout();
+		notebookScrollPane = controller.getScrollPane();
+		// change compute button text (play / pause symbols) when the computation stops / starts
+		this.getCellModel().isComputingProperty().addListener(new ChangeListener<Boolean>() {
+
+			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+				if (newValue) {
+					Platform.runLater(new Runnable() {
+						@Override
+						public void run() {
+							computeButtonImage.getStyleClass().remove("play-solid");
+							computeButtonImage.getStyleClass().add("pause-solid");
+						}
+					});
+				} else {
+					Platform.runLater(new Runnable() {
+						@Override
+						public void run() {
+							computeButtonImage.getStyleClass().remove("pause-solid");
+							computeButtonImage.getStyleClass().add("play-solid");
+						}
+					});
+				}
+			}
+		});
+	}
 
 	/**
 	 * Gets executed after the constructor. Has access to the @FXML annotated
@@ -139,42 +179,6 @@ public class ComputationCellController extends CellController {
 		cellBody.maxWidthProperty().bind(controller.getScene().widthProperty().subtract(64));
 	}
 
-	public ComputationCellController(NotebookController controller, ComputationCellModel model) {
-		super(controller, model);
-
-		configurationModal = new ConfigurationModalController(this);
-		this.isConfigurationModalShown = false;
-
-		isExpanded = false;
-		isFullScreen = false;
-		notebookLayout = controller.getNotebookLayout();
-		notebookToolbar = controller.getToolbarLayout();
-		notebookScrollPane = controller.getScrollPane();
-		// change compute button text (play / pause symbols) when the computation stops / starts
-		this.getCellModel().isComputingProperty().addListener(new ChangeListener<Boolean>() {
-
-			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-				if (newValue) {
-					Platform.runLater(new Runnable() {
-						@Override
-						public void run() {
-							computeButtonImage.getStyleClass().remove("play-solid");
-							computeButtonImage.getStyleClass().add("pause-solid");
-						}
-					});
-				} else {
-					Platform.runLater(new Runnable() {
-						@Override
-						public void run() {
-							computeButtonImage.getStyleClass().remove("pause-solid");
-							computeButtonImage.getStyleClass().add("play-solid");
-						}
-					});
-				}
-			}
-		});
-	}
-
 	@FXML
 	public void addFilter() {
 		if (!this.isConfigurationModalShown
@@ -182,10 +186,12 @@ public class ComputationCellController extends CellController {
 			int index = getCellModel().getFilters().size(); // Index of the new cell, so that we can compute which XLogs are available
 			FilterButtonModel filterModel = new FilterButtonModel(index);
 			// if cell was already computed and is not out-of-date, we can set the input log of the new filter to be the output of the previous one
-			if (index > 0 && getCellModel().getFilters().get(index - 1).getOutputLog() != null
-					&& getCellModel().getStatusBar() == CellStatus.IDLE) {
-
+			if(index > 0 &&
+				getCellModel().getFilters().get(index - 1).getOutputLog() != null &&
+				getCellModel().getStatusBar() == CellStatus.IDLE) {
 				filterModel.setInputLog(getCellModel().getFilters().get(index - 1).getOutputLog());
+			} else {
+				System.out.println("New Filter");
 			}
 			getCellModel().addFilterModel(index, filterModel);
 			loadFilter(index, filterModel);
@@ -209,7 +215,7 @@ public class ComputationCellController extends CellController {
 		showModalFilterList(newController, model);
 	}
 
-	private void addFilterButtonListeners() {
+	public void addFilterButtonListeners() {
 		getCellModel().getFilters().addListener(new ListChangeListener<FilterButtonModel>() {
 			@Override
 			public void onChanged(Change<? extends FilterButtonModel> change) {

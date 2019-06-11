@@ -158,7 +158,7 @@
 			<test name="org.processmining.tests.gui.TextCellModelListenersTest" todir="${test.basedir}" />
 			<test name="org.processmining.tests.gui.TextCellModelTest" todir="${test.basedir}" />
 			<test name="org.processmining.tests.gui.UtilitiesTest" todir="${test.basedir}" />
-			<test name="org.processmining.tests.gui.VisualizerPanelControllerTest" todir="${test.basedir}" />
+			<!-- <test name="org.processmining.tests.gui.VisualizerPanelControllerTest" todir="${test.basedir}" /> -->
 			<!-- WIDGETS TESTS (Hudson will not run them) -->
 			<!-- <test name="org.processmining.tests.widgets.FilterdConfigurationDialogTest" todir="${test.basedir}" /> -->
 			<!-- <test name="org.processmining.tests.widgets.FilterdConfigurationModalTest" todir="${test.basedir}" /> -->
