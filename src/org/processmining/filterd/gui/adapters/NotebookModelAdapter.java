@@ -1,12 +1,14 @@
 package org.processmining.filterd.gui.adapters;
 
+import javax.xml.bind.annotation.adapters.XmlAdapter;
+
 import org.processmining.filterd.gui.NotebookModel;
 
 /**
  * Converts the NotebookModel into a NotebokModelAdapted and vice versa.
  *
  */
-public class NotebookModelAdapter extends AbstractJAXBAdapter<NotebookModelAdapted, NotebookModel> {
+public class NotebookModelAdapter extends XmlAdapter<NotebookModelAdapted, NotebookModel> {
 
 	/**
 	 * Converts the NotebookMode into a NotebookModelAdapted.
@@ -22,17 +24,7 @@ public class NotebookModelAdapter extends AbstractJAXBAdapter<NotebookModelAdapt
 	 * Converts a NotebookModelAdapted to a NotebookModel
 	 */
 	public NotebookModel unmarshal(NotebookModelAdapted adaptedModel) throws NullPointerException {
-		// Parameters come from the static variables in AbstractJAXBAdapter
-		if (staticPromContext == null) {
-			throw new NullPointerException(
-					"org.processmining.filterd.gui.adapters.NotebookModelAdapter.unmarshal():" +
-			"org.processmining.filterd.gui.AbstractJAXBAdapter.staticContext is null");
-		} else if (staticInitialInput == null) {
-			throw new NullPointerException(
-					"org.processmining.filterd.gui.adapters.NotebookModelAdapter.unmarshal():" +
-			"org.processmining.filterd.gui.AbstractJAXBAdapter.staticInitialInput is null");
-		}
-		NotebookModel model = new NotebookModel(staticPromContext, staticInitialInput, null);
+		NotebookModel model = new NotebookModel(null, null, null);
 		model.addCells(adaptedModel.getCells());
 		model.setComputationMode(adaptedModel.getComputationMode());
 		return model;

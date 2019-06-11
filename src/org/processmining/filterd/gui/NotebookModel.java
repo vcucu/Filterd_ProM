@@ -58,18 +58,6 @@ public class NotebookModel {
 	private SimpleBooleanProperty isComputing; // boolean property stating whether the notebook is currently being computed
 
 	/**
-	 * Constructor for importing/exporting. This constructor needs to exist
-	 * because JAXB needs a no-argument constructor for unmarshalling.
-	 * Properties set here could be overwritten during loading.
-	 */
-	public NotebookModel() {
-		this.cells = FXCollections.observableArrayList();
-		setComputationMode(ComputationMode.MANUAL);
-		this.isComputing = new SimpleBooleanProperty();
-		this.isComputing.set(false);
-	}
-
-	/**
 	 * The constructor which sets the initial input event log. Note that the
 	 * constructor does not have access to the @FXML annotated fields as @FXML
 	 * annotated fields are populated after the execution of the constructor.

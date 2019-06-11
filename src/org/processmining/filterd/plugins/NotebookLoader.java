@@ -8,7 +8,6 @@ import javax.xml.bind.Unmarshaller;
 import org.deckfour.xes.model.XLog;
 import org.processmining.contexts.uitopia.UIPluginContext;
 import org.processmining.contexts.uitopia.annotations.UITopiaVariant;
-import org.processmining.filterd.gui.adapters.AbstractJAXBAdapter;
 import org.processmining.filterd.gui.adapters.ComputationCellModelAdapted;
 import org.processmining.filterd.gui.adapters.NotebookModelAdapted;
 import org.processmining.filterd.gui.adapters.TextCellModelAdapted;
@@ -23,10 +22,6 @@ public class NotebookLoader {
 	public NotebookModelAdapted load(UIPluginContext context, String imported, XLog log) {
 		NotebookModelAdapted adaptedModel;
 		try {
-			// set the static loading variables.
-			AbstractJAXBAdapter.setContext(context);
-			AbstractJAXBAdapter.setInitialInput(log);
-			
 			// read the XML.
 			// add all the classes which have a XmlRootElement annotation in the newInstance method.
 			JAXBContext jaxbContext= JAXBContext.newInstance(NotebookModelAdapted.class, TextCellModelAdapted.class, ComputationCellModelAdapted.class);
