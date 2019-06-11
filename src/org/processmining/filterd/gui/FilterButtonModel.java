@@ -1,9 +1,6 @@
 package org.processmining.filterd.gui;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 
 import org.deckfour.xes.model.XLog;
 import org.processmining.filterd.configurations.FilterdAbstractConfig;
@@ -14,15 +11,11 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-@XmlAccessorType(XmlAccessType.NONE) // Makes sure only explicitly named elements get added to the XML.
-@XmlRootElement(name = "FilterButtonModel") // Needed by JAXB to generate an XML.
 public class FilterButtonModel {
 	
 	private StringProperty name;
-	@XmlElement
 	private int index;
 	private BooleanProperty selected;
-	//@XmlElement
 	private FilterdAbstractConfig filterConfig;
 	private XLog inputLog;
 	private XLog outputLog;
@@ -51,7 +44,6 @@ public class FilterButtonModel {
 		this.outputLog = null;
 	}
 	
-	@XmlElement
 	public String getName() {
 		return name.get();
 	}

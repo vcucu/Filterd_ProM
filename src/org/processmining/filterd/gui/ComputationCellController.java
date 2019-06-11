@@ -171,6 +171,11 @@ public class ComputationCellController extends CellController {
 		visualizerSwgWrap = new SwingBubble();
 		// bind cellBody width to cellContent width so the visualizations scale properly
 		cellBody.maxWidthProperty().bind(controller.getScene().widthProperty().subtract(64));
+		if (!model.getFilters().isEmpty()) {
+			// if there already exist filters inside this cell generate their controllers.
+			generateFilterButtonControllers();
+			hideConfigurationModal(false); // hides the configuration modal that spawn upon creating a filter controller.
+		}
 	}
 
 	@FXML
@@ -207,6 +212,15 @@ public class ComputationCellController extends CellController {
 		newController.selectFilterButton();
 		// show the filter list to allow the user to pick which filter she wants to add
 		showModalFilterList(newController, model);
+	}
+	
+	/**
+	 * This is to generate a controller for every filter model. Used when importing a notebook from the workspace.
+	 */
+	public void generateFilterButtonControllers() {
+		for (FilterButtonModel filter : getCellModel().getFilters()) {
+			loadFilter(filter.getIndex(), filter);
+		}
 	}
 
 	public void addFilterButtonListeners() {
