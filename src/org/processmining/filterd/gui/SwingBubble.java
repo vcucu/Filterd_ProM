@@ -32,8 +32,6 @@ public class SwingBubble extends AnchorPane {
 		Utilities.setAnchors(imgView, 0.0);
 		// Add imgView to the view
 		getChildren().add(imgView);
-//		imgView.setMouseTransparent(false);
-		System.out.println(imgView.isMouseTransparent());
 		// Add listeners for the JavaFX - Swing workaround
 		addHandlers();	
 	}
@@ -44,7 +42,6 @@ public class SwingBubble extends AnchorPane {
 	 * @pre The SwingWrap must be in the parent object.
 	 */
 	private void fake() {
-		System.out.println(imgView.isMouseTransparent());
         Platform.runLater(new Runnable() {
             @Override
             public synchronized void run() {
@@ -81,16 +78,18 @@ public class SwingBubble extends AnchorPane {
 	}
 	
 	public void setContent(JComponent content) {
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				Dimension dimension = new Dimension();
-				dimension.setSize(getMaxWidth(), getMaxHeight());
-				content.setMaximumSize(dimension);
-				content.setPreferredSize(dimension);
-				swgNode.setContent(content);
-			}
-		});
+		if (content != null) {
+			SwingUtilities.invokeLater(new Runnable() {
+				@Override
+				public void run() {
+					Dimension dimension = new Dimension();
+					dimension.setSize(getMaxWidth(), getMaxHeight());
+					content.setMaximumSize(dimension);
+					content.setPreferredSize(dimension);
+					swgNode.setContent(content);
+				}
+			});
+		}
 	}
 	
 	/**
