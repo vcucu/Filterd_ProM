@@ -162,5 +162,20 @@ public class NotebookControllerTest extends TestCase {
 			assertEquals(NullPointerException.class, exception.getClass());
 		}
 	}
+	
+	@Test
+	public void testNotebookModelExport() {
+		// Create new notebook model
+		NotebookModel model = new NotebookModel();
+		// Create new notebook controller
+		NotebookController controller = new NotebookController(model);
+		
+		try {
+			// Export the notebook
+			controller.export();	
+		} catch (Throwable exception) {
+			assertFalse(exception.equals(null));
+		}
+	}
 
 }

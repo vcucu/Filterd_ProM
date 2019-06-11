@@ -1,4 +1,5 @@
 package org.processmining.filterd.gui;
+
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Optional;
@@ -19,8 +20,10 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -42,7 +45,9 @@ public class NotebookController {
 	@FXML
 	private Button manualButton;
 	@FXML
-	private Button computeButton;
+	private Label computeButton;
+	@FXML
+	private Region computeButtonImage;
 	@FXML
 	private Button exportButton;
 	@FXML
@@ -94,13 +99,14 @@ public class NotebookController {
 	 * Gets executed after the constructor. Has access to the @FXML annotated
 	 * fields, thus UI elements can be manipulated here.
 	 */
-	public void initialize() {	
+	public void initialize() {
 		// Add cell listener 
 		cellListeners();
-		
+
 		// Initialize AddCellModal
 		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/processmining/filterd/gui/fxml/AddCell.fxml"));
+			FXMLLoader loader = new FXMLLoader(
+					getClass().getResource("/org/processmining/filterd/gui/fxml/AddCell.fxml"));
 			loader.setController(new AddCellController());
 			addCellHBox.getChildren().add((HBox) loader.load());
 		} catch (IOException e) {
@@ -110,26 +116,26 @@ public class NotebookController {
 		this.model.isComputingProperty().addListener(new ChangeListener<Boolean>() {
 
 			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-				if(newValue) {
-					Platform.runLater(new Runnable(){
-						@Override 
+				if (newValue) {
+					Platform.runLater(new Runnable() {
+						@Override
 						public void run() {
-							computeButton.setText("\u23F8"); // unicode for pause symbol
-//							computeButton.setText("pause"); // unicode for pause symbol
-		                 }
+							computeButtonImage.getStyleClass().remove("play-solid");
+							computeButtonImage.getStyleClass().add("pause-solid");
+						}
 					});
 				} else {
-					Platform.runLater(new Runnable(){
-						@Override 
+					Platform.runLater(new Runnable() {
+						@Override
 						public void run() {
-//							computeButton.setText("\u25B6"); // unicode for play symbol
-							computeButton.setText("▶"); // unicode for play symbol
-		                 }
+							computeButtonImage.getStyleClass().remove("pause-solid");
+							computeButtonImage.getStyleClass().add("play-solid");
+						}
 					});
 				}
 			}
 		});
-		
+
 	}
 
 	public void cellListeners() {

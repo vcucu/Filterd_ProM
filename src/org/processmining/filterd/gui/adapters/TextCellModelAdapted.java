@@ -2,7 +2,7 @@ package org.processmining.filterd.gui.adapters;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement
+@XmlRootElement(name = "Text Cell")
 public class TextCellModelAdapted extends CellModelAdapted {
 	
 	private String comment;

@@ -207,7 +207,7 @@ public class FilterdTraceTrimConfig extends FilterdAbstractConfig {
 		if (parameters == null || candidateLog.equals(log))
 			return true;
 		Set<String> cEventAttributes = new HashSet<>();
-		for (XTrace trace : log) {
+		for (XTrace trace : candidateLog) {
 
 			for (XEvent event : trace) {
 

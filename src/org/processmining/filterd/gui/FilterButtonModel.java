@@ -27,6 +27,7 @@ public class FilterButtonModel {
 	private XLog inputLog;
 	private XLog outputLog;
 	private BooleanProperty isValid;
+	private BooleanProperty isEditDisabled;
 	
 	/**
 	 * Constructor for importing/exporting. This constructor needs to exist because JAXB needs a no-argument constructor for unmarshalling.
@@ -37,6 +38,7 @@ public class FilterButtonModel {
 		name = new SimpleStringProperty(filterName);
 		selected = new SimpleBooleanProperty(false);
 		isValid = new SimpleBooleanProperty(true);
+		isEditDisabled = new SimpleBooleanProperty(true);
 	}	
 	
 	public FilterButtonModel(int index) {
@@ -44,6 +46,7 @@ public class FilterButtonModel {
 		name = new SimpleStringProperty(filterName);
 		selected = new SimpleBooleanProperty(false);
 		isValid = new SimpleBooleanProperty(true);
+		isEditDisabled = new SimpleBooleanProperty(true);
 		this.index = index;
 		this.outputLog = null;
 	}
@@ -61,6 +64,18 @@ public class FilterButtonModel {
 		this.name.set(value);
 	}
 	
+	public boolean isEditDisabled() {
+		return this.isEditDisabled.get();
+	}
+	
+	public void setIsEditDisabled(boolean isEditDisabled) {
+		this.isEditDisabled.set(isEditDisabled);
+	}
+	
+	public BooleanProperty isEditDisabledProperty() {
+		return this.isEditDisabled;
+	}
+	
 	public XLog getInputLog() {
 		return this.inputLog;
 	}
@@ -71,6 +86,10 @@ public class FilterButtonModel {
 	
 	public XLog getOutputLog() {
 		return this.outputLog;
+	}
+	
+	public void setOutputLog(XLog outputLog) {
+		this.outputLog = outputLog;
 	}
 	
 	public StringProperty nameProperty() {

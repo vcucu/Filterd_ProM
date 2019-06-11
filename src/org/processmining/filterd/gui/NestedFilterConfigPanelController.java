@@ -27,7 +27,7 @@ public class NestedFilterConfigPanelController extends AbstractFilterConfigPanel
         populateFromParameters(parameters);
 	}
 
-	protected VBox getNextContainer() {
+	public VBox getNextContainer() {
 		return panel;
 	}
 

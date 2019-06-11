@@ -65,7 +65,9 @@ public class Toolbox {
 		XLogInfo logInfo = XLogInfoImpl.create(log);
 		Collection<XEventClassifier> compatibleClassifiers = logInfo.getEventClassifiers();
 		for (XEventClassifier c : compatibleClassifiers) {
+			if (!classifiers.contains(c)) {
 				classifiers.add(c);
+			}
 		}
 
 		return classifiers;
@@ -451,35 +453,65 @@ public class Toolbox {
 	public static List<Integer> getMinAnMaxDuration(XLog log) {
 
 		int minDuration = Integer.MAX_VALUE;
-		int maxDuration = -Integer.MAX_VALUE;
+		int maxDuration = Integer.MIN_VALUE;
 
 		for (XTrace trace : log) {
 
 			// Use first and last event to calculate the total duration of
 			// the trace.
-			String firstEventTime = trace
-					.get(0)
-					.getAttributes()
-					.get("time:timestamp")
-					.toString();
-			String lastEventTime = trace
-					.get(trace.size() - 1)
-					.getAttributes()
-					.get("time:timestamp")
-					.toString();
-
-			LocalDateTime startTime = synchronizeGMT(firstEventTime);
-			LocalDateTime endTime = synchronizeGMT(lastEventTime);
-
-			Duration traceDuration = Duration.between(startTime, endTime);
-			int totalMillis = (int) traceDuration.toMillis();
-
-			if (totalMillis < minDuration) {
-				minDuration = totalMillis;
+			LocalDateTime firstEventTime;
+			LocalDateTime lastEventTime;
+			
+			int firstIndex = 0;
+			
+			while (!(trace.get(firstIndex).getAttributes().containsKey("time:timestamp")) && firstIndex < trace.size() - 2) {
+				firstIndex++;
 			}
+			
+			if (trace.get(firstIndex).getAttributes().containsKey("time:timestamp")) {
+				firstEventTime = synchronizeGMT(
+						trace
+						.get(firstIndex)
+						.getAttributes()
+						.get("time:timestamp")
+						.toString());
+			} else {
+				firstEventTime = LocalDateTime.MAX;
+			}
+			
+			int lastIndex = trace.size() - 1;
+			
+			while (!(trace.get(firstIndex).getAttributes().containsKey("time:timestamp")) && lastIndex > firstIndex + 1) {
+				lastIndex--;
+			}
+			
+			if (trace.get(lastIndex).getAttributes().containsKey("time:timestamp")) {
+				lastEventTime = synchronizeGMT(
+						trace
+						.get(firstIndex)
+						.getAttributes()
+						.get("time:timestamp")
+						.toString());
+			} else {
+				lastEventTime = LocalDateTime.MAX;
+			}
+			
+			if (firstEventTime != LocalDateTime.MAX && lastEventTime != LocalDateTime.MAX) {
 
-			if (totalMillis > maxDuration) {
-				maxDuration = totalMillis;
+				Duration traceDuration = Duration.between(firstEventTime, lastEventTime);
+				int totalMillis = (int) traceDuration.toMillis();
+	
+				if (totalMillis < minDuration) {
+					minDuration = totalMillis;
+				}
+	
+				if (totalMillis > maxDuration) {
+					maxDuration = totalMillis;
+				}
+			
+			} else {
+				minDuration = 0;
+				maxDuration = 0;
 			}
 
 		}
@@ -541,31 +573,58 @@ public class Toolbox {
 			// First and last event is the start and finish time of this trace.
 			// Use first and last event to calculate the total duration of
 			// the trace.
-			String firstEventTime = trace
-					.get(0)
-					.getAttributes()
-					.get("time:timestamp")
-					.toString();
-			String lastEventTime = trace
-					.get(trace.size() - 1)
-					.getAttributes()
-					.get("time:timestamp")
-					.toString();
-
-			// Get the values in LocalDateTime
-			LocalDateTime startTime = synchronizeGMT(firstEventTime);
-			LocalDateTime endTime = synchronizeGMT(lastEventTime);
-
-			// Do comparisons to get the earliest time a trace is started.
-			if (firstTimestamp.compareTo(startTime) > 0) {
-				firstTimestamp = startTime;
+			LocalDateTime firstEventTime;
+			LocalDateTime lastEventTime;
+			
+			int firstIndex = 0;
+			
+			while (!(trace.get(firstIndex).getAttributes().containsKey("time:timestamp")) && firstIndex < trace.size() - 2) {
+				firstIndex++;
 			}
-
-			// Do comparisons to get the latest time a trace is finished.
-			if (finalTimestamp.compareTo(endTime) < 0) {
-				finalTimestamp = endTime;
+			
+			if (trace.get(firstIndex).getAttributes().containsKey("time:timestamp")) {
+				firstEventTime = synchronizeGMT(
+						trace
+						.get(firstIndex)
+						.getAttributes()
+						.get("time:timestamp")
+						.toString());
+			} else {
+				firstEventTime = LocalDateTime.MAX;
 			}
+			
+			int lastIndex = trace.size() - 1;
+			
+			while (!(trace.get(firstIndex).getAttributes().containsKey("time:timestamp")) && lastIndex > firstIndex + 1) {
+				lastIndex--;
+			}
+			
+			if (trace.get(lastIndex).getAttributes().containsKey("time:timestamp")) {
+				lastEventTime = synchronizeGMT(
+						trace
+						.get(firstIndex)
+						.getAttributes()
+						.get("time:timestamp")
+						.toString());
+			} else {
+				lastEventTime = LocalDateTime.MAX;
+			}
+			
+			if (firstEventTime != LocalDateTime.MAX && lastEventTime != LocalDateTime.MAX) {
 
+				// Do comparisons to get the earliest time a trace is started.
+				if (firstTimestamp.compareTo(firstEventTime) > 0) {
+					firstTimestamp = firstEventTime;
+				}
+	
+				// Do comparisons to get the latest time a trace is finished.
+				if (finalTimestamp.compareTo(lastEventTime) < 0) {
+					finalTimestamp = lastEventTime;
+				}
+			
+			} else {
+				finalTimestamp = firstTimestamp;
+			}
 		}
 
 		firstAndLast[0] = firstTimestamp;

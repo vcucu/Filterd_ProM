@@ -146,11 +146,11 @@ public class FilterEventAttributeTest extends FilterdPackageTest {
 		values.setChosen(chosen);
 		parameters.add(values);
 		
-		ArrayList<Integer> options = new ArrayList<>();
-		options.add(1);
-		options.add(10);
+		ArrayList<Double> options = new ArrayList<>();
+		options.add(1.0);
+		options.add(10.0);
 		
-		ParameterRangeFromRange<Integer> range = new ParameterRangeFromRange<>("range",
+		ParameterRangeFromRange<Double> range = new ParameterRangeFromRange<>("range",
 				"", options, options);
 		range.setChosenPair(options);
 		parameters.add(range);
@@ -199,11 +199,11 @@ public class FilterEventAttributeTest extends FilterdPackageTest {
 		values.setChosen(chosen);
 		parameters.add(values);
 		
-		ArrayList<Integer> options = new ArrayList<>();
-		options.add(1);
-		options.add(10);
+		ArrayList<Double> options = new ArrayList<>();
+		options.add(1.0);
+		options.add(10.0);
 		
-		ParameterRangeFromRange<Integer> range = new ParameterRangeFromRange<>("range",
+		ParameterRangeFromRange<Double> range = new ParameterRangeFromRange<>("range",
 				"", options, options);
 		range.setChosenPair(options);
 		parameters.add(range);
@@ -246,11 +246,11 @@ public class FilterEventAttributeTest extends FilterdPackageTest {
 		values.setChosen(chosen);
 		parameters.add(values);
 		
-		ArrayList<Integer> options = new ArrayList<>();
-		options.add(1);
-		options.add(10);
+		ArrayList<Double> options = new ArrayList<>();
+		options.add(1.0);
+		options.add(10.0);
 		
-		ParameterRangeFromRange<Integer> range = new ParameterRangeFromRange<>("range",
+		ParameterRangeFromRange<Double> range = new ParameterRangeFromRange<>("range",
 				"", options, options);
 		range.setChosenPair(options);
 		parameters.add(range);

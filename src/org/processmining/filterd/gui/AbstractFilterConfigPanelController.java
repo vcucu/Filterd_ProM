@@ -24,7 +24,7 @@ public abstract class AbstractFilterConfigPanelController {
 	protected List<ParameterController> controllers;
 	protected VBox root; // top-level box which contains all components in this config. panel
 	
-	abstract protected VBox getNextContainer();
+	abstract public VBox getNextContainer();
 	
 	public void addParameterYesNo(ParameterYesNo parameter) {
 		ParameterController controller = new ParameterYesNoController(parameter.getNameDisplayed(), 
@@ -93,8 +93,10 @@ public abstract class AbstractFilterConfigPanelController {
 				ParameterOneFromSet casted = (ParameterOneFromSet) parameter;
 				addParameterOneFromSet(casted);
 			} else if(parameter instanceof ParameterMultipleFromSet) {
+				System.out.println("[!] Starting multiple from set");
 				ParameterMultipleFromSet casted = (ParameterMultipleFromSet) parameter;
 				addParameterMultipleFromSet(casted);
+				System.out.println("[!] End multiple from set");
 			} else if(parameter instanceof ParameterValueFromRange) {
 				ParameterValueFromRange<N1> casted = (ParameterValueFromRange<N1>) parameter;
 				addParameterValueFromRange(casted);

@@ -31,10 +31,13 @@ public class ParameterMultipleFromSetController extends ParameterController {
         list.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         ObservableList<String> observableList = FXCollections.observableList(options);
         list.setItems(observableList);
+        System.out.println(defaultValues.size());
         for(String option : defaultValues) {
         	list.getSelectionModel().select(option);
         }
-        list.scrollTo(defaultValues.get(0));
+        if(defaultValues.size() > 0) {
+        	list.scrollTo(defaultValues.get(0));        	
+        }
 	}
 
 	public List<String> getValue() {
@@ -54,6 +57,7 @@ public class ParameterMultipleFromSetController extends ParameterController {
         list.getSelectionModel().select(options.get(0));
         list.scrollTo(options.get(0));
 	}
+	
 	public List<String> getSelected(){
 		return (List<String>) list.getSelectionModel();
 	}

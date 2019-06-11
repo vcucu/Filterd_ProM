@@ -126,7 +126,7 @@ public class FilterdTraceAttrConfig extends FilterdAbstractConfig {
 		if (parameters == null || candidateLog.equals(log))
 			return true;
 		Set<String> cTraceAttributes = new HashSet<>();
-		for (XTrace trace : log) {
+		for (XTrace trace : candidateLog) {
 			cTraceAttributes.addAll(trace.getAttributes().keySet());
 		}
 		if (!cTraceAttributes.contains(((ParameterOneFromSet) parameters.get(0)).getChosen()))

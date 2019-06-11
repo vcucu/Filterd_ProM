@@ -36,10 +36,13 @@ public class FilterdTraceTimeframeConfig extends FilterdAbstractConfig {
 		firstAndlastTimestamp.add(Toolbox.getFirstAndLastTimes(log)[0]);
 		firstAndlastTimestamp.add(Toolbox.getFirstAndLastTimes(log)[1]);
 		
+		
 		times = new ArrayList<>();
 		defaultPair = new ArrayList<>();
 		optionsPair = new ArrayList<>();
 		parameters = new ArrayList<>();
+		
+		boolean added = false;
 		
 		/*populate the array times with the ordered date&time of all events */
 		for (XTrace trace: log) {
@@ -49,8 +52,14 @@ public class FilterdTraceTimeframeConfig extends FilterdAbstractConfig {
 				String value = event.getAttributes().get(key).toString();
 				LocalDateTime time = Toolbox.synchronizeGMT(value);
 				times.add(time.toString());
+				added = true;
 			}
 		}
+		
+		if (!added) {
+			times.add("0");
+		}
+		
 		Collections.sort(times);
 		defaultPair.add(0);
 		defaultPair.add(times.size()-1);
