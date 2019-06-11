@@ -6,7 +6,7 @@ public class InvalidConfigurationException extends RuntimeException {
 	
 	private final FilterButtonModel filterButtonModel;
 
-	InvalidConfigurationException(String message, FilterButtonModel filterButtonModel) {
+	public InvalidConfigurationException(String message, FilterButtonModel filterButtonModel) {
 		super(message);
 		this.filterButtonModel = filterButtonModel;
 	}

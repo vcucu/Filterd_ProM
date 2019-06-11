@@ -3,16 +3,23 @@ package org.processmining.tests.gui;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.bind.JAXBException;
+
 import org.junit.Test;
 import org.processmining.contexts.uitopia.UIPluginContext;
 import org.processmining.contexts.uitopia.hub.ProMResourceManager;
 import org.processmining.contexts.uitopia.hub.ProMViewManager;
+import org.processmining.filterd.configurations.FilterdAbstractConfig;
+import org.processmining.filterd.configurations.FilterdTraceSampleConfig;
+import org.processmining.filterd.filters.FilterdTraceSampleFilter;
 import org.processmining.filterd.gui.CellModel;
 import org.processmining.filterd.gui.ComputationCellModel;
 import org.processmining.filterd.gui.ComputationMode;
+import org.processmining.filterd.gui.FilterButtonModel;
 import org.processmining.filterd.gui.NotebookModel;
 import org.processmining.filterd.gui.TextCellModel;
 import org.processmining.filterd.models.YLog;
+import org.processmining.filterd.parameters.ParameterValueFromRange;
 import org.processmining.framework.plugin.ProMCanceller;
 import org.processmining.tests.filters.FilterdPackageTest;
 
@@ -183,6 +190,36 @@ public class NotebookModelTest extends FilterdPackageTest {
 		List<YLog> logs = model.getOutputLogsTill(0);
 		// Check the logs list that is returned (should only be the initial log)
 		assertEquals(logs.size(), 1);
+		
+		// Call the getOutputLogsTill with -1 index
+		logs = model.getOutputLogsTill(-1);
+		// Check the logs list that is returned (should only be the initial log)
+		assertEquals(logs.size(), 1);
+	}
+	
+	@Test
+	public void testNotebookGetOutputLogsTillMultiple() {
+		// Create new YLog with initial input log
+		YLog logY = new YLog(0, "Original Log", originalLog);
+		
+		// Create new notebook model instance
+		NotebookModel model = new NotebookModel();
+		model.setInitialInput(logY);
+		
+		// Create new computation cell model instance
+		ComputationCellModel cell = new ComputationCellModel(null, 0, null, new ArrayList<>());
+		// Set the initial log for the computation cell
+		cell.setInputLog(logY);
+		
+		// Add some computation cells to the model
+		model.addCell(cell);
+		model.addCell(cell);
+		model.addCell(cell);
+		
+		// Get the output logs until the first cell
+		List<YLog> logs = model.getOutputLogsTill(3);
+		// Check the logs list that is returned (should only be the initial log)
+		assertEquals(logs.size(), 4);
 	}
 	
 	@Test
@@ -215,76 +252,79 @@ public class NotebookModelTest extends FilterdPackageTest {
 		assertFalse(computingProperty.get());
 	}
 	
-	// TODO: This test keeps failing because the JUnit thread terminates before the computation thread is done
-//	@Test
-//	public void testNotebookComputeOneCell() {
-//		// Create new notebook model instance
-//		NotebookModel model = new NotebookModel();
-//		// Create new YLog
-//		YLog initialLog = new YLog(0, "Original Log", originalLog);
-//		// Set the initial input log for the notebook
-//		model.setInitialInput(initialLog);
-//		// Create new computation cell model instance
-//		ComputationCellModel cellModel0 = new ComputationCellModel(null, 0, null, new ArrayList<>());
-//		// Set the initial log for the computation cell
-//		cellModel0.setInputLog(model.getInitialInput());
-//		// Add cell model to the notebook model
-//		model.addCell(cellModel0);
-//		// Create new filter button models
-//		FilterButtonModel filterModel0 = new FilterButtonModel(0);
-//		// Add filter buttons to the computation cell filter list
-//		cellModel0.addFilterModel(0, filterModel0);
-//		// Add filter configurations to the filter buttons
-//		FilterdAbstractConfig filterConfig0 = new FilterdTraceSampleConfig(cellModel0.getInputLog().get(),
-//				new FilterdTraceSampleFilter());
-//		// Set the filter configuration parameters
-//		((ParameterValueFromRange<Integer>) filterConfig0.getParameters().get(0)).setChosen(2);
-//		// Set filter configurations for the filter buttons
-//		filterModel0.setFilterConfig(filterConfig0);
-//		// Compute the cell's output
-//		model.compute();
-//		// Check that the computation was successful
-//		assertEquals(2, cellModel0.getOutputLogs().get(0).get().size());
-//	}
+	@Test
+	public void testNotebookComputeOneCell() {
+		// Create new YLog with initial input log
+		YLog logY = new YLog(0, "Original Log", originalLog);
+		
+		// Create new notebook model instance
+		NotebookModel model = new NotebookModel();
+		
+		// Create new computation cell model instance
+		ComputationCellModel compCell = new ComputationCellModel(null, 0, null, new ArrayList<>());
+		// Set the initial log for the computation cell
+		compCell.setInputLog(logY);
+		
+		// Create new filter button model
+		FilterButtonModel filterButton = new FilterButtonModel(0);
+		// Set the initial log for the filter button model
+		filterButton.setInputLog(logY.get());
+		// Create new configurations for the filter button
+		FilterdAbstractConfig config = new FilterdTraceSampleConfig(logY.get(),
+				new FilterdTraceSampleFilter());
+		// Set the filter configuration parameters
+		((ParameterValueFromRange<Integer>) config.getParameters().get(0)).setChosen(2);
+		// Set the filter configuration for the filter button
+		filterButton.setFilterConfig(config);
+		
+		// Add filter buttons to the computation cell filter list
+		compCell.addFilterModel(0, filterButton);
+		// Add computation cell to the notebook model
+		model.addCell(compCell);
+		
+		// Compute the cell's output
+		Thread computation = new Thread(new Runnable()
+		{
+		   public void run() {
+			   model.compute();
+		   }
+		});
+
+		computation.start();
+		
+		try {
+			computation.join();
+			// Check that the computation was successful
+			assertEquals(compCell.getOutputLogs().get(0).get().size(), 9);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	
-	// TODO: This test keeps failing because the JUnit thread terminates before the computation thread is done
-//	@Test
-//	public void testNotebookComputeTwoCells() {
-//		// Create new notebook model instance
-//		NotebookModel model = new NotebookModel();
-//		// Create new YLog
-//		YLog initialLog = new YLog(0, "Initial Log", originalLog);
-//		// Set the initial input log for the notebook
-//		model.setInitialInput(initialLog);
-//		// Create new computation cell model instance
-//		ComputationCellModel cellModel0 = new ComputationCellModel(null, 0, null, new ArrayList<>());
-//		ComputationCellModel cellModel1 = new ComputationCellModel(null, 0, null, new ArrayList<>());
-//		// Set the initial log for the computation cell
-//		cellModel0.setInputLog(model.getInitialInput());
-//		cellModel1.setInputLog(cellModel0.getOutputLogs().get(0));
-//		// Add cell model to the notebook model
-//		model.addCell(cellModel0);
-//		model.addCell(cellModel1);
-//		// Create new filter button models
-//		FilterButtonModel filterModel0 = new FilterButtonModel(0);
-//		FilterButtonModel filterModel1 = new FilterButtonModel(0);
-//		// Add filter buttons to the computation cell filter list
-//		cellModel0.addFilterModel(0, filterModel0);
-//		cellModel1.addFilterModel(0, filterModel1);
-//		// Add filter configurations to the filter buttons
-//		FilterdAbstractConfig filterConfig0 = new FilterdTraceSampleConfig(cellModel0.getInputLog().get(),
-//				new FilterdTraceSampleFilter());
-//		FilterdAbstractConfig filterConfig1 = new FilterdTraceSampleConfig(cellModel1.getInputLog().get(),
-//				new FilterdTraceSampleFilter());
-//		// Set the filter configuration parameters
-//		((ParameterValueFromRange<Integer>) filterConfig0.getParameters().get(0)).setChosen(2);
-//		((ParameterValueFromRange<Integer>) filterConfig1.getParameters().get(0)).setChosen(1);
-//		// Set filter configurations for the filter buttons
-//		filterModel0.setFilterConfig(filterConfig0);
-//		filterModel1.setFilterConfig(filterConfig1);
-//		// Compute the cell's output
-//		model.compute();
-//		// Check that the computation was successful
-//		assertEquals(1, cellModel1.getOutputLogs().get(0).get().size());
-//	}
+	@Test
+	public void testGetXML() {
+		// Create new notebook model instance
+		NotebookModel model = new NotebookModel();
+		// Get the XML of the notebook model
+		try {
+			String notebookModel = model.getXML();
+			assertTrue(notebookModel.length() != 0);
+		} catch (JAXBException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void testNotebookModelClone() {
+		// Create new notebook model instance
+		NotebookModel model = new NotebookModel();
+		try {
+			// Get a clone of the notebook model
+			NotebookModel clone = model.clone();	
+		} catch (Throwable exception) {
+			assertFalse(exception.equals(null));
+		}
+	}
 }

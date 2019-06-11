@@ -73,6 +73,10 @@
                                  </graphic>
                               </Label>
                            </children>
+                           <stylesheets>
+                              <URL value="@../css/ComputationCell.css" />
+                              <URL value="@../css/Cell.css" />
+                           </stylesheets>
                         </HBox>
                         <MenuButton fx:id="menuBtnCellSettings" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="12.0" prefWidth="4.0" stylesheets="@../css/Icons.css">
                           <items>

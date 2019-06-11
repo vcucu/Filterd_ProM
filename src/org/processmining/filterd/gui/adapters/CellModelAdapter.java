@@ -11,10 +11,9 @@ public class CellModelAdapter extends AbstractJAXBAdapter<CellModelAdapted, Cell
 		if (adaptedModel.getClass() == ComputationCellModelAdapted.class) {
 			//TODO: setcanceller
 			model = new ComputationCellModel(staticPromContext, adaptedModel.getIndex(), null, null);
-			((ComputationCellModel) model).addFilterModels(((ComputationCellModelAdapted) adaptedModel).getFilters());
+			//((ComputationCellModel) model).addFilterModels(((ComputationCellModelAdapted) adaptedModel).getFilters()); Uncomment once implemented
 		} else {
 			model = new TextCellModel(staticPromContext, adaptedModel.getIndex());
-			//TODO: test if the binding in the controller clears the comment
 			((TextCellModel) model).setComment(((TextCellModelAdapted) adaptedModel).getComment());
 		}
 		

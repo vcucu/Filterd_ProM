@@ -11,6 +11,7 @@ import org.processmining.contexts.uitopia.UIPluginContext;
 import org.processmining.contexts.uitopia.annotations.Visualizer;
 import org.processmining.filterd.gui.NotebookController;
 import org.processmining.filterd.gui.NotebookModel;
+import org.processmining.filterd.gui.adapters.NotebookModelAdapted;
 import org.processmining.framework.plugin.ProMCanceller;
 import org.processmining.framework.plugin.annotations.Plugin;
 import org.processmining.framework.plugin.annotations.PluginLevel;
@@ -52,17 +53,30 @@ public class FilterdVisualizer {
 	
 	
 	// Used for import/export
-	@Plugin(name = NAME, level = PluginLevel.PeerReviewed, parameterLabels = { "Notebook model", "Canceller" },
+	@Plugin(name = NAME, level = PluginLevel.PeerReviewed, parameterLabels = { "NotebookModelAdapted", "Canceller" },
 			returnTypes = JComponent.class, returnLabels = "Filterd Notebook Visualizer", userAccessible = true,
 			mostSignificantResult = 1, help = HELP)
 	@Visualizer(name = "Filterd Visualizer", pack = "Filterd")
-	public JComponent visualize(final UIPluginContext context, final NotebookModel model, final ProMCanceller canceller) {
+	public JComponent visualize(final UIPluginContext context, final NotebookModelAdapted adaptedModel, final ProMCanceller canceller) {
 
+		// initialize an empty notebook model and its contrller
+		model = new NotebookModel(context, adaptedModel.getInitialInput(), canceller);
 		controller = new NotebookController(model);
 		
 		// Initialize GUI components
 		notebookPanel = new JFXPanel();
 		initGUI(notebookPanel);
+		
+		// Set imported state to the empty notebook
+		Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                // This method is invoked on JavaFX thread
+				controller.setComputationMode(adaptedModel.getComputationMode());
+				controller.loadCells(adaptedModel.getCells());
+                
+            }
+        });
 		
 		return notebookPanel;
 	}
@@ -85,7 +99,6 @@ public class FilterdVisualizer {
 		            
 		            fxPanel.setScene(scene);
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
                 

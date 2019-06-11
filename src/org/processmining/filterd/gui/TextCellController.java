@@ -17,10 +17,11 @@ public class TextCellController extends CellController {
 
 	public void initialize() {
 		cellModel.getProperty().addPropertyChangeListener(new CellModelListeners(this));
+		this.cellName.setText(this.cellModel.getCellName()); // Sets the cell name in the UI to be equivalent to the model
+		this.commentField.setText(this.getCellModel().getComment()); // Sets the comment in the UI to be equivalent to the model.
 		getCellModel().bindCellName(cellName.textProperty()); // bind the cell name to the cell name variable.
 		getCellModel().bindComment(commentField.textProperty()); // bind the text in the UI to its variable counterpart.
 		// binding for cell name 
-		this.cellName.setText(this.cellModel.getCellName());
 		this.cellModel.cellNameProperty().addListener(new ChangeListener<String>() {
 
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
@@ -29,8 +30,6 @@ public class TextCellController extends CellController {
 				}
 			}
 		});
-		
-		SwingWrap.workaround(menuBtnCellSettings);
 	}
 	
 	public void changeComment(String comment) {

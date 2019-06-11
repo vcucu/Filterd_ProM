@@ -88,6 +88,10 @@ public class FilterButtonModel {
 		return this.outputLog;
 	}
 	
+	public void setOutputLog(XLog outputLog) {
+		this.outputLog = outputLog;
+	}
+	
 	public StringProperty nameProperty() {
 		return name;
 	}

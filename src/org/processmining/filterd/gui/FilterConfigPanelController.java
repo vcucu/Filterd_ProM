@@ -70,7 +70,7 @@ public class FilterConfigPanelController extends AbstractFilterConfigPanelContro
 	}
 	
 	@Override
-	protected VBox getNextContainer() {
+	public VBox getNextContainer() {
 		VBox container;
 		// pick whether to place in left or right side of the panel
 		if(placeInLeftPane) {
@@ -82,6 +82,22 @@ public class FilterConfigPanelController extends AbstractFilterConfigPanelContro
 		return container;
 	}
 	
+	public VBox getLeftPanel() {
+		return leftPanel;
+	}
+	
+	public VBox getRightPanel() {
+		return rightPanel;
+	}
+	
+	public boolean isPlaceInLeftPane() {
+		return placeInLeftPane;
+	}
+
+	public void setPlaceInLeftPane(boolean placeInLeftPane) {
+		this.placeInLeftPane = placeInLeftPane;
+	}
+
 	public List<ParameterController> getControllers() {
 		return controllers;
 	}
