@@ -5,8 +5,10 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import org.deckfour.xes.model.XLog;
 import org.processmining.filterd.gui.CellModel;
 import org.processmining.filterd.gui.ComputationMode;
 
@@ -22,6 +24,7 @@ public class NotebookModelAdapted {
 
 	private List<CellModel> cells; // the list of all cells currently in the notebook.
 	private ComputationMode computationMode;
+	private XLog initialInput; // the initial input, set while importing and is never exported.
 
 	public NotebookModelAdapted() {
 		
@@ -44,6 +47,15 @@ public class NotebookModelAdapted {
 	
 	public void setComputationMode(ComputationMode computationMode) {
 		this.computationMode = computationMode;
+	}
+	
+	@XmlTransient // To make sure this does not get imported or exported
+	public XLog getInitialInput() {
+		return initialInput;
+	}
+	
+	public void setInitialInput(XLog log) {
+		this.initialInput = log;
 	}
 
 }

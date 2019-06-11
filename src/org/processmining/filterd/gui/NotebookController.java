@@ -2,6 +2,7 @@ package org.processmining.filterd.gui;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.List;
 import java.util.Optional;
 
 import javax.xml.bind.JAXBContext;
@@ -275,6 +276,7 @@ public class NotebookController {
 	/**
 	 * Given a cell model, this method creates a corresponding controller and
 	 * adds it the notebook UI.
+	 * @param cell The cell to load into the notebook.
 	 */
 	private void loadCell(CellModel cell) {
 		FXMLLoader loader = new FXMLLoader();
@@ -296,6 +298,26 @@ public class NotebookController {
 			newController.setCellLayout(newCellLayout);
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Loads a list of cells into the notebook. Ignores null or an empty list.
+	 * @param cells The list of cells to load into the notebook.
+	 */
+	public void loadCells(List<CellModel> cells) {
+		if (cells != null && !cells.isEmpty()) {
+			for (CellModel cell : cells) {
+				// TODO: make sure we iterate through the cells in order of their index.
+				cell.setContext(model.getPromContext()); // set the context for the cell.
+				if (cell.getClass() == ComputationCellModel.class) {
+					((ComputationCellModel) cell).setCanceller(model.getPromCanceller()); // set the canceller for this cell.
+					((ComputationCellModel) cell).setInputLogs(model.getOutputLogsTill(cell.getIndex())); // set the available input logs for this cell.
+					// TODO: set the correct input log for the cell. In order to do this cell need to start keeping track of the index of the cell whoses output event log they are using.
+				}
+				model.addCell(cell); // add the cell to the list of cells in the NotebookModel.
+				loadCell(cell); // Load the UI elements of the Cell.
+			}
 		}
 	}
 

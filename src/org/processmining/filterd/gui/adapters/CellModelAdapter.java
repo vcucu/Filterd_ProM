@@ -1,19 +1,21 @@
 package org.processmining.filterd.gui.adapters;
 
+import javax.xml.bind.annotation.adapters.XmlAdapter;
+
 import org.processmining.filterd.gui.CellModel;
 import org.processmining.filterd.gui.ComputationCellModel;
 import org.processmining.filterd.gui.TextCellModel;
 
-public class CellModelAdapter extends AbstractJAXBAdapter<CellModelAdapted, CellModel> {
+public class CellModelAdapter extends XmlAdapter<CellModelAdapted, CellModel> {
 
 	public CellModel unmarshal(CellModelAdapted adaptedModel){
 		CellModel model;
 		if (adaptedModel.getClass() == ComputationCellModelAdapted.class) {
 			//TODO: setcanceller
-			model = new ComputationCellModel(staticPromContext, adaptedModel.getIndex(), null, null);
+			model = new ComputationCellModel(null, adaptedModel.getIndex(), null, null);
 			//((ComputationCellModel) model).addFilterModels(((ComputationCellModelAdapted) adaptedModel).getFilters()); Uncomment once implemented
 		} else {
-			model = new TextCellModel(staticPromContext, adaptedModel.getIndex());
+			model = new TextCellModel(null, adaptedModel.getIndex());
 			((TextCellModel) model).setComment(((TextCellModelAdapted) adaptedModel).getComment());
 		}
 		
