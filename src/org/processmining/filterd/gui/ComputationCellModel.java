@@ -104,11 +104,13 @@ public class ComputationCellModel extends CellModel {
 	}
 	
 	/**
-	 * Adds all FilterButtonModels in a collection to this model.
+	 * Adds all FilterButtonModels in a collection to this model. Ignores models if it is null or empty.
 	 * @param models collection of FilterButtonModels.
 	 */
 	public void addFilterModels(List<FilterButtonModel> models) {
-		this.filters.addAll(models);
+		if (models != null && !models.isEmpty()) {
+			this.filters.addAll(models);
+		}
 	}
 	
 	public void removeFilter(FilterButtonModel filter) {
