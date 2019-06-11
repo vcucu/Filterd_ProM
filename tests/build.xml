@@ -127,11 +127,15 @@
 			<!-- CONFIG TESTS -->
 			<test name="org.processmining.tests.config.ConfigEventAttributeTest" todir="${test.basedir}" />
 			<test name="org.processmining.tests.config.ConfigEventRateTest" todir="${test.basedir}" />
+			<test name="org.processmining.tests.config.ConfigTraceAttrTest" todir="${test.basedir}" />
 			<test name="org.processmining.tests.config.ConfigTraceEndTest" todir="${test.basedir}" />
+			<test name="org.processmining.tests.config.ConfigTraceFollowerTest" todir="${test.basedir}" />
 			<test name="org.processmining.tests.config.ConfigTraceFrequencyTest" todir="${test.basedir}" />
 			<test name="org.processmining.tests.config.ConfigTracePerformanceTest" todir="${test.basedir}" />
 			<test name="org.processmining.tests.config.ConfigTraceSampleTest" todir="${test.basedir}" />
+			<test name="org.processmining.tests.config.ConfigTracesHavingEventTest" todir="${test.basedir}" />
 			<test name="org.processmining.tests.config.ConfigTraceStartTest" todir="${test.basedir}" />
+			<test name="org.processmining.tests.config.ConfigTraceTrimTest" todir="${test.basedir}" />
 			<!-- FILTERS TESTS -->
 			<test name="org.processmining.tests.filters.FilterEndEventsTest" todir="${test.basedir}" />
 			<test name="org.processmining.tests.filters.FilterEventAttributeTest" todir="${test.basedir}" />
@@ -152,6 +156,8 @@
 			<test name="org.processmining.tests.gui.ComputationCellModelTest" todir="${test.basedir}" />
 			<test name="org.processmining.tests.gui.FilterButtonControllerTest" todir="${test.basedir}" />
 			<test name="org.processmining.tests.gui.FilterButtonModelTest" todir="${test.basedir}" />
+			<test name="org.processmining.tests.gui.FilterConfigPanelControllerTest" todir="${test.basedir}" />
+			<test name="org.processmining.tests.gui.NestedFilterConfigPanelControllerTest" todir="${test.basedir}" />
 			<test name="org.processmining.tests.gui.NotebookControllerTest" todir="${test.basedir}" />
 			<test name="org.processmining.tests.gui.NotebookModelTest" todir="${test.basedir}" />
 			<test name="org.processmining.tests.gui.TextCellControllerTest" todir="${test.basedir}" />
