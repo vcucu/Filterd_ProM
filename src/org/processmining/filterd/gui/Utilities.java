@@ -6,6 +6,9 @@ import org.deckfour.uitopia.api.model.ResourceType;
 import org.deckfour.uitopia.api.model.View;
 import org.deckfour.uitopia.api.model.ViewType;
 
+import javafx.scene.Node;
+import javafx.scene.layout.AnchorPane;
+
 public class Utilities {
 	
 	/**	Dummy view type for not showing any visualizer in the dropdown  */
@@ -42,5 +45,16 @@ public class Utilities {
 		}
 		
 	};
+	
+	
+	/**
+	 * Sets the anchors for each side of a node to some value.
+	 */
+	public static void setAnchors(Node node, double value) {
+		AnchorPane.setTopAnchor(node, value);
+		AnchorPane.setBottomAnchor(node, value);
+		AnchorPane.setLeftAnchor(node, value);
+		AnchorPane.setRightAnchor(node, value);
+	}
 	
 }

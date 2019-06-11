@@ -30,8 +30,6 @@ public class TextCellController extends CellController {
 				}
 			}
 		});
-		
-		SwingWrap.workaround(menuBtnCellSettings);
 	}
 	
 	public void changeComment(String comment) {

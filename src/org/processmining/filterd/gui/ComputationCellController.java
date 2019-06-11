@@ -1,12 +1,10 @@
 package org.processmining.filterd.gui;
 
-import java.awt.Dimension;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JComponent;
-import javax.swing.SwingUtilities;
 
 import org.deckfour.uitopia.api.model.ViewType;
 import org.deckfour.xes.model.XLog;
@@ -68,7 +66,7 @@ public class ComputationCellController extends CellController {
 	private VBox notebookLayout;
 	private HBox notebookToolbar;
 	private ScrollPane notebookScrollPane;
-	private SwingWrap visualizerSwgWrap;
+	private SwingBubble visualizerSwgWrap;
 	private ConfigurationModalController configurationModal;
 
 	@FXML
@@ -170,11 +168,7 @@ public class ComputationCellController extends CellController {
 		getCellModel().bindCellName(cellName.textProperty());
 
 		// Initialize the visualizer
-		visualizerSwgWrap = new SwingWrap(visualizerPane);
-		// Add listener for the ComboBoxes and the MenuButton (workaround JavaFX - SwingNode)
-		SwingWrap.workaround(cmbEventLog);
-		SwingWrap.workaround(cmbVisualizers);
-		SwingWrap.workaround(menuBtnCellSettings);
+		visualizerSwgWrap = new SwingBubble();
 		// bind cellBody width to cellContent width so the visualizations scale properly
 		cellBody.maxWidthProperty().bind(controller.getScene().widthProperty().subtract(64));
 	}
@@ -398,23 +392,10 @@ public class ComputationCellController extends CellController {
 			// Add visualizer if not present
 			visualizerPane.getChildren().add(visualizerSwgWrap);
 		}
-		// We set the anchors for each side of the swingNode to 0 so it fits itself to the anchorPane and gets resized with the cell.
-		AnchorPane.setTopAnchor(visualizerSwgWrap, 0.0);
-		AnchorPane.setBottomAnchor(visualizerSwgWrap, 0.0);
-		AnchorPane.setLeftAnchor(visualizerSwgWrap, 0.0);
-		AnchorPane.setRightAnchor(visualizerSwgWrap, 0.0);
+		// Make the visualizer resize with the pane
+		Utilities.setAnchors(visualizerSwgWrap, 0.0);
 		// Load Visualizer
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				Dimension dimension = new Dimension();
-				dimension.setSize(Double.MAX_VALUE, Double.MAX_VALUE);
-				//visualizer.setPreferredSize(new Dimension((int)button.getPreferredSize().getWidth()+10, (int)button.getPreferredSize().getHeight()));
-				visualizer.setMaximumSize(dimension);
-				visualizer.setPreferredSize(dimension);
-				visualizerSwgWrap.setContent(visualizer);
-			}
-		});
+		visualizerSwgWrap.setContent(visualizer);
 	}
 
 	/**
@@ -430,13 +411,10 @@ public class ComputationCellController extends CellController {
 		if (this.isConfigurationModalShown) {
 			ConfigurationStep configurationStep = configurationModal.getConfigurationStep();
 			visualizerPane.getChildren().clear(); // remove configuration modal from the visualizer pane
-			visualizerPane.getChildren().add(visualizerSwgWrap); // add the visualizer to the vistualizer pane
+			visualizerPane.getChildren().add(visualizerSwgWrap); // add the visualizer to the visualizer pane
 			cmbVisualizers.setDisable(false); // enable visualizer combobox
-			// set properties w.r.t. parent node (AnchorPane)
-			AnchorPane.setTopAnchor(visualizerSwgWrap, 0.0);
-			AnchorPane.setBottomAnchor(visualizerSwgWrap, 0.0);
-			AnchorPane.setLeftAnchor(visualizerSwgWrap, 0.0);
-			AnchorPane.setRightAnchor(visualizerSwgWrap, 0.0);
+			// Make the visualizer resize with the pane
+			Utilities.setAnchors(visualizerSwgWrap, 0.0);
 			// if filter selection was cancelled, delete the added button
 			if (configurationStep == ConfigurationStep.ADD_FILTER && removeFilter) {
 				// remove FilterButton (its always the last in the list)
@@ -468,11 +446,8 @@ public class ComputationCellController extends CellController {
 		// get and set the root component of the configuration modal
 		VBox configurationModalRoot = configurationModal.getRoot();
 		visualizerPane.getChildren().add(configurationModalRoot);
-		// set properties w.r.t. parent node (AnchorPane)
-		AnchorPane.setTopAnchor(configurationModalRoot, 0.0);
-		AnchorPane.setBottomAnchor(configurationModalRoot, 0.0);
-		AnchorPane.setLeftAnchor(configurationModalRoot, 0.0);
-		AnchorPane.setRightAnchor(configurationModalRoot, 0.0);
+		// Make the configuration modal resize with the pane
+		Utilities.setAnchors(configurationModalRoot, 0.0);
 		this.isConfigurationModalShown = true;
 	}
 
@@ -596,10 +571,8 @@ public class ComputationCellController extends CellController {
 				});
 		VBox configurationModalRoot = configurationModal.getRoot();
 		visualizerPane.getChildren().add(configurationModalRoot);
-		AnchorPane.setTopAnchor(configurationModalRoot, 0.0);
-		AnchorPane.setBottomAnchor(configurationModalRoot, 0.0);
-		AnchorPane.setLeftAnchor(configurationModalRoot, 0.0);
-		AnchorPane.setRightAnchor(configurationModalRoot, 0.0);
+		// Make the configuration modal resize with the pane
+		Utilities.setAnchors(configurationModalRoot, 0.0);
 		this.isConfigurationModalShown = true;
 	}
 	
