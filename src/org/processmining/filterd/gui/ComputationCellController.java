@@ -69,36 +69,21 @@ public class ComputationCellController extends CellController {
 	private SwingBubble visualizerSwgWrap;
 	private ConfigurationModalController configurationModal;
 
-	@FXML
-	private VBox panelLayout;
-	@FXML
-	private AnchorPane visualizerPane;
-	@FXML
-	private ComboBox<YLog> cmbEventLog;
-	@FXML
-	private ComboBox<ViewType> cmbVisualizers;
-	@FXML
-	private Label expandButton;
-	@FXML
-	private ScrollPane filterPanelScroll;
-	@FXML
-	private VBox cell;
-	@FXML
-	private HBox cellBody;
-	@FXML
-	private Label fullScreenButton;
-	@FXML
-	private Label playButton;
-	@FXML
-	private Region computeButtonImage;
-	@FXML
-	private MenuButton menuBtnCellSettings;
-	@FXML
-	private Label prependCellButton;
-	@FXML
-	private HBox fullToolbar;
-	@FXML
-	private HBox cellToolbar;
+	@FXML private VBox panelLayout;
+	@FXML private AnchorPane visualizerPane;
+	@FXML private ComboBox<YLog> cmbEventLog;
+	@FXML private ComboBox<ViewType> cmbVisualizers;
+	@FXML private Label expandButton;
+	@FXML private ScrollPane filterPanelScroll;
+	@FXML private VBox cell;
+	@FXML private HBox cellBody;
+	@FXML private Label fullScreenButton;
+	@FXML private Label playButton;
+	@FXML private Region computeButtonImage;
+	@FXML private MenuButton menuBtnCellSettings;
+	@FXML private Label prependCellButton;
+	@FXML private HBox fullToolbar;
+	@FXML private HBox cellToolbar;
 	
 	public ComputationCellController(ComputationCellModel model) {
 		super(null, model);
