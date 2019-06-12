@@ -3,6 +3,11 @@
 	-fx-scale-y: 0.5;
 }
 
+.round-combobox {
+	-fx-background-radius: 15;
+	-fx-background-color: linear-gradient(#ABABAB, #A9A9A9, #8B8B8B, #898989);
+}
+
 .round-button {
 	-fx-background-radius: 100;
 	-fx-background-color:  #787878;

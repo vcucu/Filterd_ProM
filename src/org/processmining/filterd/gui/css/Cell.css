@@ -11,7 +11,7 @@
 	-fx-opacity: 100%;
 }
 
-.prepend-cell-button {
+.cell-layout .round-button.prepend-cell-button {
 	-fx-pref-width: 16;
 	-fx-pref-height: 16;
 }

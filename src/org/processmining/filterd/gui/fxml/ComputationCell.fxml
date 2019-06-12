@@ -34,7 +34,7 @@
                </styleClass>
                <stylesheets>
                   <URL value="@../css/Icons.css" />
-                  <URL value="@../css/Buttons.css" />
+                  <URL value="@../css/Controls.css" />
                </stylesheets>
             </Label>
          </children>
@@ -47,7 +47,7 @@
                   <HBox fx:id="cellToolbar" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="35.0" spacing="10.0" styleClass="cell-toolbar" VBox.vgrow="ALWAYS">
                      <children>
 
-                        <ComboBox fx:id="cmbEventLog" maxHeight="-Infinity" minHeight="-Infinity" onKeyReleased="#setXLog" onMouseClicked="#setXLog" prefHeight="24.0" prefWidth="150.0" styleClass="round-combobox" HBox.hgrow="ALWAYS" />
+                        <ComboBox fx:id="cmbEventLog" maxHeight="-Infinity" minHeight="-Infinity" onKeyReleased="#setXLog" onMouseClicked="#setXLog" prefHeight="24.0" prefWidth="150.0" styleClass="round-combobox" stylesheets="@../css/Controls.css" HBox.hgrow="ALWAYS" />
                         <Label fx:id="playButton" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#computeHandler" prefHeight="24.0" prefWidth="24.0" styleClass="round-button">                           <graphic>
                               <Region prefHeight="200.0" prefWidth="200.0">
                                  <styleClass>
@@ -58,19 +58,22 @@
                            </graphic>
                            <stylesheets>
                               <URL value="@../css/Icons.css" />
-                              <URL value="@../css/Buttons.css" />
+                              <URL value="@../css/Controls.css" />
                            </stylesheets>
                         </Label>
                         <Label fx:id="reloadVisualizerButton" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#reloadVisualizer" prefHeight="24.0" prefWidth="24.0" styleClass="round-button">
                            <graphic>
-                              <Region fx:id="reloadVisualizerButtonImage" prefHeight="200.0" prefWidth="200.0" stylesheets="@../css/Icons.css">
+                              <Region fx:id="reloadVisualizerButtonImage" prefHeight="200.0" prefWidth="200.0">
                                  <styleClass>
-                                    <String fx:value="play-solid" />
+                                    <String fx:value="sync-alt-solid" />
                                     <String fx:value="icon-svg" />
-                                    <String fx:value="sync-alt" />
                                  </styleClass>
                               </Region>
                            </graphic>
+                           <stylesheets>
+                              <URL value="@../css/Controls.css" />
+                              <URL value="@../css/Icons.css" />
+                           </stylesheets>
                         </Label>
                         <Region maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
                         <TextField fx:id="cellName" alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" onKeyPressed="#handleCellName" prefHeight="25.0" styleClass="cell-name" text="Cell name">
@@ -80,7 +83,7 @@
                         <HBox fx:id="fullToolbar" spacing="10.0" HBox.hgrow="ALWAYS">
                            <children>
                               <Region maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
-                              <ComboBox fx:id="cmbVisualizers" maxHeight="-Infinity" minHeight="-Infinity" onAction="#loadVisualizer" prefHeight="24.0" prefWidth="150.0" styleClass="round-combobox" />
+                              <ComboBox fx:id="cmbVisualizers" maxHeight="-Infinity" minHeight="-Infinity" onAction="#loadVisualizer" prefHeight="24.0" prefWidth="150.0" styleClass="round-combobox" stylesheets="@../css/Controls.css" />
                               <Label fx:id="fullScreenButton" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#handleFullScreen" prefHeight="24.0" prefWidth="24.0" styleClass="icon-button">
                                  <graphic>
                                     <Region prefHeight="200.0" prefWidth="200.0">
@@ -92,7 +95,7 @@
                                  </graphic>
                                  <stylesheets>
                                     <URL value="@../css/Icons.css" />
-                                    <URL value="@../css/Buttons.css" />
+                                    <URL value="@../css/Controls.css" />
                                  </stylesheets>
                               </Label>
                            </children>
@@ -116,7 +119,7 @@
                            </styleClass>
                            <stylesheets>
                               <URL value="@../css/Icons.css" />
-                              <URL value="@../css/Buttons.css" />
+                              <URL value="@../css/Controls.css" />
                            </stylesheets>
                         </MenuButton>
                      </children>
@@ -165,7 +168,7 @@
                            </styleClass>
                            <stylesheets>
                               <URL value="@../css/Icons.css" />
-                              <URL value="@../css/Buttons.css" />
+                              <URL value="@../css/Controls.css" />
                            </stylesheets>
                         </Label>
                         <AnchorPane fx:id="visualizerPane" maxHeight="1.7976931348623157E308" minHeight="390.0" minWidth="600.0" HBox.hgrow="ALWAYS" />

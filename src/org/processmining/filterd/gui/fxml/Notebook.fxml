@@ -40,7 +40,7 @@
                </HBox.margin>
                <stylesheets>
                   <URL value="@../css/Icons.css" />
-                  <URL value="@../css/Buttons.css" />
+                  <URL value="@../css/Controls.css" />
                </stylesheets>
             </Label>
 				<Region maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
@@ -58,7 +58,7 @@
                </font>
                <stylesheets>
                   <URL value="@../css/Icons.css" />
-                  <URL value="@../css/Buttons.css" />
+                  <URL value="@../css/Controls.css" />
                </stylesheets>
                <styleClass>
                   <String fx:value="round-button" />
@@ -91,7 +91,7 @@
                      </graphic>
                      <stylesheets>
                         <URL value="@../css/Icons.css" />
-                        <URL value="@../css/Buttons.css" />
+                        <URL value="@../css/Controls.css" />
                      </stylesheets>
                      <styleClass>
                         <String fx:value="round-button" />

@@ -28,7 +28,7 @@
                </graphic>
                <stylesheets>
                   <URL value="@../css/Icons.css" />
-                  <URL value="@../css/Buttons.css" />
+                  <URL value="@../css/Controls.css" />
                </stylesheets>
             </Label>
             <Label fx:id="moveDownButton" contentDisplay="CENTER" layoutX="25.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#moveDownFilterHandler" prefHeight="25.0" prefWidth="25.0">
@@ -42,7 +42,7 @@
                </graphic>
                <stylesheets>
                   <URL value="@../css/Icons.css" />
-                  <URL value="@../css/Buttons.css" />
+                  <URL value="@../css/Controls.css" />
                </stylesheets>
             </Label>
             <Label fx:id="removeButton" contentDisplay="CENTER" layoutX="50.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#removeFilterHandler" prefHeight="25.0" prefWidth="25.0">
@@ -56,7 +56,7 @@
                </graphic>
                <stylesheets>
                   <URL value="@../css/Icons.css" />
-                  <URL value="@../css/Buttons.css" />
+                  <URL value="@../css/Controls.css" />
                </stylesheets>
             </Label>
          </children>
@@ -75,7 +75,7 @@
          </HBox.margin>
          <stylesheets>
             <URL value="@../css/Icons.css" />
-            <URL value="@../css/Buttons.css" />
+            <URL value="@../css/Controls.css" />
          </stylesheets>
       </Label>
    </children>
