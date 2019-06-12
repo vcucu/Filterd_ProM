@@ -207,4 +207,18 @@ public class ComputationCellControllerTest extends FilterdPackageTest {
 		// Check that the modal controller was properly returned
 		assertEquals(configModalController, null);
 	}
+	
+	@Test
+	public void testComputationCellEnableFilters() {
+		// Setup new computation cell controller
+		setupComputationCell();
+		// Create new filter button model
+		FilterButtonModel filter0 = new FilterButtonModel();
+		FilterButtonModel filter1 = new FilterButtonModel();
+		// Add filters to the computation cell model
+		model.addFilterModel(0, filter0);
+		model.addFilterModel(1, filter1);
+		controller.enableAllFilterButtonsBut(0);
+		assertTrue(true);
+	}
 }

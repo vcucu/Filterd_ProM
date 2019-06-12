@@ -48,6 +48,7 @@ import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.embed.swing.JFXPanel;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -91,11 +92,11 @@ public class ComputationCellController extends CellController {
 	@FXML private Label prependCellButton;
 	@FXML private HBox fullToolbar;
 	@FXML private HBox cellToolbar;
-	
+
 	public ComputationCellController(ComputationCellModel model) {
 		super(null, model);
 	}
-	
+
 	public ComputationCellController(NotebookController controller, ComputationCellModel model) {
 		super(controller, model);
 
@@ -140,9 +141,10 @@ public class ComputationCellController extends CellController {
 		// Load event logs in cmbEventLog and select "Initial input"
 		cmbEventLog.getItems().addAll(model.getInputLogs());
 		cmbEventLog.getSelectionModel().selectFirst();
+		System.out.println("!!!! WE ARE GONNA SET THE XLOG RN !!!!");
 		setXLog();
 		// Add listeners to the basic model components
-		cellModel.getProperty().addPropertyChangeListener(new CellModelListeners(this));
+		cellModel.getProperty().addPropertyChangeListener(new ComputationCellModelListeners(this));
 		// binding for cell name
 		this.cellName.setText(this.cellModel.getCellName());
 		this.cellModel.cellNameProperty().addListener(new ChangeListener<String>() {
@@ -162,6 +164,11 @@ public class ComputationCellController extends CellController {
 		visualizerSwgWrap = new SwingBubble();
 		// bind cellBody width to cellContent width so the visualizations scale properly
 		cellBody.maxWidthProperty().bind(controller.getScene().widthProperty().subtract(64));
+		if (!model.getFilters().isEmpty()) {
+			// if there already exist filters inside this cell generate their controllers.
+			generateFilterButtonControllers();
+			hideConfigurationModal(false); // hides the configuration modal that spawn upon creating a filter controller.
+		}
 	}
 
 	@FXML
@@ -198,6 +205,15 @@ public class ComputationCellController extends CellController {
 		newController.selectFilterButton();
 		// show the filter list to allow the user to pick which filter she wants to add
 		showModalFilterList(newController, model);
+	}
+
+	/**
+	 * This is to generate a controller for every filter model. Used when importing a notebook from the workspace.
+	 */
+	public void generateFilterButtonControllers() {
+		for (FilterButtonModel filter : getCellModel().getFilters()) {
+			loadFilter(filter.getIndex(), filter);
+		}
 	}
 
 	public void addFilterButtonListeners() {
@@ -246,6 +262,13 @@ public class ComputationCellController extends CellController {
 
 	public void setPanelLayout(VBox panelLayout) {
 		this.panelLayout = panelLayout;
+	}
+
+
+	public void changeInputLogsCombo(List <YLog> logs){
+		System.out.println("selected value BEFORE setting the items " + cmbEventLog.getValue().getName() + (cmbEventLog.getValue()==null));
+		cmbEventLog.setItems((ObservableList<YLog>) logs);
+		System.out.println("selected value AFTER setting the items " + cmbEventLog.getValue().getName() + (cmbEventLog.getValue()==null));
 	}
 
 	/**
@@ -310,31 +333,31 @@ public class ComputationCellController extends CellController {
 	 */
 	@FXML
 	public void handleFullScreen() {
-		if (!isFullScreen && !isConfigurationModalShown 
+		if (!isFullScreen && !isConfigurationModalShown
 				&& cmbVisualizers.getValue() != Utilities.dummyViewType) {
 			// Style toolbar for fullscreen mode
 			fullToolbar.getStyleClass().remove("bg-gray");
 			fullToolbar.getStyleClass().add("bg-black");
 			fullToolbar.setPadding(new Insets(5, 20, 5, 10));
-			
+
 			// Remove toolbar
 			cellToolbar.getChildren().remove(fullToolbar);
-			
+
 			// Initialize toolbar
 			JFXPanel toolbarPanel = new JFXPanel();
 			Scene scene = new Scene(fullToolbar);
 			scene.getStylesheets().add("org/processmining/filterd/gui/css/Notebook.css");
 			scene.setFill(Paint.valueOf("black"));
             toolbarPanel.setScene(scene);
-			
+
 			// Initialize panel
             fullScreenPanel = new JPanel(new BorderLayout());
 			fullScreenPanel.add(toolbarPanel, BorderLayout.PAGE_START);
 			fullScreenPanel.add(visualizerSwgWrap.getContent(), BorderLayout.CENTER);
-			
-			// Change plugin view to fullscreen panel			
+
+			// Change plugin view to fullscreen panel
 			FilterdVisualizer.changeView(fullScreenPanel);
-			
+
 			// TODO Change icon
 			isFullScreen = true;
 		} else if (isFullScreen) {
@@ -342,10 +365,10 @@ public class ComputationCellController extends CellController {
 			fullToolbar.getStyleClass().remove("bg-black");
 			fullToolbar.getStyleClass().add("bg-gray");
 			fullToolbar.setPadding(new Insets(0, 0, 0, 0));
-			
+
 			// Re-add toolbar
 			cellToolbar.getChildren().add(cellToolbar.getChildren().size() - 1, fullToolbar);
-			
+
 			// Revert view
 			FilterdVisualizer.revertView();
 			// TODO Change icon
@@ -365,6 +388,7 @@ public class ComputationCellController extends CellController {
 	// Set XLog
 	@FXML
 	public void setXLog() {
+		System.out.println("WE ARE SETTING THE XLOG");
 		ComputationCellModel model = this.getCellModel();
 		YLog eventLog = cmbEventLog.getValue();
 		model.setInputLog(eventLog);
@@ -391,7 +415,7 @@ public class ComputationCellController extends CellController {
 		Utilities.setAnchors(visualizerSwgWrap, 0.0);
 		// Load Visualizer
 		visualizerSwgWrap.setContent(visualizer);
-		
+
 		if (isFullScreen) {
 			try {
 				SwingUtilities.invokeAndWait(new Runnable() {
@@ -406,11 +430,11 @@ public class ComputationCellController extends CellController {
 			}
 		}
 	}
-	
+
 	/**
 	 * Method called when the configuration modal has to be hidden. It replaces
 	 * the configuration modal with the visualizer.
-	 * 
+	 *
 	 * @param removeFilter
 	 *            boolean stating whether the last filter button should be
 	 *            removed (when the user cancels the configuration)
@@ -438,7 +462,7 @@ public class ComputationCellController extends CellController {
 	/**
 	 * Method called when the filter configuration dialog should be shown in the
 	 * configuration modal.
-	 * 
+	 *
 	 * @param filterConfig
 	 *            Filter configuration whose configuration panel should be shown
 	 * @param filterConfigController
@@ -463,7 +487,7 @@ public class ComputationCellController extends CellController {
 	/**
 	 * Method called when the list of available filters should be shown in the
 	 * configuration modal.
-	 * 
+	 *
 	 * @param filterButtonController
 	 *            Filter button for which the user wants to pick the filter
 	 * @param filterButtonModel
@@ -491,7 +515,7 @@ public class ComputationCellController extends CellController {
 		filterOptions.add("Merge Subsequent Events");
 
 		// callback is called when the user chooses which filter she wants to use
-		// it should map the chosen string to a concrete class which is initialized 
+		// it should map the chosen string to a concrete class which is initialized
 		configurationModal.showFilterList(filterOptions, filterButtonController,
 				new Callback<String, FilterdAbstractConfig>() {
 
@@ -584,7 +608,7 @@ public class ComputationCellController extends CellController {
 		Utilities.setAnchors(configurationModalRoot, 0.0);
 		this.isConfigurationModalShown = true;
 	}
-	
+
 	public void enableAllFilterButtonsBut(int index) {
 		for(int i = 0; i < getCellModel().getFilters().size(); i++) {
 			if(i != index) {
@@ -614,4 +638,5 @@ public class ComputationCellController extends CellController {
 	public ConfigurationModalController getConfigurationModal() {
 		return this.configurationModal;
 	}
+
 }

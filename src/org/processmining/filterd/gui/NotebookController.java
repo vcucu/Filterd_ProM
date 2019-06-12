@@ -117,6 +117,7 @@ public class NotebookController {
 						public void run() {
 							computeButtonImage.getStyleClass().remove("play-solid");
 							computeButtonImage.getStyleClass().add("pause-solid");
+
 						}
 					});
 				} else {
@@ -125,9 +126,11 @@ public class NotebookController {
 						public void run() {
 							computeButtonImage.getStyleClass().remove("pause-solid");
 							computeButtonImage.getStyleClass().add("play-solid");
+
 						}
 					});
 				}
+
 			}
 		});
 
@@ -148,12 +151,24 @@ public class NotebookController {
 						for (CellModel removedCell : change.getRemoved()) {
 							System.out.printf("ID: %d ----------\n", removedCell.getIndex());
 							System.out.println("Removed: " + removedCell);
-							// Do something
+							// update downstream cells from removed cell 
+							if (removedCell instanceof ComputationCellModel) {//if computation cell being removed update input logs
+								System.out.println("We are removing a computation cell");
+								model.removeCellsInputLogs(removedCell.getIndex(), model.getCells().size() - 1,
+										((ComputationCellModel) removedCell));
+							}
 						}
 						for (CellModel addedCell : change.getAddedSubList()) {
 							System.out.printf("ID: %d ----------\n", addedCell.getIndex());
 							System.out.println("Added: " + addedCell);
-							// Do something
+							if (addedCell instanceof ComputationCellModel) {//if computation cell being removed update input logs
+								//if we are not appending the index of where the cell is added isn't equal to the size of the list
+								//update all input logs of downstream cells
+								//if (addedCell.getIndex() != model.getCells().size() - 1) {
+								System.out.println("We are adding a computation cell");
+								model.addCellsInputLogs(addedCell.getIndex(), model.getCells().size() - 1);
+								//}
+							}
 						}
 						// Update indices
 						for (int i = 0; i < model.getCells().size(); i++) {
@@ -163,6 +178,7 @@ public class NotebookController {
 				}
 			}
 		});
+
 	}
 
 	/**
@@ -187,7 +203,7 @@ public class NotebookController {
 	 * Handler for the compute button. (Re)computes the entire notebook.
 	 */
 	@FXML
-	private void computeButtonHandler() {
+	public void computeButtonHandler() {
 		// TODO: set compute button icon to play / pause w.r.t. this.isComputing
 		if (model.isComputing()) {
 			model.cancelCompute();
@@ -226,7 +242,7 @@ public class NotebookController {
 	 * button modal.
 	 */
 	@FXML
-	private void appendCellButtonHandler() {
+	public void appendCellButtonHandler() {
 		int index = model.getCells().size();
 		toggleAddCellModal(index);
 	}
@@ -249,13 +265,19 @@ public class NotebookController {
 	}
 
 	/**
-	 * Creates a new ComputationCell model and adds it to the observable list.
+	 * Creates a new ComputationCell model and adds it to the observable list at
+	 * index.
 	 */
 	public void addComputationCell(int index) {
 		ComputationCellModel cellModel = new ComputationCellModel(model.getPromContext(), index,
 				model.getPromCanceller(), model.getOutputLogsTill(index));
 		model.addCell(index, cellModel);
 		loadCell(cellModel);
+		//		//if we are not appending the index of where the cell is added isn't equal to the size of the list
+		//		//update all input logs of downstream cells
+		//		if(index != model.getCells().size()) {
+		//			model.removeCellsInputLogs(index);
+		//		}
 	}
 
 	/**
@@ -270,7 +292,9 @@ public class NotebookController {
 	/**
 	 * Given a cell model, this method creates a corresponding controller and
 	 * adds it the notebook UI.
-	 * @param cell The cell to load into the notebook.
+	 * 
+	 * @param cell
+	 *            The cell to load into the notebook.
 	 */
 	private void loadCell(CellModel cell) {
 		FXMLLoader loader = new FXMLLoader();
@@ -294,10 +318,12 @@ public class NotebookController {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Loads a list of cells into the notebook. Ignores null or an empty list.
-	 * @param cells The list of cells to load into the notebook.
+	 * 
+	 * @param cells
+	 *            The list of cells to load into the notebook.
 	 */
 	public void loadCells(List<CellModel> cells) {
 		if (cells != null && !cells.isEmpty()) {
@@ -324,6 +350,10 @@ public class NotebookController {
 	 */
 	public void removeCell(CellModel cell) {
 		int index = cell.getIndex();
+		//System.out.println("cell is computation cell "+ (cell instanceof ComputationCellModel));
+		//		if(cell instanceof ComputationCellModel) {//if computation cell being removed update input logs
+		//			model.updateCellsInput(index);
+		//		}
 		model.removeCell(cell); // Removes the cell from the model
 		cellsLayout.getChildren().remove(index); // Removes the layout
 	}

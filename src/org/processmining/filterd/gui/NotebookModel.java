@@ -293,6 +293,65 @@ public class NotebookModel {
 		//TODO: implement
 	}
 
+	/**
+	 * Updates input logs for all cells with endIndex >= index >= startIndex to
+	 * not contain logs specified in logs
+	 * 
+	 * @param startIndex
+	 *            position of the first cell to be updated in the cellLayout
+	 * @param endIndex
+	 *            position of the last cell to be updated in the cellLayout
+	 * @param logs
+	 *            the logs that need to be removed for all cells with index
+	 */
+	public void removeCellsInputLogs(int startIndex, int endIndex, ComputationCellModel removedCell) {
+		//Remove all input logs of the removed cell so that if re-added we add new elements from scratch
+		 List<YLog> logs = removedCell.getOutputLogs();
+		for (int i = startIndex; i <= endIndex; i++) {
+			CellModel gCell = getCells().get(i);
+			if (gCell instanceof ComputationCellModel) {
+				ComputationCellModel cell = (ComputationCellModel) gCell;
+				//creates new object so that event would be fired when calling the setInputLogs
+				List<YLog> result = new ArrayList<YLog>(cell.getInputLogs());
+				System.out.println("Removing log " +  logs.get(0).getName() + " from cell " + i );
+				result.removeAll(logs);
+				//cast the array list to an observable list and set it to be the new input logs of the cell
+				cell.setInputLogs(FXCollections.observableArrayList(result));
+			}
+		}
+	}
+
+	/**
+	 * Updates input logs for all cells with endIndex >= index > startIndex to
+	 * add output logs of the cell at startIndex
+	 * 
+	 * @param startIndex
+	 *            position of the first cell to be updated in the cellLayout
+	 * @param endIndex
+	 *            position of the last cell to be updated in the cellLayout
+	 */
+	public void addCellsInputLogs(int startIndex, int endIndex) {
+		ComputationCellModel changedCell = (ComputationCellModel) getCells().get(startIndex);
+		//make sure the added cell's input logs are up to date
+		//changedCell.getInputLogs().clear();
+		changedCell.setInputLogs(FXCollections.observableArrayList(getOutputLogsTill(startIndex)));
+		
+		List<YLog> logs = changedCell.getOutputLogs(); // get all logs outputed by cell at startIndex
+		//System.out.println("Removing cell with index: " + startIndex + " with output logs " + logs.get(0).getName());
+		for (int i = startIndex + 1; i <= endIndex; i++) {
+			CellModel gCell = getCells().get(i);
+			if (gCell instanceof ComputationCellModel) {
+				ComputationCellModel cell = (ComputationCellModel) gCell;
+				//creates new object so that event would be fired when calling the setInputLogs
+				List<YLog> result = new ArrayList<YLog>(cell.getInputLogs());
+				System.out.println("Adding log " +  logs.get(0).getName() + " from cell " + i );
+				result.addAll(logs);
+				//cast the array list to an observable list and set it to be the new input logs of the cell
+				cell.setInputLogs(FXCollections.observableArrayList(result));
+			}
+		}
+	}
+
 	public List<YLog> getOutputLogsTill(int index) {
 		List<YLog> logs = new ArrayList<>();
 		logs.add(initialInput);
@@ -302,8 +361,7 @@ public class NotebookModel {
 				if (getCells().get(i) instanceof ComputationCellModel) {
 					ComputationCellModel cell = (ComputationCellModel) gCell;
 					// add all output logs (except the initial input log since we don't want it to be duplicated)
-					logs.addAll(cell.getOutputLogs()
-							.stream() // parse as a stream
+					logs.addAll(cell.getOutputLogs().stream() // parse as a stream
 							.filter(l -> !l.getName().equals(initialInput.getName())) // filter all logs whose name is not the same as input log's
 							.collect(Collectors.toList())); // convert to a list
 				}
@@ -315,9 +373,10 @@ public class NotebookModel {
 	}
 
 	/**
-	 * Method that computes the whole notebook in a separate thread. 
-	 * Notebook is computed by computing each individual computation cell while respecting their order in the list.
-	 * Separate thread is used so that the UI thread is not blocked in long computation.
+	 * Method that computes the whole notebook in a separate thread. Notebook is
+	 * computed by computing each individual computation cell while respecting
+	 * their order in the list. Separate thread is used so that the UI thread is
+	 * not blocked in long computation.
 	 */
 	public void compute() {
 		// computation is executed in a task which is passed to a thread
@@ -327,9 +386,7 @@ public class NotebookModel {
 			protected Void call() throws Exception {
 				isComputing.set(true); // let the controller know that the computation is starting
 				// transform the cells list into a new computation cells list (ordering is preserved)
-				List<ComputationCellModel> computeList = cells
-						.stream()
-						.filter(c -> c instanceof ComputationCellModel) // use only computation cells
+				List<ComputationCellModel> computeList = cells.stream().filter(c -> c instanceof ComputationCellModel) // use only computation cells
 						.map(c -> (ComputationCellModel) c) // cast to computation cell model
 						.collect(Collectors.toList()); // transform steam to list
 				// compute cells in their order in the list
@@ -370,6 +427,10 @@ public class NotebookModel {
 	public boolean isComputing() {
 		return this.isComputing.get();
 	}
+	
+	public void setComputing(boolean value) {
+		this.isComputing.setValue(value);
+	}
 
 	public BooleanProperty isComputingProperty() {
 		return this.isComputing;
@@ -390,17 +451,18 @@ public class NotebookModel {
 	 * @Return The XML of the notebook.
 	 */
 	public String getXML() throws JAXBException {
-		JAXBContext jaxbContext = JAXBContext.newInstance(NotebookModelAdapted.class, TextCellModelAdapted.class, ComputationCellModelAdapted.class); // Create JAXB Context.
+		JAXBContext jaxbContext = JAXBContext.newInstance(NotebookModelAdapted.class, TextCellModelAdapted.class,
+				ComputationCellModelAdapted.class); // Create JAXB Context.
 		Marshaller jaxbMarshaller = jaxbContext.createMarshaller(); // Create Marshaller.
 		jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE); // Format XML (otherwise it wil be a single line without spaces)
-		
+
 		NotebookModelAdapted adaptedModel = new NotebookModelAdapted(); // Create adapted notebook.
 		adaptedModel.setCells(getCells());
 		adaptedModel.setComputationMode(getComputationMode());
-		
+
 		StringWriter sw = new StringWriter();
 		jaxbMarshaller.marshal(adaptedModel, sw); // write XML to stringwriter.
-		String xmlContent = sw.toString(); 
+		String xmlContent = sw.toString();
 		System.out.println(xmlContent); //print xml to console
 		return xmlContent;
 

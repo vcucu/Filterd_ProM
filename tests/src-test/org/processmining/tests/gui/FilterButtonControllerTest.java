@@ -111,4 +111,19 @@ public class FilterButtonControllerTest extends TestCase {
 			assertFalse(exception.equals(null));
 		}
 	}
+	
+	@Test
+	public void testFilterButtonRemove() {
+		// Setup new filter button
+		setupNewFilterButton();
+		try {
+			// Remove filter from the filters panel
+			controller.removeFilterHandler();
+			// Should throw an error since no view is present
+			fail("Error was NOT thrown!");
+		} catch (Throwable exception) {
+			assertFalse(exception.equals(null));
+		}
+		assertTrue(true);
+	}
 }

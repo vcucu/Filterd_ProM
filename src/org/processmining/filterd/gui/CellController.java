@@ -73,6 +73,7 @@ public abstract class CellController {
 		if (result.get() == buttonYes){
 		    //user chose Yes so remove cell
 			getNotebookController().removeCell(getCellModel());
+			
 		}
 		//user chose No or closed the dialog don't remove cell
 		
@@ -160,6 +161,8 @@ public abstract class CellController {
 		controller.getCellsLayout().getChildren().remove(cellLayout);
 		// Remove model
 		controller.getModel().getCells().remove(getCellModel());
+		// Set the index of the cell prior to being added
+		getCellModel().setIndex(index);
 		// Add model at new position
 		controller.getModel().getCells().add(index, getCellModel());
 		// Add layout at new position
@@ -167,8 +170,6 @@ public abstract class CellController {
 	}
 
 	public void show() {
-		//System.out.println("We are now updating ui!");
-		//System.out.println(cellBody.equals(null));
 		cellBody.setVisible(true); // makes the content of the HBox invisible.
 		cellBody.setManaged(true); // makes the HBox take up no space. This option is note available in the Scene Builder.		
 	}

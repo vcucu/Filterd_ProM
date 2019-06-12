@@ -11,9 +11,8 @@ public class CellModelAdapter extends XmlAdapter<CellModelAdapted, CellModel> {
 	public CellModel unmarshal(CellModelAdapted adaptedModel){
 		CellModel model;
 		if (adaptedModel.getClass() == ComputationCellModelAdapted.class) {
-			//TODO: setcanceller
 			model = new ComputationCellModel(null, adaptedModel.getIndex(), null, null);
-			//((ComputationCellModel) model).addFilterModels(((ComputationCellModelAdapted) adaptedModel).getFilters()); Uncomment once implemented
+			((ComputationCellModel) model).addFilterModels(((ComputationCellModelAdapted) adaptedModel).getFilters());
 		} else {
 			model = new TextCellModel(null, adaptedModel.getIndex());
 			((TextCellModel) model).setComment(((TextCellModelAdapted) adaptedModel).getComment());

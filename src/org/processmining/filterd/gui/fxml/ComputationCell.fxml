@@ -42,9 +42,9 @@
                <children>
                   <HBox fx:id="cellToolbar" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="35.0" spacing="10.0" styleClass="cell-toolbar" VBox.vgrow="ALWAYS">
                      <children>
-                        <ComboBox fx:id="cmbEventLog" maxHeight="-Infinity" minHeight="-Infinity" onAction="#setXLog" prefHeight="24.0" prefWidth="150.0" styleClass="round-combobox" HBox.hgrow="ALWAYS" />
-                        <Label fx:id="playButton" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#computeHandler" prefHeight="24.0" prefWidth="24.0" styleClass="round-button" stylesheets="@../css/Icons.css">
-                           <graphic>
+
+                        <ComboBox fx:id="cmbEventLog" maxHeight="-Infinity" minHeight="-Infinity" onKeyReleased="#setXLog" onMouseClicked="#setXLog" prefHeight="24.0" prefWidth="150.0" styleClass="round-combobox" HBox.hgrow="ALWAYS" />
+                        <Label fx:id="playButton" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="24.0" prefWidth="24.0" styleClass="round-button">                           <graphic>
                               <Region fx:id="computeButtonImage" prefHeight="200.0" prefWidth="200.0">
                                  <styleClass>
                                     <String fx:value="play-solid" />
