@@ -153,7 +153,6 @@ public class NotebookController {
 								//if we are not appending the index of where the cell is added isn't equal to the size of the list
 								//update all input logs of downstream cells
 								//if (addedCell.getIndex() != model.getCells().size() - 1) {
-								System.out.println("We are adding a computation cell");
 								model.addCellsInputLogs(addedCell.getIndex(), model.getCells().size() - 1);
 								//}
 							}
@@ -338,10 +337,6 @@ public class NotebookController {
 	 */
 	public void removeCell(CellModel cell) {
 		int index = cell.getIndex();
-		//System.out.println("cell is computation cell "+ (cell instanceof ComputationCellModel));
-		//		if(cell instanceof ComputationCellModel) {//if computation cell being removed update input logs
-		//			model.updateCellsInput(index);
-		//		}
 		model.removeCell(cell); // Removes the cell from the model
 		cellsLayout.getChildren().remove(index); // Removes the layout
 	}

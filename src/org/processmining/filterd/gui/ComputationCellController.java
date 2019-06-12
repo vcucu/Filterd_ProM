@@ -126,7 +126,6 @@ public class ComputationCellController extends CellController {
 		// Load event logs in cmbEventLog and select "Initial input"
 		cmbEventLog.getItems().addAll(model.getInputLogs());
 		cmbEventLog.getSelectionModel().selectFirst();
-		System.out.println("!!!! WE ARE GONNA SET THE XLOG RN !!!!");
 		setXLog();
 		// Add listeners to the basic model components
 		cellModel.getProperty().addPropertyChangeListener(new ComputationCellModelListeners(this));
@@ -168,7 +167,6 @@ public class ComputationCellController extends CellController {
 				getCellModel().getStatusBar() == CellStatus.IDLE) {
 				filterModel.setInputLog(getCellModel().getFilters().get(index - 1).getOutputLog());
 			} else {
-				System.out.println("New Filter");
 			}
 			getCellModel().addFilterModel(index, filterModel);
 			loadFilter(index, filterModel);
@@ -251,9 +249,7 @@ public class ComputationCellController extends CellController {
 
 
 	public void changeInputLogsCombo(List <YLog> logs){
-		System.out.println("selected value BEFORE setting the items " + cmbEventLog.getValue().getName() + (cmbEventLog.getValue()==null));
 		cmbEventLog.setItems((ObservableList<YLog>) logs);
-		System.out.println("selected value AFTER setting the items " + cmbEventLog.getValue().getName() + (cmbEventLog.getValue()==null));
 	}
 
 	/**
@@ -373,7 +369,6 @@ public class ComputationCellController extends CellController {
 	// Set XLog
 	@FXML
 	public void setXLog() {
-		System.out.println("WE ARE SETTING THE XLOG");
 		ComputationCellModel model = this.getCellModel();
 		YLog eventLog = cmbEventLog.getValue();
 		model.setInputLog(eventLog);
