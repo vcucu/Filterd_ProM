@@ -48,3 +48,28 @@
 .icon-button > .icon-svg {
 	-fx-background-color: white;
 }
+
+.toggle-buttons > .toggle-button1 {
+	-fx-background-radius: 15 0 0 15;
+}
+
+.toggle-buttons > .toggle-button2 {
+	-fx-background-radius: 0 15 15 0;
+}
+
+.toggle-buttons > * {
+	-fx-background-color: #939393;
+}
+
+.toggle-buttons > :disabled {
+	-fx-background-color: #8C8C14;
+	-fx-opacity: 1.0;
+}
+
+.notebook-layout .toggle-buttons > * {
+	-fx-pref-height: 30;
+}
+
+.toggle-buttons > :disabled {
+	-fx-text-fill: white;
+}
