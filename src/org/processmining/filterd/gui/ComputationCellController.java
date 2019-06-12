@@ -44,7 +44,6 @@ import org.processmining.filterd.models.YLog;
 import org.processmining.filterd.plugins.FilterdVisualizer;
 import org.processmining.filterd.tools.EmptyLogException;
 
-import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
@@ -87,7 +86,7 @@ public class ComputationCellController extends CellController {
 	@FXML private HBox cellBody;
 	@FXML private Label fullScreenButton;
 	@FXML private Label playButton;
-	@FXML private Region computeButtonImage;
+	@FXML private Label computeButton;
 	@FXML private MenuButton menuBtnCellSettings;
 	@FXML private Label prependCellButton;
 	@FXML private HBox fullToolbar;
@@ -107,27 +106,13 @@ public class ComputationCellController extends CellController {
 		isFullScreen = false;
 		notebookLayout = controller.getNotebookLayout();
 		notebookToolbar = controller.getToolbarLayout();
-		// change compute button text (play / pause symbols) when the computation stops / starts
-		this.getCellModel().isComputingProperty().addListener(new ChangeListener<Boolean>() {
-
-			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-				if (newValue) {
-					Platform.runLater(new Runnable() {
-						@Override
-						public void run() {
-							computeButtonImage.getStyleClass().remove("play-solid");
-							computeButtonImage.getStyleClass().add("pause-solid");
-						}
-					});
-				} else {
-					Platform.runLater(new Runnable() {
-						@Override
-						public void run() {
-							computeButtonImage.getStyleClass().remove("pause-solid");
-							computeButtonImage.getStyleClass().add("play-solid");
-						}
-					});
-				}
+		
+		// Change compute button icon (play / pause) when the computation stops / starts
+		this.getCellModel().isComputingProperty().addListener((observable, oldValue, newValue) -> {
+			if (newValue) {
+				Utilities.changeIcon(computeButton, "play-solid", "pause-solid");
+			} else {
+				Utilities.changeIcon(computeButton, "pause-solid", "play-solid");
 			}
 		});
 	}

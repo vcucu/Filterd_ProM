@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.lang.String?>
+<?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
@@ -9,8 +10,9 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<VBox fx:id="notebookLayout" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" stylesheets="@../css/Notebook.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+<VBox fx:id="notebookLayout" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="notebook-layout" stylesheets="@../css/Notebook.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
 	<children>
 		<HBox fx:id="toolbarLayout" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="51.0">
 			<children>
@@ -24,9 +26,9 @@
 						<Insets left="3.0" />
 					</HBox.margin>
 				</Button>
-            <Label fx:id="computeButton" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#computeButtonHandler" prefHeight="30.0" prefWidth="30.0" styleClass="round-button" stylesheets="@../css/Icons.css">
+            <Label fx:id="computeButton" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#computeButtonHandler" prefHeight="30.0" prefWidth="30.0" styleClass="round-button">
                <graphic>
-                  <Region fx:id="computeButtonImage" prefHeight="200.0" prefWidth="200.0">
+                  <Region prefHeight="200.0" prefWidth="200.0">
                      <styleClass>
                         <String fx:value="play-solid" />
                         <String fx:value="icon-svg" />
@@ -36,13 +38,36 @@
                <HBox.margin>
                   <Insets left="20.0" />
                </HBox.margin>
+               <stylesheets>
+                  <URL value="@../css/Icons.css" />
+                  <URL value="@../css/Buttons.css" />
+               </stylesheets>
             </Label>
 				<Region maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
-				<Button fx:id="exportButton" mnemonicParsing="false" onAction="#exportButtonHandler" text="▶ Export to workspace">
-					<HBox.margin>
-						<Insets right="10.0" />
-					</HBox.margin>
-				</Button>
+            <Label fx:id="exportButton" layoutX="171.0" layoutY="21.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#exportButtonHandler" prefHeight="30.0" text="Export to workspace" textFill="WHITE">
+               <graphic>
+                  <Region prefHeight="200.0" prefWidth="200.0">
+                     <styleClass>
+                        <String fx:value="play-solid" />
+                        <String fx:value="icon-svg" />
+                     </styleClass>
+                  </Region>
+               </graphic>
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+               <stylesheets>
+                  <URL value="@../css/Icons.css" />
+                  <URL value="@../css/Buttons.css" />
+               </stylesheets>
+               <styleClass>
+                  <String fx:value="round-button" />
+                  <String fx:value="labeled-round-button" />
+               </styleClass>
+               <HBox.margin>
+                  <Insets right="10.0" />
+               </HBox.margin>
+            </Label>
 			</children>
          <styleClass>
             <String fx:value="notebook-toolbar" />
@@ -55,13 +80,27 @@
 					<children>
 						<VBox fx:id="cellsLayout" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS" />
                   <HBox fx:id="addCellHBox" alignment="CENTER" managed="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" visible="false" VBox.vgrow="ALWAYS" />
-						<!-- managed="false" makes the element not take up space, this option 
-							cannot be set in the scene builder -->
-						<Button fx:id="appendCellButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#appendCellButtonHandler" text="+" VBox.vgrow="ALWAYS">
-							<VBox.margin>
-								<Insets bottom="20.0" top="30.0" />
-							</VBox.margin>
-						</Button>
+                  <Label fx:id="appendCellButton" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#appendCellButtonHandler" prefHeight="30.0" prefWidth="30.0">
+                     <graphic>
+                        <Region prefHeight="200.0" prefWidth="200.0">
+                           <styleClass>
+                              <String fx:value="plus-solid" />
+                              <String fx:value="icon-svg" />
+                           </styleClass>
+                        </Region>
+                     </graphic>
+                     <stylesheets>
+                        <URL value="@../css/Icons.css" />
+                        <URL value="@../css/Buttons.css" />
+                     </stylesheets>
+                     <styleClass>
+                        <String fx:value="round-button" />
+                        <String fx:value="append-cell-button" />
+                     </styleClass>
+                     <VBox.margin>
+                        <Insets bottom="20.0" top="30.0" />
+                     </VBox.margin>
+                  </Label>
 					</children>
 				</VBox>
 			</content>

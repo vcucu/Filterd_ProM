@@ -6,6 +6,6 @@ root {
 	-fx-background-color: #000000;
 }
 
-.notebook-toolbar {
-	
+.round-button.append-cell-button {
+	-fx-background-color: #C4C4C4;
 }

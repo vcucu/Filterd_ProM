@@ -1,0 +1,45 @@
+.icon-svg {
+	-fx-scale-x: 0.5;
+	-fx-scale-y: 0.5;
+}
+
+.round-button {
+	-fx-background-radius: 100;
+	-fx-background-color:  #787878;
+}
+
+.round-button > .icon-svg {
+	-fx-background-color: white;
+}
+
+.dropdown-button .arrow-button  {
+    -fx-opacity: 0.0;
+}
+
+.dropdown-button {
+	-fx-background-color: #FFFFFF;
+}
+
+.notebook-layout .round-button :not(.labeled-round-button) {
+	-fx-pref-width: 30;
+	-fx-pref-height: 30;
+}
+
+.notebook-layout .labeled-round-button {
+	-fx-pref-height: 30;
+	-fx-label-padding: 0 10 0 5;
+}
+
+.notebook-layout .labeled-round-button > * {
+	-fx-pref-width: 30;
+	-fx-pref-height: 30;
+}
+
+.cell-layout .round-button {
+	-fx-pref-width: 24;
+	-fx-pref-height: 24;
+}
+
+.icon-button > .icon-svg {
+	-fx-background-color: white;
+}

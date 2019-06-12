@@ -40,30 +40,18 @@ public class NotebookController {
 	 * variables containing the (important) UI elements so they can be
 	 * interacted with in the code.
 	 */
-	@FXML
-	private Button autoButton;
-	@FXML
-	private Button manualButton;
-	@FXML
-	private Label computeButton;
-	@FXML
-	private Region computeButtonImage;
-	@FXML
-	private Button exportButton;
-	@FXML
-	private VBox cellsLayout;
-	@FXML
-	private Button appendCellButton;
-	@FXML
-	private HBox addCellHBox;
-	@FXML
-	private Button addComputationCellButton;
-	@FXML
-	private Button addTextCellButton;
-	@FXML
-	private VBox notebookLayout;
-	@FXML
-	private HBox toolbarLayout;
+	@FXML private Button autoButton;
+	@FXML private Button manualButton;
+	@FXML private Label computeButton;
+	@FXML private Region computeButtonImage;
+	@FXML private Label exportButton;
+	@FXML private VBox cellsLayout;
+	@FXML private Label appendCellButton;
+	@FXML private HBox addCellHBox;
+	@FXML private Button addComputationCellButton;
+	@FXML private Button addTextCellButton;
+	@FXML private VBox notebookLayout;
+	@FXML private HBox toolbarLayout;
 
 
 	/**
