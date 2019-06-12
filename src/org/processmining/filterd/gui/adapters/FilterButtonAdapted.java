@@ -1,7 +1,8 @@
 package org.processmining.filterd.gui.adapters;
 
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.processmining.filterd.configurations.FilterdAbstractConfig;
 
@@ -28,7 +29,8 @@ public class FilterButtonAdapted {
 		this.name = name;
 	}
 	
-	@XmlTransient
+	@XmlElement(name = "filter") // to name individual cells 'cell' instead of 'cells'
+	@XmlJavaTypeAdapter(FilterdAbstractConfigAdapter.class)
 	public FilterdAbstractConfig getFilterConfig() {
 		return filterConfig;
 	}

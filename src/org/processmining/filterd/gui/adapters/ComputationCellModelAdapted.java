@@ -14,8 +14,8 @@ public class ComputationCellModelAdapted extends CellModelAdapted {
 	
 	private List<FilterButtonModel> filters;
 	
-	@XmlElementWrapper(name = "filterButtons") // to put the cells from the list in their own xml section.
-	@XmlElement(name = "filterButton") // to name individual cells 'cell' instead of 'cells'
+	@XmlElementWrapper(name = "filterButtons") // to put the buttons from the list in their own xml section.
+	@XmlElement(name = "filterButton") // to name individual buttons 'filterButton' instead of 'FilterButtons'
 	@XmlJavaTypeAdapter(FilterButtonAdapter.class) // tell JAXB to use the adapter.
 	public List<FilterButtonModel> getFilters() {
 		return filters;
