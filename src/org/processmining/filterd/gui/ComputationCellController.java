@@ -391,6 +391,9 @@ public class ComputationCellController extends CellController {
 			visualizerSwgWrap.setContent(null);
 			return;
 		}
+		visualizerPane.getChildren().clear();
+		visualizerSwgWrap.setContent(null);
+		
 		JComponent visualizer = getCellModel().getVisualization(cmbVisualizers.getValue());
 		if (!visualizerPane.getChildren().contains(visualizerSwgWrap)) {
 			// Add visualizer if not present
@@ -414,6 +417,11 @@ public class ComputationCellController extends CellController {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	@FXML
+	private void reloadVisualizer() {
+		this.loadVisualizer();
 	}
 
 	/**

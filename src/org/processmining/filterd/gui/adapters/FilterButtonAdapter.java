@@ -4,7 +4,7 @@ import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 import org.processmining.filterd.gui.FilterButtonModel;
 
-public class FilterButtonAdapter extends XmlAdapter<FilterButtonAdapted, FilterButtonModel>{
+public class FilterButtonAdapter extends XmlAdapter<FilterButtonAdapted, FilterButtonModel> {
 
 	public FilterButtonModel unmarshal(FilterButtonAdapted adaptedModel) throws Exception {
 		FilterButtonModel model = new FilterButtonModel(adaptedModel.getIndex());
