@@ -1,9 +1,19 @@
 package org.processmining.filterd.parameters;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
 public class ParameterYesNo extends Parameter {
 	
 	private boolean defaultChoice;
 	private boolean chosen;
+	
+	/**
+	 * This constructor exists for importing and exporting
+	 */
+	public ParameterYesNo() {
+		
+	}
 	
 	public ParameterYesNo(String name, String nameDisplayed, boolean defaultChoice) {
 		super(name, nameDisplayed);

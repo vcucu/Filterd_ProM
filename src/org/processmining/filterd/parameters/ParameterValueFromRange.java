@@ -2,11 +2,21 @@ package org.processmining.filterd.parameters;
 
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
 public class ParameterValueFromRange<T> extends Parameter {
 	private T defaultChoice;
 	private T chosen;
 	private List<T> optionsPair;
 	private Class<T> genericTypeClass;
+	
+	/**
+	 * This constructor exists for importing and exporting
+	 */
+	public ParameterValueFromRange() {
+		
+	}
 	
 	public ParameterValueFromRange(String name, String nameDisplayed, T defaultChoice, List<T> optionsPair) {
 		super(name, nameDisplayed);
