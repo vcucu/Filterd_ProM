@@ -18,6 +18,7 @@ import org.processmining.contexts.uitopia.hub.ProMViewManager;
 import org.processmining.filterd.gui.adapters.ComputationCellModelAdapted;
 import org.processmining.filterd.gui.adapters.FilterButtonAdapted;
 import org.processmining.filterd.gui.adapters.FilterdAbstractConfigAdapted;
+import org.processmining.filterd.gui.adapters.FilterdAbstractConfigReferencingAdapted;
 import org.processmining.filterd.gui.adapters.NotebookModelAdapted;
 import org.processmining.filterd.gui.adapters.NotebookModelAdapter;
 import org.processmining.filterd.gui.adapters.TextCellModelAdapted;
@@ -465,7 +466,7 @@ public class NotebookModel {
 				ComputationCellModelAdapted.class, FilterButtonAdapted.class, FilterdAbstractConfigAdapted.class,
 				Parameter.class, ParameterMultipleFromSet.class, ParameterOneFromSet.class,
 				ParameterRangeFromRange.class, ParameterText.class, ParameterValueFromRange.class,
-				ParameterYesNo.class); // Create JAXB Context.
+				ParameterYesNo.class, FilterdAbstractConfigReferencingAdapted.class); // Create JAXB Context.
 		Marshaller jaxbMarshaller = jaxbContext.createMarshaller(); // Create Marshaller.
 		jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE); // Format XML (otherwise it wil be a single line without spaces)
 

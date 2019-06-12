@@ -9,7 +9,7 @@ public class FilterButtonAdapter extends XmlAdapter<FilterButtonAdapted, FilterB
 	public FilterButtonModel unmarshal(FilterButtonAdapted adaptedModel) throws Exception {
 		FilterButtonModel model = new FilterButtonModel(adaptedModel.getIndex());
 		model.setName(adaptedModel.getName());
-		// model.setFilterConfig(adaptedModel.getFilterConfig()); TODO: uncomment when an adapted exists for filterd abstract config
+		model.setFilterConfig(adaptedModel.getFilterConfig());
 		return model;
 	}
 
