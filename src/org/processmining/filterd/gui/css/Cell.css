@@ -2,7 +2,7 @@ root {
     display: block;
 }
 
-.cell-toolbar {
+.cell-toolbar, .bg-gray {
 	-fx-background-color: #646464;
 }
 

@@ -22,7 +22,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
@@ -52,8 +51,6 @@ public class NotebookController {
 	@FXML
 	private Button exportButton;
 	@FXML
-	private ScrollPane scrollPane;
-	@FXML
 	private VBox cellsLayout;
 	@FXML
 	private Button appendCellButton;
@@ -68,9 +65,6 @@ public class NotebookController {
 	@FXML
 	private HBox toolbarLayout;
 
-	public ScrollPane getScrollPane() {
-		return scrollPane;
-	}
 
 	/**
 	 * The constructor which sets the model. Note that the constructor does not
