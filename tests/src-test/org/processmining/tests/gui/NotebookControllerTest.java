@@ -6,7 +6,6 @@ import org.processmining.filterd.gui.ComputationMode;
 import org.processmining.filterd.gui.NotebookController;
 import org.processmining.filterd.gui.NotebookModel;
 
-import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import junit.framework.TestCase;
@@ -29,11 +28,6 @@ public class NotebookControllerTest extends TestCase {
 		NotebookModel model = new NotebookModel();
 		// Create new notebook controller
 		NotebookController controller = new NotebookController(model);
-		
-		// Get the notebook scroll pane
-		ScrollPane scrollPane = controller.getScrollPane();
-		// Check the component is properly returned (should be null at this point)
-		assertTrue(scrollPane == null);
 		
 		// Get the notebook layout
 		VBox notebookLayout = controller.getNotebookLayout();

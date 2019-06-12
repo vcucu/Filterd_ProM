@@ -78,18 +78,22 @@ public class SwingBubble extends AnchorPane {
 	}
 	
 	public void setContent(JComponent content) {
-		if (content != null) {
-			SwingUtilities.invokeLater(new Runnable() {
-				@Override
-				public void run() {
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public synchronized void run() {
+				if (content != null) {
 					Dimension dimension = new Dimension();
 					dimension.setSize(getMaxWidth(), getMaxHeight());
 					content.setMaximumSize(dimension);
 					content.setPreferredSize(dimension);
 					swgNode.setContent(content);
 				}
-			});
-		}
+			}
+		});
+	}
+	
+	public JComponent getContent() {
+		return swgNode.getContent();
 	}
 	
 	/**
@@ -115,9 +119,7 @@ public class SwingBubble extends AnchorPane {
 		this.setOnMouseEntered(event -> unfake());
 		
 		// Restore SwingNode when mouse moves over ImageView
-		imgView.setOnMouseMoved(event -> {
-			unfake();
-		});
+		imgView.setOnMouseMoved(event -> unfake());
 		
 		// Hide SwingNode when mouse exits pane
 		this.setOnMouseExited(event -> fake());

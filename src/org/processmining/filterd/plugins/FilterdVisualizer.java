@@ -1,10 +1,14 @@
 package org.processmining.filterd.plugins;
 
 
+import java.awt.GridLayout;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 import org.deckfour.xes.model.XLog;
 import org.processmining.contexts.uitopia.UIPluginContext;
@@ -24,7 +28,9 @@ import javafx.scene.Scene;
 
 public class FilterdVisualizer {
 
-	private JFXPanel notebookPanel;
+	private static JPanel mainPanel;
+	private static JFXPanel filterdPanel;
+	
 	private NotebookModel model;
 	private NotebookController controller;
 	
@@ -45,10 +51,14 @@ public class FilterdVisualizer {
 		controller = new NotebookController(model);
 		
 		// Initialize GUI components
-		notebookPanel = new JFXPanel();
-		initGUI(notebookPanel);
+		filterdPanel = new JFXPanel();
+		initGUI(filterdPanel);
 		
-		return notebookPanel;
+		// Initialize JPanel to be returned
+		mainPanel = new JPanel(new GridLayout(1,1));
+		mainPanel.add(filterdPanel);
+		
+		return mainPanel;
 	}
 	
 	
@@ -59,13 +69,13 @@ public class FilterdVisualizer {
 	@Visualizer(name = "Filterd Visualizer", pack = "Filterd")
 	public JComponent visualize(final UIPluginContext context, final NotebookModelAdapted adaptedModel, final ProMCanceller canceller) {
 
-		// initialize an empty notebook model and its contrller
+		// initialize an empty notebook model and its controller
 		model = new NotebookModel(context, adaptedModel.getInitialInput(), canceller);
 		controller = new NotebookController(model);
 		
 		// Initialize GUI components
-		notebookPanel = new JFXPanel();
-		initGUI(notebookPanel);
+		filterdPanel = new JFXPanel();
+		initGUI(filterdPanel);
 		
 		// Set imported state to the empty notebook
 		Platform.runLater(new Runnable() {
@@ -78,11 +88,14 @@ public class FilterdVisualizer {
             }
         });
 		
-		return notebookPanel;
+		// Initialize JPanel to be returned
+		mainPanel = new JPanel(new GridLayout(1,1));
+		mainPanel.add(filterdPanel);
+		
+		return mainPanel;
 	}
 	
 	private void initGUI(final JFXPanel fxPanel) {
-		
 		Platform.setImplicitExit(false);
 		// Prevents the JavaFX Platform from automatically exiting
 		// in case the components are no longer visible (i.e. by changing visualization)
@@ -106,5 +119,34 @@ public class FilterdVisualizer {
         });
 	}
 
+	public static void changeView(JComponent component) {
+		try {
+			SwingUtilities.invokeAndWait(new Runnable() {
+				@Override
+				public void run() {
+					mainPanel.remove(0);
+					mainPanel.add(component);
+					mainPanel.repaint(); 	// useless
+				}
+			});
+		} catch (InvocationTargetException | InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void revertView() {
+		try {
+			SwingUtilities.invokeAndWait(new Runnable() {
+				@Override
+				public void run() {
+					mainPanel.remove(0);
+					mainPanel.add(filterdPanel);
+					mainPanel.repaint();	// useless
+				}
+			});
+		} catch (InvocationTargetException | InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
 	
 }
