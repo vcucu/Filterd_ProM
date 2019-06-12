@@ -106,16 +106,18 @@ public class ConfigurationModalController {
 			cancel();
 			return;
 		}
+		resetModal(); // reset the modal before populating it
 		// set internal variables
 		this.filterConfig = filterConfig;
 		this.filterButtonController = filterButtonController;
-		this.filterListController.setStatusLabelText("Creating the configuration panel");
+		if(this.filterListController != null) {
+			this.filterListController.setStatusLabelText("Creating the configuration panel");
+		}
 		currentContentsController = filterConfig.getConfigPanel(); // get the configuration panel from the filter configuration
 		if (currentContentsController instanceof NestedFilterConfigPanelController) { // nested configuration panels are handled inside the general configuration panels
 			throw new IllegalArgumentException(
 					"Filter configuration panel controller is nested. Is this filter config. nested?");
 		}
-		resetModal(); // reset the modal before populating it
 		// populate contents pane
 		HBox.setHgrow(currentContentsController.getRoot(), Priority.ALWAYS); // make the content 100% of the available width
 		contentPane.getChildren().clear(); // remove anything that may be left over by previous contents
@@ -178,10 +180,10 @@ public class ConfigurationModalController {
 		this.apply.setText("Apply"); // apply is the default over next
 		this.apply.disableProperty().unbind(); // remove disabled binding that may have been added to the apply button  
 		this.filterSelectionCallback = null;
-		this.filterButtonController = null;
 		this.filterListController = null;
 		if (this.configurationStep != ConfigurationStep.ADD_FILTER) {
 			this.filterConfig = null;
+			this.filterButtonController = null;
 			this.currentContentsController = null;
 		}
 	}

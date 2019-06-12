@@ -46,6 +46,8 @@ public class FilterButtonController {
 		model.isValidProperty().addListener(new ChangeListener<Boolean>() {
 
 			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+				System.out.print("Setting valid to ");
+				System.out.println(newValue);
 				if(newValue) {
 					// filter became valid
 					controller.hideConfigurationModal(false);
