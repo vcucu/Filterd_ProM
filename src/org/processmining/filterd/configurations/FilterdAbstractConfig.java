@@ -1,10 +1,6 @@
 package org.processmining.filterd.configurations;
 import java.util.List;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
-
 import org.deckfour.xes.classification.XEventClassifier;
 import org.deckfour.xes.extension.XExtension;
 import org.deckfour.xes.model.XLog;
@@ -27,8 +23,6 @@ import org.processmining.filterd.widgets.ParameterTextController;
 import org.processmining.filterd.widgets.ParameterValueFromRangeController;
 import org.processmining.filterd.widgets.ParameterYesNoController;
 
-@XmlAccessorType(XmlAccessType.NONE) // Makes sure only explicitly named elements get added to the XML.
-@XmlRootElement(name = "FilterButtonModel") // Needed by JAXB to generate an XML.
 public abstract class FilterdAbstractConfig {
 	
 	protected Filter filterType;
