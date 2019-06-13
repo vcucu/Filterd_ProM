@@ -9,6 +9,7 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
@@ -60,6 +61,9 @@
                               <URL value="@../css/Icons.css" />
                               <URL value="@../css/Controls.css" />
                            </stylesheets>
+                           <tooltip>
+                              <Tooltip text="Compute cell" />
+                           </tooltip>
                         </Label>
                         <Label fx:id="reloadVisualizerButton" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#reloadVisualizer" prefHeight="24.0" prefWidth="24.0" styleClass="round-button">
                            <graphic>
@@ -74,6 +78,9 @@
                               <URL value="@../css/Controls.css" />
                               <URL value="@../css/Icons.css" />
                            </stylesheets>
+                           <tooltip>
+                              <Tooltip text="Refresh visualization" />
+                           </tooltip>
                         </Label>
                         <Region HBox.hgrow="ALWAYS" />
                         <TextField fx:id="cellName" alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" onKeyPressed="#handleCellName" prefHeight="25.0" styleClass="cell-name" text="Cell name">
@@ -97,6 +104,9 @@
                                     <URL value="@../css/Icons.css" />
                                     <URL value="@../css/Controls.css" />
                                  </stylesheets>
+                                 <tooltip>
+                                    <Tooltip text="Go fullscreen" />
+                                 </tooltip>
                               </Label>
                            </children>
                            <stylesheets>
@@ -143,7 +153,7 @@
                                                 <Insets bottom="10.0" top="5.0" />
                                              </VBox.margin>
                                           </VBox>
-                                          <Label alignment="CENTER" contentDisplay="CENTER" onMouseClicked="#addFilter" styleClass="addFilterButton" text="Click to add a filter" textFill="#787878">
+                                          <Label alignment="CENTER" contentDisplay="CENTER" onMouseClicked="#addFilter" stylesheets="@../css/Controls.css" text="Click to add a filter" textFill="#787878">
                                              <VBox.margin>
                                                 <Insets left="10.0" right="10.0" />
                                              </VBox.margin>
@@ -153,6 +163,10 @@
                                              <font>
                                                 <Font name="System Bold" size="14.0" />
                                              </font>
+                                             <styleClass>
+                                                <String fx:value="addFilterButton" />
+                                                <String fx:value="dashed-border" />
+                                             </styleClass>
                                           </Label>
                                           <Region maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS" />
                                           <Label fx:id="lblNumEventLogs" alignment="BOTTOM_CENTER" text="0 output event logs" textFill="#787878">
@@ -166,7 +180,7 @@
                               </ScrollPane>
                            </children>
                         </VBox>
-                        <Label fx:id="expandButton" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#handleExpandVisualiser" prefHeight="46.0" prefWidth="11.0">
+                        <Label fx:id="expandButton" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#handleExpandVisualiser" prefHeight="46.0" prefWidth="11.0" visible="false">
                            <graphic>
                               <Region prefHeight="200.0" prefWidth="200.0">
                                  <styleClass>
@@ -186,6 +200,9 @@
                               <URL value="@../css/Icons.css" />
                               <URL value="@../css/Controls.css" />
                            </stylesheets>
+                           <tooltip>
+                              <Tooltip text="Expand visualizer" />
+                           </tooltip>
                         </Label>
                         <AnchorPane fx:id="visualizerPane" maxHeight="1.7976931348623157E308" minHeight="390.0" minWidth="600.0" HBox.hgrow="ALWAYS" />
                      </children>

@@ -16,13 +16,17 @@
 	-fx-pref-height: 16;
 }
 
+.cell-layout .round-button.prepend-cell-button:hover {
+	-fx-background-color: #646464;
+}
+
 .cell-panel {
 	-fx-border-width: 0 1 1 0;
     -fx-border-color: #707070;
 }
 
 .cell-name {
-	-fx-background-color:  #646464;
+	-fx-background-color: #646464;
 	-fx-border-width: 0;
 	-fx-text-fill:  #FFFFFF;
 	-fx-font-size: 16;

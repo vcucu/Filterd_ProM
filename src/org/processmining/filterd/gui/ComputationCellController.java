@@ -350,7 +350,8 @@ public class ComputationCellController extends CellController {
 			// Change plugin view to fullscreen panel
 			FilterdVisualizer.changeView(fullScreenPanel);
 
-			// TODO Change icon
+			// Update icon
+			Utilities.changeIcon(fullScreenButton, "expand-solid", "compress-solid");
 			isFullScreen = true;
 		} else if (isFullScreen) {
 			// Style toolbar for leaving fullscreen mode
@@ -363,7 +364,9 @@ public class ComputationCellController extends CellController {
 
 			// Revert view
 			FilterdVisualizer.revertView();
-			// TODO Change icon
+			// Update icon
+			Utilities.changeIcon(fullScreenButton, "compress-solid", "expand-solid");
+			
 			isFullScreen = false;
 		}
 	}
@@ -395,6 +398,8 @@ public class ComputationCellController extends CellController {
 			//			visualizerPane.getChildren().remove(visualizerSwgWrap);
 			visualizerPane.getChildren().clear();
 			visualizerSwgWrap.setContent(null);
+			// Hide expand button
+			expandButton.setVisible(false);
 			return;
 		}
 		visualizerPane.getChildren().clear();
@@ -409,6 +414,8 @@ public class ComputationCellController extends CellController {
 		Utilities.setAnchors(visualizerSwgWrap, 0.0);
 		// Load Visualizer
 		visualizerSwgWrap.setContent(visualizer);
+		// Show expand button
+		expandButton.setVisible(true);
 
 		if (isFullScreen) {
 			try {
@@ -463,6 +470,10 @@ public class ComputationCellController extends CellController {
 				removeFilter(buttonToRemove);
 			}
 		}
+		
+		// Show expand button
+		expandButton.setVisible(true);
+		
 		this.isConfigurationModalShown = false;
 	}
 
@@ -609,6 +620,10 @@ public class ComputationCellController extends CellController {
 					}
 
 				});
+		
+		// Hide expand button
+		expandButton.setVisible(false);
+		
 		VBox configurationModalRoot = configurationModal.getRoot();
 		visualizerPane.getChildren().add(configurationModalRoot);
 		// Make the configuration modal resize with the pane

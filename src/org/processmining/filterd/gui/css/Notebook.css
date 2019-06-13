@@ -5,3 +5,22 @@
 .round-button.append-cell-button {
 	-fx-background-color: #C4C4C4;
 }
+
+.round-button.append-cell-button:hover {
+	-fx-background-color: #646464;
+}
+
+.notebook-layout .round-button :not(.labeled-round-button) {
+	-fx-pref-width: 30;
+	-fx-pref-height: 30;
+}
+
+.notebook-layout .labeled-round-button {
+	-fx-pref-height: 30;
+	-fx-label-padding: 0 10 0 5;
+}
+
+.notebook-layout .labeled-round-button > * {
+	-fx-pref-width: 30;
+	-fx-pref-height: 30;
+}
