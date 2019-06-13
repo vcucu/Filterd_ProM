@@ -174,9 +174,9 @@ public class ComputationCellController extends CellController {
 				getCellModel().getFilters().get(index - 1).getOutputLog() != null &&
 				getCellModel().getStatusBar() == CellStatus.IDLE) {
 				filterModel.setInputLog(getCellModel().getFilters().get(index - 1).getOutputLog());
-			} else {
 			}
 			getCellModel().addFilterModel(index, filterModel);
+			enableAllFilterButtonsBut(index);
 			loadFilter(index, filterModel);
 		}
 	}

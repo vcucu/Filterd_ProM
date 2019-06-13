@@ -32,6 +32,10 @@ public class CellModelAdapter extends XmlAdapter<CellModelAdapted, CellModel> {
 		if (model.getClass() == ComputationCellModel.class) {
 			adaptedModel = new ComputationCellModelAdapted();
 			((ComputationCellModelAdapted) adaptedModel).setFilters(((ComputationCellModel) model).getFilters());
+			// set the input log (0 is initial input log, > 0 are cell outputs)
+			((ComputationCellModelAdapted) adaptedModel).setIndex(((ComputationCellModel) model)
+				.getInputLog()
+				.getIndexOfOwner());
 		} else {
 			adaptedModel = new TextCellModelAdapted();
 			((TextCellModelAdapted) adaptedModel).setComment(((TextCellModel) model).getComment());

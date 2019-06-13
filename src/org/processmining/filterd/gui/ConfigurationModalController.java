@@ -178,7 +178,8 @@ public class ConfigurationModalController {
 	private void resetModal() {
 		this.contentPane.getChildren().clear(); // remove any content from the configuration modal
 		this.apply.setText("Apply"); // apply is the default over next
-		this.apply.disableProperty().unbind(); // remove disabled binding that may have been added to the apply button  
+		this.apply.disableProperty().unbind(); // remove disabled binding that may have been added to the apply button
+		this.apply.disableProperty().set(false);
 		this.filterSelectionCallback = null;
 		this.filterListController = null;
 		if (this.configurationStep != ConfigurationStep.ADD_FILTER) {

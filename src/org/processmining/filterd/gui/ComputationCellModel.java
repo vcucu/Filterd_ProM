@@ -129,6 +129,8 @@ public class ComputationCellModel extends CellModel {
 		if (log == null) {
 			throw new IllegalArgumentException("Log cannot be null!");
 		}
+		System.out.print("Index of the set log is ");
+		System.out.println(log.getIndexOfOwner());
 		this.inputLog = log;
 		// set the output to be the input (when the cell is computed, this will change)
 		// this is needed so that downstream cells don't have null logs as their input
