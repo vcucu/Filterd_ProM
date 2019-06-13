@@ -2,8 +2,6 @@ package org.processmining.filterd.filters;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.Period;
-import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -191,6 +189,7 @@ public class FilterdTracePerformanceFilter extends Filter {
 				
 				break;
 			}
+		}
 		
 		return new double[]{lowThreshold, highThreshold};
 	}
