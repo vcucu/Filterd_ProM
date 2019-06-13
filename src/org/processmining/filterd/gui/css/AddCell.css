@@ -1,0 +1,11 @@
+.add-cell-layout .labeled-round-button {
+	-fx-pref-height: 35;
+	-fx-pref-width: 190;
+	-fx-label-padding: 0 10 0 5;
+	-fx-background-color: #939393;
+	-fx-text-fill: white;
+}
+
+.add-cell-layout .labeled-round-button:hover {
+	-fx-background-color: #646464;
+}

@@ -1,9 +1,5 @@
 .addFilterButton {
-	 -fx-cursor: hand;
-	 -fx-border-style: segments(6);
-	 -fx-border-width: 1.5;
-	 -fx-border-color: #787878;
-	 
+	 -fx-cursor: hand;	 
 }
 
 .expand-button {

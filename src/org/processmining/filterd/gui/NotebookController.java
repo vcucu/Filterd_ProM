@@ -22,6 +22,7 @@ import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -39,30 +40,17 @@ public class NotebookController {
 	 * variables containing the (important) UI elements so they can be
 	 * interacted with in the code.
 	 */
-	@FXML
-	private Button autoButton;
-	@FXML
-	private Button manualButton;
-	@FXML
-	private Label computeButton;
-	@FXML
-	private Region computeButtonImage;
-	@FXML
-	private Label exportButton;
-	@FXML
-	private VBox cellsLayout;
-	@FXML
-	private Label appendCellButton;
-	@FXML
-	private HBox addCellHBox;
-	@FXML
-	private Button addComputationCellButton;
-	@FXML
-	private Button addTextCellButton;
-	@FXML
-	private VBox notebookLayout;
-	@FXML
-	private HBox toolbarLayout;
+	@FXML private Button autoButton;
+	@FXML private Button manualButton;
+	@FXML private Label computeButton;
+	@FXML private Label exportButton;
+	@FXML private VBox cellsLayout;
+	@FXML private Label appendCellButton;
+	@FXML private HBox addCellHBox;
+	@FXML private Button addComputationCellButton;
+	@FXML private Button addTextCellButton;
+	@FXML private VBox notebookLayout;
+	@FXML private HBox toolbarLayout;
 
 	/**
 	 * The constructor which sets the model. Note that the constructor does not
@@ -102,6 +90,7 @@ public class NotebookController {
 					getClass().getResource("/org/processmining/filterd/gui/fxml/AddCell.fxml"));
 			loader.setController(new AddCellController());
 			addCellHBox.getChildren().add((HBox) loader.load());
+			HBox.setHgrow(addCellHBox.getChildren().get(0), Priority.ALWAYS);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
