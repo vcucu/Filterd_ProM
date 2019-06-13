@@ -4,7 +4,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.deckfour.xes.classification.XEventClassifier;
+import org.deckfour.xes.factory.XFactory;
+import org.deckfour.xes.factory.XFactoryRegistry;
 import org.deckfour.xes.model.XLog;
+import org.deckfour.xes.model.XTrace;
 import org.processmining.filterd.filters.Filter;
 import org.processmining.filterd.gui.AbstractFilterConfigPanelController;
 import org.processmining.filterd.gui.FilterConfigPanelController;
@@ -19,9 +22,9 @@ public class FilterdTraceEndEventConfig extends FilterdAbstractReferencingConfig
 		super(log, filterType);
 		parameters = new ArrayList<Parameter>();
 		List<XEventClassifier>complexClassifiers = Toolbox.computeComplexClassifiers(log);
-		
+		XLog endEventsLog = endEventsOnly();
 		 // Get all the events attributes that are passed to the parameter 
-		List<String> attrAndClassifiers = Toolbox.computeAttributes(log);
+		List<String> attrAndClassifiers = Toolbox.computeAttributes(endEventsLog);
 		//add the complex classifiers to the list of global attributes 
 		attrAndClassifiers.addAll(Toolbox.getClassifiersName(complexClassifiers));
 		
@@ -91,6 +94,15 @@ public class FilterdTraceEndEventConfig extends FilterdAbstractReferencingConfig
 				
 		return concreteReference;
 	}
-
+	private XLog endEventsOnly() {
+		XLog filteredLog = Toolbox.initializeLog(log);
+		XFactory factory = XFactoryRegistry.instance().currentDefault();
+		for (XTrace trace: this.log) {
+			XTrace filteredTrace = factory.createTrace(trace.getAttributes());
+			filteredTrace.add(trace.get(trace.size()-1));
+			filteredLog.add(filteredTrace);
+		}
+		return filteredLog;
+	}
 
 }
