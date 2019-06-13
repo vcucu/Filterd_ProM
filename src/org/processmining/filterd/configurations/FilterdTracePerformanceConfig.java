@@ -52,12 +52,26 @@ public class FilterdTracePerformanceConfig extends FilterdAbstractConfig {
 						minAndMaxDuration, 
 						minAndMaxDuration,
 						Integer.TYPE);
+		
+		// Create parameter for selecting the time type.
+				ParameterOneFromSet timeTypeParameter = 
+						new ParameterOneFromSet(
+								"timeType", 
+								"Select time type", 
+								"Millis", 
+								Arrays.asList(
+										"Millis",
+										"Seconds",
+										"Minutes",
+										"Hours",
+										"Days",
+										"Weeks",
+										"Years"));
 
 		// Add the created parameters.
 		parameters.add(performanceOptionsParameter);
 		parameters.add(valueParameter);
-
-		
+		parameters.add(timeTypeParameter);
 	}
 
 	public boolean checkValidity(XLog candidateLog) {

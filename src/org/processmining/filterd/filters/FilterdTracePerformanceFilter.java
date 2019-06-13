@@ -2,6 +2,8 @@ package org.processmining.filterd.filters;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.Period;
+import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -33,7 +35,8 @@ public class FilterdTracePerformanceFilter extends Filter {
 			case "filter on duration": {
 				return filterDuration(
 						clonedLog, 
-						(ParameterRangeFromRange<Integer>) parameters.get(1));
+						(ParameterRangeFromRange<Integer>) parameters.get(1),
+						(ParameterOneFromSet) parameters.get(2));
 			}
 			case "filter on number of events": {
 				return filterNumberOfEvents(
@@ -46,11 +49,23 @@ public class FilterdTracePerformanceFilter extends Filter {
 	}
 	
 	public XLog filterDuration(XLog clonedLog,
-			ParameterRangeFromRange<Integer> threshold) {
+			ParameterRangeFromRange<Integer> threshold, 
+			ParameterOneFromSet timeTypeParameter) {
+		
+		String type = timeTypeParameter.getChosen();
 		
 		// Threshold contains the thresholds in milliseconds.
-		double lowThreshold = threshold.getChosenPair().get(0);
-		double highThreshold = threshold.getChosenPair().get(1);
+		double lowThreshold = getThresholds(
+				timeTypeParameter.getChosen(), 
+				threshold.getChosenPair().get(0), 
+				threshold.getChosenPair().get(1))
+				[0];
+		double highThreshold = getThresholds(
+				timeTypeParameter.getChosen(), 
+				threshold.getChosenPair().get(0), 
+				threshold.getChosenPair().get(1))
+				[1];
+	
 		
 		Set<XTrace> removeFromLog = new HashSet<>();
 		
@@ -111,6 +126,73 @@ public class FilterdTracePerformanceFilter extends Filter {
 		clonedLog.removeAll(removeFromLog);
 		
 		return clonedLog;
+	}
+	
+	private double[] getThresholds(String durationType, double low, double high) {
+		
+		double lowThreshold = 0;
+		double highThreshold = 0;
+		
+		
+		switch (durationType) {
+			case "Millis": {
+				
+				// In milliseconds.
+				lowThreshold = low;
+				highThreshold = high;
+				
+				break;
+			}
+			case "Seconds": {
+				
+				// In seconds.
+				lowThreshold = low * 1000;
+				highThreshold = high * 1000;
+				
+				break;
+			}
+			case "Minutes": {
+				
+				// In minutes.
+				lowThreshold = low * 1000 * 60;
+				highThreshold = high * 1000 * 60;
+				
+				break;
+			}
+			case "Hours": {
+				
+				// In hours.
+				lowThreshold = low * 1000 * 60 * 60;
+				highThreshold = high * 1000 * 60 * 60;
+				
+				break;
+			}
+			case "Days": {
+				
+				// In days.
+				lowThreshold = low * 1000 * 60 * 60 * 24;
+				highThreshold = high * 1000 * 60 * 60 * 24;
+				
+				break;
+			}
+			case "Weeks": {
+				
+				// In weeks.
+				lowThreshold = low * 1000 * 60 * 60 * 24 * 7;
+				highThreshold = high * 1000 * 60 * 60 * 24 * 7;
+				
+				break;
+			}
+			case "Years": {
+				
+				// In years.
+				lowThreshold = low * 1000 * 60 * 60 * 24 * 365.242199;
+				highThreshold = high * 1000 * 60 * 60 * 24 * 365.242199;
+				
+				break;
+			}
+		
+		return new double[]{lowThreshold, highThreshold};
 	}
 
 }

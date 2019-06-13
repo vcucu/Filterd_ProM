@@ -180,7 +180,7 @@ public class FilterdTraceFollowerConfig extends FilterdAbstractConfig {
 				new ParameterOneFromSet(
 						"timeType", 
 						"Select time type", 
-						"millis", 
+						"Millis", 
 						Arrays.asList(
 								"Millis",
 								"Seconds",

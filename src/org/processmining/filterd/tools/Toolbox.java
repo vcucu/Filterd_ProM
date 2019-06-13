@@ -476,7 +476,7 @@ public class Toolbox {
 						.get("time:timestamp")
 						.toString());
 			} else {
-				firstEventTime = LocalDateTime.MAX;
+				firstEventTime = LocalDateTime.MIN;
 			}
 			
 			int lastIndex = trace.size() - 1;
@@ -488,7 +488,7 @@ public class Toolbox {
 			if (trace.get(lastIndex).getAttributes().containsKey("time:timestamp")) {
 				lastEventTime = synchronizeGMT(
 						trace
-						.get(firstIndex)
+						.get(lastIndex)
 						.getAttributes()
 						.get("time:timestamp")
 						.toString());
@@ -496,7 +496,10 @@ public class Toolbox {
 				lastEventTime = LocalDateTime.MAX;
 			}
 			
-			if (firstEventTime != LocalDateTime.MAX && lastEventTime != LocalDateTime.MAX) {
+			System.out.println(firstEventTime);
+			System.out.println(lastEventTime);
+			
+			if (firstEventTime != LocalDateTime.MIN && lastEventTime != LocalDateTime.MAX) {
 
 				Duration traceDuration = Duration.between(firstEventTime, lastEventTime);
 				int totalMillis = (int) traceDuration.toMillis();
