@@ -71,11 +71,8 @@ public class FilterdEventAttrCategoricalConfig extends FilterdAbstractReferencea
 		
 		for (XTrace trace : log) {
 			for (XEvent event : trace) {
-				for (String choice : desiredValues.getChosen()) {
-					if (event.getAttributes().get(key).toString().contains(choice)) {
-						return true;
-					}
-				}
+				if(!event.getAttributes().containsKey(key)) continue;
+				if(desiredValues.getChosen().contains(event.getAttributes().get(key).toString())) return true;
 			}
 		}
 		

@@ -14,14 +14,8 @@ import org.processmining.filterd.parameters.Parameter;
 import org.processmining.filterd.parameters.ParameterMultipleFromSet;
 import org.processmining.filterd.parameters.ParameterOneFromSet;
 import org.processmining.filterd.tools.Toolbox;
-import org.processmining.filterd.widgets.ParameterMultipleFromSetController;
-import org.processmining.filterd.widgets.ParameterOneFromSetController;
 import org.processmining.filterd.widgets.ParameterOneFromSetExtendedController;
 import org.python.google.common.collect.Sets;
-
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.scene.control.ComboBox;
 
 
 public class FilterdModifMergeSubsequentConfig extends FilterdAbstractReferencingConfig {
@@ -34,10 +28,6 @@ public class FilterdModifMergeSubsequentConfig extends FilterdAbstractReferencin
 		List<XEventClassifier> classifiers = Toolbox.computeAllClassifiers(log);
 		List<String> classifiersNames = Toolbox.getClassifiersName(classifiers);
 		List<String> attributeNames = Toolbox.computeAttributes(log);
-		List<String> comparisonTypes = new ArrayList<>(Arrays.asList
-				("Compare event class", 
-				"Compare event timestamps", 
-				"Compare event class & attributes"));
 		List<String> mergeTypes = new ArrayList<>(Arrays.asList
 				("Merge taking first event", 
 				"Merge taking last event", 
@@ -54,12 +44,6 @@ public class FilterdModifMergeSubsequentConfig extends FilterdAbstractReferencin
 		concreteReference = new FilterdModifMergeSubsequentCategoricalConfig
 				(log, filterType, classifiersNames.get(0), classifiers);
 		
-		// Create comparison type parameter
-		ParameterOneFromSet comparisonType = new ParameterOneFromSet
-				("comparisonType", 
-				"Select how to compare events",
-				comparisonTypes.get(0),
-				comparisonTypes);
 		
 		// Create merge type parameter
 		ParameterOneFromSet mergeType = new ParameterOneFromSet
@@ -71,14 +55,13 @@ public class FilterdModifMergeSubsequentConfig extends FilterdAbstractReferencin
 		//Create relevant attributes parameter
 		ParameterMultipleFromSet relevantAttributes = new ParameterMultipleFromSet(
 				"relevantAttributes",
-				"Select which attributes should be considered in the comparison",
+				"Select the attributes that should coincide",
 				new ArrayList<>(),
 				attributeNames);
 				
 		
 		//Add all parameters to the list of parameters
 		parameters.add(classifierParam);
-		parameters.add(comparisonType);
 		parameters.add(mergeType);
 		parameters.add(relevantAttributes);
 		
@@ -124,37 +107,7 @@ public class FilterdModifMergeSubsequentConfig extends FilterdAbstractReferencin
 
 
 	
-	public AbstractFilterConfigPanelController getConfigPanel() {
-
-		/*
-		 * if the comparison type is "Compare event class & attributes" then the parameter
-		 * relevantAttributes is displayed.
-		 * Otherwise, keep it hidden.
-		 */
-		ParameterOneFromSetController comparisonTypeController =  (ParameterOneFromSetController)
-				configPanel.getControllers().stream().
-				filter(c->c.getName().equals("comparisonType")).
-				findFirst().get();
-		
-		ParameterMultipleFromSetController relevantAttributesController = (ParameterMultipleFromSetController)
-				configPanel.getControllers().stream().
-				filter(c-> c.getName().equals("relevantAttributes")).
-				findFirst().get();
-		if (!comparisonTypeController.getValue().equals("Compare event class & attributes")) {
-			relevantAttributesController.getContents().setVisible(false);
-		}
-		
-		ComboBox<String> comboBox = comparisonTypeController.getComboBox();
-		comboBox.valueProperty().addListener(new ChangeListener<String>() {
-			@Override
-			public void changed(ObservableValue ov, String oldValue, String newValue) {
-				if (!comparisonTypeController.getValue().equals("Compare event class & attributes")) {
-					relevantAttributesController.getContents().setVisible(false);				
-				} else {
-					relevantAttributesController.getContents().setVisible(true);	
-				}
-			}
-		});			
+	public AbstractFilterConfigPanelController getConfigPanel() {		
 		return configPanel;
 	}
 }
