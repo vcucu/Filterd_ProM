@@ -106,7 +106,7 @@ public class FilterdTraceFollowerConfig extends FilterdAbstractConfig {
 		ParameterMultipleFromSet referenceParameter = 
 				new ParameterMultipleFromSet(
 						"firstattrValues",
-						"Desired values:",
+						"Select reference values:",
 						Arrays.asList(attributeValuesList.get(0)),
 						attributeValuesList
 						);
@@ -115,7 +115,7 @@ public class FilterdTraceFollowerConfig extends FilterdAbstractConfig {
 		ParameterMultipleFromSet followerParameter = 
 				new ParameterMultipleFromSet(
 						"endattrValues",
-						"Desired values:",
+						"Select follower values:",
 						Arrays.asList(attributeValuesList.get(0)),
 						attributeValuesList
 						);
