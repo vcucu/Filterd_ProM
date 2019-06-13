@@ -298,7 +298,6 @@ public class ComputationCellController extends CellController {
 	 */
 	@FXML
 	public void handleExpandVisualiser() {
-		//visualizerPane.setStyle("-fx-background-color: #ff0000; ");
 		if (isExpanded) {
 			//make cell go to default size
 			isExpanded = false;
@@ -306,10 +305,14 @@ public class ComputationCellController extends CellController {
 			cell.prefHeightProperty().unbind();
 			//set the PrefHeight to what it is by default
 			cell.setPrefHeight(Region.USE_COMPUTED_SIZE);
+			// Update icon
+			Utilities.changeIcon(expandButton, "angle-right-solid", "angle-left-solid");
 		} else if (!isExpanded && !isConfigurationModalShown) {
 			isExpanded = true;
 			//set height of cell to be the size of the 'window'
 			cell.prefHeightProperty().bind(notebookLayout.heightProperty().subtract(notebookToolbar.heightProperty()));
+			// Update icon
+			Utilities.changeIcon(expandButton, "angle-left-solid", "angle-right-solid");
 		}
 		//extend visualizerPane over the filter pane
 		filterPanelScroll.setVisible(!isExpanded);

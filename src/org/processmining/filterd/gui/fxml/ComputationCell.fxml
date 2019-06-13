@@ -176,7 +176,7 @@
                               </Region>
                            </graphic>
                            <HBox.margin>
-                              <Insets left="20.0" />
+                              <Insets left="10.0" />
                            </HBox.margin>
                            <styleClass>
                               <String fx:value="expand-button" />
