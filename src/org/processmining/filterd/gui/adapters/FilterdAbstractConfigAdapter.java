@@ -14,11 +14,14 @@ public class FilterdAbstractConfigAdapter extends XmlAdapter<FilterdAbstractConf
 
 	public FilterdAbstractConfigAdapted marshal(FilterdAbstractConfig config) {
 		FilterdAbstractConfigAdapted adaptedConfig;
-		if (config.getClass().isAssignableFrom(FilterdAbstractReferencingConfig.class)) {
+		
+		if (FilterdAbstractReferencingConfig.class.isAssignableFrom(config.getClass())) {
+			// if the config is referencing save the concrete reference.
 			adaptedConfig = new FilterdAbstractConfigReferencingAdapted();
 			((FilterdAbstractConfigReferencingAdapted) adaptedConfig).setConcreteReference(
 					((FilterdAbstractReferencingConfig) config).getConcreteReference());
 		} else {
+			// if the config is not referencing can create a general one.
 			adaptedConfig = new FilterdAbstractConfigAdapted();
 		}
 		adaptedConfig.setParameters(config.getParameters());
