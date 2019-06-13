@@ -48,7 +48,7 @@
                      <children>
 
                         <ComboBox fx:id="cmbEventLog" maxHeight="-Infinity" minHeight="-Infinity" onKeyReleased="#setXLog" onMouseClicked="#setXLog" prefHeight="24.0" prefWidth="150.0" styleClass="round-combobox" stylesheets="@../css/Controls.css" HBox.hgrow="ALWAYS" />
-                        <Label fx:id="playButton" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#computeHandler" prefHeight="24.0" prefWidth="24.0" styleClass="round-button">                           <graphic>
+                        <Label fx:id="computeButton" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#computeHandler" prefHeight="24.0" prefWidth="24.0" styleClass="round-button">                           <graphic>
                               <Region prefHeight="200.0" prefWidth="200.0">
                                  <styleClass>
                                     <String fx:value="play-solid" />

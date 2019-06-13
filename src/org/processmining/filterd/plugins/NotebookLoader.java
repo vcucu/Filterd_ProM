@@ -9,8 +9,18 @@ import org.deckfour.xes.model.XLog;
 import org.processmining.contexts.uitopia.UIPluginContext;
 import org.processmining.contexts.uitopia.annotations.UITopiaVariant;
 import org.processmining.filterd.gui.adapters.ComputationCellModelAdapted;
+import org.processmining.filterd.gui.adapters.FilterButtonAdapted;
+import org.processmining.filterd.gui.adapters.FilterdAbstractConfigAdapted;
+import org.processmining.filterd.gui.adapters.FilterdAbstractConfigReferencingAdapted;
 import org.processmining.filterd.gui.adapters.NotebookModelAdapted;
 import org.processmining.filterd.gui.adapters.TextCellModelAdapted;
+import org.processmining.filterd.parameters.Parameter;
+import org.processmining.filterd.parameters.ParameterMultipleFromSet;
+import org.processmining.filterd.parameters.ParameterOneFromSet;
+import org.processmining.filterd.parameters.ParameterRangeFromRange;
+import org.processmining.filterd.parameters.ParameterText;
+import org.processmining.filterd.parameters.ParameterValueFromRange;
+import org.processmining.filterd.parameters.ParameterYesNo;
 import org.processmining.framework.plugin.annotations.Plugin;
 import org.processmining.framework.plugin.annotations.PluginVariant;
 
@@ -24,7 +34,11 @@ public class NotebookLoader {
 		try {
 			// read the XML.
 			// add all the classes which have a XmlRootElement annotation in the newInstance method.
-			JAXBContext jaxbContext= JAXBContext.newInstance(NotebookModelAdapted.class, TextCellModelAdapted.class, ComputationCellModelAdapted.class);
+			JAXBContext jaxbContext = JAXBContext.newInstance(NotebookModelAdapted.class, TextCellModelAdapted.class,
+					ComputationCellModelAdapted.class, FilterButtonAdapted.class, FilterdAbstractConfigAdapted.class,
+					Parameter.class, ParameterMultipleFromSet.class, ParameterOneFromSet.class,
+					ParameterRangeFromRange.class, ParameterText.class, ParameterValueFromRange.class,
+					ParameterYesNo.class, FilterdAbstractConfigReferencingAdapted.class); // Create JAXB Context.
 			Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
 			
 			StringReader reader = new StringReader(imported);

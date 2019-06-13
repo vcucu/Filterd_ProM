@@ -74,7 +74,7 @@ public class ComputationCellModel extends CellModel {
 		this.canceller = canceller;
 		this.inputLogs = eventLogs;
 		this.outputLogs = FXCollections.observableArrayList();
-		outputLogs.add(new YLog(Toolbox.getNextId(), getCellName() + " output log"));
+		outputLogs.add(new YLog(Toolbox.getNextId(), getCellName() + " output log", index));
 
 		filters = FXCollections.observableArrayList(new Callback<FilterButtonModel, Observable[]>() {
 			@Override
@@ -90,7 +90,7 @@ public class ComputationCellModel extends CellModel {
 		String oldState = this.cellName.getValue();
 		this.cellName.setValue(cellName);
 		property.firePropertyChange("setCellName", oldState, cellName);
-		// change name of the output log (downstream cells may be using it) 
+		// change name of the output log (downstream cells may be using it)
 		if (this.outputLogs != null && this.outputLogs.size() > 0) {
 			this.outputLogs.get(0).setName(cellName + " output log");
 		}
@@ -107,11 +107,11 @@ public class ComputationCellModel extends CellModel {
 	/**
 	 * <<<<<<< Updated upstream Adds all FilterButtonModels in a collection to
 	 * this model. Ignores models if it is null or empty.
-	 * 
+	 *
 	 * @param models
 	 *            collection of FilterButtonModels. ======= Adds all
 	 *            FilterButtonModels in a collection to this model.
-	 * 
+	 *
 	 * @param models
 	 *            collection of FilterButtonModels. >>>>>>> Stashed changes
 	 */
@@ -142,13 +142,13 @@ public class ComputationCellModel extends CellModel {
 	}
 
 	public void setInputLogs(List<YLog> eventLogs) {
-		//System.out.println("Setting log for computation cell "+ this.getIndex());					
+		//System.out.println("Setting log for computation cell "+ this.getIndex());
 		if (eventLogs == null) {
 			System.out.println("the input logs are null");
 		}
 		List<YLog> oldState = this.getInputLogs();
 		this.inputLogs = eventLogs;
-		//change the items in combobox that are displayed after list in model changes 
+		//change the items in combobox that are displayed after list in model changes
 		property.firePropertyChange("setInputLogs", oldState, eventLogs);
 	}
 
@@ -181,7 +181,7 @@ public class ComputationCellModel extends CellModel {
 
 	/**
 	 * Sets the canceller of this Model. Used when loading a notebook from File.
-	 * 
+	 *
 	 * @param canceller
 	 */
 	public void setCanceller(ProMCanceller canceller) {
@@ -355,7 +355,7 @@ public class ComputationCellModel extends CellModel {
 	/**
 	 * Compute the cell by computing each of its individual filters in the
 	 * appropriate order
-	 * 
+	 *
 	 * @param computeTask
 	 *            javafx task which is used to check whether the user cancelled
 	 *            the compute task
@@ -377,7 +377,7 @@ public class ComputationCellModel extends CellModel {
 			}
 			// compute method may throw two expected exceptions:
 			// - EmptyLogException  the of the previously computed filter is empty (i.e. it has 0 traces)
-			// - InvalidConfigurationExcpetion  the selected configuration is not valid w.r.t. the output of the previous filter  
+			// - InvalidConfigurationExcpetion  the selected configuration is not valid w.r.t. the output of the previous filter
 			try {
 				filter.setInputLog(inputOutput);
 				filter.compute(); // no point in passing the task to the individual filter models (individual filters do not support canceling)
