@@ -31,4 +31,8 @@ public class ParameterYesNoController extends ParameterController {
 	public boolean getValue() {
 		return checkbox.isSelected();
 	}
+	
+	public CheckBox getCheckbox() {
+		return checkbox;
+	}
 }
