@@ -62,6 +62,8 @@ public class Utilities {
 	
 	/**
 	 * Updates the icon of a Label button.
+	 * 
+	 * @pre The Region of the icon should be the first child of the label. 
 	 */
 	public static void changeIcon(Label button, String oldIcon, String newIcon) {
 		// Get icon
