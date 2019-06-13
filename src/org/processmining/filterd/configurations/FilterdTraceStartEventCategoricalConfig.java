@@ -98,7 +98,7 @@ public class FilterdTraceStartEventCategoricalConfig extends FilterdAbstractRefe
 			ParameterYesNo eventHandling = new ParameterYesNo("eventHandling", 
 					"Keep events if attribute not specified.", false);
 			parameters.add(eventHandling);
-			for (XTrace trace : log) {
+			for (XTrace trace : startEventsLog) {
 				for (XEvent event : trace) {
 					String value;
 					if (event.getAttributes().containsKey(attribute)) {

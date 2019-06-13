@@ -466,7 +466,7 @@ public class NotebookModel {
 				ComputationCellModelAdapted.class, FilterButtonAdapted.class, FilterdAbstractConfigAdapted.class,
 				Parameter.class, ParameterMultipleFromSet.class, ParameterOneFromSet.class,
 				ParameterRangeFromRange.class, ParameterText.class, ParameterValueFromRange.class,
-				ParameterYesNo.class, FilterdAbstractConfigReferencingAdapted.class); // Create JAXB Context.
+				ParameterYesNo.class, FilterdAbstractConfigReferencingAdapted.class, FilterdAbstractConfigAdapted.class); // Create JAXB Context.
 		Marshaller jaxbMarshaller = jaxbContext.createMarshaller(); // Create Marshaller.
 		jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE); // Format XML (otherwise it wil be a single line without spaces)
 
