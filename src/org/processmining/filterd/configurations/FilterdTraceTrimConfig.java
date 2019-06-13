@@ -95,7 +95,7 @@ public class FilterdTraceTrimConfig extends FilterdAbstractConfig {
 		ParameterMultipleFromSet firstEvents = 
 				new ParameterMultipleFromSet(
 						"firstattrValues",
-						"Desired values:",
+						"Select start event values:",
 						Arrays.asList(attributeValuesList.get(0)),
 						attributeValuesList
 						);
@@ -104,7 +104,7 @@ public class FilterdTraceTrimConfig extends FilterdAbstractConfig {
 		ParameterMultipleFromSet endEvents = 
 				new ParameterMultipleFromSet(
 						"endattrValues",
-						"Desired values:",
+						"Select end event values:",
 						Arrays.asList(attributeValuesList.get(0)),
 						attributeValuesList
 						);
