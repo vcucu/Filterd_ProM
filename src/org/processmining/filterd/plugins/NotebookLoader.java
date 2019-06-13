@@ -11,6 +11,7 @@ import org.processmining.contexts.uitopia.annotations.UITopiaVariant;
 import org.processmining.filterd.gui.adapters.ComputationCellModelAdapted;
 import org.processmining.filterd.gui.adapters.FilterButtonAdapted;
 import org.processmining.filterd.gui.adapters.FilterdAbstractConfigAdapted;
+import org.processmining.filterd.gui.adapters.FilterdAbstractConfigAdapter;
 import org.processmining.filterd.gui.adapters.FilterdAbstractConfigReferencingAdapted;
 import org.processmining.filterd.gui.adapters.NotebookModelAdapted;
 import org.processmining.filterd.gui.adapters.TextCellModelAdapted;
@@ -38,18 +39,17 @@ public class NotebookLoader {
 					ComputationCellModelAdapted.class, FilterButtonAdapted.class, FilterdAbstractConfigAdapted.class,
 					Parameter.class, ParameterMultipleFromSet.class, ParameterOneFromSet.class,
 					ParameterRangeFromRange.class, ParameterText.class, ParameterValueFromRange.class,
-					ParameterYesNo.class, FilterdAbstractConfigReferencingAdapted.class); // Create JAXB Context.
+					ParameterYesNo.class, FilterdAbstractConfigReferencingAdapted.class);
 			Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
 			
 			StringReader reader = new StringReader(imported);
 			adaptedModel = (NotebookModelAdapted) jaxbUnmarshaller.unmarshal(reader);
 			
-			// embed the initial input to the adaptedModel
+			// embed the initial input to the adaptedModel.
 			adaptedModel.setInitialInput(log);
+			// set the initial input for the abstract configs.
+			FilterdAbstractConfigAdapter.setInitialInput(log);
 			
-//			// convert the adapted model to a notebook model.
-//			NotebookModelAdapter adapter = new NotebookModelAdapter();		
-//			notebookModel = adapter.unmarshal(adaptedModel);
 			return adaptedModel;
 		} catch (Exception e) {
 			e.printStackTrace();

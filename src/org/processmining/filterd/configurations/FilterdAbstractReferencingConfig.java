@@ -43,6 +43,11 @@ public abstract class FilterdAbstractReferencingConfig extends FilterdAbstractCo
 		return concreteReference;
 	}
 	
+	public void setConcreteReference(FilterdAbstractReferenceableConfig concreteReference) {
+		//TODO: throw illegal state exception if the concreteReference is already set.
+		this.concreteReference = concreteReference;
+	}
+	
 	@Override
 	public FilterdAbstractConfig populate(AbstractFilterConfigPanelController abstractComponent) {
 		
