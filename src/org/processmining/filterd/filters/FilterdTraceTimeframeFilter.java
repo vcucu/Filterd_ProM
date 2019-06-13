@@ -1,6 +1,5 @@
 package org.processmining.filterd.filters;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -36,9 +35,6 @@ public class FilterdTraceTimeframeFilter extends Filter {
 
 		int lowPos = timeframeParameter.getChosenPair().get(0);
 		int highPos = timeframeParameter.getChosenPair().get(1);
-		
-		LocalDateTime[] firstAndlastTimestamp = 
-				Toolbox.getFirstAndLastTimes(clonedLog);
 		
 		Set<XTrace> tracesToRemove = new HashSet<>();
 		Set<XEvent> eventsToRemove = new HashSet<>();
@@ -122,45 +118,10 @@ public class FilterdTraceTimeframeFilter extends Filter {
 					
 					break;
 				}
-				case "Trim to timeframe": {
-					
-					// Check the time stamp of every event
-					for (XEvent event : trace) {
-						
-						LocalDateTime eventTimeStamp = Toolbox.synchronizeGMT(
-								event
-								.getAttributes()
-								.get("time:timestamp")
-								.toString());
-						
-						
-						int eventPos = times.indexOf(eventTimeStamp.toString());
-						// If the event is not contained in the time frame,
-						// remove it.
-						if (!(eventPos >= firstEventPos
-								&& eventPos <= finalEventPos)) {
-							
-							eventsToRemove.add(event);
-							
-						}
-						
-					}
-
-					break;
-				}
 				
 			}
 			
 			
-		}
-		
-		for (XTrace trace : clonedLog) {
-			
-			trace.removeAll(eventsToRemove);
-			
-			if (trace.isEmpty()) {
-				tracesToRemove.add(trace);
-			}
 		}
 		
 		clonedLog.removeAll(tracesToRemove);
