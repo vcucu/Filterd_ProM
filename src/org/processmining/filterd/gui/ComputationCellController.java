@@ -91,6 +91,7 @@ public class ComputationCellController extends CellController {
 	@FXML private Label prependCellButton;
 	@FXML private HBox fullToolbar;
 	@FXML private HBox cellToolbar;
+	@FXML private Label lblNumEventLogs;
 
 	public ComputationCellController(ComputationCellModel model) {
 		super(null, model);
@@ -106,15 +107,6 @@ public class ComputationCellController extends CellController {
 		isFullScreen = false;
 		notebookLayout = controller.getNotebookLayout();
 		notebookToolbar = controller.getToolbarLayout();
-		
-		// Change compute button icon (play / pause) when the computation stops / starts
-		this.getCellModel().isComputingProperty().addListener((observable, oldValue, newValue) -> {
-			if (newValue) {
-				Utilities.changeIcon(computeButton, "play-solid", "pause-solid");
-			} else {
-				Utilities.changeIcon(computeButton, "pause-solid", "play-solid");
-			}
-		});
 	}
 
 	/**
@@ -143,6 +135,22 @@ public class ComputationCellController extends CellController {
 		addFilterButtonListeners();
 		// bind the cell name to the cell name variable.
 		getCellModel().bindCellName(cellName.textProperty());
+		
+		// Change compute button icon (play / pause) when the computation stops / starts
+		this.getCellModel().isComputingProperty().addListener((observable, oldValue, newValue) -> {
+			if (newValue) {
+				Utilities.changeIcon(computeButton, "play-solid", "pause-solid");
+			} else {
+				Utilities.changeIcon(computeButton, "pause-solid", "play-solid");
+			}
+		});
+		
+		// Update label showing number of output logs when there's a change
+		updateNoOfOutputs(getCellModel().getOutputLogs().size());
+		
+		this.getCellModel().getOutputLogs().addListener((ListChangeListener<? super YLog>) change -> {
+			updateNoOfOutputs(getCellModel().getOutputLogs().size());
+		});
 
 		// Initialize the visualizer
 		visualizerSwgWrap = new SwingBubble();
@@ -417,6 +425,14 @@ public class ComputationCellController extends CellController {
 	@FXML
 	private void reloadVisualizer() {
 		this.loadVisualizer();
+	}
+	
+	private void updateNoOfOutputs(int noOfLogs) {
+		if (noOfLogs == 1) {
+			lblNumEventLogs.setText("1 output event log");
+		} else {
+			lblNumEventLogs.setText(noOfLogs + " output event logs");
+		}
 	}
 
 	/**

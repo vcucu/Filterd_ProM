@@ -64,17 +64,19 @@ public class SwingBubble extends AnchorPane {
 	 * @pre imgView must be in the parent object.
 	 */
 	private void unfake() {
-        Platform.runLater(new Runnable() {
-            @Override
-            public synchronized void run() {
-        		if (getChildren().contains(imgView)) {
-        			// Reload visualizer
-        			getChildren().add(swgNode);
-        			// Remove snapshot
-        			getChildren().remove(imgView);
-        		}
-            }
-        });
+		if (swgNode.getContent() != null) {			
+	        Platform.runLater(new Runnable() {
+	            @Override
+	            public synchronized void run() {
+	        		if (getChildren().contains(imgView)) {
+	        			// Reload visualizer
+	        			getChildren().add(swgNode);
+	        			// Remove snapshot
+	        			getChildren().remove(imgView);
+	        		}
+	            }
+	        });
+		}
 	}
 	
 	public void setContent(JComponent content) {

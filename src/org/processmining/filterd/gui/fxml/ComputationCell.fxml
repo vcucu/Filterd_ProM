@@ -75,7 +75,7 @@
                               <URL value="@../css/Icons.css" />
                            </stylesheets>
                         </Label>
-                        <Region maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
+                        <Region HBox.hgrow="ALWAYS" />
                         <TextField fx:id="cellName" alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" onKeyPressed="#handleCellName" prefHeight="25.0" styleClass="cell-name" text="Cell name">
                            <font>
                               <Font size="14.0" />
@@ -132,24 +132,40 @@
                   </HBox>
                   <HBox fx:id="cellBody" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="390.0" VBox.vgrow="ALWAYS">
                      <children>
-                        <ScrollPane fx:id="filterPanelScroll" cacheShape="false" fitToWidth="true" hbarPolicy="NEVER" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="390.0" prefWidth="245.0" HBox.hgrow="ALWAYS">
-                           <content>
-                              <VBox fx:id="filtersVBox" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity">
-                                 <children>
-                                    <VBox fx:id="panelLayout" alignment="TOP_CENTER" spacing="5.0" VBox.vgrow="ALWAYS">
-                                       <VBox.margin>
-                                          <Insets top="5.0" />
-                                       </VBox.margin>
+                        <VBox>
+                           <children>
+                              <ScrollPane fx:id="filterPanelScroll" cacheShape="false" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="390.0" prefWidth="245.0">
+                                 <content>
+                                    <VBox fx:id="filtersVBox" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity">
+                                       <children>
+                                          <VBox fx:id="panelLayout" alignment="TOP_CENTER" spacing="5.0">
+                                             <VBox.margin>
+                                                <Insets bottom="10.0" top="5.0" />
+                                             </VBox.margin>
+                                          </VBox>
+                                          <Label alignment="CENTER" contentDisplay="CENTER" onMouseClicked="#addFilter" styleClass="addFilterButton" text="Click to add a filter" textFill="#787878">
+                                             <VBox.margin>
+                                                <Insets left="10.0" right="10.0" />
+                                             </VBox.margin>
+                                             <padding>
+                                                <Insets bottom="10.0" left="45.0" right="45.0" top="10.0" />
+                                             </padding>
+                                             <font>
+                                                <Font name="System Bold" size="14.0" />
+                                             </font>
+                                          </Label>
+                                          <Region maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS" />
+                                          <Label fx:id="lblNumEventLogs" alignment="BOTTOM_CENTER" text="0 output event logs" textFill="#787878">
+                                             <font>
+                                                <Font name="System Bold" size="14.0" />
+                                             </font>
+                                          </Label>
+                                       </children>
                                     </VBox>
-                                    <Label alignment="CENTER" contentDisplay="CENTER" onMouseClicked="#addFilter" styleClass="addFilterButton" text="Click to add a filter" VBox.vgrow="ALWAYS">
-                                       <VBox.margin>
-                                          <Insets bottom="15.0" left="10.0" right="10.0" top="15.0" />
-                                       </VBox.margin>
-                                    </Label>
-                                 </children>
-                              </VBox>
-                           </content>
-                        </ScrollPane>
+                                 </content>
+                              </ScrollPane>
+                           </children>
+                        </VBox>
                         <Label fx:id="expandButton" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#handleExpandVisualiser" prefHeight="46.0" prefWidth="11.0">
                            <graphic>
                               <Region prefHeight="200.0" prefWidth="200.0">

@@ -49,7 +49,7 @@ public class ComputationCellModel extends CellModel {
 	private ProMCanceller canceller;
 	private YLog inputLog;
 	private List<YLog> inputLogs;
-	private List<YLog> outputLogs;
+	private ObservableList<YLog> outputLogs;
 	private ObservableList<FilterButtonModel> filters;
 	private SimpleBooleanProperty isComputing;
 	private Task<Void> computeTask;
@@ -73,7 +73,7 @@ public class ComputationCellModel extends CellModel {
 		super(context, index);
 		this.canceller = canceller;
 		this.inputLogs = eventLogs;
-		this.outputLogs = new ArrayList<>();
+		this.outputLogs = FXCollections.observableArrayList();
 		outputLogs.add(new YLog(Toolbox.getNextId(), getCellName() + " output log"));
 
 		filters = FXCollections.observableArrayList(new Callback<FilterButtonModel, Observable[]>() {
@@ -157,10 +157,10 @@ public class ComputationCellModel extends CellModel {
 	}
 
 	public void setOutputLogs(List<YLog> outputLogs) {
-		this.outputLogs = outputLogs;
+		this.outputLogs.setAll(outputLogs);
 	}
 
-	public List<YLog> getOutputLogs() {
+	public ObservableList<YLog> getOutputLogs() {
 		return outputLogs;
 	}
 

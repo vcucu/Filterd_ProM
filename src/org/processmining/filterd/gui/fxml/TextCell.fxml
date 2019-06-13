@@ -39,7 +39,7 @@
       </VBox>
       <HBox styleClass="cell-panel" VBox.vgrow="SOMETIMES">
          <children>
-            <Region fx:id="statusBar" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minWidth="-Infinity" onMouseClicked="#handleStatusBar" prefWidth="14.0" style="-fx-background-color: #799ea4;" HBox.hgrow="ALWAYS" />
+            <Region fx:id="statusBar" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minWidth="-Infinity" onMouseClicked="#handleStatusBar" prefWidth="14.0" style="-fx-background-color: #67A767;" HBox.hgrow="ALWAYS" />
             <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" styleClass="panel-content" HBox.hgrow="ALWAYS">
                <children>
                   <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="35.0" spacing="10.0" styleClass="cell-toolbar" VBox.vgrow="ALWAYS">
