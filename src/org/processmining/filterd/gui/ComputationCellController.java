@@ -472,7 +472,9 @@ public class ComputationCellController extends CellController {
 		}
 		
 		// Show expand button
-		expandButton.setVisible(true);
+		if (cmbVisualizers.getValue() != Utilities.dummyViewType) {
+			expandButton.setVisible(true);			
+		}
 		
 		this.isConfigurationModalShown = false;
 	}
