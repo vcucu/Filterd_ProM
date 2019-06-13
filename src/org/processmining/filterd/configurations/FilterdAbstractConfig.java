@@ -34,7 +34,7 @@ public abstract class FilterdAbstractConfig {
 	protected boolean isAttribute; // checks whether selected string is attribute or complex classifier
 	protected FilterConfigPanelController configPanel = null;
 
-	public FilterdAbstractConfig(XLog log, Filter filterType ) throws EmptyLogException{
+	public FilterdAbstractConfig(XLog log, Filter filterType ) throws EmptyLogException {
 		
 		this.filterType = filterType;
 		this.checkEmptyLog(log);

@@ -14,10 +14,12 @@ import org.processmining.filterd.parameters.Parameter;
 public class FilterdAbstractConfigAdapted {
 
 	String className;
+	String filterTypeName;
 	List<Parameter> parameters;
 	
 	// following variables are not exported but are needed for reconstruction
 	XLog log;
+	
 	
 	public String getClassName() {
 		return className;
@@ -25,6 +27,14 @@ public class FilterdAbstractConfigAdapted {
 	
 	public void setClassName(String className) {
 		this.className = className;
+	}
+	
+	public String getfilterTypeName() {
+		return filterTypeName;
+	}
+	
+	public void setfilterTypeName(String filterTypeName) {
+		this.filterTypeName = filterTypeName;
 	}
 	
 	public List<Parameter> getParameters() {

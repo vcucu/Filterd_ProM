@@ -1,6 +1,5 @@
 package org.processmining.filterd.gui.adapters;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import javax.xml.bind.annotation.adapters.XmlAdapter;
@@ -28,13 +27,14 @@ public class FilterdAbstractConfigAdapter extends XmlAdapter<FilterdAbstractConf
 		try {
 			// create the new object of the right type based on the class name.
 			FilterdAbstractConfig config;
-			Class<FilterdAbstractConfig> cls = (Class<FilterdAbstractConfig>) Class.forName(adaptedConfig.getClassName());
-			if (FilterdAbstractReferenceableConfig.class.isAssignableFrom(cls.getClass())) {
+			Class<FilterdAbstractConfig> configClass = (Class<FilterdAbstractConfig>) Class.forName(adaptedConfig.getClassName());
+			Filter filterType =  (Filter) Class.forName(adaptedConfig.getfilterTypeName()).newInstance();
+			if (FilterdAbstractReferenceableConfig.class.isAssignableFrom(configClass.getClass())) {
 				//TODO: replace nulls
-				config = cls.getDeclaredConstructor(XLog.class, Filter.class, String.class, List.class).newInstance(initialInput ,null,null,null);
+				
+				config = configClass.getDeclaredConstructor(XLog.class, Filter.class, String.class, List.class).newInstance(initialInput , filterType,null,null);
 			} else {
-				//TODO: replace nulls
-				config = cls.getDeclaredConstructor(XLog.class, Filter.class).newInstance(initialInput,null);
+				config = configClass.getDeclaredConstructor(XLog.class, Filter.class).newInstance(initialInput, filterType);
 			}
 			
 			config.setParameters(config.getParameters());
@@ -46,8 +46,8 @@ public class FilterdAbstractConfigAdapter extends XmlAdapter<FilterdAbstractConf
 			}
 
 			return config;
-		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | InvocationTargetException | NoSuchMethodException e) {
-			System.out.println("##################### class name: " + adaptedConfig.getClassName());
+		//} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | InvocationTargetException | NoSuchMethodException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
 		}
@@ -67,11 +67,12 @@ public class FilterdAbstractConfigAdapter extends XmlAdapter<FilterdAbstractConf
 		}
 
 		adaptedConfig.setClassName(config.getClass().getName());
+		adaptedConfig.setfilterTypeName(config.getFilterType().getClass().getName());
 		adaptedConfig.setParameters(config.getParameters());
 		return adaptedConfig;
 	}
 
-	public static XLog getInitialInput(XLog log) {
+	public static XLog getInitialInput() {
 		return initialInput;
 	}
 

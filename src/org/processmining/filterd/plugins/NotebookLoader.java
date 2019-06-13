@@ -39,16 +39,17 @@ public class NotebookLoader {
 					ComputationCellModelAdapted.class, FilterButtonAdapted.class, FilterdAbstractConfigAdapted.class,
 					Parameter.class, ParameterMultipleFromSet.class, ParameterOneFromSet.class,
 					ParameterRangeFromRange.class, ParameterText.class, ParameterValueFromRange.class,
-					ParameterYesNo.class, FilterdAbstractConfigReferencingAdapted.class);
+					ParameterYesNo.class, FilterdAbstractConfigReferencingAdapted.class, FilterdAbstractConfigAdapted.class); // Create JAXB Context.
 			Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
 			
 			StringReader reader = new StringReader(imported);
+			// set the initial input for the abstract configs.
+			FilterdAbstractConfigAdapter.setInitialInput(log);
 			adaptedModel = (NotebookModelAdapted) jaxbUnmarshaller.unmarshal(reader);
 			
 			// embed the initial input to the adaptedModel.
 			adaptedModel.setInitialInput(log);
-			// set the initial input for the abstract configs.
-			FilterdAbstractConfigAdapter.setInitialInput(log);
+			
 			
 			return adaptedModel;
 		} catch (Exception e) {

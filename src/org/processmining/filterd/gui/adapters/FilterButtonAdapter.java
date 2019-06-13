@@ -17,7 +17,7 @@ public class FilterButtonAdapter extends XmlAdapter<FilterButtonAdapted, FilterB
 		FilterButtonAdapted adaptedModel = new FilterButtonAdapted();
 		adaptedModel.setIndex(model.getIndex());
 		adaptedModel.setName(model.getName());
-		adaptedModel.setFilterAbstractConfig(model.getFilterConfig());
+		adaptedModel.setFilterConfig(model.getFilterConfig());
 		return adaptedModel;
 	}
 	

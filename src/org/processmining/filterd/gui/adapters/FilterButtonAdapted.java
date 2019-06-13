@@ -35,7 +35,7 @@ public class FilterButtonAdapted {
 		return filterConfig;
 	}
 	
-	public void setFilterAbstractConfig(FilterdAbstractConfig filterConfig) {
+	public void setFilterConfig(FilterdAbstractConfig filterConfig) {
 		this.filterConfig = filterConfig;
 	}
 	
