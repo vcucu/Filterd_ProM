@@ -34,7 +34,7 @@ public class FilterdTraceFrequencyConfig extends FilterdAbstractConfig {
 		List<String> foOptions = new ArrayList<String>();
 
 		foOptions.add("frequency");
-		foOptions.add("occurrance");
+		foOptions.add("occurrence");
 
 		ParameterOneFromSet frequencyOccurranceParameter = 
 				new ParameterOneFromSet(
