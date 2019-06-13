@@ -1,0 +1,75 @@
+.icon-svg {
+	-fx-scale-x: 0.5;
+	-fx-scale-y: 0.5;
+}
+
+.round-combobox {
+	-fx-background-radius: 15;
+	-fx-background-color: linear-gradient(#ABABAB, #A9A9A9, #8B8B8B, #898989);
+}
+
+.round-button {
+	-fx-background-radius: 100;
+	-fx-background-color:  #787878;
+}
+
+.round-button > .icon-svg {
+	-fx-background-color: white;
+}
+
+.dropdown-button .arrow-button  {
+    -fx-opacity: 0.0;
+}
+
+.dropdown-button {
+	-fx-background-color: #FFFFFF;
+}
+
+.notebook-layout .round-button :not(.labeled-round-button) {
+	-fx-pref-width: 30;
+	-fx-pref-height: 30;
+}
+
+.notebook-layout .labeled-round-button {
+	-fx-pref-height: 30;
+	-fx-label-padding: 0 10 0 5;
+}
+
+.notebook-layout .labeled-round-button > * {
+	-fx-pref-width: 30;
+	-fx-pref-height: 30;
+}
+
+.cell-layout .round-button {
+	-fx-pref-width: 24;
+	-fx-pref-height: 24;
+}
+
+.icon-button > .icon-svg {
+	-fx-background-color: white;
+}
+
+.toggle-buttons > .toggle-button1 {
+	-fx-background-radius: 15 0 0 15;
+}
+
+.toggle-buttons > .toggle-button2 {
+	-fx-background-radius: 0 15 15 0;
+}
+
+.toggle-buttons > * {
+	-fx-background-color: #939393;
+}
+
+.toggle-buttons > :disabled {
+	-fx-background-color: #8C8C14;
+	-fx-opacity: 1.0;
+}
+
+.notebook-layout .toggle-buttons > * {
+	-fx-pref-height: 30;
+}
+
+.toggle-buttons > :disabled {
+	-fx-text-fill: white;
+}

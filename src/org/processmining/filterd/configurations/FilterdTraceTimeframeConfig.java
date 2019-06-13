@@ -80,8 +80,7 @@ public class FilterdTraceTimeframeConfig extends FilterdAbstractConfig {
 								"Contained in timeframe",
 								"Intersecting timeframe",
 								"Started in timeframe",
-								"Completed in timeframe",
-								"Trim to timeframe"));
+								"Completed in timeframe"));
 		
 		parameters.add(range);
 		parameters.add(keepTracesParameter);

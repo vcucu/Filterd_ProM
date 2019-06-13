@@ -6,6 +6,13 @@ public abstract class Parameter {
 	protected String explanation;
 	protected String name;
 	
+	/**
+	 * This constructor exists for importing and exporting
+	 */
+	public Parameter( ) {
+		
+	}
+	
 	public Parameter(String name, String nameDisplayed) {
 		this.name = name;
 		this.nameDisplayed = nameDisplayed;

@@ -44,7 +44,6 @@ import org.processmining.filterd.models.YLog;
 import org.processmining.filterd.plugins.FilterdVisualizer;
 import org.processmining.filterd.tools.EmptyLogException;
 
-import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
@@ -87,7 +86,7 @@ public class ComputationCellController extends CellController {
 	@FXML private HBox cellBody;
 	@FXML private Label fullScreenButton;
 	@FXML private Label playButton;
-	@FXML private Region computeButtonImage;
+	@FXML private Label computeButton;
 	@FXML private MenuButton menuBtnCellSettings;
 	@FXML private Label prependCellButton;
 	@FXML private HBox fullToolbar;
@@ -107,27 +106,13 @@ public class ComputationCellController extends CellController {
 		isFullScreen = false;
 		notebookLayout = controller.getNotebookLayout();
 		notebookToolbar = controller.getToolbarLayout();
-		// change compute button text (play / pause symbols) when the computation stops / starts
-		this.getCellModel().isComputingProperty().addListener(new ChangeListener<Boolean>() {
-
-			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-				if (newValue) {
-					Platform.runLater(new Runnable() {
-						@Override
-						public void run() {
-							computeButtonImage.getStyleClass().remove("play-solid");
-							computeButtonImage.getStyleClass().add("pause-solid");
-						}
-					});
-				} else {
-					Platform.runLater(new Runnable() {
-						@Override
-						public void run() {
-							computeButtonImage.getStyleClass().remove("pause-solid");
-							computeButtonImage.getStyleClass().add("play-solid");
-						}
-					});
-				}
+		
+		// Change compute button icon (play / pause) when the computation stops / starts
+		this.getCellModel().isComputingProperty().addListener((observable, oldValue, newValue) -> {
+			if (newValue) {
+				Utilities.changeIcon(computeButton, "play-solid", "pause-solid");
+			} else {
+				Utilities.changeIcon(computeButton, "pause-solid", "play-solid");
 			}
 		});
 	}
@@ -141,7 +126,6 @@ public class ComputationCellController extends CellController {
 		// Load event logs in cmbEventLog and select "Initial input"
 		cmbEventLog.getItems().addAll(model.getInputLogs());
 		cmbEventLog.getSelectionModel().selectFirst();
-		System.out.println("!!!! WE ARE GONNA SET THE XLOG RN !!!!");
 		setXLog();
 		// Add listeners to the basic model components
 		cellModel.getProperty().addPropertyChangeListener(new ComputationCellModelListeners(this));
@@ -183,7 +167,6 @@ public class ComputationCellController extends CellController {
 				getCellModel().getStatusBar() == CellStatus.IDLE) {
 				filterModel.setInputLog(getCellModel().getFilters().get(index - 1).getOutputLog());
 			} else {
-				System.out.println("New Filter");
 			}
 			getCellModel().addFilterModel(index, filterModel);
 			loadFilter(index, filterModel);
@@ -266,9 +249,7 @@ public class ComputationCellController extends CellController {
 
 
 	public void changeInputLogsCombo(List <YLog> logs){
-		System.out.println("selected value BEFORE setting the items " + cmbEventLog.getValue().getName() + (cmbEventLog.getValue()==null));
 		cmbEventLog.setItems((ObservableList<YLog>) logs);
-		System.out.println("selected value AFTER setting the items " + cmbEventLog.getValue().getName() + (cmbEventLog.getValue()==null));
 	}
 
 	/**
@@ -388,7 +369,6 @@ public class ComputationCellController extends CellController {
 	// Set XLog
 	@FXML
 	public void setXLog() {
-		System.out.println("WE ARE SETTING THE XLOG");
 		ComputationCellModel model = this.getCellModel();
 		YLog eventLog = cmbEventLog.getValue();
 		model.setInputLog(eventLog);
@@ -406,6 +386,9 @@ public class ComputationCellController extends CellController {
 			visualizerSwgWrap.setContent(null);
 			return;
 		}
+		visualizerPane.getChildren().clear();
+		visualizerSwgWrap.setContent(null);
+		
 		JComponent visualizer = getCellModel().getVisualization(cmbVisualizers.getValue());
 		if (!visualizerPane.getChildren().contains(visualizerSwgWrap)) {
 			// Add visualizer if not present
@@ -429,6 +412,11 @@ public class ComputationCellController extends CellController {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	@FXML
+	private void reloadVisualizer() {
+		this.loadVisualizer();
 	}
 
 	/**

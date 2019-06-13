@@ -16,10 +16,20 @@ import org.processmining.contexts.uitopia.UIPluginContext;
 import org.processmining.contexts.uitopia.hub.ProMResourceManager;
 import org.processmining.contexts.uitopia.hub.ProMViewManager;
 import org.processmining.filterd.gui.adapters.ComputationCellModelAdapted;
+import org.processmining.filterd.gui.adapters.FilterButtonAdapted;
+import org.processmining.filterd.gui.adapters.FilterdAbstractConfigAdapted;
+import org.processmining.filterd.gui.adapters.FilterdAbstractConfigReferencingAdapted;
 import org.processmining.filterd.gui.adapters.NotebookModelAdapted;
 import org.processmining.filterd.gui.adapters.NotebookModelAdapter;
 import org.processmining.filterd.gui.adapters.TextCellModelAdapted;
 import org.processmining.filterd.models.YLog;
+import org.processmining.filterd.parameters.Parameter;
+import org.processmining.filterd.parameters.ParameterMultipleFromSet;
+import org.processmining.filterd.parameters.ParameterOneFromSet;
+import org.processmining.filterd.parameters.ParameterRangeFromRange;
+import org.processmining.filterd.parameters.ParameterText;
+import org.processmining.filterd.parameters.ParameterValueFromRange;
+import org.processmining.filterd.parameters.ParameterYesNo;
 import org.processmining.filterd.tools.Toolbox;
 import org.processmining.framework.plugin.ProMCanceller;
 
@@ -81,7 +91,7 @@ public class NotebookModel {
 	 */
 	public NotebookModel(UIPluginContext context, XLog log, ProMCanceller canceller) {
 		this.promContext = context;
-		this.initialInput = new YLog(Toolbox.getNextId(), "Initial input", log);
+		this.initialInput = new YLog(Toolbox.getNextId(), "Initial input", log, 0);
 		this.promCanceller = canceller;
 		this.cells = FXCollections.observableArrayList();
 		// set the computation mode to manual
@@ -170,7 +180,8 @@ public class NotebookModel {
 	}
 
 	/**
-	 * Appends a list of cells to the list of cells in this model. Ignores empty cells and null.
+	 * Appends a list of cells to the list of cells in this model. Ignores empty
+	 * cells and null.
 	 * 
 	 * @param cells
 	 *            The list of cells to append to the cells in this model.
@@ -179,7 +190,7 @@ public class NotebookModel {
 		if (cells != null && !cells.isEmpty()) {
 			// if cells is not null and is not empty
 			this.cells.addAll(cells);
-		}		
+		}
 	}
 
 	/**
@@ -306,14 +317,14 @@ public class NotebookModel {
 	 */
 	public void removeCellsInputLogs(int startIndex, int endIndex, ComputationCellModel removedCell) {
 		//Remove all input logs of the removed cell so that if re-added we add new elements from scratch
-		 List<YLog> logs = removedCell.getOutputLogs();
+		List<YLog> logs = removedCell.getOutputLogs();
 		for (int i = startIndex; i <= endIndex; i++) {
 			CellModel gCell = getCells().get(i);
 			if (gCell instanceof ComputationCellModel) {
 				ComputationCellModel cell = (ComputationCellModel) gCell;
 				//creates new object so that event would be fired when calling the setInputLogs
 				List<YLog> result = new ArrayList<YLog>(cell.getInputLogs());
-				System.out.println("Removing log " +  logs.get(0).getName() + " from cell " + i );
+				System.out.println("Removing log " + logs.get(0).getName() + " from cell " + i);
 				result.removeAll(logs);
 				//cast the array list to an observable list and set it to be the new input logs of the cell
 				cell.setInputLogs(FXCollections.observableArrayList(result));
@@ -335,7 +346,7 @@ public class NotebookModel {
 		//make sure the added cell's input logs are up to date
 		//changedCell.getInputLogs().clear();
 		changedCell.setInputLogs(FXCollections.observableArrayList(getOutputLogsTill(startIndex)));
-		
+
 		List<YLog> logs = changedCell.getOutputLogs(); // get all logs outputed by cell at startIndex
 		//System.out.println("Removing cell with index: " + startIndex + " with output logs " + logs.get(0).getName());
 		for (int i = startIndex + 1; i <= endIndex; i++) {
@@ -344,7 +355,7 @@ public class NotebookModel {
 				ComputationCellModel cell = (ComputationCellModel) gCell;
 				//creates new object so that event would be fired when calling the setInputLogs
 				List<YLog> result = new ArrayList<YLog>(cell.getInputLogs());
-				System.out.println("Adding log " +  logs.get(0).getName() + " from cell " + i );
+				System.out.println("Adding log " + logs.get(0).getName() + " from cell " + i);
 				result.addAll(logs);
 				//cast the array list to an observable list and set it to be the new input logs of the cell
 				cell.setInputLogs(FXCollections.observableArrayList(result));
@@ -427,7 +438,7 @@ public class NotebookModel {
 	public boolean isComputing() {
 		return this.isComputing.get();
 	}
-	
+
 	public void setComputing(boolean value) {
 		this.isComputing.setValue(value);
 	}
@@ -452,7 +463,10 @@ public class NotebookModel {
 	 */
 	public String getXML() throws JAXBException {
 		JAXBContext jaxbContext = JAXBContext.newInstance(NotebookModelAdapted.class, TextCellModelAdapted.class,
-				ComputationCellModelAdapted.class); // Create JAXB Context.
+				ComputationCellModelAdapted.class, FilterButtonAdapted.class, FilterdAbstractConfigAdapted.class,
+				Parameter.class, ParameterMultipleFromSet.class, ParameterOneFromSet.class,
+				ParameterRangeFromRange.class, ParameterText.class, ParameterValueFromRange.class,
+				ParameterYesNo.class, FilterdAbstractConfigReferencingAdapted.class); // Create JAXB Context.
 		Marshaller jaxbMarshaller = jaxbContext.createMarshaller(); // Create Marshaller.
 		jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE); // Format XML (otherwise it wil be a single line without spaces)
 

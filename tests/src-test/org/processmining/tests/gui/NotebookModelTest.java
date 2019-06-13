@@ -200,7 +200,7 @@ public class NotebookModelTest extends FilterdPackageTest {
 	@Test
 	public void testNotebookGetOutputLogsTillMultiple() {
 		// Create new YLog with initial input log
-		YLog logY = new YLog(0, "Original Log", originalLog);
+		YLog logY = new YLog(0, "Original Log", originalLog, 0);
 		
 		// Create new notebook model instance
 		NotebookModel model = new NotebookModel();
@@ -227,7 +227,7 @@ public class NotebookModelTest extends FilterdPackageTest {
 		// Create new notebook model instance
 		NotebookModel model = new NotebookModel();
 		// Create new YLog
-		YLog initialLog = new YLog(0, "Original Log", originalLog);
+		YLog initialLog = new YLog(0, "Original Log", originalLog, 0);
 		// Set the initial input log for the notebook
 		model.setInitialInput(initialLog);
 		// Check the initial input log was properly set
@@ -255,7 +255,7 @@ public class NotebookModelTest extends FilterdPackageTest {
 	@Test
 	public void testNotebookComputeOneCell() {
 		// Create new YLog with initial input log
-		YLog logY = new YLog(0, "Original Log", originalLog);
+		YLog logY = new YLog(0, "Original Log", originalLog, 0);
 		
 		// Create new notebook model instance
 		NotebookModel model = new NotebookModel();

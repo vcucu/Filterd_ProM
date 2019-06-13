@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.lang.String?>
+<?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Group?>
 <?import javafx.scene.control.Label?>
@@ -16,7 +17,7 @@
       <Region HBox.hgrow="ALWAYS" />
       <Group fx:id="buttons" visible="false">
          <children>
-            <Label fx:id="moveUpButton" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#moveUpFilterHandler" prefHeight="25.0" prefWidth="25.0" stylesheets="@../css/Icons.css">
+            <Label fx:id="moveUpButton" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#moveUpFilterHandler" prefHeight="25.0" prefWidth="25.0">
                <graphic>
                   <Region>
                      <styleClass>
@@ -25,8 +26,12 @@
                      </styleClass>
                   </Region>
                </graphic>
+               <stylesheets>
+                  <URL value="@../css/Icons.css" />
+                  <URL value="@../css/Controls.css" />
+               </stylesheets>
             </Label>
-            <Label fx:id="moveDownButton" contentDisplay="CENTER" layoutX="25.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#moveDownFilterHandler" prefHeight="25.0" prefWidth="25.0" stylesheets="@../css/Icons.css">
+            <Label fx:id="moveDownButton" contentDisplay="CENTER" layoutX="25.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#moveDownFilterHandler" prefHeight="25.0" prefWidth="25.0">
                <graphic>
                   <Region>
                      <styleClass>
@@ -35,8 +40,12 @@
                      </styleClass>
                   </Region>
                </graphic>
+               <stylesheets>
+                  <URL value="@../css/Icons.css" />
+                  <URL value="@../css/Controls.css" />
+               </stylesheets>
             </Label>
-            <Label fx:id="removeButton" contentDisplay="CENTER" layoutX="50.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#removeFilterHandler" prefHeight="25.0" prefWidth="25.0" stylesheets="@../css/Icons.css">
+            <Label fx:id="removeButton" contentDisplay="CENTER" layoutX="50.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#removeFilterHandler" prefHeight="25.0" prefWidth="25.0">
                <graphic>
                   <Region>
                      <styleClass>
@@ -45,10 +54,14 @@
                      </styleClass>
                   </Region>
                </graphic>
+               <stylesheets>
+                  <URL value="@../css/Icons.css" />
+                  <URL value="@../css/Controls.css" />
+               </stylesheets>
             </Label>
          </children>
       </Group>
-      <Label fx:id="editButton" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" onMouseClicked="#editFilterHandler" prefHeight="30.0" prefWidth="25.0" stylesheets="@../css/Icons.css">
+      <Label fx:id="editButton" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" onMouseClicked="#editFilterHandler" prefHeight="30.0" prefWidth="25.0">
          <graphic>
             <Region>
                <styleClass>
@@ -60,6 +73,10 @@
          <HBox.margin>
             <Insets />
          </HBox.margin>
+         <stylesheets>
+            <URL value="@../css/Icons.css" />
+            <URL value="@../css/Controls.css" />
+         </stylesheets>
       </Label>
    </children>
    <padding>

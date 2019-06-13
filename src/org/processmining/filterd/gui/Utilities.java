@@ -6,8 +6,11 @@ import org.deckfour.uitopia.api.model.ResourceType;
 import org.deckfour.uitopia.api.model.View;
 import org.deckfour.uitopia.api.model.ViewType;
 
+import javafx.application.Platform;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Region;
 
 public class Utilities {
 	
@@ -55,6 +58,22 @@ public class Utilities {
 		AnchorPane.setBottomAnchor(node, value);
 		AnchorPane.setLeftAnchor(node, value);
 		AnchorPane.setRightAnchor(node, value);
+	}
+	
+	/**
+	 * Updates the icon of a Label button.
+	 */
+	public static void changeIcon(Label button, String oldIcon, String newIcon) {
+		// Get icon
+		Region icon = (Region) button.getChildrenUnmodifiable().get(0);
+		// Update icon
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				icon.getStyleClass().remove(oldIcon);
+				icon.getStyleClass().add(newIcon);
+			}
+		});
 	}
 	
 }

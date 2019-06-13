@@ -74,7 +74,7 @@ public class ComputationCellModel extends CellModel {
 		this.canceller = canceller;
 		this.inputLogs = eventLogs;
 		this.outputLogs = new ArrayList<>();
-		outputLogs.add(new YLog(Toolbox.getNextId(), getCellName() + " output log"));
+		outputLogs.add(new YLog(Toolbox.getNextId(), getCellName() + " output log", index));
 
 		filters = FXCollections.observableArrayList(new Callback<FilterButtonModel, Observable[]>() {
 			@Override

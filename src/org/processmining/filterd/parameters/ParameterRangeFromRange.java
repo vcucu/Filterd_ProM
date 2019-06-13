@@ -3,13 +3,24 @@ package org.processmining.filterd.parameters;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
 public class ParameterRangeFromRange<T> extends Parameter  {
 	
 	private List<T> defaultPair;
 	private List<T> chosenPair;
 	private List<T> optionsPair;
+	@XmlElement
 	private Class<T> genericTypeClass;
 	private ArrayList<String> times; // for timeframe
+	
+	/**
+	 * This constructor exists for importing and exporting
+	 */
+	public ParameterRangeFromRange() {
+	}
 	
 	public ParameterRangeFromRange(String name, String nameDisplayed, List<T> defaultPair, List<T> optionsPair) {
 		super(name, nameDisplayed);

@@ -9,7 +9,6 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
-import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
@@ -49,11 +48,11 @@ public class NotebookController {
 	@FXML
 	private Region computeButtonImage;
 	@FXML
-	private Button exportButton;
+	private Label exportButton;
 	@FXML
 	private VBox cellsLayout;
 	@FXML
-	private Button appendCellButton;
+	private Label appendCellButton;
 	@FXML
 	private HBox addCellHBox;
 	@FXML
@@ -64,7 +63,6 @@ public class NotebookController {
 	private VBox notebookLayout;
 	@FXML
 	private HBox toolbarLayout;
-
 
 	/**
 	 * The constructor which sets the model. Note that the constructor does not
@@ -112,23 +110,9 @@ public class NotebookController {
 
 			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
 				if (newValue) {
-					Platform.runLater(new Runnable() {
-						@Override
-						public void run() {
-							computeButtonImage.getStyleClass().remove("play-solid");
-							computeButtonImage.getStyleClass().add("pause-solid");
-
-						}
-					});
+					Utilities.changeIcon(computeButton, "play-solid", "pause-solid");
 				} else {
-					Platform.runLater(new Runnable() {
-						@Override
-						public void run() {
-							computeButtonImage.getStyleClass().remove("pause-solid");
-							computeButtonImage.getStyleClass().add("play-solid");
-
-						}
-					});
+					Utilities.changeIcon(computeButton, "pause-solid", "play-solid");
 				}
 
 			}
@@ -165,7 +149,6 @@ public class NotebookController {
 								//if we are not appending the index of where the cell is added isn't equal to the size of the list
 								//update all input logs of downstream cells
 								//if (addedCell.getIndex() != model.getCells().size() - 1) {
-								System.out.println("We are adding a computation cell");
 								model.addCellsInputLogs(addedCell.getIndex(), model.getCells().size() - 1);
 								//}
 							}
@@ -350,10 +333,6 @@ public class NotebookController {
 	 */
 	public void removeCell(CellModel cell) {
 		int index = cell.getIndex();
-		//System.out.println("cell is computation cell "+ (cell instanceof ComputationCellModel));
-		//		if(cell instanceof ComputationCellModel) {//if computation cell being removed update input logs
-		//			model.updateCellsInput(index);
-		//		}
 		model.removeCell(cell); // Removes the cell from the model
 		cellsLayout.getChildren().remove(index); // Removes the layout
 	}

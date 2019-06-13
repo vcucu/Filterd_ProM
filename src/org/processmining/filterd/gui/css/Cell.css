@@ -1,18 +1,5 @@
-root { 
-    display: block;
-}
-
 .cell-toolbar, .bg-gray {
 	-fx-background-color: #646464;
-}
-
-.round-button {
-	-fx-pref-width: 24;
-	-fx-pref-height: 24;
-}
-
-.icon-button > .icon-svg {
-	-fx-background-color: white;
 }
 
 .prepend-cell-vbox > .prepend-cell-button {
@@ -24,7 +11,7 @@ root {
 	-fx-opacity: 100%;
 }
 
-.prepend-cell-button {
+.cell-layout .round-button.prepend-cell-button {
 	-fx-pref-width: 16;
 	-fx-pref-height: 16;
 }
@@ -42,13 +29,5 @@ root {
 }
 
 .panel-content {
-	-fx-background-color: #FFFFFF;
-}
-
-.dropdown-button .arrow-button  {
-    -fx-opacity: 0.0;
-}
-
-.dropdown-button {
 	-fx-background-color: #FFFFFF;
 }
