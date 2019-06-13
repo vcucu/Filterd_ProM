@@ -9,29 +9,19 @@ public class YLog {
 	private boolean isOutput;	// Is the XLog the output of some cell or filter?
 	private int outputOf;	// Number of the cell/filter that generated the XLog
 	private int id;
-	
-//	public YLog(org.deckfour.xes.model.XLog log, String name) {
-//		this.log = log;
-//		this.name = name;
-//		this.isOutput = false;
-//	}
-//	
-//	public YLog(org.deckfour.xes.model.XLog log, String name, int outputOf) {
-//		this.log = log;
-//		this.name = name;
-//		this.isOutput = true;
-//		this.outputOf = outputOf;
-//	}
-	
-	public YLog(int id, String name) {
+	private int indexOfOwner;
+
+	public YLog(int id, String name, int indexOfOwner) {
 		this.id = id;
 		this.name = name;
+		this.indexOfOwner = indexOfOwner;
 	}
 	
-	public YLog(int id, String name, XLog log) {
+	public YLog(int id, String name, XLog log, int indexOfOwner) {
 		this.id = id;
 		this.name = name;
 		this.log = log;
+		this.indexOfOwner = indexOfOwner;
 	}
 
 	public org.deckfour.xes.model.XLog get() {
@@ -69,6 +59,14 @@ public class YLog {
 
 	public boolean isOutput() {
 		return isOutput;
+	}
+	
+	public int getIndexOfOwner() {
+		return indexOfOwner;
+	}
+
+	public void setIndexOfOwner(int indexOfOwner) {
+		this.indexOfOwner = indexOfOwner;
 	}
 	
 }

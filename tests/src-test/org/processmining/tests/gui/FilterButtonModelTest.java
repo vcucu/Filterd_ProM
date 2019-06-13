@@ -26,7 +26,7 @@ public class FilterButtonModelTest extends FilterdPackageTest {
 	@Test
 	public void testNewFilterButtonModel() throws Throwable {
 		// Create new YLog
-		YLog initialLog = new YLog(0, "Original Log", originalLog);
+		YLog initialLog = new YLog(0, "Original Log", originalLog, 0);
 		// Create new filter button instance
 		FilterButtonModel filter = new FilterButtonModel(0);
 		filter.setInputLog(originalLog);
@@ -45,7 +45,7 @@ public class FilterButtonModelTest extends FilterdPackageTest {
 	@Test
 	public void testNameProperty() {
 		// Create new YLog
-		YLog initialLog = new YLog(0, "Original Log", originalLog);
+		YLog initialLog = new YLog(0, "Original Log", originalLog, 0);
 		// Create new filter button instance
 		FilterButtonModel filter = new FilterButtonModel(0);
 		filter.setInputLog(originalLog);
@@ -62,7 +62,7 @@ public class FilterButtonModelTest extends FilterdPackageTest {
 	@Test
 	public void testIndexProperty() {
 		// Create new YLog
-		YLog initialLog = new YLog(0, "Original Log", originalLog);
+		YLog initialLog = new YLog(0, "Original Log", originalLog, 0);
 		// Create new filter button instance
 		FilterButtonModel filter = new FilterButtonModel(0);
 		filter.setInputLog(originalLog);
@@ -77,7 +77,7 @@ public class FilterButtonModelTest extends FilterdPackageTest {
 	@Test
 	public void testSelectedProperty() {
 		// Create new YLog
-		YLog initialLog = new YLog(0, "Original Log", originalLog);
+		YLog initialLog = new YLog(0, "Original Log", originalLog, 0);
 		// Create new filter button instance
 		FilterButtonModel filter = new FilterButtonModel(0);
 		filter.setInputLog(originalLog);
@@ -94,7 +94,7 @@ public class FilterButtonModelTest extends FilterdPackageTest {
 	@Test
 	public void testFilterButtonConfig() {
 		// Create new YLog
-		YLog initialLog = new YLog(0, "Original Log", originalLog);
+		YLog initialLog = new YLog(0, "Original Log", originalLog, 0);
 		// Create new filter button instance
 		FilterButtonModel filter = new FilterButtonModel(0);
 		filter.setInputLog(originalLog);
@@ -112,7 +112,7 @@ public class FilterButtonModelTest extends FilterdPackageTest {
 	@Test
 	public void testFilterButtonOutputLog() {
 		// Create new YLog
-		YLog initialLog = new YLog(0, "Original Log", originalLog);
+		YLog initialLog = new YLog(0, "Original Log", originalLog, 0);
 		// Create new filter button instance
 		FilterButtonModel filter = new FilterButtonModel(0);
 		filter.setInputLog(originalLog);
@@ -125,7 +125,7 @@ public class FilterButtonModelTest extends FilterdPackageTest {
 	@Test
 	public void testFilterButtonComputeIllegalStateException() {
 		// Create new YLog
-		YLog initialLog = new YLog(0, "Original Log", originalLog);
+		YLog initialLog = new YLog(0, "Original Log", originalLog, 0);
 		// Create new filter button instance
 		FilterButtonModel filter = new FilterButtonModel(0);
 		filter.setInputLog(originalLog);
@@ -149,7 +149,7 @@ public class FilterButtonModelTest extends FilterdPackageTest {
 	@Test
 	public void testFilterButtonComputeNullLog() {
 		// Create new YLog
-		YLog initialLog = new YLog(0, "Original Log", originalLog);
+		YLog initialLog = new YLog(0, "Original Log", originalLog, 0);
 		// Create new filter button instance
 		FilterButtonModel filter = new FilterButtonModel(0);
 		// Create new configuration for the button instance
