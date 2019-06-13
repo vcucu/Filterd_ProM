@@ -21,6 +21,8 @@ import org.processmining.filterd.tools.EmptyLogException;
 import org.processmining.filterd.widgets.ParameterController;
 import org.processmining.filterd.widgets.ParameterMultipleFromSetController;
 import org.processmining.filterd.widgets.ParameterOneFromSetController;
+import org.processmining.filterd.widgets.ParameterValueFromRangeController;
+import org.processmining.filterd.widgets.ParameterYesNoController;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -206,7 +208,7 @@ public class FilterdTraceFollowerConfig extends FilterdAbstractConfig {
 		//check whether no params are empty if you populate with the component
 		return true;
 	};
-	
+
 	@Override
 	public AbstractFilterConfigPanelController getConfigPanel() {
 		if (this.configPanel == null) {
@@ -216,11 +218,55 @@ public class FilterdTraceFollowerConfig extends FilterdAbstractConfig {
 					this);
 			parameterListeners();
 		}
-		
+
 		return configPanel;
 	}
 
 	public void parameterListeners() {
+
+		/* if the time restriction box in unchecked, then hide the parameters */
+		ParameterYesNoController timeControl = (ParameterYesNoController)
+				configPanel.getControllers().stream()
+				.filter(c -> c.getName().equals("Time restrictions"))
+				.findFirst()
+				.get();
+
+		if(!timeControl.getValue()) {
+			setTimeVisible(false);
+		}
+
+		/* if the value matching box in unchecked, then hide the parameters */
+		ParameterYesNoController valueControl = (ParameterYesNoController)
+				configPanel.getControllers().stream()
+				.filter(c -> c.getName().equals("Value matching"))
+				.findFirst()
+				.get();
+
+		if(!valueControl.getValue()) {
+			setValueVisible(false);
+		}
+
+		/* add listener to the time control such that if the checkbox is checked,
+		 * the parameter appear.
+		 */
+		timeControl.getCheckbox().selectedProperty().addListener(new ChangeListener<Boolean>() {
+			@Override 
+			public void changed(ObservableValue ov, Boolean oldValue, Boolean newValue) {
+				setTimeVisible(newValue);
+			}
+		});
+		
+		/* add listener to the value control such that if the checkbox is checked,
+		 * the parameter appear.
+		 */
+		valueControl.getCheckbox().selectedProperty().addListener(new ChangeListener<Boolean>() {
+			@Override 
+			public void changed(ObservableValue ov, Boolean oldValue, Boolean newValue) {
+				setValueVisible(newValue);
+			}
+		});
+
+
 		for(ParameterController parameter : configPanel.getControllers()) {
 			if (parameter.getName().equals("attrType")) {
 				ParameterOneFromSetController casted = (ParameterOneFromSetController) parameter;
@@ -291,6 +337,63 @@ public class FilterdTraceFollowerConfig extends FilterdAbstractConfig {
 
 			}
 		}
+	}
+
+	/* method for setting the time parameters controller visible or invisible
+	 * based on whether the time restriction checkbox is checked or not
+	 */
+	private void setTimeVisible(Boolean visible) {
+		// make parameter for selecting whether the time needs to be longer
+		// or shorter than the time selected (in)visible
+		ParameterOneFromSetController shorterOrLongerControl = 
+				(ParameterOneFromSetController) configPanel
+				.getControllers().stream()
+				.filter(c -> c.getName().equals("Shorter or longer"))
+				.findFirst()
+				.get();
+		shorterOrLongerControl.getContents().setVisible(visible);
+
+		// make parameter for selecting time duration (in)visible
+		ParameterValueFromRangeController<Integer> timeDurationParameter = 
+				(ParameterValueFromRangeController<Integer>) configPanel
+				.getControllers().stream()
+				.filter(c -> c.getName().equals("duration"))
+				.findFirst()
+				.get();
+		timeDurationParameter.getContents().setVisible(visible);
+
+		// make parameter for selecting the time type (in)visible
+		ParameterOneFromSetController timeTypeParameter = 
+				(ParameterOneFromSetController) configPanel
+				.getControllers().stream()
+				.filter(c -> c.getName().equals("timeType"))
+				.findFirst()
+				.get();
+		timeTypeParameter.getContents().setVisible(visible);
+	}
+	
+	/* method for setting the value parameters controller visible or invisible
+	 * based on whether the value matching checkbox is checked or not
+	 */
+	private void setValueVisible(Boolean visible) {
+		// make parameter (in)visible
+		ParameterOneFromSetController sameOrDifferentControl = 
+				(ParameterOneFromSetController) configPanel
+				.getControllers().stream()
+				.filter(c -> c.getName().equals("Same or Different value"))
+				.findFirst()
+				.get();
+		sameOrDifferentControl.getContents().setVisible(visible);
+
+		// make parameter for selecting the attribute whose value has to be
+		// matched (in)visible
+		ParameterOneFromSetController valueMatchingControl = 
+				(ParameterOneFromSetController) configPanel
+				.getControllers().stream()
+				.filter(c -> c.getName().equals("Attribute for value matching"))
+				.findFirst()
+				.get();
+		valueMatchingControl.getContents().setVisible(visible);
 	}
 
 	public boolean checkValidity(XLog candidateLog) {
