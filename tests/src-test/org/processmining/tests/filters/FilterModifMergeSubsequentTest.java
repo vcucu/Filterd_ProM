@@ -35,7 +35,6 @@ public class FilterModifMergeSubsequentTest extends FilterdPackageTest {
 		
 		ParameterOneFromSet classifierParam = new ParameterOneFromSet("classifier", "classifier", "", empty );
 		ParameterMultipleFromSet desiredEventsParam = new ParameterMultipleFromSet("desiredEvents", "desiredEvents", empty, empty);
-		ParameterOneFromSet comparisonTypeParam = new ParameterOneFromSet("comparisonType", "comparisonType", "", empty);
 		ParameterMultipleFromSet relevantAttributesParam = 
 				new ParameterMultipleFromSet("relevantAttributes", "relevantAttributes", empty, empty );
 		ParameterOneFromSet mergeTypeParam = new ParameterOneFromSet("mergeType", "mergeType", "", empty);
@@ -44,12 +43,10 @@ public class FilterModifMergeSubsequentTest extends FilterdPackageTest {
 		
 		classifierParam.setChosen("Event Name");
 		desiredEventsParam.setChosen(desiredEvents);
-		comparisonTypeParam.setChosen("Compare event class");
 		mergeTypeParam.setChosen("Merge taking last event");
 		
 		parameters.add(classifierParam);
 		parameters.add(desiredEventsParam);
-		parameters.add(comparisonTypeParam);
 		parameters.add(mergeTypeParam);
 		parameters.add(relevantAttributesParam);
 		
@@ -76,7 +73,6 @@ public class FilterModifMergeSubsequentTest extends FilterdPackageTest {
 		
 		ParameterOneFromSet classifierParam = new ParameterOneFromSet("classifier", "classifier", "", empty );
 		ParameterMultipleFromSet desiredEventsParam = new ParameterMultipleFromSet("desiredEvents", "desiredEvents", empty, empty);
-		ParameterOneFromSet comparisonTypeParam = new ParameterOneFromSet("comparisonType", "comparisonType", "", empty);
 		ParameterMultipleFromSet relevantAttributesParam = 
 				new ParameterMultipleFromSet("relevantAttributes", "relevantAttributes", empty, empty );
 		ParameterOneFromSet mergeTypeParam = new ParameterOneFromSet("mergeType", "mergeType", "", empty);
@@ -85,12 +81,11 @@ public class FilterModifMergeSubsequentTest extends FilterdPackageTest {
 		
 		classifierParam.setChosen("Event Name");
 		desiredEventsParam.setChosen(desiredEvents);
-		comparisonTypeParam.setChosen("Compare event timestamps");
 		mergeTypeParam.setChosen("Merge taking first event");
+		//relevantAttributesParam.setChosen(Arrays.asList("concept:name"));
 		
 		parameters.add(classifierParam);
 		parameters.add(desiredEventsParam);
-		parameters.add(comparisonTypeParam);
 		parameters.add(mergeTypeParam);
 		parameters.add(relevantAttributesParam);
 		
@@ -120,7 +115,6 @@ public class FilterModifMergeSubsequentTest extends FilterdPackageTest {
 		
 		ParameterOneFromSet classifierParam = new ParameterOneFromSet("classifier", "classifier", "", empty );
 		ParameterMultipleFromSet desiredEventsParam = new ParameterMultipleFromSet("desiredEvents", "desiredEvents", empty, empty);
-		ParameterOneFromSet comparisonTypeParam = new ParameterOneFromSet("comparisonType", "comparisonType", "", empty);
 		ParameterMultipleFromSet relevantAttributesParam = 
 				new ParameterMultipleFromSet("relevantAttributes", "relevantAttributes", empty, empty );
 		ParameterOneFromSet mergeTypeParam = new ParameterOneFromSet("mergeType", "mergeType", "", empty);
@@ -129,13 +123,11 @@ public class FilterModifMergeSubsequentTest extends FilterdPackageTest {
 		
 		classifierParam.setChosen("Event Name");
 		desiredEventsParam.setChosen(desiredEvents);
-		comparisonTypeParam.setChosen("Compare event class & attributes");
 		mergeTypeParam.setChosen("Merge taking first as 'start' and last as 'complete' life-cycle transitions");
 		relevantAttributesParam.setChosen(relevantAttr);
 		
 		parameters.add(classifierParam);
 		parameters.add(desiredEventsParam);
-		parameters.add(comparisonTypeParam);
 		parameters.add(mergeTypeParam);
 		parameters.add(relevantAttributesParam);
 		
