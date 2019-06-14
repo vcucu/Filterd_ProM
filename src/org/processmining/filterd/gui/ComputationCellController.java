@@ -203,6 +203,7 @@ public class ComputationCellController extends CellController {
 	 */
 	public void generateFilterButtonControllers() {
 		for (FilterButtonModel filter : getCellModel().getFilters()) {
+			//TODO: enforce right indices
 			loadFilter(filter.getIndex(), filter);
 		}
 	}
