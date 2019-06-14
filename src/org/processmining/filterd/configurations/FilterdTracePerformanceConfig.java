@@ -11,25 +11,19 @@ import org.processmining.filterd.gui.FilterConfigPanelController;
 import org.processmining.filterd.parameters.ParameterOneFromSet;
 import org.processmining.filterd.parameters.ParameterRangeFromRange;
 import org.processmining.filterd.tools.Toolbox;
-import org.processmining.filterd.widgets.ParameterController;
-import org.processmining.filterd.widgets.ParameterOneFromSetController;
-import org.processmining.filterd.widgets.ParameterRangeFromRangeController;
-
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.scene.control.ComboBox;
 
 public class FilterdTracePerformanceConfig extends FilterdAbstractConfig {
 
-	List<Integer> minAndMaxDuration;
 	List<Integer> minAndMaxEvents;
+	ArrayList<String> durations;
 
 	public FilterdTracePerformanceConfig(XLog log, Filter filterType) {
 		super(log, filterType);
 
 		parameters = new ArrayList<>();
+		durations = Toolbox.getDurations(log);
+		
 		// Initialize members based on the log.
-		minAndMaxDuration = Toolbox.getMinAnMaxDuration(log);
 		minAndMaxEvents = Toolbox.getminAdnMaxEventSize(log);
 
 		// Create performance options parameter and set the option to duration
@@ -42,36 +36,21 @@ public class FilterdTracePerformanceConfig extends FilterdAbstractConfig {
 						Arrays.asList(
 								"filter on duration", 
 								"filter on number of events"));
-
+				
 		// Use duration as default because this is also set in the performance
 		// options parameter.
-		ParameterRangeFromRange<Integer> valueParameter = 
+		ParameterRangeFromRange<Integer> testParameter = 
 				new ParameterRangeFromRange<Integer>(
-						"threshold", 
-						"Select the threshold", 
-						minAndMaxDuration, 
-						minAndMaxDuration,
+						"time-range", 
+						"Select test threshold", 
+						Arrays.asList(0, durations.size() - 1), 
+						Arrays.asList(0, durations.size() - 1),
 						Integer.TYPE);
-		
-		// Create parameter for selecting the time type.
-				ParameterOneFromSet timeTypeParameter = 
-						new ParameterOneFromSet(
-								"timeType", 
-								"Select time type", 
-								"Millis", 
-								Arrays.asList(
-										"Millis",
-										"Seconds",
-										"Minutes",
-										"Hours",
-										"Days",
-										"Weeks",
-										"Years"));
+		testParameter.setTimes(durations);
 
 		// Add the created parameters.
 		parameters.add(performanceOptionsParameter);
-		parameters.add(valueParameter);
-		parameters.add(timeTypeParameter);
+		parameters.add(testParameter);
 	}
 
 	public boolean checkValidity(XLog candidateLog) {
@@ -98,6 +77,7 @@ public class FilterdTracePerformanceConfig extends FilterdAbstractConfig {
 	}
 
 	public void parameterListeners() {
+		/*
 		for(ParameterController parameter : configPanel.getControllers()) {
 			if (parameter.getName().equals("performanceOptions")) {
 				ParameterOneFromSetController casted = (ParameterOneFromSetController) parameter;
@@ -148,6 +128,7 @@ public class FilterdTracePerformanceConfig extends FilterdAbstractConfig {
 							castedParameter.getChosenPair(), castedParameter.getOptionsPair());
 			}
 		}
+		*/
 	}
 
 }

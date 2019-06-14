@@ -5,13 +5,16 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import org.deckfour.xes.classification.XEventClass;
 import org.deckfour.xes.classification.XEventClasses;
@@ -454,10 +457,9 @@ public class Toolbox {
 		return id;
 	}
 
-	public static List<Integer> getMinAnMaxDuration(XLog log) {
-
-		int minDuration = Integer.MAX_VALUE;
-		int maxDuration = Integer.MIN_VALUE;
+	public static ArrayList<String> getDurations(XLog log) {
+		
+		ArrayList<Long> durations = new ArrayList<Long>();
 
 		for (XTrace trace : log) {
 
@@ -500,30 +502,60 @@ public class Toolbox {
 				lastEventTime = LocalDateTime.MAX;
 			}
 			
-			System.out.println(firstEventTime);
-			System.out.println(lastEventTime);
-			
 			if (firstEventTime != LocalDateTime.MIN && lastEventTime != LocalDateTime.MAX) {
 
 				Duration traceDuration = Duration.between(firstEventTime, lastEventTime);
-				int totalMillis = (int) traceDuration.toMillis();
-	
-				if (totalMillis < minDuration) {
-					minDuration = totalMillis;
-				}
-	
-				if (totalMillis > maxDuration) {
-					maxDuration = totalMillis;
-				}
+				long totalMillis = traceDuration.toMillis();
+				
+				durations.add(totalMillis);
 			
 			} else {
-				minDuration = 0;
-				maxDuration = 0;
+				durations.add(0l);
 			}
+			
+			
 
 		}
+		
+		Collections.sort(durations);
 
-		return Arrays.asList(minDuration, maxDuration);
+		return new ArrayList<String> (durations.stream().map(l -> {
+			
+			Calendar c = Calendar.getInstance(); 
+			//Set time in milliseconds
+			c.setTimeInMillis(l);
+			int mYear = c.get(Calendar.YEAR) - 1970;
+			int mMonth = c.get(Calendar.MONTH); 
+			int mDay = c.get(Calendar.DAY_OF_MONTH) - 1;
+			int hr = c.get(Calendar.HOUR);
+			int min = c.get(Calendar.MINUTE);
+			int sec = c.get(Calendar.SECOND);
+			int millis = c.get(Calendar.MILLISECOND);
+			
+			String string = "";
+			
+			string += addToDuration(mYear, "year");
+			string += addToDuration(mMonth, "month");
+			string += addToDuration(mDay, "day");
+			string += addToDuration(hr, "hour");
+			string += addToDuration(min, "minute");
+			string += addToDuration(sec, "second");
+			string += addToDuration(millis, "millisecond");
+			
+			return string;
+		}).collect(Collectors.toList()));
+	}
+	
+	private static String addToDuration(int time, String type) {
+		
+		if (time == 0) {
+			return "";
+		} else if (time == 1) {
+			return "1 " + type + " ";
+		} else {
+			return Integer.toString(time) + " " + type + "s ";
+		}
+		
 	}
 
 	public static List<Integer> getminAdnMaxEventSize(XLog log) {
