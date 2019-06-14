@@ -159,7 +159,6 @@ public class ComputationCellController extends CellController {
 		if (!model.getFilters().isEmpty()) {
 			// if there already exist filters inside this cell generate their controllers.
 			generateFilterButtonControllers();
-//			hideConfigurationModal(false); // hides the configuration modal that spawn upon creating a filter controller.
 		}
 	}
 
