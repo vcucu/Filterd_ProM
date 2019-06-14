@@ -91,7 +91,7 @@ public class NotebookModel {
 	 */
 	public NotebookModel(UIPluginContext context, XLog log, ProMCanceller canceller) {
 		this.promContext = context;
-		this.initialInput = new YLog(Toolbox.getNextId(), "Initial input", log, 0);
+		this.initialInput = new YLog(Toolbox.getNextId(), "Initial input", log, -1);
 		this.promCanceller = canceller;
 		this.cells = FXCollections.observableArrayList();
 		// set the computation mode to manual
