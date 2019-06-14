@@ -2,24 +2,27 @@ package org.processmining.filterd.models;
 
 import org.deckfour.xes.model.XLog;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+
 public class YLog {
 	
 	private XLog log;
-	private String name;	// Name of the XLog (for visualization
 	private boolean isOutput;	// Is the XLog the output of some cell or filter?
 	private int outputOf;	// Number of the cell/filter that generated the XLog
 	private int id;
 	private int indexOfOwner;
+	private StringProperty name;
 
 	public YLog(int id, String name, int indexOfOwner) {
 		this.id = id;
-		this.name = name;
+		this.name = new SimpleStringProperty(name);
 		this.indexOfOwner = indexOfOwner;
 	}
 	
 	public YLog(int id, String name, XLog log, int indexOfOwner) {
 		this.id = id;
-		this.name = name;
+		this.name = new SimpleStringProperty(name);
 		this.log = log;
 		this.indexOfOwner = indexOfOwner;
 	}
@@ -33,16 +36,20 @@ public class YLog {
 	}
 	
 	public void setName(String name) {
-		this.name = name;
+		this.name.setValue(name);
 	}
 	
 	public String getName() {
+		return name.getValue();
+	}
+	
+	public StringProperty getNameProperty() {
 		return name;
 	}
 	
 	@Override
 	public String toString() {
-		return name;
+		return name.getValue().toString();
 	}
 	
 	public boolean isEmpty() {

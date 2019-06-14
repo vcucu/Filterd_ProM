@@ -124,17 +124,33 @@ public class ComputationCellController extends CellController {
 		// binding for cell name
 		this.cellName.setText(this.cellModel.getCellName());
 		this.cellModel.cellNameProperty().addListener(new ChangeListener<String>() {
-
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
 				if (!cellName.getText().equals(newValue)) {
 					cellName.setText(newValue);
 				}
 			}
 		});
+		this.cellName.focusedProperty().addListener(new ChangeListener<Boolean>() {
+			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+				cellModel.setCellName(cellName.getText());
+			}
+		});
 		// Add listeners for filter buttons
 		addFilterButtonListeners();
 		// bind the cell name to the cell name variable.
 		getCellModel().bindCellName(cellName.textProperty());
+		
+		for (YLog log : model.getInputLogs()) {
+			log.getNameProperty().addListener(new ChangeListener<String>() {
+				@Override
+				public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+					int selected = cmbEventLog.getSelectionModel().getSelectedIndex();
+					int index = cmbEventLog.getItems().indexOf(log);
+					cmbEventLog.getItems().remove(index);
+					cmbEventLog.getItems().add(index, log);
+				}
+			});
+		}
 		
 		// Change compute button icon (play / pause) when the computation stops / starts
 		this.getCellModel().isComputingProperty().addListener((observable, oldValue, newValue) -> {
@@ -268,8 +284,21 @@ public class ComputationCellController extends CellController {
 	}
 
 
-	public void changeInputLogsCombo(List <YLog> logs){
+	public void changeInputLogsCombo(List <YLog> logs) {
+		ComputationCellModel model = this.getCellModel();
+		ObservableList<YLog> oldLogs = cmbEventLog.getItems();
 		cmbEventLog.setItems((ObservableList<YLog>) logs);
+		for (YLog log : logs) {
+			if (!oldLogs.contains(log)) {
+				log.getNameProperty().addListener(new ChangeListener<String>() {
+					public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+						int index = cmbEventLog.getItems().indexOf(log);
+						cmbEventLog.getItems().remove(index);
+						cmbEventLog.getItems().add(index, log);
+					}
+				});
+			}
+		}
 	}
 
 	/**
@@ -397,7 +426,11 @@ public class ComputationCellController extends CellController {
 	public void setXLog() {
 		ComputationCellModel model = this.getCellModel();
 		YLog eventLog = cmbEventLog.getValue();
-		model.setInputLog(eventLog);
+		try {
+			model.setInputLog(eventLog);	
+		} catch (Throwable exception) {
+			// DO NOTHING
+		}
 		cmbVisualizers.getItems().addAll(model.getVisualizers());
 		cmbVisualizers.getSelectionModel().selectFirst();
 	}

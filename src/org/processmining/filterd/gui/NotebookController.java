@@ -81,7 +81,7 @@ public class NotebookController {
 	 */
 	public void initialize() {
 		// Add cell listener 
-//		cellListeners();
+		cellListeners();
 
 		// Initialize AddCellModal
 		try {
@@ -124,21 +124,16 @@ public class NotebookController {
 							System.out.printf("ID: %d ----------\n", removedCell.getIndex());
 							System.out.println("Removed: " + removedCell);
 							// update downstream cells from removed cell 
-							if (removedCell instanceof ComputationCellModel) {//if computation cell being removed update input logs
-								System.out.println("We are removing a computation cell");
-								model.removeCellsInputLogs(removedCell.getIndex(), model.getCells().size() - 1,
-										((ComputationCellModel) removedCell));
+							if (removedCell instanceof ComputationCellModel) {
+								model.removeCellsInputLogs(((ComputationCellModel) removedCell));
 							}
 						}
 						for (CellModel addedCell : change.getAddedSubList()) {
 							System.out.printf("ID: %d ----------\n", addedCell.getIndex());
 							System.out.println("Added: " + addedCell);
-							if (addedCell instanceof ComputationCellModel) {//if computation cell being removed update input logs
-								//if we are not appending the index of where the cell is added isn't equal to the size of the list
-								//update all input logs of downstream cells
-								//if (addedCell.getIndex() != model.getCells().size() - 1) {
-								model.addCellsInputLogs(addedCell.getIndex(), model.getCells().size() - 1);
-								//}
+							// update downstream cells from added cell
+							if (addedCell instanceof ComputationCellModel) {
+								model.addCellsInputLogs(((ComputationCellModel) addedCell));
 							}
 						}
 						// Update indices
