@@ -159,7 +159,6 @@ public class ComputationCellController extends CellController {
 		if (!model.getFilters().isEmpty()) {
 			// if there already exist filters inside this cell generate their controllers.
 			generateFilterButtonControllers();
-			hideConfigurationModal(false); // hides the configuration modal that spawn upon creating a filter controller.
 		}
 	}
 
@@ -203,7 +202,20 @@ public class ComputationCellController extends CellController {
 	 */
 	public void generateFilterButtonControllers() {
 		for (FilterButtonModel filter : getCellModel().getFilters()) {
-			loadFilter(filter.getIndex(), filter);
+			//TODO: enforce right indices
+			FXMLLoader loader = new FXMLLoader(
+					getClass().getResource("/org/processmining/filterd/gui/fxml/FilterButton.fxml"));
+			FilterButtonController newController = new FilterButtonController(this, filter);
+			loader.setController(newController);
+			try {
+				HBox newPanelLayout = (HBox) loader.load();
+				panelLayout.getChildren().add(filter.getIndex(), newPanelLayout);
+				newController.setFilterLayout(newPanelLayout);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			newController.selectFilterButton();
+			newController.enableEditFilterHandler();
 		}
 	}
 

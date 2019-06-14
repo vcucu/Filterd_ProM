@@ -13,7 +13,7 @@ public class CellModel {
 	private boolean isHidden;
 	private CellStatus statusBar;
 	protected StringProperty cellName;
-	private int index;
+	protected int index;
 	//property used to register property listeners for each bound property
 	protected PropertyChangeSupport property;
 
