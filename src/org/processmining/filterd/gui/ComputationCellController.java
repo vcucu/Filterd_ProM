@@ -402,39 +402,41 @@ public class ComputationCellController extends CellController {
 		cmbVisualizers.getSelectionModel().selectFirst();
 	}
 
-	// Load visualizer
+	/**
+	 *  Load visualizer.
+	 *  
+	 *  Use this method to load the visualizer.
+	 *  This method is called when the visualizer combobox is used 
+	 *  and when the filter configuration dialog is hidden.
+	 */
 	@FXML
 	private void loadVisualizer() {
+		// Remove visualizer if "None" is selected
 		if (cmbVisualizers.getValue() == Utilities.dummyViewType) {
-			// Remove visualizer if "None" is selected
-			//			visualizerPane.getChildren().remove(visualizerSwgWrap);
 			visualizerPane.getChildren().clear();
 			visualizerSwgBubble.setContent(null);
-			// Hide expand button
-			expandButton.setVisible(false);
+			expandButton.setVisible(false);	// Hide expand button
 			return;
 		}
 		
-		visualizerPane.getChildren().clear();
-		visualizerSwgBubble.setContent(null);
+		JComponent visualizer = getCellModel().getVisualization(cmbVisualizers.getValue());	// Visualizer to be shown
 		
-		JComponent visualizer = getCellModel().getVisualization(cmbVisualizers.getValue());
+		// Add visualizer if not present
 		if (!visualizerPane.getChildren().contains(visualizerSwgBubble)) {
-			// Add visualizer if not present
 			visualizerPane.getChildren().add(visualizerSwgBubble);
+			Utilities.setAnchors(visualizerSwgBubble, 0.0);	// Make the visualizer resize with the pane
 		}
-		// Make the visualizer resize with the pane
-		Utilities.setAnchors(visualizerSwgBubble, 0.0);
-		// Load Visualizer
-		visualizerSwgBubble.setContent(visualizer);
-		// Show expand button
-		expandButton.setVisible(true);
+		
+		visualizerSwgBubble.setContent(visualizer);	// Load Visualizer
+		expandButton.setVisible(true);	// Show expand button
 
+		// Update Fullscreen visualizer if necessary 
 		if (isFullScreen) {
 			try {
 				SwingUtilities.invokeAndWait(new Runnable() {
 					@Override
 					public void run() {
+						// Indices: 0 = JFX toolbar; 1 = JPanel visualizer
 						fullScreenPanel.remove(1);
 						fullScreenPanel.add(visualizer);
 					}
@@ -480,11 +482,6 @@ public class ComputationCellController extends CellController {
 						.get(getCellModel().getFilters().size() - 1);
 				removeFilter(buttonToRemove);
 			}
-		}
-		
-		// Show expand button
-		if (cmbVisualizers.getValue() != Utilities.dummyViewType) {
-			expandButton.setVisible(true);			
 		}
 		
 		this.isConfigurationModalShown = false;
