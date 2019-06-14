@@ -15,7 +15,6 @@ import org.processmining.filterd.parameters.ParameterMultipleFromSet;
 import org.processmining.filterd.parameters.ParameterOneFromSet;
 import org.processmining.filterd.parameters.ParameterValueFromRange;
 import org.processmining.filterd.tools.Toolbox;
-import org.processmining.filterd.widgets.ParameterController;
 import org.processmining.filterd.widgets.ParameterMultipleFromSetController;
 import org.processmining.filterd.widgets.ParameterOneFromSetController;
 import org.processmining.filterd.widgets.ParameterValueFromRangeController;
@@ -95,85 +94,113 @@ public class FilterdEventRateConfig extends FilterdAbstractConfig {
 	}
 
 	public void parameterListeners() {
-		for (ParameterController parameter: configPanel.getControllers()) {
-			if (parameter.getName().contentEquals("rate")) {
-				ParameterOneFromSetController casted = (ParameterOneFromSetController) parameter;
-				ComboBox<String> comboBox = casted.getComboBox();
-				comboBox.valueProperty().addListener(new ChangeListener<String>() {
+		
+		
+		/*
+		 * retrieve and cast all needed parameter controllers
+		 */
+		ParameterOneFromSetController rateController =  (ParameterOneFromSetController)
+				configPanel.getControllers().stream().
+				filter(c->c.getName().equals("rate")).
+				findFirst().get();
+		
+		ParameterMultipleFromSetController desiredEventsController =  (ParameterMultipleFromSetController)
+				configPanel.getControllers().stream().
+				filter(c->c.getName().equals("desiredEvents")).
+				findFirst().get();
+		
+		ParameterValueFromRangeController thresholdController = (ParameterValueFromRangeController)
+				configPanel.getControllers().stream().
+				filter(c->c.getName().equals("threshold")).
+				findFirst().get();
+		
+		// retrieve and cast all needed parameters
+		ParameterOneFromSet rateParameter = (ParameterOneFromSet) getParameter("rate");
+		ParameterMultipleFromSet desiredEventsParameter = (ParameterMultipleFromSet) getParameter("desiredEvents");
+		ParameterValueFromRange<Integer> thresholdParameter =  (ParameterValueFromRange<Integer>) getParameter("threshold");
+	
+		
+		/*
+		 * listener for the selection of rate drop-down
+		 * the selected values modifies the end points of the slider,
+		 * the units in the slider, as well as the selected events 
+		 * from the desiredEvents parameter
+		*/
+		ComboBox<String> comboBox = rateController.getComboBox();
+		comboBox.valueProperty().addListener(new ChangeListener<String>() {
 
-					private ParameterValueFromRange<Integer> threshold;
-					@Override 
-					public void changed(ObservableValue ov, String oldValue, String newValue) {
+			ParameterValueFromRange<Integer> thresholdParameter;
+			ParameterMultipleFromSet desiredEventsParameter;
+			ParameterOneFromSet rateParameter;
+			@Override 
+			public void changed(ObservableValue ov, String oldValue, String newValue) {
 
-						for (ParameterController changingParameter : configPanel.getControllers()) {
-
-							if (changingParameter.getName().equals("threshold")) {
-
-								ParameterValueFromRangeController<Integer> castedChanging = 
-										(ParameterValueFromRangeController<Integer>) changingParameter;
-
-								if (newValue.equals("Occurrence")) {
-									int defaultValue = minAndMaxOccurrence.get(0);
-									List<Integer> minMaxPair = new ArrayList<>();
-									minMaxPair.add(minAndMaxOccurrence.get(0));
-									minMaxPair.add(minAndMaxOccurrence.get(1));
-									castedChanging.setSliderConfig(defaultValue, minMaxPair);
-
-									ParameterValueFromRange<Integer> castedParameter = (ParameterValueFromRange<Integer>) getParameter("threshold");
-									castedParameter.setDefaultChoice(defaultValue);
-									castedParameter.setOptionsPair(minMaxPair);
-								} else {
-									castedChanging.setSliderConfig(minAndMaxFrequency.get(1), minAndMaxFrequency);
-
-									ParameterValueFromRange<Integer> castedParameter = (ParameterValueFromRange<Integer>) getParameter("threshold");
-									castedParameter.setDefaultChoice(minAndMaxFrequency.get(1));
-									castedParameter.setOptionsPair(minAndMaxFrequency);
-								}
-							}
-						}
-					}
-				});
+			//cast the needed parameters
+				thresholdParameter = (ParameterValueFromRange<Integer>) getParameter("threshold");
+				rateParameter = (ParameterOneFromSet) getParameter("rate");
+				desiredEventsParameter = (ParameterMultipleFromSet) getParameter("desiredEvents");
+				List<String> selection = new ArrayList<String>();
+				
+				//set the threshold parameter with the new value provided by the controller
+				if (newValue.equals("Occurrence")) {
+					thresholdController.setSliderConfig(minAndMaxOccurrence.get(0), minAndMaxOccurrence);	
+					thresholdParameter.setDefaultChoice(minAndMaxOccurrence.get(0));
+					thresholdParameter.setOptionsPair(minAndMaxOccurrence);
+					
+					
+				} else {
+					thresholdController.setSliderConfig(minAndMaxFrequency.get(1), minAndMaxFrequency);
+					thresholdParameter.setDefaultChoice(minAndMaxFrequency.get(1));
+					thresholdParameter.setOptionsPair(minAndMaxFrequency);
+				}
+				
+				//recompute the corresponding desired events from the threshold value
+				selection = Toolbox.computeDesiredEventsFromThreshold(thresholdParameter, rateParameter, eventClasses);
+				desiredEventsController.setSelected(selection);	
+			
+				//set the rest of the parameters
+				desiredEventsParameter.setChosen(selection);	 
+				rateParameter.setChosen(rateController.getValue());
+		
 			}
+		});
+		
+	    /*
+	     * listener for the slider of the threshold. 
+		 * the selected value modifies which events are selected from the
+		 * desiredEvents parameter
+	     */	 
+		Slider slider = thresholdController.getSlider();
+		slider.valueProperty().addListener(new ChangeListener<Number>() {
 
-			if (parameter.getName().equals("threshold")) {
-				ParameterValueFromRangeController casted = (ParameterValueFromRangeController) parameter;
-				Slider slider = casted.getSlider();
-				slider.valueProperty().addListener(new ChangeListener<Number>() {
+			ParameterValueFromRange<Integer> thresholdParameter;
+			ParameterMultipleFromSet desiredEventsParameter;
+			ParameterOneFromSet rateParameter;
 
-					private ParameterValueFromRange<Integer> threshold;
+			@Override
+			public void changed(ObservableValue<? extends Number> observable, Number oldValue,
+					Number newValue) {
+				
+				//cast the needed parameters
+				rateParameter = (ParameterOneFromSet) getParameter("rate");
+				desiredEventsParameter = (ParameterMultipleFromSet) getParameter("desiredEvents");
+				thresholdParameter =  (ParameterValueFromRange) getParameter("threshold");
+				List<String> selection = new ArrayList<String>();
+				
+				//set the threshold parameter with the new value provided by the controller
+				thresholdParameter.setChosen(newValue.intValue());
+				
+				//recompute the corresponding desired events from the threshold value
+				selection = Toolbox.computeDesiredEventsFromThreshold(thresholdParameter, rateParameter, eventClasses);
+				desiredEventsController.setSelected(selection);
 
-					@Override
-					public void changed(ObservableValue<? extends Number> observable, Number oldValue,
-							Number newValue) {
-						//find the controller for desired events so that it can change
-						for (ParameterController changingController : configPanel.getControllers()) {
-							if (changingController.getName().equals("desiredEvents")) {
-								ParameterMultipleFromSetController castedChangingController = 
-										(ParameterMultipleFromSetController) changingController;
-								//select events corresponding to the slider selection 
-								//using the toolbox function
-
-								//the parameter is only used because thats the interface in toolbox
-								//but nice solution would also be making it string & number, cos this is kinda workaround
-								ParameterOneFromSet rate = new ParameterOneFromSet(
-										"Frequency","Frequency","Frequency",null );
-								threshold = new ParameterValueFromRange<Integer>(
-										"Frequency threshold", "threshold", 100, null, Integer.TYPE);
-								threshold.setChosen(newValue.intValue());
-								List<String> selection = new ArrayList<String>();
-
-
-								selection = Toolbox.computeDesiredEventsFromThreshold(threshold, rate, eventClasses);
-								castedChangingController.setSelected(selection);
-
-								ParameterMultipleFromSet castedChangingParameter = (ParameterMultipleFromSet) getParameter("desiredEvents");
-								castedChangingParameter.setChosen(selection);	 
-							}	
-						}
-					}
-				});
+				//set the rest of the parameters
+				desiredEventsParameter.setChosen(selection);	 
+				rateParameter.setChosen(rateController.getValue());
+								
 			}
-		}
+		});	
+		
 	}
 
 	// I did not find any case where a different input log would cause invalidity

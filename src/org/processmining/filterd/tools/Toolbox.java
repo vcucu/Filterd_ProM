@@ -105,7 +105,7 @@ public class Toolbox {
 		for (XEventClass event : eventClasses.getClasses()) {
 			eventSizes.add(event.size());
 		}
-		minAndMax.add(eventSizes.first());
+		minAndMax.add(eventSizes.first()-1);
 		minAndMax.add(eventSizes.last());
 		return minAndMax;
 	}
@@ -155,6 +155,7 @@ public class Toolbox {
 		for (XEventClass event : eventClasses.getClasses()) {
 			size += event.size();
 			eventSizes.add(event.size());
+			
 		}
 
 		int value;
@@ -181,21 +182,24 @@ public class Toolbox {
 		} else {
 
 			value = eventSizes.last();
-			while (value > selectedValueFromRange) {
+			
+			while (value > selectedValueFromRange && eventSizes.size() > 0) {
 				/*extract the class with the greatest size */
 				int biggestEventClass = eventSizes.last();
 				eventSizes.remove(biggestEventClass);
-				value = eventSizes.last();
+				if (eventSizes.size() != 0 ) {
+					value = eventSizes.last();
+				}
 				/* mark all the event classes that have this size */
 				for (XEventClass eventClass : eventClasses.getClasses()) {
-					if (eventClass.size() == biggestEventClass) {
+					if (eventClass.size() == biggestEventClass && 
+							!desirableEventClasses.contains(eventClass.toString())) {
 						desirableEventClasses.add(eventClass.toString());
 					}
 				}
 			}	
 
 		}
-
 		return desirableEventClasses;
 	}
 
