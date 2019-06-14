@@ -81,7 +81,7 @@ public class NotebookController {
 	 */
 	public void initialize() {
 		// Add cell listener 
-		cellListeners();
+//		cellListeners();
 
 		// Initialize AddCellModal
 		try {

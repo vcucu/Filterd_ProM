@@ -31,20 +31,18 @@ public class FilterdAbstractConfigAdapter extends XmlAdapter<FilterdAbstractConf
 			Filter filterType =  (Filter) Class.forName(adaptedConfig.getfilterTypeName()).newInstance();
 			if (FilterdAbstractReferenceableConfig.class.isAssignableFrom(configClass.getClass())) {
 				//TODO: replace nulls
-				
-				config = configClass.getDeclaredConstructor(XLog.class, Filter.class, String.class, List.class).newInstance(initialInput , filterType,null,null);
+				config = configClass.getDeclaredConstructor(XLog.class, Filter.class, String.class, List.class).newInstance(initialInput, filterType,null,null);
 			} else {
 				config = configClass.getDeclaredConstructor(XLog.class, Filter.class).newInstance(initialInput, filterType);
 			}
-			
-			config.setParameters(config.getParameters());
 			
 			if (FilterdAbstractReferencingConfig.class.isAssignableFrom(config.getClass())) {
 				// set the concrete reference if the config is referencing.
 				((FilterdAbstractReferencingConfig) config).setConcreteReference(
 						((FilterdAbstractConfigReferencingAdapted) adaptedConfig).getConcreteReference());
 			}
-
+			
+			config.setParameters(adaptedConfig.getParameters());
 			return config;
 		//} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | InvocationTargetException | NoSuchMethodException e) {
 		} catch (Exception e) {

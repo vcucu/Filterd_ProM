@@ -75,7 +75,7 @@ public class ComputationCellModel extends CellModel {
 		this.inputLogs = eventLogs;
 		this.outputLogs = FXCollections.observableArrayList();
 		outputLogs.add(new YLog(Toolbox.getNextId(), getCellName() + " output log", index));
-
+		
 		filters = FXCollections.observableArrayList(new Callback<FilterButtonModel, Observable[]>() {
 			@Override
 			public Observable[] call(FilterButtonModel temp) {
@@ -129,7 +129,7 @@ public class ComputationCellModel extends CellModel {
 		if (log == null) {
 			throw new IllegalArgumentException("Log cannot be null!");
 		}
-		System.out.print("Index of the set log is ");
+		System.out.print("Name of the set log is " + log.getName() + ". Index of the set log is ");
 		System.out.println(log.getIndexOfOwner());
 		this.inputLog = log;
 		// set the output to be the input (when the cell is computed, this will change)
@@ -404,5 +404,14 @@ public class ComputationCellModel extends CellModel {
 			this.computeTask.cancel();
 		}
 		this.isComputing.set(false);
+	}
+	
+	@Override
+	public void setIndex(int index) {
+		this.index = index;
+//		System.out.print("My name is " + this.cellName);
+//		System.out.print(" and my output log index is ");
+//		System.out.println(index);
+		this.outputLogs.get(0).setIndexOfOwner(index);
 	}
 }

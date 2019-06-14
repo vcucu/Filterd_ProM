@@ -73,7 +73,7 @@ public class ComputationCellController extends CellController {
 	private JPanel fullScreenPanel;
 	private VBox notebookLayout;
 	private HBox notebookToolbar;
-	private SwingBubble visualizerSwgWrap;
+	private SwingBubble visualizerSwgBubble;
 	private ConfigurationModalController configurationModal;
 
 	@FXML private VBox panelLayout;
@@ -153,13 +153,12 @@ public class ComputationCellController extends CellController {
 		});
 
 		// Initialize the visualizer
-		visualizerSwgWrap = new SwingBubble();
+		visualizerSwgBubble = new SwingBubble();
 		// bind cellBody width to cellContent width so the visualizations scale properly
 		cellBody.maxWidthProperty().bind(controller.getScene().widthProperty().subtract(64));
 		if (!model.getFilters().isEmpty()) {
 			// if there already exist filters inside this cell generate their controllers.
 			generateFilterButtonControllers();
-			hideConfigurationModal(false); // hides the configuration modal that spawn upon creating a filter controller.
 		}
 	}
 
@@ -203,7 +202,20 @@ public class ComputationCellController extends CellController {
 	 */
 	public void generateFilterButtonControllers() {
 		for (FilterButtonModel filter : getCellModel().getFilters()) {
-			loadFilter(filter.getIndex(), filter);
+			//TODO: enforce right indices
+			FXMLLoader loader = new FXMLLoader(
+					getClass().getResource("/org/processmining/filterd/gui/fxml/FilterButton.fxml"));
+			FilterButtonController newController = new FilterButtonController(this, filter);
+			loader.setController(newController);
+			try {
+				HBox newPanelLayout = (HBox) loader.load();
+				panelLayout.getChildren().add(filter.getIndex(), newPanelLayout);
+				newController.setFilterLayout(newPanelLayout);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			newController.selectFilterButton();
+			newController.enableEditFilterHandler();
 		}
 	}
 
@@ -345,7 +357,7 @@ public class ComputationCellController extends CellController {
 			// Initialize panel
             fullScreenPanel = new JPanel(new BorderLayout());
 			fullScreenPanel.add(toolbarPanel, BorderLayout.PAGE_START);
-			fullScreenPanel.add(visualizerSwgWrap.getContent(), BorderLayout.CENTER);
+			fullScreenPanel.add(visualizerSwgBubble.getContent(), BorderLayout.CENTER);
 
 			// Change plugin view to fullscreen panel
 			FilterdVisualizer.changeView(fullScreenPanel);
@@ -397,23 +409,24 @@ public class ComputationCellController extends CellController {
 			// Remove visualizer if "None" is selected
 			//			visualizerPane.getChildren().remove(visualizerSwgWrap);
 			visualizerPane.getChildren().clear();
-			visualizerSwgWrap.setContent(null);
+			visualizerSwgBubble.setContent(null);
 			// Hide expand button
 			expandButton.setVisible(false);
 			return;
 		}
+		
 		visualizerPane.getChildren().clear();
-		visualizerSwgWrap.setContent(null);
+		visualizerSwgBubble.setContent(null);
 		
 		JComponent visualizer = getCellModel().getVisualization(cmbVisualizers.getValue());
-		if (!visualizerPane.getChildren().contains(visualizerSwgWrap)) {
+		if (!visualizerPane.getChildren().contains(visualizerSwgBubble)) {
 			// Add visualizer if not present
-			visualizerPane.getChildren().add(visualizerSwgWrap);
+			visualizerPane.getChildren().add(visualizerSwgBubble);
 		}
 		// Make the visualizer resize with the pane
-		Utilities.setAnchors(visualizerSwgWrap, 0.0);
+		Utilities.setAnchors(visualizerSwgBubble, 0.0);
 		// Load Visualizer
-		visualizerSwgWrap.setContent(visualizer);
+		visualizerSwgBubble.setContent(visualizer);
 		// Show expand button
 		expandButton.setVisible(true);
 
@@ -458,10 +471,8 @@ public class ComputationCellController extends CellController {
 		if (this.isConfigurationModalShown) {
 			ConfigurationStep configurationStep = configurationModal.getConfigurationStep();
 			visualizerPane.getChildren().clear(); // remove configuration modal from the visualizer pane
-			visualizerPane.getChildren().add(visualizerSwgWrap); // add the visualizer to the visualizer pane
 			cmbVisualizers.setDisable(false); // enable visualizer combobox
-			// Make the visualizer resize with the pane
-			Utilities.setAnchors(visualizerSwgWrap, 0.0);
+			loadVisualizer(); // Reload visualizer
 			// if filter selection was cancelled, delete the added button
 			if (configurationStep == ConfigurationStep.ADD_FILTER && removeFilter) {
 				// remove FilterButton (its always the last in the list)
@@ -530,7 +541,7 @@ public class ComputationCellController extends CellController {
 		filterOptions.add("Trace Timeframe");
 		filterOptions.add("Trace Follower Filter");
 		filterOptions.add("Trace Trim Filter");
-		filterOptions.add("Event Attributes");
+		filterOptions.add("Event Attribute");
 		filterOptions.add("Event Rate");
 		filterOptions.add("Merge Subsequent Events");
 
@@ -585,7 +596,7 @@ public class ComputationCellController extends CellController {
 								filterConfig = new FilterdTracePerformanceConfig(inputLog,
 										new FilterdTracePerformanceFilter());
 								break;
-							case "Event Attributes" :
+							case "Event Attribute" :
 								filterConfig = new FilterdEventAttrConfig(inputLog, new FilterdEventAttrFilter());
 								break;
 							case "Event Rate" :
