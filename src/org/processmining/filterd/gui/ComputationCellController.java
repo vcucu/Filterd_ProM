@@ -530,7 +530,7 @@ public class ComputationCellController extends CellController {
 		filterOptions.add("Trace Timeframe");
 		filterOptions.add("Trace Follower Filter");
 		filterOptions.add("Trace Trim Filter");
-		filterOptions.add("Event Attributes");
+		filterOptions.add("Event Attribute");
 		filterOptions.add("Event Rate");
 		filterOptions.add("Merge Subsequent Events");
 
@@ -585,7 +585,7 @@ public class ComputationCellController extends CellController {
 								filterConfig = new FilterdTracePerformanceConfig(inputLog,
 										new FilterdTracePerformanceFilter());
 								break;
-							case "Event Attributes" :
+							case "Event Attribute" :
 								filterConfig = new FilterdEventAttrConfig(inputLog, new FilterdEventAttrFilter());
 								break;
 							case "Event Rate" :
