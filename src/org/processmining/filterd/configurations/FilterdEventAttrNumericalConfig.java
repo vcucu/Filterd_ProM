@@ -37,7 +37,6 @@ public class FilterdEventAttrNumericalConfig extends FilterdAbstractReferenceabl
 		ArrayList<Double> defaultPair = new ArrayList<>();
 		ArrayList<Double> optionsPair = new ArrayList<>();
 
-
 		String defaultSelect = "Choose different values.";
 		ArrayList<String> selectList = new ArrayList<>();
 		selectList.add(defaultSelect);
