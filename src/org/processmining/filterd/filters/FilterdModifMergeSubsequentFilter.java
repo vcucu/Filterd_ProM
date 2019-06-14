@@ -1,9 +1,9 @@
 package org.processmining.filterd.filters;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Objects;
 import java.util.Set;
 
 import org.deckfour.xes.classification.XEventClass;
@@ -11,10 +11,10 @@ import org.deckfour.xes.classification.XEventClasses;
 import org.deckfour.xes.classification.XEventClassifier;
 import org.deckfour.xes.extension.std.XConceptExtension;
 import org.deckfour.xes.extension.std.XLifecycleExtension;
+import org.deckfour.xes.extension.std.XTimeExtension;
 import org.deckfour.xes.factory.XFactory;
 import org.deckfour.xes.factory.XFactoryRegistry;
 import org.deckfour.xes.info.impl.XLogInfoImpl;
-import org.deckfour.xes.model.XAttribute;
 import org.deckfour.xes.model.XAttributeMap;
 import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XLog;
@@ -30,24 +30,28 @@ public class FilterdModifMergeSubsequentFilter extends Filter {
 	
 	private static final int TIME_DIFFERENCE = 1000 * 60;
 
-	public enum MergeFilter {
-		SAME_DATA("Keep events having the same attribute") {
+	public enum MergeFilter {SAME_CLASS("Compare event class") {
+		public boolean sameEvent(XEventClassifier classifier, Set<String> relevantAttributes, XEvent eventA,
+				XEvent eventB) {
+			return classifier.sameEventClass(eventA, eventB);
+		}
+	},
+	SHORT_TIME("Compare event timestamps") {
+		public boolean sameEvent(XEventClassifier classifier, Set<String> relevantAttributes, XEvent eventA,
+				XEvent eventB) {
+			Date timeA = XTimeExtension.instance().extractTimestamp(eventA);
+			Date timeB = XTimeExtension.instance().extractTimestamp(eventB);
+			if (timeA != null && timeB != null) {
+				return Math.abs(timeB.getTime() - timeA.getTime()) < TIME_DIFFERENCE;
+			} else {
+				return false;
+			}
+		}
+	},
+	SAME_DATA("Compare event class & attributes") {
 			public boolean sameEvent(XEventClassifier classifier, Set<String> relevantAttributes, XEvent eventA,
 					XEvent eventB) {
-				boolean sameClass = classifier.sameEventClass(eventA, eventB);
-				if (sameClass) {
-					XAttributeMap attributesA = eventA.getAttributes();
-					XAttributeMap attributesB = eventB.getAttributes();
-					for (String key : relevantAttributes) {
-						XAttribute attributeA = attributesA.get(key);
-						XAttribute attributeB = attributesB.get(key);
-						if (!Objects.equals(attributeA, attributeB)) {
-							return false;
-						}
-					}
-					return true;
-				}
-				return false;
+				return classifier.sameEventClass(eventA, eventB);
 			}
 		};
 
@@ -175,6 +179,8 @@ public class FilterdModifMergeSubsequentFilter extends Filter {
 				.getParameter(parameters, "classifier");
 		ParameterMultipleFromSet desiredEventsParam = (ParameterMultipleFromSet)this
 				.getParameter(parameters, "desiredEvents");
+		ParameterOneFromSet comparisonTypeParam = (ParameterOneFromSet)this
+				.getParameter(parameters, "comparisonType");
 		ParameterOneFromSet mergeTypeParam = (ParameterOneFromSet)this
 				.getParameter(parameters, "mergeType");
 		ParameterMultipleFromSet relevantAttributesParam = (ParameterMultipleFromSet)this
@@ -201,8 +207,16 @@ public class FilterdModifMergeSubsequentFilter extends Filter {
 		
 		// get the comparisonType as MergeFilter - mergeFilter
 		 MergeFilter mergeFilter;
-		 mergeFilter = MergeFilter.SAME_DATA;
-		
+		 switch(comparisonTypeParam.getChosen()) {
+				case "Compare event class" : mergeFilter = MergeFilter.SAME_CLASS;
+				break;
+				case "Compare event timestamps" : mergeFilter = MergeFilter.SHORT_TIME;
+				break;
+				case "Compare event class & attributes" : mergeFilter = MergeFilter.SAME_DATA;
+				break;
+				default: mergeFilter = MergeFilter.SAME_CLASS;
+				break;
+			}		
 		// get the relevantAttributes as Set<String> - relevantAttributes
 		 Set<String> relevantAttributes = new HashSet<>(relevantAttributesParam.getChosen());
 		
