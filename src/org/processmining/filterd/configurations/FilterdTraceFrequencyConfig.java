@@ -2,7 +2,9 @@ package org.processmining.filterd.configurations;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+import org.deckfour.xes.classification.XEventClassifier;
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
 import org.processmining.filterd.filters.Filter;
@@ -28,6 +30,16 @@ public class FilterdTraceFrequencyConfig extends FilterdAbstractConfig {
 
 		//initialize the configuration's parameters list
 		parameters = new ArrayList<>();
+		
+		// build the list of classifiers
+		List<XEventClassifier> classifiers = Toolbox.computeAllClassifiers(log);
+		
+		// initialize the classifier dropdown
+		ParameterOneFromSet classifierParameter = 
+				new ParameterOneFromSet("classifier", "Select classifier", 
+						classifiers.get(0).toString(), 
+						classifiers.stream().map(x -> x.toString())
+				        .collect(Collectors.toList()));		
 
 		// Initialize the threshold type parameter and add it to the parameters 
 		// list
@@ -97,6 +109,7 @@ public class FilterdTraceFrequencyConfig extends FilterdAbstractConfig {
 				fModeOptions
 				);
 
+		parameters.add(classifierParameter);
 		parameters.add(frequencyOccurranceParameter);
 		parameters.add(threshold);
 		parameters.add(filterInOut);
