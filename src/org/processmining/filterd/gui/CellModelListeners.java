@@ -16,8 +16,6 @@ public class CellModelListeners implements PropertyChangeListener {
 	public void propertyChange(PropertyChangeEvent event) {
 		if (event.getPropertyName().equals("setHidden")) {
 			collapseCell(event);
-		} else if (event.getPropertyName().equals("setCellName")) {
-			updateCellName(event);
 		}
 	}
 
@@ -35,16 +33,5 @@ public class CellModelListeners implements PropertyChangeListener {
 			//System.out.println("This cell should expand!");
 			controller.show();
 		}
-	}
-
-	/**
-	 * Changes name of cell in UI
-	 * 
-	 * @param eventchange
-	 *            event fired by the CellName property
-	 */
-	private void updateCellName(PropertyChangeEvent event) {
-		//System.out.println("cell name is:" + (String) event.getNewValue());
-		controller.changeCellName((String) event.getNewValue());
 	}
 }
