@@ -67,6 +67,7 @@ public class ComputationCellModel extends CellModel {
 			}
 		});
 		this.isComputing = new SimpleBooleanProperty(false);
+		this.outputLogs = FXCollections.observableArrayList();
 	}
 
 	public ComputationCellModel(UIPluginContext context, int index, ProMCanceller canceller, List<YLog> eventLogs) {

@@ -32,10 +32,6 @@ public class TextCellController extends CellController {
 		});
 	}
 	
-	public void changeComment(String comment) {
-		commentField.setText(comment);
-	}
-	
 	/**
 	 * Gets the cell model of the current cell. This method is overridden so it
 	 * returns an object of type TextCellModel, this prevents us from

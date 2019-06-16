@@ -134,19 +134,6 @@ public class TextCellControllerTest extends TestCase {
 	}
 	
 	@Test
-	public void testChangeComment() {
-		// Setup new text cell controller
-		setupTextCellController();
-		try {
-			cellController.changeComment("Filterd");
-			fail("NullPointerException was NOT thrown!");
-		} catch (Throwable exception) {
-			// Check null pointer is thrown (since the view is not initialized)
-			assertFalse(exception.equals(null));
-		}
-	}
-	
-	@Test
 	public void testTextCellControllerInitialize() {
 		// Setup new text cell controller
 		setupTextCellController();

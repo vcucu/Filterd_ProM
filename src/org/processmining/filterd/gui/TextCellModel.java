@@ -17,8 +17,7 @@ public class TextCellModel extends CellModel{
 	 * Constructor for importing/exporting. This constructor needs to exist because JAXB needs a no-argument constructor for unmarshalling.
 	 * Properties set here could be overwritten during loading.
 	 */
-	public TextCellModel() {
-	}
+	public TextCellModel() {}
 	
 	public TextCellModel(UIPluginContext context, int index) {
 		super(context, index);
@@ -40,7 +39,6 @@ public class TextCellModel extends CellModel{
 	public void setComment(String comment) {
 		String oldState = this.comment.toString();
 		this.comment.set(comment);
-		property.firePropertyChange("setComment", oldState, comment);
 	}
 	
 	/**
