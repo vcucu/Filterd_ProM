@@ -8,11 +8,12 @@ import org.processmining.filterd.gui.TextCellModel;
 
 public class CellModelAdapter extends XmlAdapter<CellModelAdapted, CellModel> {
 
-	public CellModel unmarshal(CellModelAdapted adaptedModel){
+	public CellModel unmarshal(CellModelAdapted adaptedModel) {
 		CellModel model;
 		if (adaptedModel.getClass() == ComputationCellModelAdapted.class) {
 			model = new ComputationCellModel(null, adaptedModel.getIndex(), null, null);
 			((ComputationCellModel) model).addFilterModels(((ComputationCellModelAdapted) adaptedModel).getFilters());
+			((ComputationCellModel) model).setIndexOfInputOwner(((ComputationCellModelAdapted) adaptedModel).getIndexOfInputOwner());
 		} else {
 			model = new TextCellModel(null, adaptedModel.getIndex());
 			((TextCellModel) model).setComment(((TextCellModelAdapted) adaptedModel).getComment());
@@ -32,8 +33,9 @@ public class CellModelAdapter extends XmlAdapter<CellModelAdapted, CellModel> {
 		if (model.getClass() == ComputationCellModel.class) {
 			adaptedModel = new ComputationCellModelAdapted();
 			((ComputationCellModelAdapted) adaptedModel).setFilters(((ComputationCellModel) model).getFilters());
-			// set the input log (0 is initial input log, > 0 are cell outputs)
-			((ComputationCellModelAdapted) adaptedModel).setIndex(((ComputationCellModel) model)
+			// set the input log (-1 is initial input log, >= 0 are cell outputs)
+			((ComputationCellModelAdapted) adaptedModel).setIndexOfInputOwner(
+				((ComputationCellModel) model)
 				.getInputLog()
 				.getIndexOfOwner());
 		} else {

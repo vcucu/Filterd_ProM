@@ -50,6 +50,7 @@ public class ComputationCellModel extends CellModel {
 	private YLog inputLog;
 	private List<YLog> inputLogs;
 	private ObservableList<YLog> outputLogs;
+	private int indexOfInputOwner;
 	private ObservableList<FilterButtonModel> filters;
 	private SimpleBooleanProperty isComputing;
 	private Task<Void> computeTask;
@@ -67,6 +68,7 @@ public class ComputationCellModel extends CellModel {
 			}
 		});
 		this.isComputing = new SimpleBooleanProperty(false);
+		this.outputLogs = FXCollections.observableArrayList();
 	}
 
 	public ComputationCellModel(UIPluginContext context, int index, ProMCanceller canceller, List<YLog> eventLogs) {
@@ -89,7 +91,6 @@ public class ComputationCellModel extends CellModel {
 	public void setCellName(String cellName) {
 		String oldState = this.cellName.getValue();
 		this.cellName.setValue(cellName);
-		property.firePropertyChange("setCellName", oldState, cellName);
 		// change name of the output log (downstream cells may be using it)
 		if (this.outputLogs != null && this.outputLogs.size() > 0) {
 			this.outputLogs.get(0).setName(cellName + " output log");
@@ -129,9 +130,9 @@ public class ComputationCellModel extends CellModel {
 		if (log == null) {
 			throw new IllegalArgumentException("Log cannot be null!");
 		}
-		System.out.print("Name of the set log is " + log.getName() + ". Index of the set log is ");
-		System.out.println(log.getIndexOfOwner());
+		this.indexOfInputOwner = log.getIndexOfOwner();
 		this.inputLog = log;
+		System.out.println("[!] I am " + this.getCellName() + " and my input log has name " + log.getName());
 		// set the output to be the input (when the cell is computed, this will change)
 		// this is needed so that downstream cells don't have null logs as their input
 		if (log.get() != null) {
@@ -141,6 +142,15 @@ public class ComputationCellModel extends CellModel {
 
 	public YLog getInputLog() {
 		return this.inputLog;
+	}
+	
+	public void setIndexOfInputOwner(int indexOfInputOwner) {
+		System.out.println("[+] I am " + this.getCellName() + " and my new owner index is " + Integer.toString(indexOfInputOwner));
+		this.indexOfInputOwner = indexOfInputOwner;
+	}
+	
+	public int getIndexOfInputOwner() {
+		return this.indexOfInputOwner;
 	}
 
 	public void setInputLogs(List<YLog> eventLogs) {

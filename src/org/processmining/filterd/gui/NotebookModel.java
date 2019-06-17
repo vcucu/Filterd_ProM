@@ -305,60 +305,36 @@ public class NotebookModel {
 	}
 
 	/**
-	 * Updates input logs for all cells with endIndex >= index >= startIndex to
-	 * not contain logs specified in logs
+	 * Updates input logs for all computation cells within the notebook model
+	 * This happens when a computation cell is removed in order to update 
+	 * the output logs of downstream cells
 	 * 
-	 * @param startIndex
-	 *            position of the first cell to be updated in the cellLayout
-	 * @param endIndex
-	 *            position of the last cell to be updated in the cellLayout
-	 * @param logs
-	 *            the logs that need to be removed for all cells with index
+	 * @param removedCell
+	 *            the computation cell that was removed from the notebook model
 	 */
-	public void removeCellsInputLogs(int startIndex, int endIndex, ComputationCellModel removedCell) {
-		//Remove all input logs of the removed cell so that if re-added we add new elements from scratch
-		List<YLog> logs = removedCell.getOutputLogs();
-		for (int i = startIndex; i <= endIndex; i++) {
-			CellModel gCell = getCells().get(i);
-			if (gCell instanceof ComputationCellModel) {
-				ComputationCellModel cell = (ComputationCellModel) gCell;
-				//creates new object so that event would be fired when calling the setInputLogs
-				List<YLog> result = new ArrayList<YLog>(cell.getInputLogs());
-				System.out.println("Removing log " + logs.get(0).getName() + " from cell " + i);
-				result.removeAll(logs);
-				//cast the array list to an observable list and set it to be the new input logs of the cell
-				cell.setInputLogs(FXCollections.observableArrayList(result));
+	public void removeCellsInputLogs(ComputationCellModel removedCell) {
+		YLog removedLog = removedCell.getOutputLogs().get(0);
+		for (int i = 0; i < this.getCells().size(); i++) {
+			CellModel cell = this.getCells().get(i);
+			if (cell instanceof ComputationCellModel) {
+				((ComputationCellModel) cell).getInputLogs().remove(removedLog);
 			}
 		}
 	}
 
 	/**
-	 * Updates input logs for all cells with endIndex >= index > startIndex to
-	 * add output logs of the cell at startIndex
+	 * Updates input logs for all computation cells within the notebook model
+	 * This happens when a computation cell is added in order to update 
+	 * the output logs of downstream cells
 	 * 
-	 * @param startIndex
-	 *            position of the first cell to be updated in the cellLayout
-	 * @param endIndex
-	 *            position of the last cell to be updated in the cellLayout
+	 * @param addedCell
+	 *            the computation cell that was added to the notebook model
 	 */
-	public void addCellsInputLogs(int startIndex, int endIndex) {
-		ComputationCellModel changedCell = (ComputationCellModel) getCells().get(startIndex);
-		//make sure the added cell's input logs are up to date
-		//changedCell.getInputLogs().clear();
-		changedCell.setInputLogs(FXCollections.observableArrayList(getOutputLogsTill(startIndex)));
-
-		List<YLog> logs = changedCell.getOutputLogs(); // get all logs outputed by cell at startIndex
-		//System.out.println("Removing cell with index: " + startIndex + " with output logs " + logs.get(0).getName());
-		for (int i = startIndex + 1; i <= endIndex; i++) {
-			CellModel gCell = getCells().get(i);
-			if (gCell instanceof ComputationCellModel) {
-				ComputationCellModel cell = (ComputationCellModel) gCell;
-				//creates new object so that event would be fired when calling the setInputLogs
-				List<YLog> result = new ArrayList<YLog>(cell.getInputLogs());
-				System.out.println("Adding log " + logs.get(0).getName() + " from cell " + i);
-				result.addAll(logs);
-				//cast the array list to an observable list and set it to be the new input logs of the cell
-				cell.setInputLogs(FXCollections.observableArrayList(result));
+	public void addCellsInputLogs(ComputationCellModel addedCell) {
+		for (int i = 0; i < this.getCells().size(); i++) {
+			CellModel cell = this.getCells().get(i);
+			if (cell instanceof ComputationCellModel) {
+				((ComputationCellModel) cell).setInputLogs(FXCollections.observableArrayList(getOutputLogsTill(i)));
 			}
 		}
 	}

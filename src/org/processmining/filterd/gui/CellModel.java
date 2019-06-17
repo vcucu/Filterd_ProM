@@ -94,7 +94,6 @@ public class CellModel {
 		String oldState = this.cellName.getValue();
 		this.cellName.setValue(cellName);
 		//System.out.println("cellName in cell model with cellName value:" + cellName + " and old value" + oldState);
-		property.firePropertyChange("setCellName", oldState, cellName);
 	}
 
 	public UIPluginContext getContext() {

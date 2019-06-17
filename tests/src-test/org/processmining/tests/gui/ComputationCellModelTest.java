@@ -14,6 +14,7 @@ import org.processmining.filterd.models.YLog;
 import org.processmining.filterd.parameters.ParameterValueFromRange;
 import org.processmining.tests.filters.FilterdPackageTest;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.concurrent.Task;
 
 public class ComputationCellModelTest extends FilterdPackageTest {
@@ -248,5 +249,19 @@ public class ComputationCellModelTest extends FilterdPackageTest {
 			// Check that the computation was unsuccessful (TODO: there should be a message displayed somewhere)
 			assertFalse(exception.equals(null));
 		}
+	}
+	
+	@Test
+	public void testComputingProperty() {
+		// Create new computation cell model instance
+		ComputationCellModel cell = new ComputationCellModel(null, 0, null, new ArrayList<>());
+		// Get the state of the cell model
+		boolean computing = cell.isComputing();
+		// Check the state of the cell model
+		assertFalse(computing);
+		// Get the computing property of the cell model
+		BooleanProperty compProp = cell.isComputingProperty();
+		// Check that the property was properly returned
+		assertFalse(compProp.get());
 	}
 }

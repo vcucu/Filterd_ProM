@@ -83,6 +83,8 @@ public class CellModelTest extends TestCase {
 	public void testCellContext() {
 		// Create new cell model instance
 		CellModel cell = new CellModel(null, 0);
+		// Set the UIPluginContext of the cell model
+		cell.setContext(null);
 		// Get the UIPluginContext of the cell model
 		UIPluginContext context = cell.getContext();
 		// Check the cell context is set to null

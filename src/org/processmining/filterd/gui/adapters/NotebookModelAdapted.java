@@ -34,6 +34,8 @@ public class NotebookModelAdapted {
 	@XmlElement(name = "cell") // to name individual cells 'cell' instead of 'cells'
 	@XmlJavaTypeAdapter(CellModelAdapter.class) // tell JAXB to use the adapter.
 	public List<CellModel> getCells() {
+//		CellModelAdapter cma = new CellModelAdapter();
+//		return cma.unmarshal(cells);
 		return cells;
 	}
 	
