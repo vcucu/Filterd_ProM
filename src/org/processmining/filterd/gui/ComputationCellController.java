@@ -416,6 +416,7 @@ public class ComputationCellController extends CellController {
 			visualizerPane.getChildren().clear();
 			visualizerSwgBubble.setContent(null);
 			expandButton.setVisible(false);	// Hide expand button
+			fullScreenButton.setDisable(true);	// Disable fullscreen button
 			return;
 		}
 		
@@ -429,6 +430,7 @@ public class ComputationCellController extends CellController {
 		
 		visualizerSwgBubble.setContent(visualizer);	// Load Visualizer
 		expandButton.setVisible(true);	// Show expand button
+		fullScreenButton.setDisable(false);	// Enable fullscreen button
 
 		// Update Fullscreen visualizer if necessary 
 		if (isFullScreen) {
@@ -631,8 +633,8 @@ public class ComputationCellController extends CellController {
 
 				});
 		
-		// Hide expand button
-		expandButton.setVisible(false);
+		expandButton.setVisible(false);	// Hide expand button
+		fullScreenButton.setDisable(true);	// Disable fullscreen button
 		
 		VBox configurationModalRoot = configurationModal.getRoot();
 		visualizerPane.getChildren().add(configurationModalRoot);

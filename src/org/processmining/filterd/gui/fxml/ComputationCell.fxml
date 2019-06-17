@@ -91,7 +91,7 @@
                            <children>
                               <Region maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
                               <ComboBox fx:id="cmbVisualizers" maxHeight="-Infinity" minHeight="-Infinity" onAction="#loadVisualizer" prefHeight="24.0" prefWidth="150.0" styleClass="round-combobox" stylesheets="@../css/Controls.css" />
-                              <Label fx:id="fullScreenButton" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#handleFullScreen" prefHeight="24.0" prefWidth="24.0" styleClass="icon-button">
+                              <Label fx:id="fullScreenButton" contentDisplay="CENTER" disable="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#handleFullScreen" prefHeight="24.0" prefWidth="24.0" styleClass="icon-button">
                                  <graphic>
                                     <Region prefHeight="200.0" prefWidth="200.0">
                                        <styleClass>
