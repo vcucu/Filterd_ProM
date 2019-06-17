@@ -13,6 +13,8 @@ import javax.swing.SwingUtilities;
 import org.deckfour.xes.model.XLog;
 import org.processmining.contexts.uitopia.UIPluginContext;
 import org.processmining.contexts.uitopia.annotations.Visualizer;
+import org.processmining.filterd.gui.CellModel;
+import org.processmining.filterd.gui.ComputationCellModel;
 import org.processmining.filterd.gui.NotebookController;
 import org.processmining.filterd.gui.NotebookModel;
 import org.processmining.filterd.gui.adapters.NotebookModelAdapted;
@@ -84,6 +86,24 @@ public class FilterdVisualizer {
                 // This method is invoked on JavaFX thread
 				controller.setComputationMode(adaptedModel.getComputationMode());
 				controller.loadCells(adaptedModel.getCells());
+				// set input/output logs of all computation cells
+				for(CellModel cellModel : model.getCells()) {
+					if(cellModel instanceof ComputationCellModel) {
+						ComputationCellModel computationCellModel = (ComputationCellModel) cellModel;
+						if(computationCellModel.getIndexOfInputOwner() == -1) {
+							System.out.println("[*] Setting " + cellModel.getCellName() + " to initial input. Index of owner is " + Integer.toString(computationCellModel.getIndexOfInputOwner()));
+							computationCellModel.setInputLog(model.getInitialInput());
+						} else {
+							CellModel inputOwner = model.getCells()
+								.get(computationCellModel.getIndexOfInputOwner());
+							System.out.println("Setting " + cellModel.getCellName() + " to " + inputOwner.getCellName() + "'s output");
+							computationCellModel.setInputLog(
+								((ComputationCellModel) inputOwner)
+								.getOutputLogs()
+								.get(0)); 
+						}
+					}
+				}
                 
             }
         });
