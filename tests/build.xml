@@ -124,9 +124,25 @@
 
 			<!-- JUnit: test cases to run -->
 			<sysproperty key="test.testFileRoot" path="${dir.testfiles}" />
+			<!-- ADAPTERS TESTS -->
+			<test name="org.processmining.tests.adapters.CellModelAdaptedTest" todir="${test.basedir}" />
+			<test name="org.processmining.tests.adapters.CellModelAdapterTest" todir="${test.basedir}" />
+			<test name="org.processmining.tests.adapters.ComputationCellModelAdaptedTest" todir="${test.basedir}" />
+			<test name="org.processmining.tests.adapters.FilterButtonAdaptedTest" todir="${test.basedir}" />
+			<test name="org.processmining.tests.adapters.FilterButtonAdapterTest" todir="${test.basedir}" />
+			<test name="org.processmining.tests.adapters.FilterdAbstractConfigAdaptedTest" todir="${test.basedir}" />
+			<test name="org.processmining.tests.adapters.FilterdAbstractConfigAdapterTest" todir="${test.basedir}" />
+			<test name="org.processmining.tests.adapters.FilterdAbstractConfigReferencingAdaptedTest" todir="${test.basedir}" />
+			<test name="org.processmining.tests.adapters.NotebookModelAdaptedTest" todir="${test.basedir}" />
+			<test name="org.processmining.tests.adapters.NotebookModelAdapterTest" todir="${test.basedir}" />
+			<test name="org.processmining.tests.adapters.ParameterAdaptedTest" todir="${test.basedir}" />
+			<test name="org.processmining.tests.adapters.ParameterOneFromSetAdaptedTest" todir="${test.basedir}" />
+			<test name="org.processmining.tests.adapters.ParameterYesNoAdaptedTest" todir="${test.basedir}" />
+			<test name="org.processmining.tests.adapters.TextCellModelAdaptedTest" todir="${test.basedir}" />
 			<!-- CONFIG TESTS -->
 			<test name="org.processmining.tests.config.ConfigEventAttributeTest" todir="${test.basedir}" />
 			<test name="org.processmining.tests.config.ConfigEventRateTest" todir="${test.basedir}" />
+			<test name="org.processmining.tests.config.ConfigMergeSubsequentTest" todir="${test.basedir}" />
 			<test name="org.processmining.tests.config.ConfigTraceAttrTest" todir="${test.basedir}" />
 			<test name="org.processmining.tests.config.ConfigTraceEndTest" todir="${test.basedir}" />
 			<test name="org.processmining.tests.config.ConfigTraceFollowerTest" todir="${test.basedir}" />
@@ -135,11 +151,14 @@
 			<test name="org.processmining.tests.config.ConfigTraceSampleTest" todir="${test.basedir}" />
 			<test name="org.processmining.tests.config.ConfigTracesHavingEventTest" todir="${test.basedir}" />
 			<test name="org.processmining.tests.config.ConfigTraceStartTest" todir="${test.basedir}" />
+			<test name="org.processmining.tests.config.ConfigTraceTimeframeTest" todir="${test.basedir}" />
 			<test name="org.processmining.tests.config.ConfigTraceTrimTest" todir="${test.basedir}" />
 			<!-- FILTERS TESTS -->
+			<test name="org.processmining.tests.filters.FilterdExtraTest" todir="${test.basedir}" />
 			<test name="org.processmining.tests.filters.FilterEndEventsTest" todir="${test.basedir}" />
 			<test name="org.processmining.tests.filters.FilterEventAttributeTest" todir="${test.basedir}" />
 			<test name="org.processmining.tests.filters.FilterFrequencyOccurenceTest" todir="${test.basedir}" />
+			<test name="org.processmining.tests.filters.FilterModifMergeSubsequentTest" todir="${test.basedir}" />
 			<test name="org.processmining.tests.filters.FilterOtherTest" todir="${test.basedir}" />
 			<test name="org.processmining.tests.filters.FilterStartEventsTest" todir="${test.basedir}" />
 			<test name="org.processmining.tests.filters.FilterTimeframeTest" todir="${test.basedir}" />
@@ -153,6 +172,7 @@
 			<test name="org.processmining.tests.gui.CellModelListenersTest" todir="${test.basedir}" />
 			<test name="org.processmining.tests.gui.CellModelTest" todir="${test.basedir}" />
 			<test name="org.processmining.tests.gui.ComputationCellControllerTest" todir="${test.basedir}" />
+			<test name="org.processmining.tests.gui.ComputationCellModelListenersTest" todir="${test.basedir}" />
 			<test name="org.processmining.tests.gui.ComputationCellModelTest" todir="${test.basedir}" />
 			<test name="org.processmining.tests.gui.FilterButtonControllerTest" todir="${test.basedir}" />
 			<test name="org.processmining.tests.gui.FilterButtonModelTest" todir="${test.basedir}" />
@@ -161,7 +181,6 @@
 			<test name="org.processmining.tests.gui.NotebookControllerTest" todir="${test.basedir}" />
 			<test name="org.processmining.tests.gui.NotebookModelTest" todir="${test.basedir}" />
 			<test name="org.processmining.tests.gui.TextCellControllerTest" todir="${test.basedir}" />
-			<test name="org.processmining.tests.gui.TextCellModelListenersTest" todir="${test.basedir}" />
 			<test name="org.processmining.tests.gui.TextCellModelTest" todir="${test.basedir}" />
 			<test name="org.processmining.tests.gui.UtilitiesTest" todir="${test.basedir}" />
 			<!-- <test name="org.processmining.tests.gui.VisualizerPanelControllerTest" todir="${test.basedir}" /> -->
