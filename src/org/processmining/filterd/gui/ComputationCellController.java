@@ -350,13 +350,6 @@ public class ComputationCellController extends CellController {
 			cell.prefHeightProperty().unbind();
 			//set the PrefHeight to what it is by default
 			cell.setPrefHeight(Region.USE_COMPUTED_SIZE);
-			/*
-			 * HV: Refresh the visualizer. At least this ensures that the visualizer
-			 * accepts the new, smaller, bounding box. The contents will still show
-			 * the left-upper part of the expanded image, though. Only when the user 
-			 * moves the mouse over the visualization, will this be repaired.
-			 */
-	        visualizerSwgBubble.refresh();
 			// Update icon
 			Utilities.changeIcon(expandButton, "angle-right-solid", "angle-left-solid");
 		} else if (!isExpanded && !isConfigurationModalShown) {
