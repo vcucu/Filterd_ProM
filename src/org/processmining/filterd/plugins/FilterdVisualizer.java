@@ -146,7 +146,7 @@ public class FilterdVisualizer {
 				public void run() {
 					mainPanel.remove(0);
 					mainPanel.add(component);
-					mainPanel.invalidate();	// useless
+					mainPanel.revalidate();	// useless
 					mainPanel.repaint(); 	// useless
 				}
 			});
@@ -162,7 +162,7 @@ public class FilterdVisualizer {
 				public void run() {
 					mainPanel.remove(0);
 					mainPanel.add(filterdPanel);
-					mainPanel.invalidate(); // useless
+					mainPanel.revalidate(); // useless
 					mainPanel.repaint();	// useless
 				}
 			});
