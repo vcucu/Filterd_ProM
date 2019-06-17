@@ -546,7 +546,7 @@ public class Toolbox {
 		}).collect(Collectors.toList()));
 	}
 	
-	private static String addToDuration(int time, String type) {
+	public static String addToDuration(int time, String type) {
 		
 		if (time == 0) {
 			return "";

@@ -196,6 +196,10 @@ public class ParameterRangeFromRangeController<N extends Number> extends Paramet
 		//TO DO: set the labes such that date fits
 	}
 	
+	public void setTimeframe(boolean isTimeframe) {
+		this.isTimeframe = isTimeframe;
+	}
+	
 	public boolean getTimeframe() {
 		return this.isTimeframe;
 	}
