@@ -124,17 +124,24 @@ public class ComputationCellController extends CellController {
 		// binding for cell name
 		this.cellName.setText(this.cellModel.getCellName());
 		this.cellModel.cellNameProperty().addListener(new ChangeListener<String>() {
-
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
 				if (!cellName.getText().equals(newValue)) {
 					cellName.setText(newValue);
 				}
 			}
 		});
+		this.cellName.focusedProperty().addListener(new ChangeListener<Boolean>() {
+			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+				cellModel.setCellName(cellName.getText());
+			}
+		});
 		// Add listeners for filter buttons
 		addFilterButtonListeners();
 		// bind the cell name to the cell name variable.
 		getCellModel().bindCellName(cellName.textProperty());
+		
+		// Add listeners for input logs
+		addInputLogsListeners(model.getInputLogs());
 		
 		// Change compute button icon (play / pause) when the computation stops / starts
 		this.getCellModel().isComputingProperty().addListener((observable, oldValue, newValue) -> {
@@ -218,6 +225,22 @@ public class ComputationCellController extends CellController {
 			newController.enableEditFilterHandler();
 		}
 	}
+	
+	public void addInputLogsListeners(List<YLog> logs) {
+		ComputationCellModel model = this.getCellModel();
+		for (YLog log : model.getInputLogs()) {
+			log.getNameProperty().addListener(new ChangeListener<String>() {
+				@Override
+				public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+					int selected = cmbEventLog.getSelectionModel().getSelectedIndex();
+					int index = cmbEventLog.getItems().indexOf(log);
+					cmbEventLog.getItems().remove(index);
+					cmbEventLog.getItems().add(index, log);
+					cmbEventLog.getSelectionModel().select(selected);
+				}
+			});
+		}
+	}
 
 	public void addFilterButtonListeners() {
 		getCellModel().getFilters().addListener(new ListChangeListener<FilterButtonModel>() {
@@ -268,8 +291,18 @@ public class ComputationCellController extends CellController {
 	}
 
 
-	public void changeInputLogsCombo(List <YLog> logs){
+	public void changeInputLogsCombo(List <YLog> logs) {
+		List<YLog> newLogs = new ArrayList<>();
+		ObservableList<YLog> oldLogs = cmbEventLog.getItems();
 		cmbEventLog.setItems((ObservableList<YLog>) logs);
+		// Find the logs that were not previously in the drop-down menu
+		for (YLog log : logs) {
+			if (!oldLogs.contains(log)) {
+				newLogs.add(log);
+			}
+		}
+		// Add listeners for the new logs
+		addInputLogsListeners(newLogs);
 	}
 
 	/**
@@ -397,44 +430,50 @@ public class ComputationCellController extends CellController {
 	public void setXLog() {
 		ComputationCellModel model = this.getCellModel();
 		YLog eventLog = cmbEventLog.getValue();
-		model.setInputLog(eventLog);
+		try {
+			model.setInputLog(eventLog);	
+		} catch (Throwable exception) {
+			// DO NOTHING
+		}
 		cmbVisualizers.getItems().addAll(model.getVisualizers());
 		cmbVisualizers.getSelectionModel().selectFirst();
 	}
 
-	// Load visualizer
+	/**
+	 *  Load visualizer.
+	 *  
+	 *  Use this method to load the visualizer.
+	 *  This method is called when the visualizer combobox is used 
+	 *  and when the filter configuration dialog is hidden.
+	 */
 	@FXML
 	private void loadVisualizer() {
+		// Remove visualizer if "None" is selected
 		if (cmbVisualizers.getValue() == Utilities.dummyViewType) {
-			// Remove visualizer if "None" is selected
-			//			visualizerPane.getChildren().remove(visualizerSwgWrap);
 			visualizerPane.getChildren().clear();
 			visualizerSwgBubble.setContent(null);
-			// Hide expand button
-			expandButton.setVisible(false);
+			expandButton.setVisible(false);	// Hide expand button
 			return;
 		}
 		
-		visualizerPane.getChildren().clear();
-		visualizerSwgBubble.setContent(null);
+		JComponent visualizer = getCellModel().getVisualization(cmbVisualizers.getValue());	// Visualizer to be shown
 		
-		JComponent visualizer = getCellModel().getVisualization(cmbVisualizers.getValue());
+		// Add visualizer if not present
 		if (!visualizerPane.getChildren().contains(visualizerSwgBubble)) {
-			// Add visualizer if not present
 			visualizerPane.getChildren().add(visualizerSwgBubble);
+			Utilities.setAnchors(visualizerSwgBubble, 0.0);	// Make the visualizer resize with the pane
 		}
-		// Make the visualizer resize with the pane
-		Utilities.setAnchors(visualizerSwgBubble, 0.0);
-		// Load Visualizer
-		visualizerSwgBubble.setContent(visualizer);
-		// Show expand button
-		expandButton.setVisible(true);
+		
+		visualizerSwgBubble.setContent(visualizer);	// Load Visualizer
+		expandButton.setVisible(true);	// Show expand button
 
+		// Update Fullscreen visualizer if necessary 
 		if (isFullScreen) {
 			try {
 				SwingUtilities.invokeAndWait(new Runnable() {
 					@Override
 					public void run() {
+						// Indices: 0 = JFX toolbar; 1 = JPanel visualizer
 						fullScreenPanel.remove(1);
 						fullScreenPanel.add(visualizer);
 					}
@@ -480,11 +519,6 @@ public class ComputationCellController extends CellController {
 						.get(getCellModel().getFilters().size() - 1);
 				removeFilter(buttonToRemove);
 			}
-		}
-		
-		// Show expand button
-		if (cmbVisualizers.getValue() != Utilities.dummyViewType) {
-			expandButton.setVisible(true);			
 		}
 		
 		this.isConfigurationModalShown = false;

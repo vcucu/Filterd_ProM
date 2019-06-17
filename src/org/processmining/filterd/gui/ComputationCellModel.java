@@ -68,6 +68,7 @@ public class ComputationCellModel extends CellModel {
 			}
 		});
 		this.isComputing = new SimpleBooleanProperty(false);
+		this.outputLogs = FXCollections.observableArrayList();
 	}
 
 	public ComputationCellModel(UIPluginContext context, int index, ProMCanceller canceller, List<YLog> eventLogs) {
@@ -90,7 +91,6 @@ public class ComputationCellModel extends CellModel {
 	public void setCellName(String cellName) {
 		String oldState = this.cellName.getValue();
 		this.cellName.setValue(cellName);
-		property.firePropertyChange("setCellName", oldState, cellName);
 		// change name of the output log (downstream cells may be using it)
 		if (this.outputLogs != null && this.outputLogs.size() > 0) {
 			this.outputLogs.get(0).setName(cellName + " output log");
