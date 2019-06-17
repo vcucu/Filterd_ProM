@@ -5,12 +5,17 @@ import java.util.List;
 
 import org.processmining.filterd.configurations.FilterdAbstractConfig;
 
+import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.util.Callback;
 
 /**
@@ -87,6 +92,23 @@ public class ConfigurationModalController {
 		apply.disableProperty().bind(this.filterListController.isApplyDisabledProperty()); // disable the button if nothing is selected
 		this.configurationStep = ConfigurationStep.ADD_FILTER;
 	}
+	
+	private void showParsingScreen() {
+		resetModal();
+		Label label = new Label("Configuration you selected is being parsed...");
+		label.setFont(new Font(18.0));
+		// set size properties of the label
+		HBox.setHgrow(label, Priority.ALWAYS);
+		label.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+		label.setAlignment(Pos.CENTER);
+		// add label to the content pane
+		contentPane.getChildren().clear();
+		contentPane.getChildren().add(label);
+		// disable the buttons
+		this.apply.disableProperty().set(true);
+		this.cancel.disableProperty().set(true);
+		configurationStep = ConfigurationStep.PARSING;
+	}
 
 	/**
 	 * Method called by the computation cell to show the filter configuration
@@ -153,9 +175,17 @@ public class ConfigurationModalController {
 				throw new IllegalStateException("apply() was called before showFilterList()");
 			}
 			String userSelection = this.filterListController.getSelection();
-			this.filterListController.setStatusLabelText("Initializing filter configuration");
-			// execute in a new thread so that the GUI is not blocked
-			showFilterConfiguration(filterSelectionCallback.call(userSelection), filterButtonController); // show filter configuration modal
+//			this.filterListController.setStatusLabelText("Initializing filter configuration");
+			Platform.runLater(() -> showParsingScreen());
+			new Thread(new Task<Void>() {
+
+				protected Void call() throws Exception {
+					FilterdAbstractConfig conf = filterSelectionCallback.call(userSelection);
+					Platform.runLater(() -> showFilterConfiguration(conf, filterButtonController));
+					return null;
+				}
+				
+			}).start();
 		} else if (this.configurationStep == ConfigurationStep.CONFIGURE_FILTER) {
 			if (currentContentsController instanceof NestedFilterConfigPanelController) {
 				throw new IllegalStateException("Filter configuration panel controller is nested");
@@ -180,9 +210,10 @@ public class ConfigurationModalController {
 		this.apply.setText("Apply"); // apply is the default over next
 		this.apply.disableProperty().unbind(); // remove disabled binding that may have been added to the apply button
 		this.apply.disableProperty().set(false);
-		this.filterSelectionCallback = null;
+		this.cancel.disableProperty().set(false);
 		this.filterListController = null;
 		if (this.configurationStep != ConfigurationStep.ADD_FILTER) {
+			this.filterSelectionCallback = null;
 			this.filterConfig = null;
 			this.filterButtonController = null;
 			this.currentContentsController = null;
@@ -198,6 +229,6 @@ public class ConfigurationModalController {
 	}
 
 	enum ConfigurationStep {
-		ADD_FILTER, CONFIGURE_FILTER;
+		ADD_FILTER, CONFIGURE_FILTER, PARSING;
 	}
 }
