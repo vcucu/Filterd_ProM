@@ -306,8 +306,8 @@ public class NotebookModel {
 
 	/**
 	 * Updates input logs for all computation cells within the notebook model
-	 * This happens when a computation cell is removed in order to update 
-	 * the output logs of downstream cells
+	 * This happens when a computation cell is removed in order to update the
+	 * output logs of downstream cells
 	 * 
 	 * @param removedCell
 	 *            the computation cell that was removed from the notebook model
@@ -324,8 +324,8 @@ public class NotebookModel {
 
 	/**
 	 * Updates input logs for all computation cells within the notebook model
-	 * This happens when a computation cell is added in order to update 
-	 * the output logs of downstream cells
+	 * This happens when a computation cell is added in order to update the
+	 * output logs of downstream cells
 	 * 
 	 * @param addedCell
 	 *            the computation cell that was added to the notebook model
@@ -348,11 +348,9 @@ public class NotebookModel {
 				if (getCells().get(i) instanceof ComputationCellModel) {
 					ComputationCellModel cell = (ComputationCellModel) gCell;
 					// add all output logs (except the initial input log since we don't want it to be duplicated)
-					logs.addAll(cell.getOutputLogs()
-							.stream() // parse as a stream
+					logs.addAll(cell.getOutputLogs().stream() // parse as a stream
 							.filter(l -> !l.getName().equals(initialInput.getName())) // filter all logs whose name is not the same as input log's
-							.collect(Collectors.toList())
-							); // convert to a list
+							.collect(Collectors.toList())); // convert to a list
 				}
 			}
 		} else {

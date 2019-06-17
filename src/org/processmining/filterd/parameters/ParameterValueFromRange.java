@@ -2,20 +2,25 @@ package org.processmining.filterd.parameters;
 
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
+import org.processmining.filterd.gui.adapters.GenericTypeClassAdapter;
 
 @XmlRootElement
 public class ParameterValueFromRange<T> extends Parameter {
 	private T defaultChoice;
 	private T chosen;
 	private List<T> optionsPair;
+	@XmlElement
+	@XmlJavaTypeAdapter(GenericTypeClassAdapter.class)
 	private Class<T> genericTypeClass;
 	
 	/**
 	 * This constructor exists for importing and exporting
 	 */
 	public ParameterValueFromRange() {
-		
 	}
 	
 	public ParameterValueFromRange(String name, String nameDisplayed, T defaultChoice, List<T> optionsPair) {

@@ -37,12 +37,12 @@ public class FilterdAbstractConfigAdapted {
 		this.filterTypeName = filterTypeName;
 	}
 	
+	@XmlElementWrapper(name = "parameters") // to put the paramters from the list in their own xml section.
+	@XmlElement(name = "parameter") // to name individual parameters 'parameter' instead of 'parameters'
 	public List<Parameter> getParameters() {
 		return parameters;
 	}
 	
-	@XmlElementWrapper(name = "parameters") // to put the paramters from the list in their own xml section.
-	@XmlElement(name = "parameter") // to name individual parameters 'parameter' instead of 'parameters'
 	public void setParameters(List<Parameter> parameters) {
 		this.parameters = parameters;
 	}
