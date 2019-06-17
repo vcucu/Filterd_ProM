@@ -199,6 +199,36 @@ public class ComputationCellModel extends CellModel {
 	public void setCanceller(ProMCanceller canceller) {
 		this.canceller = canceller;
 	}
+	
+	/**
+	 * exports the output event log of this cell to the workspace.
+	 */
+	public void saveOutputLog() {
+		XLog output;
+		if (filters.isEmpty()) {
+			// output the input since there are no filters.
+			output = inputLog.get();
+		} else {
+			// get the final output event log.
+			if (filters.get(filters.size() -1).getOutputLog() != null) {
+				output = filters.get(filters.size() -1).getOutputLog();
+			} else {
+				// alert the user the cell needs to be computed first.
+				Alert alert = new Alert(AlertType.WARNING);
+				alert.setTitle("Export Output Log");
+				alert.setContentText("The cell has to be computed before the output event log can be exported.");
+				Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+				stage.setAlwaysOnTop(true);// make sure window always at front when open.
+				alert.showAndWait();
+				return;
+			}
+		}
+		System.out.println(output);
+		// actually output to the workspace.
+		getContext().getProvidedObjectManager().createProvidedObject(getCellName(), output, XLog.class,
+				getContext());
+		getContext().getGlobalContext().getResourceManager().getResourceForInstance(output).setFavorite(true);
+	}
 
 	// Get visualizer names
 	// LET OP! Log must be set first.

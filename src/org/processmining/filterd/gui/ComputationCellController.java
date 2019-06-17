@@ -498,6 +498,15 @@ public class ComputationCellController extends CellController {
 			lblNumEventLogs.setText(noOfLogs + " output event logs");
 		}
 	}
+	
+	/**
+	 * exports the output event log of this cell to the workspace.
+	 */
+	@FXML
+	private void saveOutputLog() {
+		System.out.println("saveoutput button pressed");
+		getCellModel().saveOutputLog();
+	}
 
 	/**
 	 * Method called when the configuration modal has to be hidden. It replaces
