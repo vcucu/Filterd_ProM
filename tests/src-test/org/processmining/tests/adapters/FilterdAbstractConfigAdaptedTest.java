@@ -3,7 +3,6 @@ package org.processmining.tests.adapters;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.deckfour.xes.model.XLog;
 import org.junit.Test;
 import org.processmining.filterd.gui.adapters.FilterdAbstractConfigAdapted;
 import org.processmining.filterd.parameters.Parameter;
@@ -54,16 +53,6 @@ public class FilterdAbstractConfigAdaptedTest extends FilterdPackageTest {
 		// Check that the parameters list was properly list
 		assertEquals(newParams.size(), 1);
 		assertTrue(newParams.equals(params));
-	}
-	
-	@Test
-	public void testLogMethods() {
-		// Set a new log for the filter model
-		filter.setLog(originalLog);
-		// Get the log of the filter model
-		XLog log = filter.getLog();
-		// Check that the log was properly set
-		assertTrue(equalLog(log, originalLog));
 	}
 
 }
