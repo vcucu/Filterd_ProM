@@ -9,6 +9,11 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
 
+/**
+ * !!! THIS CLASS CAN BE SAFELY DELETED !!!
+ *	:-) :-) :-) (-: (-: (-:
+ */
+
 public class VisualizerPanelController {
 
 	@FXML

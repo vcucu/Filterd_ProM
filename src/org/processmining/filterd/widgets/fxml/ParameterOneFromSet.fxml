@@ -22,7 +22,7 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <ComboBox fx:id="combobox" maxWidth="1.7976931348623157E308" promptText="Pick one..." GridPane.hgrow="ALWAYS" />
+                  <ComboBox fx:id="combobox" maxWidth="1.7976931348623157E308" promptText="Pick one..." styleClass="round-combobox" stylesheets="@../../gui/css/Controls.css" GridPane.hgrow="ALWAYS" />
                   <VBox maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS">
                      <children>
                         <Label fx:id="label" alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="ParameterOneFromSet" VBox.vgrow="ALWAYS" />

@@ -34,7 +34,7 @@
                      <children>
                         <HBox>
                            <children>
-                              <RangeSlider fx:id="slider" blockIncrement="1.0" highValue="75.0" lowValue="25.0" max="100.0" maxWidth="1.7976931348623157E308" showTickLabels="true" HBox.hgrow="ALWAYS" />
+                              <RangeSlider fx:id="slider" blockIncrement="1.0" highValue="75.0" lowValue="25.0" max="100.0" maxWidth="1.7976931348623157E308" showTickLabels="true" stylesheets="@../../gui/css/Controls.css" HBox.hgrow="ALWAYS" />
                            </children>
                         </HBox>
                         <GridPane>

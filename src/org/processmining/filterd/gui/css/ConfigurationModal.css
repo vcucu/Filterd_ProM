@@ -1,0 +1,9 @@
+.config-modal-layout .labeled-round-button {
+	-fx-background-color: #939393;
+	-fx-text-fill: white;
+	-fx-text-alignment: center;
+}
+
+.config-modal-layout .labeled-round-button:hover {
+	-fx-background-color: #646464;
+}
