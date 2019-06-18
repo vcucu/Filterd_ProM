@@ -373,7 +373,9 @@ public class NotebookModel {
 			protected Void call() throws Exception {
 				isComputing.set(true); // let the controller know that the computation is starting
 				// transform the cells list into a new computation cells list (ordering is preserved)
-				List<ComputationCellModel> computeList = cells.stream().filter(c -> c instanceof ComputationCellModel) // use only computation cells
+				List<ComputationCellModel> computeList = cells
+						.stream()
+						.filter(c -> c instanceof ComputationCellModel) // use only computation cells
 						.map(c -> (ComputationCellModel) c) // cast to computation cell model
 						.collect(Collectors.toList()); // transform steam to list
 				// compute cells in their order in the list

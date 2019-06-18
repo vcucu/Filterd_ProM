@@ -437,6 +437,7 @@ public class ComputationCellModel extends CellModel {
 		}
 		this.isComputing.set(false);
 		this.outputLogs.get(0).setLog(inputOutput); // set the output of this cell to be the output of the last filter
+		this.property.firePropertyChange("reloadVisualizer", null, null);
 	}
 
 	public void cancelCompute() {

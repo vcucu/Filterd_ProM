@@ -454,7 +454,7 @@ public class ComputationCellController extends CellController {
 	 *  and when the filter configuration dialog is hidden.
 	 */
 	@FXML
-	private void loadVisualizer() {
+	public void loadVisualizer() {
 		// Remove visualizer if "None" is selected
 		if (cmbVisualizers.getValue() == Utilities.dummyViewType) {
 			visualizerPane.getChildren().clear();
