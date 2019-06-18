@@ -1,6 +1,7 @@
 package org.processmining.filterd.gui;
 
 import java.beans.PropertyChangeListener;
+import java.util.List;
 import java.util.Optional;
 
 import javafx.fxml.FXML;
@@ -167,6 +168,15 @@ public abstract class CellController {
 		controller.getModel().getCells().add(index, getCellModel());
 		// Add layout at new position
 		controller.getCellsLayout().getChildren().add(index, cellLayout);
+		
+		if(this instanceof ComputationCellController) {
+			System.out.println("I am a computation cell controrller and I'm moviiiiiiing");
+			List<FilterButtonModel> filters = ((ComputationCellController) this).getCellModel().getFilters();
+			for(FilterButtonModel filter : filters) {
+//				filter.getSelectedProperty().set(false);
+				filter.isValidProperty().set(true);
+			}
+		}
 	}
 
 	public void show() {

@@ -183,6 +183,10 @@ public class ComputationCellController extends CellController {
 			}
 			getCellModel().addFilterModel(index, filterModel);
 			enableAllFilterButtonsBut(index);
+			for(FilterButtonModel filter : getCellModel().getFilters()) {
+				filter.setSelected(false);
+				filter.isValidProperty().set(true);
+			}
 			loadFilter(index, filterModel);
 		}
 	}

@@ -13,59 +13,70 @@ public class FilterButtonController {
 	private ComputationCellController controller;
 	private FilterButtonModel model;
 	private Pane layout;
-	
-	@FXML private Group buttons;
-	@FXML private Label filterName;
-	@FXML private HBox filterLayout;
-	@FXML private Label editButton;
-	@FXML private Label removeButton;
-	@FXML private Label moveUpButton;
-	@FXML private Label moveDownButton;
-	
+
+	@FXML
+	private Group buttons;
+	@FXML
+	private Label filterName;
+	@FXML
+	private HBox filterLayout;
+	@FXML
+	private Label editButton;
+	@FXML
+	private Label removeButton;
+	@FXML
+	private Label moveUpButton;
+	@FXML
+	private Label moveDownButton;
+
 	public FilterButtonController(ComputationCellController controller, FilterButtonModel model) {
 		this.controller = controller;
-		this.model = model; 
+		this.model = model;
 	}
-	
+
 	public void initialize() {
 		// Bind properties with components
 		bindProperties();
 	}
-	
+
 	private void bindProperties() {
 		// Name
 		filterName.textProperty().bind(model.getNameProperty());
-		
+
 		// Selected property 
-		model.getSelectedProperty().addListener(
-				(observable, oldvalue, newvalue) ->
-				setSelected(newvalue)
-		);
-		
+		model.getSelectedProperty().addListener((observable, oldvalue, newvalue) -> setSelected(newvalue));
+
 		// valid property
 		model.isValidProperty().addListener(new ChangeListener<Boolean>() {
 
 			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
 				System.out.print("Setting valid to ");
 				System.out.println(newValue);
-				if(newValue) {
+				if (newValue) {
 					// filter became valid
 					controller.hideConfigurationModal(false);
-					setSelected(model.getSelected());
+					if (model.getSelected()) {
+						filterLayout.getStyleClass().add("selected");
+						buttons.setVisible(true);
+					} else {
+						filterLayout.getStyleClass().remove("selected");
+						buttons.setVisible(false);
+					}
+					setInvalid(false);
 				} else {
 					// filter became invalid (empty log or invalid configuration)
-					makeInvalid();
+					setInvalid(true);
 				}
 			}
 		});
-		
+
 		// edit disabled property
 		editButton.disableProperty().bind(model.isEditDisabledProperty());
 	}
-	
+
 	public void setSelected(boolean selected) {
+		this.model.isValidProperty().set(true);
 		if (selected) {
-			filterLayout.getStyleClass().remove("invalid");
 			filterLayout.getStyleClass().add("selected");
 			buttons.setVisible(true);
 		} else {
@@ -89,33 +100,36 @@ public class FilterButtonController {
 	public void setModel(FilterButtonModel model) {
 		this.model = model;
 	}
-	
+
 	public void setFilterName(String value) {
 		filterName.setText(value);
 	}
-	
+
 	public void setFilterLayout(HBox temp) {
 		this.filterLayout = temp;
 	}
-	
+
 	public HBox getFilterLayout() {
 		return this.filterLayout;
 	}
-	
-	public void makeInvalid() {
-		setSelected(false);
-		filterLayout.getStyleClass().add("invalid");
+
+	public void setInvalid(boolean val) {
+		if (val) {
+			filterLayout.getStyleClass().add("invalid");
+		} else {
+			filterLayout.getStyleClass().remove("invalid");
+		}
 	}
 
 	@FXML
 	public void selectFilterButton() {
 		controller.enableAllFilterButtonsBut(-1);
-		if(!model.getSelected()) {
+		if (!model.getSelected()) {
 			controller.hideConfigurationModal(true);
-			controller.getCellModel().selectFilter(model);
 		}
+		controller.getCellModel().selectFilter(model);
 	}
-	
+
 	public void enableEditFilterHandler() {
 		this.model.setIsEditDisabled(false);
 	}
@@ -124,17 +138,17 @@ public class FilterButtonController {
 	private void editFilterHandler() {
 		selectFilterButton();
 		this.controller.enableAllFilterButtonsBut(this.model.getIndex());
-		if(this.model.getFilterConfig() != null) {
+		if (this.model.getFilterConfig() != null) {
 			this.controller.showModalFilterConfiguration(this.model.getFilterConfig(), this);
 			this.model.setIsEditDisabled(true);
 		}
 	}
-	
+
 	@FXML
 	public void removeFilterHandler() {
 		controller.removeFilter(model);
 	}
-	
+
 	@FXML
 	private void moveUpFilterHandler() {
 		int index = model.getIndex();
@@ -142,7 +156,7 @@ public class FilterButtonController {
 			move(index - 1);
 		}
 	}
-	
+
 	@FXML
 	private void moveDownFilterHandler() {
 		int index = model.getIndex();
@@ -150,7 +164,7 @@ public class FilterButtonController {
 			move(index + 1);
 		}
 	}
-	
+
 	private void move(int index) {
 		// Remove layout
 		controller.getPanelLayout().getChildren().remove(filterLayout);
