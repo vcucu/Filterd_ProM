@@ -7,7 +7,10 @@ import java.util.List;
 import org.processmining.filterd.configurations.FilterdAbstractConfig;
 import org.processmining.filterd.configurations.FilterdAbstractReferencingConfig;
 import org.processmining.filterd.parameters.Parameter;
+import org.processmining.filterd.parameters.ParameterMultipleFromSet;
 import org.processmining.filterd.parameters.ParameterOneFromSet;
+import org.processmining.filterd.parameters.ParameterRangeFromRange;
+import org.processmining.filterd.parameters.ParameterValueFromRange;
 import org.processmining.filterd.widgets.ParameterController;
 import org.processmining.filterd.widgets.ParameterOneFromSetController;
 import org.processmining.filterd.widgets.ParameterOneFromSetExtendedController;
@@ -15,13 +18,16 @@ import org.processmining.filterd.widgets.ParameterOneFromSetExtendedController;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 public class FilterConfigPanelController extends AbstractFilterConfigPanelController {
 	
-	@FXML private VBox leftPanel;
-	@FXML private VBox rightPanel;
+	@FXML private HBox mainPanel;
+	@FXML private VBox childPanel;
+	@FXML private VBox slidersPanel;
 	@FXML private Label title;
+	
 	private boolean placeInLeftPane;
 	private FilterdAbstractConfig owner;
 	
@@ -65,29 +71,47 @@ public class FilterConfigPanelController extends AbstractFilterConfigPanelContro
 					parameter.getChosen(), 
 					parameter.getOptions());
 		}
-		getNextContainer().getChildren().add(controller.getContents());
+		getNextContainer(parameter).getChildren().add(controller.getContents());
 		controllers.add(controller);
 	}
 	
 	@Override
-	public VBox getNextContainer() {
-		VBox container;
-		// pick whether to place in left or right side of the panel
-		if(placeInLeftPane) {
-			container = leftPanel;
+	public VBox getNextContainer(Parameter param) {
+//		VBox container;
+//		// pick whether to place in left or right side of the panel
+//		if(placeInLeftPane) {
+//			container = leftPanel;
+//		} else {
+//			container = rightPanel;
+//		}
+//		placeInLeftPane = !placeInLeftPane; // change for the next time
+//		
+		
+		if (needsBigContainer(param)) {
+			VBox newBox = new VBox();
+			mainPanel.getChildren().add(0, newBox);
+			return newBox;
+		} else if (hasSlider(param)) {
+			return slidersPanel;
 		} else {
-			container = rightPanel;
+			return childPanel;
 		}
-		placeInLeftPane = !placeInLeftPane; // change for the next time
-		return container;
 	}
 	
-	public VBox getLeftPanel() {
-		return leftPanel;
+	/**
+	 * Returns whether the parameter needs a big container. 
+	 * There are two types of parameters that require a big container:
+	 * ParameterMultipleFromSet and OneFromSetExtended.
+	 */
+	private boolean needsBigContainer(Parameter param) {
+		return (param instanceof ParameterMultipleFromSet ||
+				(param instanceof ParameterOneFromSet &&
+						((ParameterOneFromSet) param).getCreatesReference()));
 	}
 	
-	public VBox getRightPanel() {
-		return rightPanel;
+	private boolean hasSlider(Parameter param) {
+		return ((param instanceof ParameterRangeFromRange) ||
+				(param instanceof ParameterValueFromRange));
 	}
 	
 	public boolean isPlaceInLeftPane() {
