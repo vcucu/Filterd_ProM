@@ -352,6 +352,7 @@ public class FilterdTraceFollowerConfig extends FilterdAbstractConfig {
 				.findFirst()
 				.get();
 		shorterOrLongerControl.getContents().setVisible(visible);
+		shorterOrLongerControl.getContents().setManaged(visible);
 
 		// make parameter for selecting time duration (in)visible
 		ParameterValueFromRangeController<Integer> timeDurationParameter = 
@@ -361,6 +362,8 @@ public class FilterdTraceFollowerConfig extends FilterdAbstractConfig {
 				.findFirst()
 				.get();
 		timeDurationParameter.getContents().setVisible(visible);
+		timeDurationParameter.getContents().setManaged(visible);
+		
 
 		// make parameter for selecting the time type (in)visible
 		ParameterOneFromSetController timeTypeParameter = 
@@ -370,6 +373,7 @@ public class FilterdTraceFollowerConfig extends FilterdAbstractConfig {
 				.findFirst()
 				.get();
 		timeTypeParameter.getContents().setVisible(visible);
+		timeTypeParameter.getContents().setManaged(visible);
 	}
 	
 	/* method for setting the value parameters controller visible or invisible
@@ -384,6 +388,7 @@ public class FilterdTraceFollowerConfig extends FilterdAbstractConfig {
 				.findFirst()
 				.get();
 		sameOrDifferentControl.getContents().setVisible(visible);
+		sameOrDifferentControl.getContents().setManaged(visible);
 
 		// make parameter for selecting the attribute whose value has to be
 		// matched (in)visible
@@ -394,6 +399,7 @@ public class FilterdTraceFollowerConfig extends FilterdAbstractConfig {
 				.findFirst()
 				.get();
 		valueMatchingControl.getContents().setVisible(visible);
+		valueMatchingControl.getContents().setManaged(visible);
 	}
 
 	public boolean checkValidity(XLog candidateLog) {
