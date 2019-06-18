@@ -172,8 +172,7 @@ public class ComputationCellController extends CellController {
 
 	@FXML
 	public void addFilter() {
-		if (!this.isConfigurationModalShown
-				|| this.configurationModal.getConfigurationStep() != ConfigurationStep.ADD_FILTER) {
+		if (!this.isConfigurationModalShown) {
 			int index = getCellModel().getFilters().size(); // Index of the new cell, so that we can compute which XLogs are available
 			FilterButtonModel filterModel = new FilterButtonModel(index);
 			// if cell was already computed and is not out-of-date, we can set the input log of the new filter to be the output of the previous one
