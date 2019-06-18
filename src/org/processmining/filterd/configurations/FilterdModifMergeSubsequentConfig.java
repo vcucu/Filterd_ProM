@@ -73,12 +73,13 @@ public class FilterdModifMergeSubsequentConfig extends FilterdAbstractReferencin
 
 
 		//Create relevant attributes parameter
+		// This is a parameter which can be hidden so we set disappearable to true
 		ParameterMultipleFromSet relevantAttributes = new ParameterMultipleFromSet(
 				"relevantAttributes",
 				"Select the attributes that should coincide",
 				new ArrayList<>(),
 				attributeNames);
-
+		relevantAttributes.setDisappearable(true);
 
 		//Add all parameters to the list of parameters
 		parameters.add(classifierParam);

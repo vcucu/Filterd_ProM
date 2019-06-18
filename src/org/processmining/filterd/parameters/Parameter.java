@@ -5,6 +5,7 @@ public abstract class Parameter {
 	protected String nameDisplayed;
 	protected String explanation;
 	protected String name;
+	protected boolean disappearable;
 	
 	/**
 	 * This constructor exists for importing and exporting
@@ -16,6 +17,7 @@ public abstract class Parameter {
 	public Parameter(String name, String nameDisplayed) {
 		this.name = name;
 		this.nameDisplayed = nameDisplayed;
+		this.disappearable = false;
 		
 	}
 	
@@ -36,6 +38,12 @@ public abstract class Parameter {
 	}
 	public void setName(String name) {
 		this.name = name;
+	}
+	public boolean getDisappearable() {
+		return this.disappearable;
+	}
+	public void setDisappearable(boolean bool) {
+		this.disappearable = bool;
 	}
 	
 	public boolean equals(Parameter param) {
