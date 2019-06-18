@@ -44,6 +44,7 @@ import org.processmining.filterd.models.YLog;
 import org.processmining.filterd.plugins.FilterdVisualizer;
 import org.processmining.filterd.tools.EmptyLogException;
 
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
@@ -461,10 +462,15 @@ public class ComputationCellController extends CellController {
 	public void loadVisualizer() {
 		// Remove visualizer if "None" is selected
 		if (cmbVisualizers.getValue() == Utilities.dummyViewType) {
-			visualizerPane.getChildren().clear();
-			visualizerSwgBubble.setContent(null);
-			expandButton.setVisible(false);	// Hide expand button
-			fullScreenButton.setDisable(true);	// Disable fullscreen button
+			Platform.runLater(new Runnable() {
+
+				public void run() {
+					visualizerPane.getChildren().clear();
+					visualizerSwgBubble.setContent(null);
+					expandButton.setVisible(false);	// Hide expand button
+					fullScreenButton.setDisable(true);	// Disable fullscreen button
+				}
+			});
 			return;
 		}
 		
