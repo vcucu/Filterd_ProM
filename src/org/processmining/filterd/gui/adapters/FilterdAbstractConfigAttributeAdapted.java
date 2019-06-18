@@ -3,7 +3,7 @@ package org.processmining.filterd.gui.adapters;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
-public class FilterdTraceStartEventCategoricalConfigAdapted extends FilterdAbstractConfigAdapted {
+public class FilterdAbstractConfigAttributeAdapted extends FilterdAbstractConfigAdapted {
 	
 	private String attribute;
 	

@@ -13,7 +13,8 @@ import org.processmining.filterd.gui.adapters.FilterButtonAdapted;
 import org.processmining.filterd.gui.adapters.FilterdAbstractConfigAdapted;
 import org.processmining.filterd.gui.adapters.FilterdAbstractConfigAdapter;
 import org.processmining.filterd.gui.adapters.FilterdAbstractReferencingConfigAdapted;
-import org.processmining.filterd.gui.adapters.FilterdTraceStartEventCategoricalConfigAdapted;
+import org.processmining.filterd.gui.adapters.FilterdAbstractConfigKeyAdapted;
+import org.processmining.filterd.gui.adapters.FilterdAbstractConfigAttributeAdapted;
 import org.processmining.filterd.gui.adapters.NotebookModelAdapted;
 import org.processmining.filterd.gui.adapters.TextCellModelAdapted;
 import org.processmining.filterd.parameters.Parameter;
@@ -41,7 +42,7 @@ public class NotebookLoader {
 					Parameter.class, ParameterMultipleFromSet.class, ParameterOneFromSet.class,
 					ParameterRangeFromRange.class, ParameterText.class, ParameterValueFromRange.class, ParameterYesNo.class,
 					FilterdAbstractReferencingConfigAdapted.class, FilterdAbstractConfigAdapted.class,
-					FilterdTraceStartEventCategoricalConfigAdapted.class); // Create JAXB Context.
+					FilterdAbstractConfigAttributeAdapted.class, FilterdAbstractConfigKeyAdapted.class); // Create JAXB Context.
 			Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
 			
 			StringReader reader = new StringReader(imported);

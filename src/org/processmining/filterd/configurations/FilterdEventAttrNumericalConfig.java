@@ -150,6 +150,10 @@ public class FilterdEventAttrNumericalConfig extends FilterdAbstractReferenceabl
 		//check whether no params are empty if you populate with the component
 		return true;
 	};
+	
+	public String getKey() {
+		return key;
+	}
 
 
 	public boolean checkValidity(XLog log) {
