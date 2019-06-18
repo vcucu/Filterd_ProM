@@ -54,6 +54,7 @@ public class FilterButtonController {
 				System.out.println(newValue);
 				if (newValue) {
 					// filter became valid
+					setInvalid(false);
 					controller.hideConfigurationModal(false);
 					if (model.getSelected()) {
 						filterLayout.getStyleClass().add("selected");
@@ -62,7 +63,6 @@ public class FilterButtonController {
 						filterLayout.getStyleClass().remove("selected");
 						buttons.setVisible(false);
 					}
-					setInvalid(false);
 				} else {
 					// filter became invalid (empty log or invalid configuration)
 					setInvalid(true);

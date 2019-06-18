@@ -447,6 +447,10 @@ public class ComputationCellController extends CellController {
 		} catch (Throwable exception) {
 			// DO NOTHING
 		}
+		// if any filters are invalid, make them valid
+		for(FilterButtonModel filter : model.getFilters()) {
+			filter.isValidProperty().set(true);
+		}
 		cmbVisualizers.getItems().addAll(model.getVisualizers());
 		cmbVisualizers.getSelectionModel().selectFirst();
 	}
