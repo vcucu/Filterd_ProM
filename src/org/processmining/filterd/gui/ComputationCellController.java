@@ -379,6 +379,9 @@ public class ComputationCellController extends CellController {
 
 			// Remove toolbar
 			cellToolbar.getChildren().remove(fullToolbar);
+			
+			// Remove empty visualizer
+			cmbVisualizers.getItems().remove(Utilities.dummyViewType);
 
 			// Initialize toolbar
 			JFXPanel toolbarPanel = new JFXPanel();
@@ -406,6 +409,9 @@ public class ComputationCellController extends CellController {
 
 			// Re-add toolbar
 			cellToolbar.getChildren().add(cellToolbar.getChildren().size() - 1, fullToolbar);
+			
+			// Re-add empty visualizer
+			cmbVisualizers.getItems().add(0, Utilities.dummyViewType);
 
 			// Revert view
 			FilterdVisualizer.revertView();
