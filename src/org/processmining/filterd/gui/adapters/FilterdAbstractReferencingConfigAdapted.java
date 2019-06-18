@@ -10,7 +10,7 @@ public class FilterdAbstractReferencingConfigAdapted extends FilterdAbstractConf
 
 	FilterdAbstractReferenceableConfig concreteReference;
 	
-	@XmlJavaTypeAdapter(FilterdAbstractConfigAdapter.class)
+	@XmlJavaTypeAdapter(FilterdAbstractConfigReferenceableAdapter.class)
 	public FilterdAbstractReferenceableConfig getConcreteReference() {
 		return concreteReference;
 	}

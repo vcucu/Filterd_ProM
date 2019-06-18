@@ -31,10 +31,12 @@ public class FilterdTraceStartEventCategoricalConfig extends FilterdAbstractRefe
 	
 	XEventClasses xEventClasses;
 	List<String> allValues = new ArrayList<>();
+	String attribute;
 	
 	public FilterdTraceStartEventCategoricalConfig(XLog log, Filter filterType, String attribute, 
 			List<XEventClassifier> classifiers) {
 		super(log, filterType);
+		this.attribute = attribute;
 		parameters = new ArrayList<Parameter>();
 		isAttribute = true;
 		XLog startEventsLog = startEventsOnly();
@@ -133,6 +135,10 @@ public class FilterdTraceStartEventCategoricalConfig extends FilterdAbstractRefe
 
 	public boolean checkValidity(XLog log) {
 		return true;
+	}
+	
+	public String getAttribute() {
+		return attribute;
 	}
 	
 	
