@@ -22,7 +22,7 @@ public class NotebookModelAdaptedTest extends FilterdPackageTest {
 	}
 	
 	@Test
-	public void testCellsMethods() {
+	public void testNotebookCellsMethods() {
 		// Create new model for the notebook
 		model = new NotebookModelAdapted();
 		// Create new list for the notebook cells
@@ -43,7 +43,7 @@ public class NotebookModelAdaptedTest extends FilterdPackageTest {
 	}
 	
 	@Test
-	public void testComputationModeMethods() {
+	public void testNotebookComputationModeMethods() {
 		// Create new model for the notebook
 		model = new NotebookModelAdapted();
 		// Set new computation mode for the notebook
@@ -55,7 +55,7 @@ public class NotebookModelAdaptedTest extends FilterdPackageTest {
 	}
 	
 	@Test
-	public void testInputMethods() {
+	public void testNotebookInputMethods() {
 		// Create new model for the notebook
 		model = new NotebookModelAdapted();
 		// Set the input log for the notebook

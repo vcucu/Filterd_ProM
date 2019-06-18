@@ -18,7 +18,8 @@ import org.processmining.contexts.uitopia.hub.ProMViewManager;
 import org.processmining.filterd.gui.adapters.ComputationCellModelAdapted;
 import org.processmining.filterd.gui.adapters.FilterButtonAdapted;
 import org.processmining.filterd.gui.adapters.FilterdAbstractConfigAdapted;
-import org.processmining.filterd.gui.adapters.FilterdAbstractConfigReferencingAdapted;
+import org.processmining.filterd.gui.adapters.FilterdAbstractReferencingConfigAdapted;
+import org.processmining.filterd.gui.adapters.FilterdTraceStartEventCategoricalConfigAdapted;
 import org.processmining.filterd.gui.adapters.NotebookModelAdapted;
 import org.processmining.filterd.gui.adapters.NotebookModelAdapter;
 import org.processmining.filterd.gui.adapters.TextCellModelAdapted;
@@ -373,9 +374,7 @@ public class NotebookModel {
 			protected Void call() throws Exception {
 				isComputing.set(true); // let the controller know that the computation is starting
 				// transform the cells list into a new computation cells list (ordering is preserved)
-				List<ComputationCellModel> computeList = cells
-						.stream()
-						.filter(c -> c instanceof ComputationCellModel) // use only computation cells
+				List<ComputationCellModel> computeList = cells.stream().filter(c -> c instanceof ComputationCellModel) // use only computation cells
 						.map(c -> (ComputationCellModel) c) // cast to computation cell model
 						.collect(Collectors.toList()); // transform steam to list
 				// compute cells in their order in the list
@@ -443,8 +442,9 @@ public class NotebookModel {
 		JAXBContext jaxbContext = JAXBContext.newInstance(NotebookModelAdapted.class, TextCellModelAdapted.class,
 				ComputationCellModelAdapted.class, FilterButtonAdapted.class, FilterdAbstractConfigAdapted.class,
 				Parameter.class, ParameterMultipleFromSet.class, ParameterOneFromSet.class,
-				ParameterRangeFromRange.class, ParameterText.class, ParameterValueFromRange.class,
-				ParameterYesNo.class, FilterdAbstractConfigReferencingAdapted.class, FilterdAbstractConfigAdapted.class); // Create JAXB Context.
+				ParameterRangeFromRange.class, ParameterText.class, ParameterValueFromRange.class, ParameterYesNo.class,
+				FilterdAbstractReferencingConfigAdapted.class, FilterdAbstractConfigAdapted.class,
+				FilterdTraceStartEventCategoricalConfigAdapted.class); // Create JAXB Context.
 		Marshaller jaxbMarshaller = jaxbContext.createMarshaller(); // Create Marshaller.
 		jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE); // Format XML (otherwise it wil be a single line without spaces)
 
