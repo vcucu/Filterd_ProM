@@ -1,5 +1,7 @@
 package org.processmining.filterd.gui.adapters;
 
+import java.lang.reflect.InvocationTargetException;
+
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 import org.deckfour.xes.model.XLog;
@@ -18,8 +20,12 @@ public class FilterdAbstractConfigAdapter extends XmlAdapter<FilterdAbstractConf
 	 * @throws ClassNotFoundException 
 	 * @throws IllegalAccessException 
 	 * @throws InstantiationException 
+	 * @throws SecurityException 
+	 * @throws NoSuchMethodException 
+	 * @throws InvocationTargetException 
+	 * @throws IllegalArgumentException 
 	 */
-	public FilterdAbstractConfig unmarshal(FilterdAbstractConfigAdapted adaptedConfig) throws IllegalStateException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+	public FilterdAbstractConfig unmarshal(FilterdAbstractConfigAdapted adaptedConfig) throws IllegalStateException, InstantiationException, IllegalAccessException, ClassNotFoundException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
 		if (initialInput == null) {
 			throw new IllegalStateException("org.processmining.filterd.gui.adapters.FilterdAbstractConfigAdapter.unmarshal: static variable initialInput was not set.");
 		}
