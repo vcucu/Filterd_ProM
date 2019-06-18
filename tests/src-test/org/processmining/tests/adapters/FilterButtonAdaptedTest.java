@@ -18,7 +18,7 @@ public class FilterButtonAdaptedTest extends FilterdPackageTest {
 	}
 	
 	@Test
-	public void testIndexMethods() {
+	public void testFilterIndexMethods() {
 		// Set the index of the filter model
 		filter.setIndex(10);
 		// Get the index of the filter model
@@ -28,7 +28,7 @@ public class FilterButtonAdaptedTest extends FilterdPackageTest {
 	}
 	
 	@Test
-	public void testNameMethods() {
+	public void testFilterNameMethods() {
 		// Set the name of the filter model
 		filter.setName("Filterd");
 		// Get the name of the filter model

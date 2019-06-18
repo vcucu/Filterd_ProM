@@ -8,7 +8,6 @@ import org.deckfour.xes.model.XLog;
 import org.junit.Test;
 import org.processmining.filterd.configurations.FilterdTraceFrequencyConfig;
 import org.processmining.filterd.filters.FilterdTraceFrequencyFilter;
-import org.processmining.filterd.gui.AbstractFilterConfigPanelController;
 import org.processmining.filterd.gui.FilterConfigPanelController;
 import org.processmining.filterd.parameters.ParameterOneFromSet;
 import org.processmining.filterd.parameters.ParameterRangeFromRange;
@@ -36,8 +35,7 @@ public class ConfigTraceFrequencyTest extends FilterdPackageTest {
 		thresholdType.setChosen("occurrence");
 		ParameterRangeFromRange<Double> threshold = (ParameterRangeFromRange<Double>) config.getParameter("threshold");
 		threshold.setChosenPair(pair);
-		assert(!config.checkValidity(typed2));
-		
+		assert(config.checkValidity(typed2));
 	}
 	
 	@Test

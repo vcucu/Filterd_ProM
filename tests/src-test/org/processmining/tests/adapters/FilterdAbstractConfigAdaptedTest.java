@@ -19,7 +19,7 @@ public class FilterdAbstractConfigAdaptedTest extends FilterdPackageTest {
 	}
 	
 	@Test
-	public void testClassNameMethods() {
+	public void testConfigClassNameMethods() {
 		// Set the name of the filter model
 		filter.setClassName("Filterd");
 		// Get the name of the filter model
@@ -29,7 +29,7 @@ public class FilterdAbstractConfigAdaptedTest extends FilterdPackageTest {
 	}
 	
 	@Test
-	public void testFilterNameMethods() {
+	public void testConfigFilterNameMethods() {
 		// Set the name of the filter model
 		filter.setfilterTypeName("Filterd");
 		// Get the name of the filter model
@@ -39,7 +39,7 @@ public class FilterdAbstractConfigAdaptedTest extends FilterdPackageTest {
 	}
 	
 	@Test
-	public void testParameterMethods() {
+	public void testConfigParameterMethods() {
 		// Create new list to store the parameters
 		List<Parameter> params = new ArrayList<>();
 		// Create new parameter instance
@@ -54,5 +54,4 @@ public class FilterdAbstractConfigAdaptedTest extends FilterdPackageTest {
 		assertEquals(newParams.size(), 1);
 		assertTrue(newParams.equals(params));
 	}
-
 }

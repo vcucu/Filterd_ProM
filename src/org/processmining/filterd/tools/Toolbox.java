@@ -275,7 +275,7 @@ public class Toolbox {
 			offsetH = Integer.parseInt(time.substring(24, 26));
 			offsetM = Integer.parseInt(time.substring(27, 29));
 
-			if (sign) {
+			if (!sign) {
 				return date.plusHours(offsetH).plusMinutes(offsetM);
 			} else {
 				return date.minusHours(offsetH).minusMinutes(offsetM);
