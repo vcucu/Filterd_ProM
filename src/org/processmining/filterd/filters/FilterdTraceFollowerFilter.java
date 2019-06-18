@@ -19,457 +19,235 @@ import org.processmining.filterd.parameters.ParameterYesNo;
 import org.processmining.filterd.tools.Toolbox;;
 
 public class FilterdTraceFollowerFilter extends Filter {
+	ParameterOneFromSet attributeSelector;
+	ParameterMultipleFromSet referenceParameter;
+	ParameterMultipleFromSet followerParameter;
+	ParameterYesNo timeRestrictionParameter;
+	ParameterOneFromSet shorterOrLongerParameter;
+	ParameterValueFromRange<Integer> timeDurationParameter;
+	ParameterOneFromSet timeTypeParameter;
+	ParameterYesNo valueMatchingParameter;
+	ParameterOneFromSet sameOrDifferentParameter;
+	ParameterOneFromSet valueMatchingAttributeParameter;
 
 	public XLog filter(XLog log, List<Parameter> parameters) {
 		// clone input log, since ProM documentation says filters should not 
 		// change input logs
 		XLog clonedLog = (XLog) log.clone(); 
-		
+
 		Set<XTrace> tracesToRemove = new HashSet<>();
-		
+
 		// Basic follower parameters.
-		ParameterOneFromSet attributeSelector = 
+		attributeSelector = 
 				(ParameterOneFromSet) parameters.get(0); 
 		ParameterOneFromSet selectionType = 
 				(ParameterOneFromSet) parameters.get(1);
-		ParameterMultipleFromSet referenceParameter = 
+		referenceParameter = 
 				(ParameterMultipleFromSet) parameters.get(2);
-		ParameterMultipleFromSet followerParameter = 
+		followerParameter = 
 				(ParameterMultipleFromSet) parameters.get(3);
-		
+
 		// Time duration parameters.
-		ParameterYesNo timeRestrictionParameter = 
+		timeRestrictionParameter = 
 				(ParameterYesNo) parameters.get(4);
-		ParameterOneFromSet shorterOrLongerParameter = 
+		shorterOrLongerParameter = 
 				(ParameterOneFromSet) parameters.get(6);
-		ParameterValueFromRange<Integer> timeDurationParameter = 
+		timeDurationParameter = 
 				(ParameterValueFromRange<Integer>) parameters.get(8);
-		ParameterOneFromSet timeTypeParameter = 
+		timeTypeParameter = 
 				(ParameterOneFromSet) parameters.get(10);
-		
+
 		// Value matching parameters.
-		ParameterYesNo valueMatchingParameter = 
+		valueMatchingParameter = 
 				(ParameterYesNo) parameters.get(5);
-		ParameterOneFromSet sameOrDifferentParameter = 
+		sameOrDifferentParameter = 
 				(ParameterOneFromSet) parameters.get(7);
-		ParameterOneFromSet valueMatchingAttributeParameter = 
+		valueMatchingAttributeParameter = 
 				(ParameterOneFromSet) parameters.get(9);
-		
-		
+
+
 		/*
-		 * Method for filtering traces based on the follower filter:
-		 * 1: Find the reference event. This is the first event in the trace
-		 * that has the value for the key selected by the user.
-		 * 2: Switch over the cases based on which selection type was chosen:
-		 * - "Directly followed"
-		 * - "Never directly followed"
-		 * - "Eventually followed"
-		 * - "Never eventually followed"
-		 * And check the events after the reference event that hold for this
-		 * selection.
-		 * 2: Check the events in the trace to find a reference event. The 
-		 * reference event needs to have the values for the key that was 
-		 * selected for the reference event to have. Also, if any restrictions 
-		 * were imposed on the reference event such as time or value matching, 
-		 * these must also hold.
+		 * Method for filtering traces based on the distance between
+		 * reference and follower event.
+		 * 
+		 * If distance > 0, then both referencing and follower exist and 
+		 * the referencing is for sure eventually followed.
+		 * If distance == 1, then the referencing is directly followed.
+		 * If distance <= 0, then the referencing is never eventually followed. 
+		 * If distance == traces.size() then the referencing event does not exist.
+		 * 
 		 */
 		for (XTrace trace : clonedLog) {
-			
-			// Boolean that is changed when a follower event is found that holds
-			// even with the restrictions.
-			boolean removeFromLog = true;
-			// Only used when the user has selected "never eventually followed".
-			boolean foundEventualEvent = false;
-			
-			XEvent referenceEvent = null;
-			XEvent followerEvent = null;
-			
-			for (XEvent event : trace) {
-				
-				// We already found a reference event, move to the next trace.
-				if (followerEvent != null) {
-					break;
-				}
-				
-				// Find reference event.
-				if (referenceEvent == null) {
-				
-					// If key exists in event,
-					if (event.getAttributes().containsKey(attributeSelector.getChosen())) {
-						// Get value for the chosen key.
-						String value = event.getAttributes().get(attributeSelector.getChosen()).toString();
-						
-						// Check if it is present in the reference parameter.
-						if (referenceParameter.getChosen().contains(value)) {
-							// Reference event found!
-							referenceEvent = event;
-						}
-						
-					}
-				
-				}
-				
-				// Find follower event.
-				if (referenceEvent != null && referenceEvent != event) {
-					
-					// Switch based on the selection types mentioned above.
-					switch (selectionType.getChosen()) {
-						
-						case "Directly followed": {
-							
-							// If this is the event directly following the reference event
-							if (trace.indexOf(referenceEvent) == trace.indexOf(event) - 1) {
-							
-								// Get the value for the selected attribute key.
-								String value = event.getAttributes().get(attributeSelector.getChosen()).toString();
-								
-								// Check if it is present in the follower parameter. 
-								if (followerParameter.getChosen().contains(value)) {
-									// If time restriction is imposed on the reference event.
-									if (timeRestrictionParameter.getChosen()) {
-										if (timeRestrictionHolds(
-												referenceEvent, 
-												event, 
-												shorterOrLongerParameter.getChosen().equals("Shorter"), 
-												timeDurationParameter.getChosen(), 
-												timeTypeParameter.getChosen())) {
-											// If value matching is imposed on the reference event.
-											if (valueMatchingParameter.getChosen()) {
-												if (valueMatchingHolds(
-														referenceEvent, 
-														event, 
-														sameOrDifferentParameter.getChosen().equals("The same value"), 
-														valueMatchingAttributeParameter.getChosen())) {
-													// Time and value matching restriction imposed.
-													// Follower event found!
-													removeFromLog = false;
-													followerEvent = event;
-												}
-											} else {
-												// Time restriction imposed.
-												// Follower event found!
-												removeFromLog = false;
-												followerEvent = event;
-											}
-										}
-									}
-									// If value matching is imposed on the reference event.
-									else if (valueMatchingParameter.getChosen()) {
-										if (valueMatchingHolds(
-												referenceEvent, 
-												event, 
-												sameOrDifferentParameter.getChosen().equals("The same value"), 
-												valueMatchingAttributeParameter.getChosen())) {
-											// Value matching restriction imposed.
-											// Follower event found!
-											removeFromLog = false;
-											followerEvent = event;
-										}
-									} else {
-										// No time or value matching restrictions imposed.
-										// Follower event found!
-										removeFromLog = false;
-										followerEvent = event;
-									}
-								}
-								
-							}
-							
-							break;
-						}
-						case "Never directly followed": {
-							
-							removeFromLog = false;
-							
-							// If this is the event directly following the reference event.
-							if (trace.indexOf(referenceEvent) == trace.indexOf(event) - 1) {
-								
-								// Get the value for the selected attribute key.
-								String value = event.getAttributes().get(attributeSelector.getChosen()).toString();
-								
-								// If time restriction is imposed on the reference event.
-								if (timeRestrictionParameter.getChosen()) {
-									if (timeRestrictionHolds(
-											referenceEvent, 
-											event, 
-											shorterOrLongerParameter.getChosen().equals("Shorter"), 
-											timeDurationParameter.getChosen(), 
-											timeTypeParameter.getChosen())) {
-										// If value matching is imposed on the reference event.
-										if (valueMatchingParameter.getChosen()) {
-											if (valueMatchingHolds(
-													referenceEvent, 
-													event, 
-													sameOrDifferentParameter.getChosen().equals("The same value"), 
-													valueMatchingAttributeParameter.getChosen())) {
-												// Check if it is not present in the follower parameter.
-												if (followerParameter.getChosen().contains(value)) {
-													// Time and value matching restrictions imposed.
-													// Follower event found!
-													removeFromLog = true;
-													followerEvent = event;
-												} 
-											}
-										} else {
-											// Check if it is not present in the follower parameter.
-											if (followerParameter.getChosen().contains(value)) {
-												// Time restrictions imposed.
-												// Follower event found!
-												removeFromLog = true;
-												followerEvent = event;
-											}
-										}
-									}
-								}
-								// If value matching is imposed on the reference event.
-								else if (valueMatchingParameter.getChosen()) {
-									if (valueMatchingHolds(
-											referenceEvent, 
-											event, 
-											sameOrDifferentParameter.getChosen().equals("The same value"), 
-											valueMatchingAttributeParameter.getChosen())) {
-										// Check if it is not present in the follower parameter.
-										if (followerParameter.getChosen().contains(value)) {
-											// Value matching restriction imposed.
-											// Follower event found!
-											removeFromLog = true;
-											followerEvent = event;
-										}
-									}
-								} else {
-									// Check if it is not present in the follower parameter.
-									if (followerParameter.getChosen().contains(value)) {
-										// No time or value matching restrictions imposed.
-										// Follower event found!
-										removeFromLog = true;
-										followerEvent = event;
-									}
-								}							
-							}
-							
-							break;
-						}
-						case "Eventually followed": {
-							
-							// Get the value for the selected attribute key, any
-							// event after the reference event eventually follows it.
-							String value = event.getAttributes().get(attributeSelector.getChosen()).toString();
-							
-							// Check if it is present in the follower parameter.
-							if (followerParameter.getChosen().contains(value)) {
-								// If time restriction is imposed on the reference event.
-								if (timeRestrictionParameter.getChosen()) {
-									if (timeRestrictionHolds(
-											referenceEvent, 
-											event, 
-											shorterOrLongerParameter.getChosen().equals("Shorter"), 
-											timeDurationParameter.getChosen(), 
-											timeTypeParameter.getChosen())) {
-										if (valueMatchingParameter.getChosen()) {
-											// If value matching is imposed on the reference event.
-											if (valueMatchingHolds(
-													referenceEvent, 
-													event, 
-													sameOrDifferentParameter.getChosen().equals("The same value"), 
-													valueMatchingAttributeParameter.getChosen())) {
-												// Time and value matching restriction imposed.
-												// Follower event found!
-												removeFromLog = false;
-												followerEvent = event;
-											}
-										} else {
-											// Time restriction imposed.
-											// Follower event found!
-											removeFromLog = false;
-											followerEvent = event;
-										}
-									}
-								}
-								// If value matching is imposed on the reference event.
-								else if (valueMatchingParameter.getChosen()) {
-									if (valueMatchingHolds(
-											referenceEvent, 
-											event, 
-											sameOrDifferentParameter.getChosen().equals("The same value"), 
-											valueMatchingAttributeParameter.getChosen())) {
-										// Value matching restriction imposed.
-										// Follower event found!
-										removeFromLog = false;
-										followerEvent = event;
-									}
-								} else {
-									// No time or value matching restrictions imposed.
-									// Follower event found!
-									removeFromLog = false;
-									followerEvent = event;
-								}
-							}
-							
-							break;
-						}
-						case "Never eventually followed": {
-							
-							// Get the value for the selected attribute key, any
-							// event after the reference event eventually follows it.
-							String value = event.getAttributes().get(attributeSelector.getChosen()).toString();
-							
-							// Check if it is present in the follower parameter.
-							if (followerParameter.getChosen().contains(value)) {
-								// If time restriction is imposed on the reference event.
-								if (timeRestrictionParameter.getChosen()) {
-									if (timeRestrictionHolds(
-											referenceEvent, 
-											event, 
-											shorterOrLongerParameter.getChosen().equals("Shorter"), 
-											timeDurationParameter.getChosen(), 
-											timeTypeParameter.getChosen())) {
-										// If value matching is imposed on the reference event.
-										if (valueMatchingParameter.getChosen()) {
-											if (valueMatchingHolds(
-													referenceEvent, 
-													event, 
-													sameOrDifferentParameter.getChosen().equals("The same value"), 
-													valueMatchingAttributeParameter.getChosen())) {
-												// Time and value matching restriction imposed.
-												// Follower event found, thus we need to remove the trace.
-												foundEventualEvent = true;
-												followerEvent = event;
-											}
-										} else {
-											// Time restriction imposed.
-											// Follower event found, thus we need to remove the trace.
-											foundEventualEvent = true;
-											followerEvent = event;
-										}
-									}
-								}
-								// If value matching is imposed on the reference event.
-								else if (valueMatchingParameter.getChosen()) {
-									if (valueMatchingHolds(
-											referenceEvent, 
-											event, 
-											sameOrDifferentParameter.getChosen().equals("The same value"), 
-											valueMatchingAttributeParameter.getChosen())) {
-										// Value matching restriction imposed.
-										// Follower event found, thus we need to remove the trace.
-										foundEventualEvent = true;
-										followerEvent = event;
-									}
-								} else {
-									// No time or value matching restrictions imposed.
-									// Follower event found, thus we need to remove the trace.
-									foundEventualEvent = true;
-									followerEvent = event;
-								}
-							}
-							
-							
-							break;
-						}
-						
-					}
-					
-				}
+			int follower = getFollower(trace);
 
-			}
 			
-			if (referenceEvent == null && selectionType.getChosen().contains("Never")) {
-				removeFromLog = false;
-			}
-			
-			// Found an eventual event while we want traces that never eventually 
-			// follow.
-			if (!foundEventualEvent && selectionType.getChosen().equals("Never eventually followed")) {
-				// Thus, we need to remove it.
-				removeFromLog = false;
-			}
-			
-			if (removeFromLog) {
+			/* Uncomment if traces which do not have a suitable referencing 
+			 * event must be discarded in the 'never' cases.
+			if (follower == -trace.size()) {
 				tracesToRemove.add(trace);
+				break;
+			} */
+
+			switch(selectionType.getChosen()) {
+				case "Directly followed":
+					if (follower != 1) tracesToRemove.add(trace);
+					break;
+				case "Never directly followed":
+					if (follower == 1) tracesToRemove.add(trace);
+					break;
+				case "Eventually followed": 
+					if (follower < 1) tracesToRemove.add(trace);
+					break;
+				case "Never eventually followed":
+					if (follower > 0) tracesToRemove.add(trace);
+					break;
 			}
-			
 		}
-		
+
 		clonedLog.removeAll(tracesToRemove);
-		
+
 		return clonedLog;
 	}
-	
-	
+
+	/* This method return the distance between the follower event
+	 * and the referencing event.  
+	 */
+	public int getFollower(XTrace trace) {
+		/* if there is no suitable referencing event, then the difference
+		 * will be -trace.size();
+		 */
+		int ref = trace.size(); // reference event index
+		int foll = 0; // follower event index
+
+		String key = attributeSelector.getChosen(); // attribute key
+		Boolean reference = true; // still looking for reference event
+		XEvent referenceEvent = null; // event object
+
+		for (int i = 0; i < trace.size(); i++) {
+			XEvent event = trace.get(i);
+
+			// check whether the event has the chosen attribute
+			if (event.getAttributes().containsKey(key)) {
+				// Get value for the chosen key.
+				String value = event.getAttributes().get(key).toString();
+
+				// If looking for the reference event, check if its value is in the reference parameter.
+				if (reference && referenceParameter.getChosen().contains(value)) {
+					reference = false; // reference event found
+					ref = i;
+					referenceEvent = trace.get(ref);
+				} 
+				// If looking for the follower event, check if its value is in the follower parameter.
+				else if (!reference && followerParameter.getChosen().contains(value)) {
+					// Check whether the user imposes time restriction.
+					if (timeRestrictionParameter.getChosen()) {
+						// If the time restriction does not hold for these events,
+						// keep looking.
+						if (!timeRestrictionHolds(
+								referenceEvent, 
+								event, 
+								shorterOrLongerParameter.getChosen().equals("Shorter"), 
+								timeDurationParameter.getChosen(), 
+								timeTypeParameter.getChosen())) {
+							continue;
+						}
+					}
+					// If value matching is imposed on the reference event.
+					if (valueMatchingParameter.getChosen()) {
+						if (!valueMatchingHolds(
+								referenceEvent, 
+								event, 
+								sameOrDifferentParameter.getChosen().equals("The same value"), 
+								valueMatchingAttributeParameter.getChosen())) {
+							continue;
+						}
+					} 
+
+					/* the follower has been found */
+					foll = i;
+					break;
+				}
+			}
+		}
+
+		return (foll - ref); 
+	}
+
+
 	public boolean timeRestrictionHolds(
 			XEvent referenceEvent, 
 			XEvent followerEvent, 
 			boolean shouldBeShorter, 
 			int duration, 
 			String durationType) {
-		
+
 		// Get timestamps of both events.
 		LocalDateTime referenceTime = Toolbox.synchronizeGMT(
 				referenceEvent.getAttributes().get("time:timestamp").toString());
 		LocalDateTime followerTime = Toolbox.synchronizeGMT(
 				followerEvent.getAttributes().get("time:timestamp").toString());
-		
+
 		// Get the duration in between the events.
 		Duration durationBetween = Duration.between(referenceTime, followerTime);
-		
+
 		// Build the duration set for the threshold.
 		Duration treshold = null;
-		
+
 		switch (durationType) {
 			case "Millis": {
-				
+
 				// In milliseconds.
 				treshold = Duration.of(duration, ChronoUnit.MILLIS);
-				
+
 				break;
 			}
 			case "Seconds": {
-				
+
 				// In seconds.
 				treshold = Duration.of(duration, ChronoUnit.SECONDS);
-				
+
 				break;
 			}
 			case "Minutes": {
-				
+
 				// In minutes.
 				treshold = Duration.of(duration, ChronoUnit.MINUTES);
-				
+
 				break;
 			}
 			case "Hours": {
-				
+
 				// In hours.
 				treshold = Duration.of(duration, ChronoUnit.HOURS);
-				
+
 				break;
 			}
 			case "Days": {
-				
+
 				// In days.
 				Period period = Period.ofDays(duration);
 				treshold = Duration.ofDays((period.getDays()));
-				
+
 				break;
 			}
 			case "Weeks": {
-				
+
 				// In weeks.
 				Period period = Period.ofDays(duration * 7);
 				treshold = Duration.ofDays((period.getDays()));
-				
+
 				break;
 			}
 			case "Years": {
-				
+
 				// In years.
 				Period period = Period.ofDays((int)(duration * 365.2425));
 				treshold = Duration.ofDays((period.getDays()));
-				
+
 				break;
 			}
 		}
-		
+
 		// Switch based on whether the time between the events should be shorter
 		// or longer than the selected duration.
 		if (shouldBeShorter) {
@@ -478,17 +256,17 @@ public class FilterdTraceFollowerFilter extends Filter {
 			return (durationBetween.compareTo(treshold) > 0);
 		}
 	}
-	
+
 	private boolean valueMatchingHolds(
 			XEvent referenceEvent, 
 			XEvent followerEvent, 
 			boolean shouldBeSame, 
 			String attributeToCompare) {
-		
+
 		// Check if both events contain the attribute to compare.
 		if (referenceEvent.getAttributes().keySet().contains(attributeToCompare)
 				&& followerEvent.getAttributes().keySet().contains(attributeToCompare)) {
-			
+
 			// Get both values of the reference and the follower event of the
 			// attribute, the key.
 			String referenceValue = referenceEvent
@@ -499,22 +277,22 @@ public class FilterdTraceFollowerFilter extends Filter {
 					.getAttributes()
 					.get(attributeToCompare)
 					.toString();
-			
+
 			// Switch based on whether the values should be equal to each other
 			// or not.
 			if (shouldBeSame) {
-				
+
 				return referenceValue.equals(followerValue);
-				
+
 			} else {
-				
+
 				return !(referenceValue.equals(followerValue));
-				
+
 			}
-			
+
 		}
-		
+
 		return false;
 	}
-	
+
 }

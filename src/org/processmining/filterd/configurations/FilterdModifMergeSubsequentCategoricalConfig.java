@@ -21,12 +21,14 @@ public class FilterdModifMergeSubsequentCategoricalConfig extends FilterdAbstrac
 	List<String> allValues = new ArrayList<>();
 	XEventClassifier key;
 	
-	public FilterdModifMergeSubsequentCategoricalConfig(XLog log, Filter filterType, String classifier, List<XEventClassifier> classifiers) {
+	String attribute;
+	
+	public FilterdModifMergeSubsequentCategoricalConfig(XLog log, Filter filterType, String attribute, List<XEventClassifier> classifiers) {
 		super(log, filterType);
 		parameters = new ArrayList<>();
 		
 		for (XEventClassifier c : classifiers) {
-			if (c.name().equals(classifier)) {
+			if (c.name().equals(attribute)) {
 				this.key = c;
 				xEventClasses = new XEventClasses(c);
 				xEventClasses = XEventClasses.deriveEventClasses(c, log);
@@ -86,6 +88,10 @@ public class FilterdModifMergeSubsequentCategoricalConfig extends FilterdAbstrac
 		}
 		
 		return true;
+	}
+	
+	public String getAttribute() {
+		return attribute;
 	}
 	
 	@Override

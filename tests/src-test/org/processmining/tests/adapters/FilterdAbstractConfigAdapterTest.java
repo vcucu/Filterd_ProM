@@ -1,5 +1,7 @@
 package org.processmining.tests.adapters;
 
+import java.lang.reflect.InvocationTargetException;
+
 import org.deckfour.xes.model.XLog;
 import org.junit.Test;
 import org.processmining.filterd.configurations.FilterdAbstractConfig;
@@ -48,7 +50,12 @@ public class FilterdAbstractConfigAdapterTest extends FilterdPackageTest {
 		XLog log = adapter.getInitialInput();
 		assertFalse(log.equals(null));
 		
-		newConfig = adapter.unmarshal(adaptedConfig);
+		try {
+			newConfig = adapter.unmarshal(adaptedConfig);
+		} catch (IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		// Check that the configuration was properly created
 		assertEquals(newConfig.getClass().getName(), config.getClass().getName());
 	}
