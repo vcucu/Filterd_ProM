@@ -76,6 +76,7 @@ public class FilterdEventAttrNumericalConfig extends FilterdAbstractReferenceabl
 		
 		desiredValues = new ParameterMultipleFromSet(
 				"desiredValues", "Choose values:", stringValues, stringValues);
+		desiredValues.setDisappearable(true);
 
 		/* populate the parameters */
 		defaultPair.add(values.get(0));
@@ -85,6 +86,7 @@ public class FilterdEventAttrNumericalConfig extends FilterdAbstractReferenceabl
 		// slider values parameter
 		range = new ParameterRangeFromRange<Double>("range",
 				"Select interval to choose from.", defaultPair, optionsPair, Double.TYPE);
+		range.setDisappearable(true);
 
 		/* add the parameters */
 		parameters.add(selectionType);
@@ -115,6 +117,7 @@ public class FilterdEventAttrNumericalConfig extends FilterdAbstractReferenceabl
 				.findFirst()
 				.get();
 		 rangeControl.getContents().setVisible(false);
+		 rangeControl.getContents().setManaged(false);
 		}
 
 		comboBox.valueProperty().addListener(new ChangeListener<String>() {
@@ -136,10 +139,14 @@ public class FilterdEventAttrNumericalConfig extends FilterdAbstractReferenceabl
 
 				if (!newValue.contains("interval") && parameters.contains(range)) {
 					desiredControl.getContents().setVisible(true);
+					desiredControl.getContents().setManaged(true);
 					rangeControl.getContents().setVisible(false);
+					rangeControl.getContents().setManaged(false);
 				} else if (newValue.contains("interval") && parameters.contains(desiredValues)) {
 					desiredControl.getContents().setVisible(false);
+					desiredControl.getContents().setManaged(false);
 					rangeControl.getContents().setVisible(true);
+					rangeControl.getContents().setManaged(true);
 				}
 			}
 		});

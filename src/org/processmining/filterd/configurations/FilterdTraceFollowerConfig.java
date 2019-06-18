@@ -137,6 +137,7 @@ public class FilterdTraceFollowerConfig extends FilterdAbstractConfig {
 				"Select same or different value", 
 				sameOrDifferentList.get(0), 
 				sameOrDifferentList);
+		sameOrDifferentParameter.setDisappearable(true);
 
 		// Create parameter for selecting the attribute whose value has to be
 		// matched.
@@ -146,6 +147,7 @@ public class FilterdTraceFollowerConfig extends FilterdAbstractConfig {
 						"Select attribute", 
 						eventAttributesList.get(0), 
 						eventAttributesList);
+		valueMatchingAttributeParameter.setDisappearable(true);
 
 		// Create parameter for a time restriction.
 		ParameterYesNo timeRestrictionParameter = new ParameterYesNo(
@@ -164,7 +166,7 @@ public class FilterdTraceFollowerConfig extends FilterdAbstractConfig {
 				"Select shorter or longer", 
 				shorterOrLongerList.get(0), 
 				shorterOrLongerList);
-
+		shorterOrLongerParameter.setDisappearable(true);
 
 		// Create parameter for selecting time duration.
 		ParameterValueFromRange<Integer> timeDurationParameter = 
@@ -174,6 +176,7 @@ public class FilterdTraceFollowerConfig extends FilterdAbstractConfig {
 						1, 
 						Arrays.asList(1, 999),
 						Integer.TYPE);
+		timeDurationParameter.setDisappearable(true);
 
 		// Create parameter for selecting the time type.
 		ParameterOneFromSet timeTypeParameter = 
@@ -189,6 +192,7 @@ public class FilterdTraceFollowerConfig extends FilterdAbstractConfig {
 								"Days",
 								"Weeks",
 								"Years"));
+		timeTypeParameter.setDisappearable(true);
 
 
 		parameters.add(attributeSelector);
@@ -352,6 +356,7 @@ public class FilterdTraceFollowerConfig extends FilterdAbstractConfig {
 				.findFirst()
 				.get();
 		shorterOrLongerControl.getContents().setVisible(visible);
+		shorterOrLongerControl.getContents().setManaged(visible);
 
 		// make parameter for selecting time duration (in)visible
 		ParameterValueFromRangeController<Integer> timeDurationParameter = 
@@ -361,6 +366,8 @@ public class FilterdTraceFollowerConfig extends FilterdAbstractConfig {
 				.findFirst()
 				.get();
 		timeDurationParameter.getContents().setVisible(visible);
+		timeDurationParameter.getContents().setManaged(visible);
+		
 
 		// make parameter for selecting the time type (in)visible
 		ParameterOneFromSetController timeTypeParameter = 
@@ -370,6 +377,7 @@ public class FilterdTraceFollowerConfig extends FilterdAbstractConfig {
 				.findFirst()
 				.get();
 		timeTypeParameter.getContents().setVisible(visible);
+		timeTypeParameter.getContents().setManaged(visible);
 	}
 	
 	/* method for setting the value parameters controller visible or invisible
@@ -384,6 +392,7 @@ public class FilterdTraceFollowerConfig extends FilterdAbstractConfig {
 				.findFirst()
 				.get();
 		sameOrDifferentControl.getContents().setVisible(visible);
+		sameOrDifferentControl.getContents().setManaged(visible);
 
 		// make parameter for selecting the attribute whose value has to be
 		// matched (in)visible
@@ -394,6 +403,7 @@ public class FilterdTraceFollowerConfig extends FilterdAbstractConfig {
 				.findFirst()
 				.get();
 		valueMatchingControl.getContents().setVisible(visible);
+		valueMatchingControl.getContents().setManaged(visible);
 	}
 
 	public boolean checkValidity(XLog candidateLog) {
