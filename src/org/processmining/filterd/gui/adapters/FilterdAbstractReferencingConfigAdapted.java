@@ -6,7 +6,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import org.processmining.filterd.configurations.FilterdAbstractReferenceableConfig;
 
 @XmlRootElement
-public class FilterdAbstractConfigReferencingAdapted extends FilterdAbstractConfigAdapted {
+public class FilterdAbstractReferencingConfigAdapted extends FilterdAbstractConfigAdapted {
 
 	FilterdAbstractReferenceableConfig concreteReference;
 	

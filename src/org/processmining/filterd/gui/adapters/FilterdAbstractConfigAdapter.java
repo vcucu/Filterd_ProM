@@ -39,7 +39,7 @@ public class FilterdAbstractConfigAdapter extends XmlAdapter<FilterdAbstractConf
 			if (FilterdAbstractReferencingConfig.class.isAssignableFrom(config.getClass())) {
 				// set the concrete reference if the config is referencing.
 				((FilterdAbstractReferencingConfig) config).setConcreteReference(
-						((FilterdAbstractConfigReferencingAdapted) adaptedConfig).getConcreteReference());
+						((FilterdAbstractReferencingConfigAdapted) adaptedConfig).getConcreteReference());
 			}
 			
 			config.setParameters(adaptedConfig.getParameters());
@@ -56,9 +56,12 @@ public class FilterdAbstractConfigAdapter extends XmlAdapter<FilterdAbstractConf
 
 		if (FilterdAbstractReferencingConfig.class.isAssignableFrom(config.getClass())) {
 			// if the config is referencing save the concrete reference.
-			adaptedConfig = new FilterdAbstractConfigReferencingAdapted();
-			((FilterdAbstractConfigReferencingAdapted) adaptedConfig)
+			adaptedConfig = new FilterdAbstractReferencingConfigAdapted();
+			((FilterdAbstractReferencingConfigAdapted) adaptedConfig)
 					.setConcreteReference(((FilterdAbstractReferencingConfig) config).getConcreteReference());
+		} else if (FilterdAbstractReferenceableConfig.class.isAssignableFrom(config.getClass())) {
+			adaptedConfig = new FilterdAbstractReferenceableConfigAdapted();
+			((FilterdAbstractReferenceableConfigAdapted) adaptedConfig).setAttribute(config.getClassifier().get);
 		} else {
 			// if the config is not referencing can create a general one.
 			adaptedConfig = new FilterdAbstractConfigAdapted();
