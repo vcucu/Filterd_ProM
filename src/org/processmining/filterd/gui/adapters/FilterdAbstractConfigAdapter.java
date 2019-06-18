@@ -60,14 +60,15 @@ public class FilterdAbstractConfigAdapter extends XmlAdapter<FilterdAbstractConf
 			adaptedConfig = new FilterdAbstractReferencingConfigAdapted();
 			((FilterdAbstractReferencingConfigAdapted) adaptedConfig)
 					.setConcreteReference(((FilterdAbstractReferencingConfig) config).getConcreteReference());
+			adaptedConfig.setParameters(((FilterdAbstractReferencingConfig) config).getOwnParameters());			
 		} else {
 			// if the config is not referencing can create a general one.
 			adaptedConfig = new FilterdAbstractConfigAdapted();
+			adaptedConfig.setParameters(config.getParameters());
 		}
 
 		adaptedConfig.setClassName(config.getClass().getName());
 		adaptedConfig.setfilterTypeName(config.getFilterType().getClass().getName());
-		adaptedConfig.setParameters(config.getParameters());
 		return adaptedConfig;
 	}
 

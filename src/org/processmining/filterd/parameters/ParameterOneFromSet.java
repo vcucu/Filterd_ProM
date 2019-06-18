@@ -2,6 +2,7 @@ package org.processmining.filterd.parameters;
 
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
@@ -10,6 +11,7 @@ public class ParameterOneFromSet extends Parameter  {
 	private String defaultChoice;
 	private String chosen;
 	private List<String> options;
+	@XmlElement
 	private boolean createsReference;
 	
 	/**

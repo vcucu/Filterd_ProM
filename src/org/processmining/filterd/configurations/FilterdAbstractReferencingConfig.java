@@ -1,5 +1,6 @@
 package org.processmining.filterd.configurations;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.deckfour.xes.model.XLog;
@@ -49,6 +50,18 @@ public abstract class FilterdAbstractReferencingConfig extends FilterdAbstractCo
 	}
 	
 	@Override
+	public List<Parameter> getParameters() {
+		List<Parameter> result = new ArrayList<Parameter>();
+		result.addAll(parameters);
+		result.addAll(concreteReference.getParameters());
+		return result;
+	}
+	
+	public List<Parameter> getOwnParameters() {
+		return parameters;
+	}
+	
+	@Override
 	public FilterdAbstractConfig populate(AbstractFilterConfigPanelController abstractComponent) {
 		
 		FilterConfigPanelController component = (FilterConfigPanelController) abstractComponent;
@@ -58,10 +71,6 @@ public abstract class FilterdAbstractReferencingConfig extends FilterdAbstractCo
 			if(controller instanceof ParameterOneFromSetExtendedController) {
 				ParameterOneFromSetExtendedController casted = (ParameterOneFromSetExtendedController) controller;
 				concreteReference.populate(casted.getNestedConfigPanel());
-				for (Parameter param : concreteReference.getParameters()) {
-					parameters.remove(param); //does this work?
-					parameters.add(param);
-				}
 				ParameterOneFromSet param = (ParameterOneFromSet) getParameter(casted.getName());
 				param.setChosen(casted.getValue());
 	
