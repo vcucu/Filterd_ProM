@@ -23,6 +23,9 @@ import org.processmining.filterd.widgets.ParameterYesNoController;
 
 public abstract class FilterdAbstractReferenceableConfig extends FilterdAbstractConfig {
 
+	String attribute;
+	String key;
+	
 	public FilterdAbstractReferenceableConfig(XLog log, Filter filterType) {
 		super(log, filterType);
 	}
@@ -81,6 +84,14 @@ public abstract class FilterdAbstractReferenceableConfig extends FilterdAbstract
 				
 		}
 		return this;
+	}
+	
+	public String getAttribute() {
+		return attribute;
+	}
+	
+	public String getKey() {
+		return key;
 	}
 
 }

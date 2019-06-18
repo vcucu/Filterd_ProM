@@ -32,6 +32,8 @@ public class FilterdTraceEndEventCategoricalConfig extends FilterdAbstractRefere
 	XEventClasses xEventClasses;
 	List<String> allValues = new ArrayList<>();
 	
+	String attribute;
+	
 	public FilterdTraceEndEventCategoricalConfig(XLog log, Filter filterType, String attribute, 
 			List<XEventClassifier> classifiers) {
 		super(log, filterType);
@@ -133,6 +135,10 @@ public class FilterdTraceEndEventCategoricalConfig extends FilterdAbstractRefere
 			filteredLog.add(filteredTrace);
 		}
 		return filteredLog;
+	}
+	
+	public String getAttribute() {
+		return attribute;
 	}
 	
 	
