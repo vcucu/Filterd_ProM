@@ -137,6 +137,7 @@ public class FilterdTraceFollowerConfig extends FilterdAbstractConfig {
 				"Select same or different value", 
 				sameOrDifferentList.get(0), 
 				sameOrDifferentList);
+		sameOrDifferentParameter.setDisappearable(true);
 
 		// Create parameter for selecting the attribute whose value has to be
 		// matched.
@@ -146,6 +147,7 @@ public class FilterdTraceFollowerConfig extends FilterdAbstractConfig {
 						"Select attribute", 
 						eventAttributesList.get(0), 
 						eventAttributesList);
+		valueMatchingAttributeParameter.setDisappearable(true);
 
 		// Create parameter for a time restriction.
 		ParameterYesNo timeRestrictionParameter = new ParameterYesNo(
@@ -164,7 +166,7 @@ public class FilterdTraceFollowerConfig extends FilterdAbstractConfig {
 				"Select shorter or longer", 
 				shorterOrLongerList.get(0), 
 				shorterOrLongerList);
-
+		shorterOrLongerParameter.setDisappearable(true);
 
 		// Create parameter for selecting time duration.
 		ParameterValueFromRange<Integer> timeDurationParameter = 
@@ -174,6 +176,7 @@ public class FilterdTraceFollowerConfig extends FilterdAbstractConfig {
 						1, 
 						Arrays.asList(1, 999),
 						Integer.TYPE);
+		timeDurationParameter.setDisappearable(true);
 
 		// Create parameter for selecting the time type.
 		ParameterOneFromSet timeTypeParameter = 
@@ -189,6 +192,7 @@ public class FilterdTraceFollowerConfig extends FilterdAbstractConfig {
 								"Days",
 								"Weeks",
 								"Years"));
+		timeTypeParameter.setDisappearable(true);
 
 
 		parameters.add(attributeSelector);

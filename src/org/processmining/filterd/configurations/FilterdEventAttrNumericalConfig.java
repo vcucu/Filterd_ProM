@@ -76,6 +76,7 @@ public class FilterdEventAttrNumericalConfig extends FilterdAbstractReferenceabl
 		
 		desiredValues = new ParameterMultipleFromSet(
 				"desiredValues", "Choose values:", stringValues, stringValues);
+		desiredValues.setDisappearable(true);
 
 		/* populate the parameters */
 		defaultPair.add(values.get(0));
@@ -85,6 +86,7 @@ public class FilterdEventAttrNumericalConfig extends FilterdAbstractReferenceabl
 		// slider values parameter
 		range = new ParameterRangeFromRange<Double>("range",
 				"Select interval to choose from.", defaultPair, optionsPair, Double.TYPE);
+		range.setDisappearable(true);
 
 		/* add the parameters */
 		parameters.add(selectionType);
