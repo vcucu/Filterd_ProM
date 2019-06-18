@@ -19,7 +19,7 @@ public class FilterdAbstractConfigAdapterTest extends FilterdPackageTest {
 	}
 	
 	@Test
-	public void testFilterdAbstractConfigAdapter() {
+	public void testFilterdAbstractConfigAdapter() throws IllegalStateException, InstantiationException, IllegalAccessException, ClassNotFoundException {
 		
 		// --------------- TESTING MARSHAL ---------------
 		// Create new filter
