@@ -17,6 +17,8 @@ public class ComputationCellModelListeners extends CellModelListeners {
 		super.propertyChange(event);
 		if (event.getPropertyName().equals("setInputLogs")) {		
 			((ComputationCellController) controller).changeInputLogsCombo((List<YLog>)event.getNewValue());
+		} else if (event.getPropertyName().equals("reloadVisualizer")) {
+			((ComputationCellController) controller).loadVisualizer();
 		}
 	}
 }

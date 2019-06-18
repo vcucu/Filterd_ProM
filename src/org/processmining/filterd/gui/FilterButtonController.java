@@ -109,8 +109,9 @@ public class FilterButtonController {
 
 	@FXML
 	public void selectFilterButton() {
+		controller.enableAllFilterButtonsBut(-1);
 		if(!model.getSelected()) {
-			controller.hideConfigurationModal(false);
+			controller.hideConfigurationModal(true);
 			controller.getCellModel().selectFilter(model);
 		}
 	}
