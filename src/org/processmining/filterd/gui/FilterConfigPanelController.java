@@ -89,7 +89,8 @@ public class FilterConfigPanelController extends AbstractFilterConfigPanelContro
 		
 		if (needsBigContainer(param)) {
 			VBox newBox = new VBox();
-			mainPanel.getChildren().add(0, newBox);
+			int index = mainPanel.getChildren().size();
+			mainPanel.getChildren().add(index, newBox);
 			return newBox;
 		} else if (hasSlider(param)) {
 			return slidersPanel;

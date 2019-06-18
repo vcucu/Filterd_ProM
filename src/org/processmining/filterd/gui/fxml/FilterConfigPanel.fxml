@@ -15,12 +15,13 @@
       </Label>
       <HBox fx:id="mainPanel" spacing="5.0" VBox.vgrow="ALWAYS">
          <children>
-            <VBox fx:id="childPanel" spacing="5.0" HBox.hgrow="ALWAYS">
-               <HBox.margin>
-                  <Insets top="5.0" />
-               </HBox.margin>
+            <VBox HBox.hgrow="ALWAYS">
+               <children>
+                  <VBox fx:id="slidersPanel" spacing="5.0" VBox.vgrow="ALWAYS" />
+                  <VBox fx:id="childPanel" spacing="5.0" VBox.vgrow="ALWAYS" />
+                  <VBox VBox.vgrow="ALWAYS" />
+               </children>
             </VBox>
-            <VBox fx:id="slidersPanel" maxWidth="600.0" spacing="5.0" />
          </children>
       </HBox>
    </children>

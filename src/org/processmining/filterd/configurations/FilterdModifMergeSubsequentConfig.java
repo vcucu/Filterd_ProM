@@ -147,6 +147,7 @@ public class FilterdModifMergeSubsequentConfig extends FilterdAbstractReferencin
 				findFirst().get();
 		if (!comparisonTypeController.getValue().equals("Compare event class & attributes")) {
 			relevantAttributesController.getContents().setVisible(false);
+			relevantAttributesController.getContents().setManaged(false);
 		}
 
 		ComboBox<String> comboBox = comparisonTypeController.getComboBox();
@@ -154,9 +155,11 @@ public class FilterdModifMergeSubsequentConfig extends FilterdAbstractReferencin
 			@Override
 			public void changed(ObservableValue ov, String oldValue, String newValue) {
 				if (!comparisonTypeController.getValue().equals("Compare event class & attributes")) {
-					relevantAttributesController.getContents().setVisible(false);				
+					relevantAttributesController.getContents().setVisible(false);
+					relevantAttributesController.getContents().setManaged(false);	
 				} else {
 					relevantAttributesController.getContents().setVisible(true);	
+					relevantAttributesController.getContents().setManaged(true);	
 				}
 			}
 		});			
