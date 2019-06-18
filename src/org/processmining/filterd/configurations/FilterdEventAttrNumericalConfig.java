@@ -115,6 +115,7 @@ public class FilterdEventAttrNumericalConfig extends FilterdAbstractReferenceabl
 				.findFirst()
 				.get();
 		 rangeControl.getContents().setVisible(false);
+		 rangeControl.getContents().setManaged(false);
 		}
 
 		comboBox.valueProperty().addListener(new ChangeListener<String>() {
@@ -136,10 +137,14 @@ public class FilterdEventAttrNumericalConfig extends FilterdAbstractReferenceabl
 
 				if (!newValue.contains("interval") && parameters.contains(range)) {
 					desiredControl.getContents().setVisible(true);
+					desiredControl.getContents().setManaged(true);
 					rangeControl.getContents().setVisible(false);
+					rangeControl.getContents().setManaged(false);
 				} else if (newValue.contains("interval") && parameters.contains(desiredValues)) {
 					desiredControl.getContents().setVisible(false);
+					desiredControl.getContents().setManaged(false);
 					rangeControl.getContents().setVisible(true);
+					rangeControl.getContents().setManaged(true);
 				}
 			}
 		});
