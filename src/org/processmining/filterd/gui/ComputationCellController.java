@@ -44,6 +44,7 @@ import org.processmining.filterd.models.YLog;
 import org.processmining.filterd.plugins.FilterdVisualizer;
 import org.processmining.filterd.tools.EmptyLogException;
 
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
@@ -183,6 +184,10 @@ public class ComputationCellController extends CellController {
 			}
 			getCellModel().addFilterModel(index, filterModel);
 			enableAllFilterButtonsBut(index);
+			for(FilterButtonModel filter : getCellModel().getFilters()) {
+				filter.setSelected(false);
+				filter.isValidProperty().set(true);
+			}
 			loadFilter(index, filterModel);
 		}
 	}
@@ -350,6 +355,13 @@ public class ComputationCellController extends CellController {
 			cell.prefHeightProperty().unbind();
 			//set the PrefHeight to what it is by default
 			cell.setPrefHeight(Region.USE_COMPUTED_SIZE);
+			/*
+			 * HV: Refresh the visualizer. At least this ensures that the visualizer
+			 * accepts the new, smaller, bounding box. The contents will still show
+			 * the left-upper part of the expanded image, though. Only when the user 
+			 * moves the mouse over the visualization, will this be repaired.
+			 */
+	        visualizerSwgBubble.refresh();
 			// Update icon
 			Utilities.changeIcon(expandButton, "angle-right-solid", "angle-left-solid");
 		} else if (!isExpanded && !isConfigurationModalShown) {
@@ -441,6 +453,10 @@ public class ComputationCellController extends CellController {
 		} catch (Throwable exception) {
 			// DO NOTHING
 		}
+		// if any filters are invalid, make them valid
+		for(FilterButtonModel filter : model.getFilters()) {
+			filter.isValidProperty().set(true);
+		}
 		cmbVisualizers.getItems().addAll(model.getVisualizers());
 		cmbVisualizers.getSelectionModel().selectFirst();
 	}
@@ -453,13 +469,18 @@ public class ComputationCellController extends CellController {
 	 *  and when the filter configuration dialog is hidden.
 	 */
 	@FXML
-	private void loadVisualizer() {
+	public void loadVisualizer() {
 		// Remove visualizer if "None" is selected
 		if (cmbVisualizers.getValue() == Utilities.dummyViewType) {
-			visualizerPane.getChildren().clear();
-			visualizerSwgBubble.setContent(null);
-			expandButton.setVisible(false);	// Hide expand button
-			fullScreenButton.setDisable(true);	// Disable fullscreen button
+			Platform.runLater(new Runnable() {
+
+				public void run() {
+					visualizerPane.getChildren().clear();
+					visualizerSwgBubble.setContent(null);
+					expandButton.setVisible(false);	// Hide expand button
+					fullScreenButton.setDisable(true);	// Disable fullscreen button
+				}
+			});
 			return;
 		}
 		
@@ -484,6 +505,10 @@ public class ComputationCellController extends CellController {
 						// Indices: 0 = JFX toolbar; 1 = JPanel visualizer
 						fullScreenPanel.remove(1);
 						fullScreenPanel.add(visualizer);
+						
+						// Fix for changing the visualizer type in fullscreen mode
+						fullScreenPanel.revalidate();
+						fullScreenPanel.repaint();
 					}
 				});
 			} catch (InvocationTargetException | InterruptedException e) {
@@ -503,6 +528,15 @@ public class ComputationCellController extends CellController {
 		} else {
 			lblNumEventLogs.setText(noOfLogs + " output event logs");
 		}
+	}
+	
+	/**
+	 * exports the output event log of this cell to the workspace.
+	 */
+	@FXML
+	private void saveOutputLog() {
+		System.out.println("saveoutput button pressed");
+		getCellModel().saveOutputLog();
 	}
 
 	/**
@@ -573,16 +607,16 @@ public class ComputationCellController extends CellController {
 		cmbVisualizers.setDisable(true); // Disable visualizer combobox
 		// populate the options list that is passed to the ConfigurationModalController
 		List<String> filterOptions = new ArrayList<>();
-		filterOptions.add("Trace Start Event Filter");
-		filterOptions.add("Trace End Event Filter");
+		filterOptions.add("Trace Start Event");
+		filterOptions.add("Trace End Event");
 		filterOptions.add("Trace Frequency");
 		filterOptions.add("Trace Sample");
 		filterOptions.add("Trace Performance");
 		filterOptions.add("Trace Having Event");
 		filterOptions.add("Trace Attribute");
 		filterOptions.add("Trace Timeframe");
-		filterOptions.add("Trace Follower Filter");
-		filterOptions.add("Trace Trim Filter");
+		filterOptions.add("Trace Follower");
+		filterOptions.add("Trace Trim");
 		filterOptions.add("Event Attribute");
 		filterOptions.add("Event Rate");
 		filterOptions.add("Merge Subsequent Events");
@@ -619,11 +653,11 @@ public class ComputationCellController extends CellController {
 						}
 						// map string to class
 						switch (userSelection) {
-							case "Trace Start Event Filter" :
+							case "Trace Start Event" :
 								filterConfig = new FilterdTraceStartEventConfig(inputLog,
 										new FilterdTraceStartEventFilter());
 								break;
-							case "Trace End Event Filter" :
+							case "Trace End Event" :
 								filterConfig = new FilterdTraceEndEventConfig(inputLog,
 										new FilterdTraceEndEventFilter());
 								break;
@@ -659,11 +693,11 @@ public class ComputationCellController extends CellController {
 								filterConfig = new FilterdModifMergeSubsequentConfig(inputLog,
 										new FilterdModifMergeSubsequentFilter());
 								break;
-							case "Trace Follower Filter" :
+							case "Trace Follower" :
 								filterConfig = new FilterdTraceFollowerConfig(inputLog,
 										new FilterdTraceFollowerFilter());
 								break;
-							case "Trace Trim Filter" :
+							case "Trace Trim" :
 								filterConfig = new FilterdTraceTrimConfig(inputLog, new FilterdTraceTrimFilter());
 								break;
 							default :

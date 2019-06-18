@@ -3,7 +3,6 @@ package org.processmining.tests.adapters;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.deckfour.xes.model.XLog;
 import org.junit.Test;
 import org.processmining.filterd.gui.adapters.FilterdAbstractConfigAdapted;
 import org.processmining.filterd.parameters.Parameter;
@@ -20,7 +19,7 @@ public class FilterdAbstractConfigAdaptedTest extends FilterdPackageTest {
 	}
 	
 	@Test
-	public void testClassNameMethods() {
+	public void testConfigClassNameMethods() {
 		// Set the name of the filter model
 		filter.setClassName("Filterd");
 		// Get the name of the filter model
@@ -30,7 +29,7 @@ public class FilterdAbstractConfigAdaptedTest extends FilterdPackageTest {
 	}
 	
 	@Test
-	public void testFilterNameMethods() {
+	public void testConfigFilterNameMethods() {
 		// Set the name of the filter model
 		filter.setfilterTypeName("Filterd");
 		// Get the name of the filter model
@@ -40,7 +39,7 @@ public class FilterdAbstractConfigAdaptedTest extends FilterdPackageTest {
 	}
 	
 	@Test
-	public void testParameterMethods() {
+	public void testConfigParameterMethods() {
 		// Create new list to store the parameters
 		List<Parameter> params = new ArrayList<>();
 		// Create new parameter instance
@@ -55,15 +54,4 @@ public class FilterdAbstractConfigAdaptedTest extends FilterdPackageTest {
 		assertEquals(newParams.size(), 1);
 		assertTrue(newParams.equals(params));
 	}
-	
-	@Test
-	public void testLogMethods() {
-		// Set a new log for the filter model
-		filter.setLog(originalLog);
-		// Get the log of the filter model
-		XLog log = filter.getLog();
-		// Check that the log was properly set
-		assertTrue(equalLog(log, originalLog));
-	}
-
 }

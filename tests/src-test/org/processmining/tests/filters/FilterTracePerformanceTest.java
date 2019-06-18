@@ -1,5 +1,6 @@
 package org.processmining.tests.filters;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -9,6 +10,7 @@ import org.processmining.filterd.filters.FilterdTracePerformanceFilter;
 import org.processmining.filterd.parameters.Parameter;
 import org.processmining.filterd.parameters.ParameterOneFromSet;
 import org.processmining.filterd.parameters.ParameterRangeFromRange;
+import org.processmining.filterd.tools.Toolbox;
 
 public class FilterTracePerformanceTest extends FilterdPackageTest {
 
@@ -31,8 +33,8 @@ public class FilterTracePerformanceTest extends FilterdPackageTest {
 		
 		List<Parameter> parameters = getTestParameters(
 				"filter on duration", 
-				86400000, 
-				Integer.MAX_VALUE);
+				6, 
+				8);
 		
 		computed = filter.filter(originalLog, parameters);
 
@@ -55,7 +57,7 @@ public class FilterTracePerformanceTest extends FilterdPackageTest {
 		List<Parameter> parameters = getTestParameters(
 				"filter on duration", 
 				0, 
-				86400000);
+				5);
 		
 		computed = filter.filter(originalLog, parameters);
 
@@ -124,14 +126,35 @@ public class FilterTracePerformanceTest extends FilterdPackageTest {
 						chosenOption, 
 						Arrays.asList(chosenOption));
 		
-		// Use duration as default because this is also set in the performance
-		// options parameter.
-		ParameterRangeFromRange<Integer> valueParameter = 
-				new ParameterRangeFromRange<Integer>(
-						"threshold", 
-						"Select the threshold", 
-						Arrays.asList(lowThreshold, highThreshold), 
-						Arrays.asList(lowThreshold, highThreshold));
+		ParameterRangeFromRange<Integer> valueParameter;
+		
+		if (chosenOption.equals("filter on duration")) {
+		
+			// Use duration as default because this is also set in the performance
+			// options parameter.
+			valueParameter = 
+					new ParameterRangeFromRange<Integer>(
+							"threshold", 
+							"Select the threshold", 
+							Arrays.asList(0, 8), 
+							Arrays.asList(0, 8),
+							Integer.TYPE);
+			
+			valueParameter.setChosenPair(Arrays.asList(lowThreshold, highThreshold));
+			
+			ArrayList<String> durations = Toolbox.getDurations(originalLog);
+			valueParameter.setTimes(durations);
+		
+		} else {
+			
+			valueParameter = 
+					new ParameterRangeFromRange<Integer>(
+							"threshold", 
+							"Select the threshold", 
+							Arrays.asList(lowThreshold, highThreshold), 
+							Arrays.asList(lowThreshold, highThreshold));
+			
+		}
 		
 		return Arrays.asList(performanceOptionsParameter, valueParameter);
 	}

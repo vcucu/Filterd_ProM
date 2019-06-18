@@ -11,7 +11,7 @@ public class CellModelAdaptedTest extends TestCase {
 	CellModelAdapted cell = new CellModelAdapted();
 	
 	@Test
-	public void testIndexMethods() {
+	public void testCellIndexMethods() {
 		// Set the index of the cell model
 		cell.setIndex(10);
 		// Get the index of the cell model
@@ -21,7 +21,7 @@ public class CellModelAdaptedTest extends TestCase {
 	}
 	
 	@Test
-	public void testNameMethods() {
+	public void testCellNameMethods() {
 		// Set the name of the cell model
 		cell.setCellName("Filterd");
 		// Get the name of the cell model
@@ -31,7 +31,7 @@ public class CellModelAdaptedTest extends TestCase {
 	}
 	
 	@Test
-	public void testStatusBarMethods() {
+	public void testCellStatusBarMethods() {
 		// Set the status of the cell model
 		cell.setStatusBar(CellStatus.IDLE);
 		// Get the status of the cell model
@@ -41,7 +41,7 @@ public class CellModelAdaptedTest extends TestCase {
 	}
 	
 	@Test
-	public void testHiddenMethods() {
+	public void testCellHiddenMethods() {
 		// Set the hidden property of the cell model
 		cell.setIsHidden(true);
 		// Get the hidden property of the cell model

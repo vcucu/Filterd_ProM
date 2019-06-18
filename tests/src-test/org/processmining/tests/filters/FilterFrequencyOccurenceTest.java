@@ -321,6 +321,13 @@ public class FilterFrequencyOccurenceTest extends FilterdPackageTest{
 		//initialize the configuration's parameters list
 		List<Parameter> parameters = new ArrayList<>();
 		
+		// initialize the classifier dropdown
+		ParameterOneFromSet classifierParameter = 
+				new ParameterOneFromSet("classifier", "Select classifier", 
+						"Resource", 
+						Arrays.asList("Resource"));	
+		
+		
 		//initialize the threshold type parameter and add it to the parameters list
 		List<String> foOptions = new ArrayList<String>();
 		
@@ -390,6 +397,8 @@ public class FilterFrequencyOccurenceTest extends FilterdPackageTest{
 		
 		filterInOut.setChosen(inOrOut);
 		
+
+		parameters.add(classifierParameter);
 		parameters.add(frequencyOccurranceParameter);
 		parameters.add(threshold);
 		parameters.add(filterInOut);

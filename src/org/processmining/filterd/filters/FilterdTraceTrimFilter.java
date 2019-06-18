@@ -29,6 +29,12 @@ public class FilterdTraceTrimFilter extends Filter {
 		ParameterMultipleFromSet followerParameter = 
 				(ParameterMultipleFromSet) parameters.get(3);
 		
+		System.out.println(clonedLog.get(0).size());
+		System.out.println(attributeSelector.getChosen());
+		System.out.println(selectionType.getChosen());
+		System.out.println(referenceParameter.getChosen());
+		System.out.println(followerParameter.getChosen());
+		
 		ArrayList<XTrace> tracesToRemove = new ArrayList<>();
 		Map<XTrace, ArrayList<XEvent>> eventsToRemove =
 				new HashMap<>();
@@ -36,8 +42,10 @@ public class FilterdTraceTrimFilter extends Filter {
 			XEvent referenceEvent = null;
 		
 			boolean noEnd = true;
-			for (XEvent event : trace) {
-			// Find reference event.
+			int eventItIndex = 0;
+			while (eventItIndex < trace.size()) {
+//			for (XEvent event : trace) {
+			XEvent event = trace.get(eventItIndex);
 			if (referenceEvent == null) {
 			
 				if (event.getAttributes().containsKey(attributeSelector.getChosen())) {
@@ -75,13 +83,10 @@ public class FilterdTraceTrimFilter extends Filter {
 					else {
 						
 						ArrayList<XEvent> eventsToRemoveList = new ArrayList<>();
-						for (XEvent itEvent : trace) {
-							if (itEvent == referenceEvent) {
-								break;
-							}
-							else {
-								eventsToRemoveList.add(itEvent);
-							}
+						int eventIndex2 = 0;
+						while(eventIndex2 < eventItIndex) {
+							eventsToRemoveList.add(trace.get(eventIndex2));
+							eventIndex2++;
 						}
 						while(++endIndex < trace.size()) {
 							eventsToRemoveList.add(trace.get(endIndex));
@@ -112,18 +117,20 @@ public class FilterdTraceTrimFilter extends Filter {
 					}
 					else {
 						ArrayList<XEvent> eventsToRemoveList = new ArrayList<>();
-						for (XEvent itEvent : trace) {
-							if (itEvent == referenceEvent) {
-								break;
-							}
-							else {
-								eventsToRemoveList.add(itEvent);
-							}
+						int eventIndex2 = 0;
+						System.out.println("eventIndex2 = " + eventIndex2);
+						while(eventIndex2 < eventItIndex) {
+							eventsToRemoveList.add(trace.get(eventIndex2));
+							eventIndex2++;
 						}
+						System.out.println("eventIndex2 = " + eventIndex2);
+						System.out.println("eventIndex = " + eventIndex);
 						while(++eventIndex < trace.size()) {
 							eventsToRemoveList.add(trace.get(eventIndex));
 						}
+						System.out.println("eventIndex = " + eventIndex);
 						eventsToRemove.put(trace, eventsToRemoveList);
+						System.out.println(eventsToRemove.get(trace).size());
 					}
 					
 				}
@@ -131,7 +138,7 @@ public class FilterdTraceTrimFilter extends Filter {
 				}
 				break;
 			}
-			
+			eventItIndex++;
 			}
 			if (referenceEvent == null || noEnd) {
 				tracesToRemove.add(trace);
@@ -139,12 +146,14 @@ public class FilterdTraceTrimFilter extends Filter {
 			
 		}
 		for (XTrace trace : eventsToRemove.keySet()) {
+		
 			clonedLog.get(clonedLog.indexOf(trace))
 					 	.removeAll(eventsToRemove.get(trace));
+			
 		}
 		clonedLog.removeAll(tracesToRemove);
 		
-		
+		System.out.println(clonedLog.get(0).size());
 		return clonedLog;
 	}
 

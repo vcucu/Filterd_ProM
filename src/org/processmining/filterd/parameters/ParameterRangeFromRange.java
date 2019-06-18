@@ -5,6 +5,9 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
+import org.processmining.filterd.gui.adapters.GenericTypeClassAdapter;
 
 @XmlRootElement
 public class ParameterRangeFromRange<T> extends Parameter  {
@@ -13,6 +16,7 @@ public class ParameterRangeFromRange<T> extends Parameter  {
 	private List<T> chosenPair;
 	private List<T> optionsPair;
 	@XmlElement
+	@XmlJavaTypeAdapter(GenericTypeClassAdapter.class)
 	private Class<T> genericTypeClass;
 	private ArrayList<String> times; // for timeframe
 	

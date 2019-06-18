@@ -116,6 +116,7 @@
                         </HBox>
                         <MenuButton fx:id="menuBtnCellSettings" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="12.0" prefWidth="4.0">
                           <items>
+                              <MenuItem mnemonicParsing="false" onAction="#saveOutputLog" text="Export event log" />
                           	<MenuItem mnemonicParsing="false" onAction="#moveUp" text="Move up" />
                           	<MenuItem mnemonicParsing="false" onAction="#moveDown" text="Move down" />
                             <MenuItem mnemonicParsing="false" onAction="#remove" text="Remove Cell" />

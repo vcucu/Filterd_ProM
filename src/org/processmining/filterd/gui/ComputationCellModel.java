@@ -187,8 +187,10 @@ public class ComputationCellModel extends CellModel {
 	public void selectFilter(FilterButtonModel model) {
 		for (FilterButtonModel filter : filters) {
 			filter.setSelected(false);
+			filter.isValidProperty().set(true);
 		}
 		model.setSelected(true);
+		model.isValidProperty().set(true);
 	}
 
 	/**
@@ -198,6 +200,36 @@ public class ComputationCellModel extends CellModel {
 	 */
 	public void setCanceller(ProMCanceller canceller) {
 		this.canceller = canceller;
+	}
+	
+	/**
+	 * exports the output event log of this cell to the workspace.
+	 */
+	public void saveOutputLog() {
+		XLog output;
+		if (filters.isEmpty()) {
+			// output the input since there are no filters.
+			output = inputLog.get();
+		} else {
+			// get the final output event log.
+			if (filters.get(filters.size() -1).getOutputLog() != null) {
+				output = filters.get(filters.size() -1).getOutputLog();
+			} else {
+				// alert the user the cell needs to be computed first.
+				Alert alert = new Alert(AlertType.WARNING);
+				alert.setTitle("Export Output Log");
+				alert.setContentText("The cell has to be computed before the output event log can be exported.");
+				Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+				stage.setAlwaysOnTop(true);// make sure window always at front when open.
+				alert.showAndWait();
+				return;
+			}
+		}
+		System.out.println(output);
+		// actually output to the workspace.
+		getContext().getProvidedObjectManager().createProvidedObject(getCellName(), output, XLog.class,
+				getContext());
+		getContext().getGlobalContext().getResourceManager().getResourceForInstance(output).setFavorite(true);
 	}
 
 	// Get visualizer names
@@ -376,6 +408,7 @@ public class ComputationCellModel extends CellModel {
 		this.computeTask = computeTask;
 		this.isComputing.set(true);
 		XLog inputOutput = this.inputLog.get(); // variable that stores the output of the previous filter (i.e. input for the next one)
+		boolean finishedSuccessfully = true;
 		if (inputOutput == null) {
 			// this state can only be reached if the cells are not computed in order (i.e. this cell uses the output of another cell which is yet to be computed)
 			throw new IllegalStateException("Input log is null. "
@@ -394,7 +427,9 @@ public class ComputationCellModel extends CellModel {
 				filter.setInputLog(inputOutput);
 				filter.compute(); // no point in passing the task to the individual filter models (individual filters do not support canceling)
 				inputOutput = filter.getOutputLog(); // if this line is reached, the filter did not throw an error -> fetch the filter output
+				filter.isValidProperty().set(true); // computation of this filter succeeded -> filter is valid
 			} catch (Exception e) {
+				finishedSuccessfully = false;
 				computeTask.cancel(); // stop any further computation in the notebook
 				filter.isValidProperty().set(false); // make this filter button invalid (filter button controllers will handle this property change)
 				Platform.runLater(new Runnable() {
@@ -407,6 +442,9 @@ public class ComputationCellModel extends CellModel {
 		}
 		this.isComputing.set(false);
 		this.outputLogs.get(0).setLog(inputOutput); // set the output of this cell to be the output of the last filter
+		if(finishedSuccessfully) {
+			this.property.firePropertyChange("reloadVisualizer", null, null);
+		}
 	}
 
 	public void cancelCompute() {
