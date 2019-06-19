@@ -24,13 +24,13 @@ public abstract class AbstractFilterConfigPanelController {
 	protected List<ParameterController> controllers;
 	protected VBox root; // top-level box which contains all components in this config. panel
 	
-	abstract public VBox getNextContainer();
+	abstract public VBox getNextContainer(Parameter parameter);
 	
 	public void addParameterYesNo(ParameterYesNo parameter) {
 		ParameterController controller = new ParameterYesNoController(parameter.getNameDisplayed(), 
 				parameter.getName(), 
 				parameter.getChosen());
-		getNextContainer().getChildren().add(controller.getContents());
+		getNextContainer(parameter).getChildren().add(controller.getContents());
 		controllers.add(controller);
 	}
 	
@@ -39,7 +39,7 @@ public abstract class AbstractFilterConfigPanelController {
 				parameter.getName(),
 				parameter.getChosen(), 
 				parameter.getOptions());
-		getNextContainer().getChildren().add(controller.getContents());
+		getNextContainer(parameter).getChildren().add(controller.getContents());
 		controllers.add(controller);
 	}
 	
@@ -48,7 +48,7 @@ public abstract class AbstractFilterConfigPanelController {
 				parameter.getName(), 
 				parameter.getChosen(), 
 				parameter.getOptions());
-		getNextContainer().getChildren().add(controller.getContents());
+		getNextContainer(parameter).getChildren().add(controller.getContents());
 		controllers.add(controller);
 	}
 	
@@ -58,7 +58,7 @@ public abstract class AbstractFilterConfigPanelController {
 				parameter.getChosen(),
 				parameter.getOptionsPair(),
 				parameter.getGenericTypeClass());
-		getNextContainer().getChildren().add(controller.getContents());
+		getNextContainer(parameter).getChildren().add(controller.getContents());
 		controllers.add(controller);
 	}
 	
@@ -66,7 +66,7 @@ public abstract class AbstractFilterConfigPanelController {
 		ParameterController controller = new ParameterTextController(parameter.getNameDisplayed(), 
 				parameter.getName(), 
 				parameter.getChosen());
-		getNextContainer().getChildren().add(controller.getContents());
+		getNextContainer(parameter).getChildren().add(controller.getContents());
 		controllers.add(controller);
 	}
 	
@@ -76,7 +76,7 @@ public abstract class AbstractFilterConfigPanelController {
 				parameter.getChosenPair(),
 				parameter.getOptionsPair(),
 				parameter.getGenericTypeClass());
-		getNextContainer().getChildren().add(controller.getContents());
+		getNextContainer(parameter).getChildren().add(controller.getContents());
 		if (parameter.getName().equals("time-range")) {
 			controller.setTimes(parameter.getTimes());
 			controller.setTimeframe();

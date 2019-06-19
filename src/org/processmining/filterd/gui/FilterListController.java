@@ -13,18 +13,14 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.layout.VBox;
 
 public class FilterListController {
 	
-	@FXML
-	private ListView<String> filterList;
-	@FXML
-	private Label statusLabel;
-	@FXML
-	private ProgressIndicator progressIndicator;
+	@FXML private Label statusLabel;
+	@FXML private ListView<String> filterList;
+
 	private VBox root;
 	private BooleanProperty isApplyDisabled;
 	private ObservableList<String> options;
@@ -47,9 +43,6 @@ public class FilterListController {
 	}
 	
 	public void initialize() {
-		// hide progress indicator
-		this.progressIndicator.setVisible(false);
-		this.progressIndicator.setManaged(false);
 		// set label text
 		this.statusLabel.setText("Select a filter");
 		// populate list
@@ -65,9 +58,6 @@ public class FilterListController {
 			public void run() {
 				// set text
 				statusLabel.setText(text);
-				// show progress indicator
-				progressIndicator.setVisible(true);
-				progressIndicator.setManaged(true);
 			}
 		});
 	}
