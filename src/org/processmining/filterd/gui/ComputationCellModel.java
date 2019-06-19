@@ -89,7 +89,6 @@ public class ComputationCellModel extends CellModel {
 
 	@Override
 	public void setCellName(String cellName) {
-		String oldState = this.cellName.getValue();
 		this.cellName.setValue(cellName);
 		// change name of the output log (downstream cells may be using it)
 		if (this.outputLogs != null && this.outputLogs.size() > 0) {
