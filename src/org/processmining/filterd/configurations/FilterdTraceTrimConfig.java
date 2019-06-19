@@ -285,7 +285,7 @@ public class FilterdTraceTrimConfig extends FilterdAbstractConfig {
 			// Loop over every event in the trace.
 			for (XEvent event : trace) {
 
-				eventAttributes.addAll(event.getAttributes().keySet());
+				cEventAttributes.addAll(event.getAttributes().keySet());
 
 			}		
 		}
