@@ -21,6 +21,6 @@
             <Insets bottom="5.0" />
          </padding>
       </HBox>
-      <Slider fx:id="slider" maxWidth="1.7976931348623157E308" showTickLabels="true" stylesheets="@../../gui/css/Controls.css" />
+      <Slider fx:id="slider" maxWidth="1.7976931348623157E308" minWidth="400.0" showTickLabels="true" stylesheets="@../../gui/css/Controls.css" />
    </children>
 </VBox>

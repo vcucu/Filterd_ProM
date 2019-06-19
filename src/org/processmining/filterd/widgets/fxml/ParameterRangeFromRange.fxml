@@ -21,7 +21,7 @@
          </rowConstraints>
          <children>
             <Label fx:id="label" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="ParameterRangeFromRange" GridPane.columnSpan="2" />
-            <RangeSlider fx:id="slider" blockIncrement="1.0" highValue="75.0" lowValue="25.0" max="100.0" maxWidth="1.7976931348623157E308" showTickLabels="true" stylesheets="@../../gui/css/Controls.css" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+            <RangeSlider fx:id="slider" blockIncrement="1.0" highValue="75.0" lowValue="25.0" max="100.0" maxWidth="1.7976931348623157E308" minWidth="400.0" showTickLabels="true" stylesheets="@../../gui/css/Controls.css" GridPane.columnSpan="2" GridPane.rowIndex="1" />
             <Label fx:id="lowValueLabel" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="2019-06-07T09:06:32" wrapText="true" GridPane.rowIndex="2" />
             <Label fx:id="highValueLabel" alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="2019-06-07T09:06:32" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="2" />
          </children>

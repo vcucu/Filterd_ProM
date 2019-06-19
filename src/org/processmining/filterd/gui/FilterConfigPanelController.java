@@ -17,18 +17,21 @@ import org.processmining.filterd.widgets.ParameterOneFromSetExtendedController;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
 public class FilterConfigPanelController extends AbstractFilterConfigPanelController {
 	
 	@FXML private HBox mainPanel;
-	@FXML private VBox childPanel;
+	@FXML private VBox rightPanel;
+	@FXML private VBox othersPanel;
 	@FXML private VBox slidersPanel;
+	@FXML private VBox maybesPanel;
 	@FXML private Label title;
 	
-	private boolean placeInLeftPane;
 	private FilterdAbstractConfig owner;
 	
 	public FilterConfigPanelController() {
@@ -36,7 +39,6 @@ public class FilterConfigPanelController extends AbstractFilterConfigPanelContro
 	}
 	
 	public FilterConfigPanelController(String title, List<Parameter> parameters, FilterdAbstractConfig owner) {
-		placeInLeftPane = true;
 		controllers = new ArrayList<>();
 		this.owner = owner;
 		// load UI
@@ -77,25 +79,17 @@ public class FilterConfigPanelController extends AbstractFilterConfigPanelContro
 	
 	@Override
 	public VBox getNextContainer(Parameter param) {
-//		VBox container;
-//		// pick whether to place in left or right side of the panel
-//		if(placeInLeftPane) {
-//			container = leftPanel;
-//		} else {
-//			container = rightPanel;
-//		}
-//		placeInLeftPane = !placeInLeftPane; // change for the next time
-//		
-		
-		if (needsBigContainer(param)) {
+		if (param.getDisappearable()) {
+			return maybesPanel;
+		} else if (needsBigContainer(param)) {
 			VBox newBox = new VBox();
-			int index = mainPanel.getChildren().size();
+			int index = mainPanel.getChildren().size() - 1;
 			mainPanel.getChildren().add(index, newBox);
 			return newBox;
 		} else if (hasSlider(param)) {
 			return slidersPanel;
 		} else {
-			return childPanel;
+			return othersPanel;
 		}
 	}
 	
@@ -110,17 +104,12 @@ public class FilterConfigPanelController extends AbstractFilterConfigPanelContro
 						((ParameterOneFromSet) param).getCreatesReference()));
 	}
 	
+	/**
+	 * Returns whether the parameter has a slider
+	 */
 	private boolean hasSlider(Parameter param) {
 		return ((param instanceof ParameterRangeFromRange) ||
 				(param instanceof ParameterValueFromRange));
-	}
-	
-	public boolean isPlaceInLeftPane() {
-		return placeInLeftPane;
-	}
-
-	public void setPlaceInLeftPane(boolean placeInLeftPane) {
-		this.placeInLeftPane = placeInLeftPane;
 	}
 
 	public List<ParameterController> getControllers() {
