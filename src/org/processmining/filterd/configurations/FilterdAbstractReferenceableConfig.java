@@ -26,6 +26,7 @@ public abstract class FilterdAbstractReferenceableConfig extends FilterdAbstract
 	String attribute; 
 	//attribute to filter one which determines the concrete referenceable config
 	String key; 
+	//
 	
 	public FilterdAbstractReferenceableConfig(XLog log, Filter filterType) {
 		super(log, filterType);
