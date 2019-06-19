@@ -61,7 +61,7 @@
             </Label>
          </children>
       </Group>
-      <Label fx:id="editButton" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" onMouseClicked="#editFilterHandler" prefHeight="30.0" prefWidth="25.0">
+      <Label fx:id="editButton" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" onMouseClicked="#editFilterHandler" prefHeight="30.0" prefWidth="25.0" textFill="#707070">
          <graphic>
             <Region>
                <styleClass>

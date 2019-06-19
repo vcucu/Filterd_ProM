@@ -25,4 +25,5 @@
 .filter-name {
 	-fx-font-weight: bold;
 	-fx-font-size: 14;
+	-fx-text-fill: #707070;
 }
