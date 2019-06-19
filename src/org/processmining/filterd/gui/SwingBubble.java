@@ -30,7 +30,7 @@ public class SwingBubble extends AnchorPane {
 
 	/**
 	 * Allocates a new SwingWrap object.
-	 * 
+	 *
 	 * @param parent,
 	 *            the Pane containing the SwingWrap
 	 */
@@ -49,7 +49,7 @@ public class SwingBubble extends AnchorPane {
 		backStage = new Stage();
 		backStage.setScene(backScene);
 
-		// Make the nodes resize with the pane 
+		// Make the nodes resize with the pane
 		Utilities.setAnchors(swgNode, 0.0);
 		Utilities.setAnchors(imgView, 0.0);
 		// Add imgView to the view
@@ -60,7 +60,7 @@ public class SwingBubble extends AnchorPane {
 
 	/**
 	 * Hides the SwingNode and replaces it with an image.
-	 * 
+	 *
 	 * @pre The SwingWrap must be in the parent object.
 	 */
 	private void fake() {
@@ -86,7 +86,7 @@ public class SwingBubble extends AnchorPane {
 
 	/**
 	 * Hides the SwingNode and replaces it with an image.
-	 * 
+	 *
 	 * @pre imgView must be in the parent object.
 	 */
 	private void unfake() {
@@ -115,7 +115,7 @@ public class SwingBubble extends AnchorPane {
 			public synchronized void run() {
 				/*
 				 * HV: Apparently, putting the visualizer backstage has side-effects
-				 * when changing the visualization type. 
+				 * when changing the visualization type.
 				 */
 				if (getChildren().contains(imgView)) {
 					unfake();
@@ -146,9 +146,23 @@ public class SwingBubble extends AnchorPane {
 		return swgNode.getContent();
 	}
 
-	/**
-	 * Forces the view to refresh.
-	 */
+	public void updateFiction() {
+        Platform.runLater(new Runnable() {
+            @Override
+            public synchronized void run() {
+        		if (getChildren().contains(imgView)) {
+        			// Snapshot the SwingNode
+        			WritableImage snapshot = swgNode.snapshot(new SnapshotParameters(), null);
+        			imgView.setImage(snapshot);
+        		}
+            }
+        });
+	}
+
+//	/**
+//	 * Forces the view to refresh.
+//	 * TODO: DELETE THIS METHOD
+//	 */
 	public synchronized void refresh() {
 		// TODO Find a better way to force the view to refresh
 		if (getChildren().contains(imgView)) {
@@ -160,6 +174,13 @@ public class SwingBubble extends AnchorPane {
 		}
 
 	}
+//
+//	public void repaint() {
+//		swgNode.getContent().revalidate();
+//		swgNode.getContent().repaint();
+//		unfake();
+//		fake();
+//	}
 
 	/**
 	 * Adds mouse event handlers for the JavaFX - Swing workaround.

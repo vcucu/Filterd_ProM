@@ -14,22 +14,48 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
+/**
+ * Range from range parameter UI counterpart.
+ * 
+ * @param <T>
+ *            type of the parameter (can be either Integer or Double)
+ * 
+ * @author Filip Davidovic
+ */
 public class ParameterRangeFromRangeController<N extends Number> extends ParameterController {
 	@FXML
-	private RangeSlider slider;
+	private RangeSlider slider; // slider to select the range from a range
 	@FXML
-	private Label label;
+	private Label label; // description of the parameter
 	@FXML
-	private Label lowValueLabel;
+	private Label lowValueLabel; // label for the current low value of the slider (better UX)
 	@FXML
-	private Label highValueLabel;
-	private Class<N> genericTypeClass;
-	private boolean isActingLikeInteger;
-	private boolean isTimeframe; 
-	private ChangeListener<N> lowValueChangeListener;
-	private ChangeListener<N> highValueChangeListener;
+	private Label highValueLabel; // label for the current high value of the slider (better UX)
+	private Class<N> genericTypeClass; // generic class (there is no way to get type of N at runtime so this variable is populated in the constructor)
+	private boolean isActingLikeInteger; // boolean stating whether the slider is behaving like an integer slider
+	private boolean isTimeframe;
+	private ChangeListener<N> lowValueChangeListener; // change listener for the low value
+	private ChangeListener<N> highValueChangeListener; // change listener for the high value
 	List<String> times; // needed for timeframe
 
+	/**
+	 * Default constructor which should be used in all actual code.
+	 * 
+	 * @param nameDisplayed
+	 *            description of the parameter
+	 * @param name
+	 *            unique identified of the parameter (used to map UI parameter
+	 *            to actual parameter in populate method of the filter
+	 *            configuration)
+	 * @param defaultValue
+	 *            low and high values of the slider which are selected by
+	 *            default
+	 * @param minMaxPair
+	 *            minimum and maximum values of the slider
+	 * @param genericTypeClass
+	 *            type of the generic class i.e. N (used to set the behavior of
+	 *            the slider)
+	 */
 	public ParameterRangeFromRangeController(String nameDisplayed, String name, List<N> defaultValue,
 			List<N> minMaxPair, Class<N> genericTypeClass) {
 		super(name);
@@ -50,18 +76,19 @@ public class ParameterRangeFromRangeController<N extends Number> extends Paramet
 			throw new RuntimeException(e);
 		}
 		// set specifics
-		// set the parameter label
-		label.setText(nameDisplayed);
+		label.setText(nameDisplayed); // set the description of the parameter
 		// set the slider
-		setSliderConfig(defaultValue, minMaxPair);
+		setSliderConfig(defaultValue, minMaxPair); // set the slider configuration
 		if (!genericTypeClass.equals(Double.TYPE) && !genericTypeClass.equals(Integer.TYPE)) {
+			// this component only supports integer and double numbers
 			throw new IllegalArgumentException("Supported types are integer (Integer.TYPE) and double (Double.TYPE)");
 		}
-		// set listeners for slider labels
+		// set listeners to change the slider labels when the slider value changes
 		slider.lowValueProperty().addListener(new ChangeListener<Number>() {
 
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
 				if (genericTypeClass.equals(Double.TYPE)) {
+					// slider is for doubles 
 					if (isActingLikeInteger) {
 						lowValueLabel.setText(Integer.toString(newValue.intValue()));
 					} else {
@@ -69,10 +96,10 @@ public class ParameterRangeFromRangeController<N extends Number> extends Paramet
 						lowValueLabel.setText(df.format(newValue));
 					}
 				} else if (genericTypeClass.equals(Integer.TYPE)) {
+					// slider is for integers
 					if (!isTimeframe) {
 						lowValueLabel.setText(Integer.toString(newValue.intValue()));
-					}
-					else {
+					} else {
 						lowValueLabel.setText(times.get(newValue.intValue()));
 					}
 				}
@@ -92,8 +119,7 @@ public class ParameterRangeFromRangeController<N extends Number> extends Paramet
 				} else if (genericTypeClass.equals(Integer.TYPE)) {
 					if (!isTimeframe) {
 						highValueLabel.setText(Integer.toString(newValue.intValue()));
-					}
-					else {
+					} else {
 						highValueLabel.setText(times.get(newValue.intValue()));
 					}
 				}
@@ -130,15 +156,31 @@ public class ParameterRangeFromRangeController<N extends Number> extends Paramet
 		return value;
 	}
 
+	/**
+	 * Set the behavior and look of the slider based on the passed parameters.
+	 * One thing to note is that the slider only works with double values. If we
+	 * want to use integer values we make it behave like it works with integer
+	 * values.
+	 * 
+	 * @param defaultValue
+	 *            low and high values that should be selected by default
+	 * @param minMaxPair
+	 *            minimum and maximum values of the slider
+	 */
 	public void setSliderConfig(List<N> defaultValue, List<N> minMaxPair) {
 		if (genericTypeClass.equals(Double.TYPE)) {
+			// slider should behave like a double slider
 			double majorTickUnit = ((Double) minMaxPair.get(1) - (Double) minMaxPair.get(0)) / 4.0;
 			majorTickUnit = Math.max(1, Math.floor(majorTickUnit)); //unit must be > 0
+			// set the minimum and maximum values of the slider
 			slider.setMin((Double) minMaxPair.get(0));
 			slider.setMax((Double) minMaxPair.get(1));
+			// set the default values of the slider
 			slider.setLowValue((Double) defaultValue.get(0));
 			slider.setHighValue((Double) defaultValue.get(1));
+			// make the slider "continuous"
 			slider.setBlockIncrement(0.1);
+			// format the labels appropriately 
 			if (isActingLikeInteger) {
 				lowValueLabel.setText(Integer.toString(defaultValue.get(0).intValue()));
 				highValueLabel.setText(Integer.toString(defaultValue.get(1).intValue()));
@@ -149,14 +191,19 @@ public class ParameterRangeFromRangeController<N extends Number> extends Paramet
 			}
 			slider.setMajorTickUnit(majorTickUnit);
 		} else if (genericTypeClass.equals(Integer.TYPE)) {
+			// slider should behave like an integer slider
 			double majorTickUnit = (minMaxPair.get(1).doubleValue() - minMaxPair.get(0).doubleValue()) / 4.0;
 			majorTickUnit = Math.max(1, Math.floor(majorTickUnit)); //unit must be > 0
 			slider.setMajorTickUnit(majorTickUnit);
+			// set the minimum and maximum values of the slider
 			slider.setMin(minMaxPair.get(0).doubleValue());
 			slider.setMax(minMaxPair.get(1).doubleValue());
+			// set the default values of the slider
 			slider.setLowValue(defaultValue.get(0).doubleValue());
 			slider.setHighValue(defaultValue.get(1).doubleValue());
+			// make the slider "discrete"
 			slider.setBlockIncrement(1);
+			// format the labels appropriately 
 			if (!isTimeframe) {
 				lowValueLabel.setText(Integer.toString(defaultValue.get(0).intValue()));
 				highValueLabel.setText(Integer.toString(defaultValue.get(1).intValue()));
@@ -172,7 +219,7 @@ public class ParameterRangeFromRangeController<N extends Number> extends Paramet
 		slider.setMajorTickUnit(majorTickUnit);
 		slider.setBlockIncrement(0.1);
 		slider.lowValueProperty()
-		.addListener((obs, oldval, newVal) -> slider.setLowValue(Math.round(newVal.doubleValue())));
+				.addListener((obs, oldval, newVal) -> slider.setLowValue(Math.round(newVal.doubleValue())));
 		slider.lowValueProperty().removeListener((ChangeListener<? super Number>) this.lowValueChangeListener);
 		slider.highValueProperty().removeListener((ChangeListener<? super Number>) this.highValueChangeListener);
 		this.isActingLikeInteger = false;
@@ -188,22 +235,22 @@ public class ParameterRangeFromRangeController<N extends Number> extends Paramet
 		this.isActingLikeInteger = true;
 	}
 
-	public void setTimeframe() { 
+	public void setTimeframe() {
 		slider.setShowTickLabels(false);
 		slider.setShowTickMarks(false);
 		lowValueLabel.setText(times.get(0));
 		highValueLabel.setText(times.get(times.size() - 1));
-		//TO DO: set the labes such that date fits
+		//TO DO: set the labels such that date fits
 	}
-	
+
 	public void setTimeframe(boolean isTimeframe) {
 		this.isTimeframe = isTimeframe;
 	}
-	
+
 	public boolean getTimeframe() {
 		return this.isTimeframe;
 	}
-	
+
 	public void setTimes(List<String> times) {
 		this.times = times;
 	}

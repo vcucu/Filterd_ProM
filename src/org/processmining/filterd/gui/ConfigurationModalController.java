@@ -31,12 +31,10 @@ import javafx.util.Callback;
  */
 public class ConfigurationModalController {
 
-	@FXML
-	private Button cancel; // cancel button
-	@FXML
-	private Button apply; // next / apply button
-	@FXML
-	private HBox contentPane; // pane that stores the configuration dialog / panel
+	@FXML private Button cancel; // cancel button
+	@FXML private Button apply; // next / apply button
+	@FXML private HBox contentPane; // pane that stores the configuration dialog / panel
+	
 	private VBox root; // root component of this controller's view
 	private FilterdAbstractConfig filterConfig; // filter configuration whose configuration panel is currently being displayed 
 	private FilterButtonController filterButtonController; // controller of the filter button (used to disable / enable the edit button)s
