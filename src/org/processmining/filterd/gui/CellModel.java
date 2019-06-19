@@ -96,9 +96,7 @@ public class CellModel {
 	 * @param cellName The name to give to the cell
 	 */
 	public void setCellName(String cellName) {
-		String oldState = this.cellName.getValue();
 		this.cellName.setValue(cellName);
-		//System.out.println("cellName in cell model with cellName value:" + cellName + " and old value" + oldState);
 	}
 
 	public UIPluginContext getContext() {

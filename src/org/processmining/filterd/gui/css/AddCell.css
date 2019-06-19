@@ -1,3 +1,4 @@
+/* Style buttons for selection of new cell type */
 .add-cell-layout .labeled-round-button {
 	-fx-pref-height: 35;
 	-fx-pref-width: 190;
@@ -6,6 +7,7 @@
 	-fx-text-fill: white;
 }
 
+/* Change color of selection buttons on hover */
 .add-cell-layout .labeled-round-button:hover {
 	-fx-background-color: #646464;
 }
