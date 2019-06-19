@@ -18,9 +18,9 @@ import org.processmining.contexts.uitopia.hub.ProMViewManager;
 import org.processmining.filterd.gui.adapters.ComputationCellModelAdapted;
 import org.processmining.filterd.gui.adapters.FilterButtonAdapted;
 import org.processmining.filterd.gui.adapters.FilterdAbstractConfigAdapted;
-import org.processmining.filterd.gui.adapters.FilterdAbstractReferencingConfigAdapted;
-import org.processmining.filterd.gui.adapters.FilterdAbstractConfigKeyAdapted;
 import org.processmining.filterd.gui.adapters.FilterdAbstractConfigAttributeAdapted;
+import org.processmining.filterd.gui.adapters.FilterdAbstractConfigKeyAdapted;
+import org.processmining.filterd.gui.adapters.FilterdAbstractReferencingConfigAdapted;
 import org.processmining.filterd.gui.adapters.NotebookModelAdapted;
 import org.processmining.filterd.gui.adapters.NotebookModelAdapter;
 import org.processmining.filterd.gui.adapters.TextCellModelAdapted;
@@ -314,12 +314,15 @@ public class NotebookModel {
 	 * @param removedCell
 	 *            the computation cell that was removed from the notebook model
 	 */
+
 	public void removeCellsInputLogs(ComputationCellModel removedCell) {
 		YLog removedLog = removedCell.getOutputLogs().get(0);
 		for (int i = 0; i < this.getCells().size(); i++) {
 			CellModel cell = this.getCells().get(i);
 			if (cell instanceof ComputationCellModel) {
-				((ComputationCellModel) cell).getInputLogs().remove(removedLog);
+				List<YLog> result = new ArrayList<YLog>(((ComputationCellModel) cell).getInputLogs());
+				result.remove(removedLog);
+				((ComputationCellModel) cell).setInputLogs(FXCollections.observableArrayList(result));
 			}
 		}
 	}
@@ -341,8 +344,8 @@ public class NotebookModel {
 		}
 	}
 
-	public List<YLog> getOutputLogsTill(int index) {
-		List<YLog> logs = new ArrayList<>();
+	public ArrayList<YLog> getOutputLogsTill(int index) {
+		ArrayList<YLog> logs = new ArrayList<>();
 		logs.add(initialInput);
 		if (index >= 0 && index < getCells().size() + 1) {
 			for (int i = 0; i < index; i++) {

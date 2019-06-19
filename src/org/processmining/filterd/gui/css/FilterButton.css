@@ -1,23 +1,36 @@
+/* Class to change background color to gray */
 .bg-gray {
 	-fx-background-color: #F5F5F5;
 }
 
+/* Set the color of the icons */
 .icon-svg {
 	-fx-background-color: #707070;
 }
 
+/* Set the background color to green when a filter button is selected */
 .selected {
 	-fx-background-color: #29A529;
 }
 
+/* Set the background color to red when a filter button is invalid */
 .invalid {
 	-fx-background-color: #CC0000;
 }
 
+/* Set the icon color to white when a filter button is selected or invalid */
 .selected .icon-svg, .invalid .icon-svg {
 	-fx-background-color: #FFFFFF;
 }
 
+/* Set the color of the filter name label to white when a filter button is selected or invalid */
 .selected .filter-name, .invalid .filter-name {
 	-fx-text-fill: #FFFFFF;
+}
+
+/* Style the filter name label */
+.filter-name {
+	-fx-font-weight: bold;
+	-fx-font-size: 14;
+	-fx-text-fill: #707070;
 }

@@ -167,13 +167,17 @@ public class ConfigurationModalController {
 	 */
 	@FXML
 	private void apply() {
+		System.out.println("Applying filter");
 		if (this.configurationStep == ConfigurationStep.ADD_FILTER) {
 			// user is picking a filter to use -> move on to the configuration screen
 			if (filterSelectionCallback == null || this.filterListController == null) {
 				throw new IllegalStateException("apply() was called before showFilterList()");
 			}
 			String userSelection = this.filterListController.getSelection();
-//			this.filterListController.setStatusLabelText("Initializing filter configuration");
+			
+			// Update FilterButton name
+			filterButtonController.getModel().setName(userSelection);
+			
 			Platform.runLater(() -> showParsingScreen());
 			new Thread(new Task<Void>() {
 
@@ -197,6 +201,9 @@ public class ConfigurationModalController {
 			}
 			resetModal();
 		}
+		System.out.println("Setting the status bar to out of date in apply");
+		//We have applied a filter but have not yet computed the cell with this updated preset so cell is out of date
+		parent.getCellModel().setStatusBar(CellStatus.OUT_OF_DATE);
 	}
 
 	/**

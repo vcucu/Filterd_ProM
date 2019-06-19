@@ -14,20 +14,13 @@ public class FilterButtonController {
 	private FilterButtonModel model;
 	private Pane layout;
 
-	@FXML
-	private Group buttons;
-	@FXML
-	private Label filterName;
-	@FXML
-	private HBox filterLayout;
-	@FXML
-	private Label editButton;
-	@FXML
-	private Label removeButton;
-	@FXML
-	private Label moveUpButton;
-	@FXML
-	private Label moveDownButton;
+	@FXML private Group buttons;
+	@FXML private Label filterName;
+	@FXML private HBox filterLayout;
+	@FXML private Label editButton;
+	@FXML private Label removeButton;
+	@FXML private Label moveUpButton;
+	@FXML private Label moveDownButton;
 
 	public FilterButtonController(ComputationCellController controller, FilterButtonModel model) {
 		this.controller = controller;
@@ -59,9 +52,11 @@ public class FilterButtonController {
 					if (model.getSelected()) {
 						filterLayout.getStyleClass().add("selected");
 						buttons.setVisible(true);
+						buttons.setManaged(true);
 					} else {
 						filterLayout.getStyleClass().remove("selected");
 						buttons.setVisible(false);
+						buttons.setManaged(false);
 					}
 				} else {
 					// filter became invalid (empty log or invalid configuration)
@@ -79,9 +74,11 @@ public class FilterButtonController {
 		if (selected) {
 			filterLayout.getStyleClass().add("selected");
 			buttons.setVisible(true);
+			buttons.setManaged(true);
 		} else {
 			filterLayout.getStyleClass().remove("selected");
 			buttons.setVisible(false);
+			buttons.setManaged(false);
 		}
 	}
 
@@ -99,10 +96,6 @@ public class FilterButtonController {
 
 	public void setModel(FilterButtonModel model) {
 		this.model = model;
-	}
-
-	public void setFilterName(String value) {
-		filterName.setText(value);
 	}
 
 	public void setFilterLayout(HBox temp) {
@@ -147,6 +140,8 @@ public class FilterButtonController {
 	@FXML
 	public void removeFilterHandler() {
 		controller.removeFilter(model);
+		//We have removed a filter but have not yet computed the cell with this updated preset so cell is out of date
+		controller.getCellModel().setStatusBar(CellStatus.OUT_OF_DATE);
 	}
 
 	@FXML
@@ -154,6 +149,8 @@ public class FilterButtonController {
 		int index = model.getIndex();
 		if (index > 0) {
 			move(index - 1);
+			//We have moved a filter but have not yet computed the cell with this updated preset so cell is out of date
+			controller.getCellModel().setStatusBar(CellStatus.OUT_OF_DATE);
 		}
 	}
 
@@ -162,7 +159,10 @@ public class FilterButtonController {
 		int index = model.getIndex();
 		if (index < controller.getCellModel().getFilters().size() - 1) {
 			move(index + 1);
+			//We have moved a filter but have not yet computed the cell with this updated preset so cell is out of date
+			controller.getCellModel().setStatusBar(CellStatus.OUT_OF_DATE);
 		}
+
 	}
 
 	private void move(int index) {

@@ -146,23 +146,10 @@ public class SwingBubble extends AnchorPane {
 		return swgNode.getContent();
 	}
 
-	public void updateFiction() {
-        Platform.runLater(new Runnable() {
-            @Override
-            public synchronized void run() {
-        		if (getChildren().contains(imgView)) {
-        			// Snapshot the SwingNode
-        			WritableImage snapshot = swgNode.snapshot(new SnapshotParameters(), null);
-        			imgView.setImage(snapshot);
-        		}
-            }
-        });
-	}
-
-//	/**
-//	 * Forces the view to refresh.
-//	 * TODO: DELETE THIS METHOD
-//	 */
+	/**
+	 * Forces the view to refresh.
+	 * TODO: DELETE THIS METHOD
+	 */
 	public synchronized void refresh() {
 		// TODO Find a better way to force the view to refresh
 		if (getChildren().contains(imgView)) {
@@ -172,15 +159,7 @@ public class SwingBubble extends AnchorPane {
 			fake();
 			unfake();
 		}
-
 	}
-//
-//	public void repaint() {
-//		swgNode.getContent().revalidate();
-//		swgNode.getContent().repaint();
-//		unfake();
-//		fake();
-//	}
 
 	/**
 	 * Adds mouse event handlers for the JavaFX - Swing workaround.

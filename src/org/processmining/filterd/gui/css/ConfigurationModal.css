@@ -1,9 +1,11 @@
+/* Style buttons in the Configuration Modal (extra adjustments) */
 .config-modal-layout .labeled-round-button {
 	-fx-background-color: #939393;
 	-fx-text-fill: white;
 	-fx-text-alignment: center;
 }
 
+/* Change color of buttons on hover  */
 .config-modal-layout .labeled-round-button:hover {
 	-fx-background-color: #646464;
 }

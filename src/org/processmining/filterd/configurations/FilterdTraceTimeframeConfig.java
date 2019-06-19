@@ -18,14 +18,20 @@ import org.processmining.filterd.tools.Toolbox;
 
 public class FilterdTraceTimeframeConfig extends FilterdAbstractConfig {
 	
+	// List to set the bounds in the slider.
 	List<LocalDateTime> firstAndlastTimestamp;
+	// times for the special range slider.
 	private ArrayList<String> times; 
+	// Default pair for special range slider.
 	private ArrayList<Integer> defaultPair;
+	// Options pair for special range slider.
 	private ArrayList<Integer> optionsPair;
+	// Configuration panel to hold all parameters.
 	private FilterConfigPanelController configPanel;
 
-	ArrayList<String> optionList;
+	// Special range slider.
 	ParameterRangeFromRange<Integer> range;
+	// Hardcode key.
 	String key = "time:timestamp";
 
 	public FilterdTraceTimeframeConfig(XLog log, Filter filterType) {
@@ -36,12 +42,13 @@ public class FilterdTraceTimeframeConfig extends FilterdAbstractConfig {
 		firstAndlastTimestamp.add(Toolbox.getFirstAndLastTimes(log)[0]);
 		firstAndlastTimestamp.add(Toolbox.getFirstAndLastTimes(log)[1]);
 		
-		
+		// Initialize all the member variables.
 		times = new ArrayList<>();
 		defaultPair = new ArrayList<>();
 		optionsPair = new ArrayList<>();
 		parameters = new ArrayList<>();
 		
+		// Edge case.
 		boolean added = false;
 		
 		/*populate the array times with the ordered date&time of all events */
@@ -50,21 +57,28 @@ public class FilterdTraceTimeframeConfig extends FilterdAbstractConfig {
 				/* timestamp format YYYY-MM-DDTHH:MM:SS.ssssGMT with GMT = {Z, + , -} */
 				if (!event.getAttributes().containsKey(key)) continue;
 				String value = event.getAttributes().get(key).toString();
+				// Get the time specified in the key-value pair with key = 
+				// "time:timestamp".
 				LocalDateTime time = Toolbox.synchronizeGMT(value);
 				times.add(time.toString());
 				added = true;
 			}
 		}
 		
+		// If log does not have any time stamps.
 		if (!added) {
 			times.add("0");
 		}
 		
+		// Sort the times.
 		Collections.sort(times);
+		// Set the default pair to the outer bounds.
 		defaultPair.add(0);
 		defaultPair.add(times.size()-1);
+		// Set the options pair to the outer bounds.
 		optionsPair.add(0);
 		optionsPair.add(times.size()-1);
+		// Create special range from range slider.
 		range = new ParameterRangeFromRange<>("time-range",
 				"Select timeframe", defaultPair, 
 				optionsPair, Integer.TYPE);
@@ -81,23 +95,39 @@ public class FilterdTraceTimeframeConfig extends FilterdAbstractConfig {
 								"Intersecting timeframe",
 								"Started in timeframe",
 								"Completed in timeframe"));
-		
+		// Add all created parameters to the created list.
 		parameters.add(range);
 		parameters.add(keepTracesParameter);
+		// Initialize the configuration panel.
 		configPanel = new FilterConfigPanelController(
 				"Filter Trace Timeframe Configuration", parameters, this);
 	}
 
+	/**
+	 * Check if the parameters are still valid on the candidate log.
+	 * 
+	 * @param candidateLog the log to check.
+	 */
 	public boolean checkValidity(XLog candidateLog) {
+		// If the parameters have not been set yet or it is the same log as the
+		// one that is already selected.
 		if( parameters == null || candidateLog.equals(log) )
 			return true;
 		return false;
 	}
 
+	/**
+	 * Checks if the configuration can populate the parameters.
+	 * 
+	 * @param component The component that populates the parameters.
+	 */
 	public boolean canPopulate(FilterConfigPanelController component) {	
 		return true;
 	}
 
+	/**
+	 * Getter for the configuration panel.
+	 */
 	public AbstractFilterConfigPanelController getConfigPanel() {
 		return configPanel;
 	}

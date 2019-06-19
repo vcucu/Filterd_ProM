@@ -27,16 +27,14 @@ public class FilterButtonModel {
 	 * Properties set here could be overwritten during loading.
 	 */
 	public FilterButtonModel() {
-		String filterName = "Filter #" + Integer.toString((int) (Math.random() * 900 + 100));
-		name = new SimpleStringProperty(filterName);
+		name = new SimpleStringProperty("New filter");
 		selected = new SimpleBooleanProperty(false);
 		isValid = new SimpleBooleanProperty(true);
 		isEditDisabled = new SimpleBooleanProperty(true);
 	}	
 	
 	public FilterButtonModel(int index) {
-		String filterName = "Filter #" + Integer.toString((int) (Math.random() * 900 + 100));
-		name = new SimpleStringProperty(filterName);
+		name = new SimpleStringProperty("New filter");
 		selected = new SimpleBooleanProperty(false);
 		isValid = new SimpleBooleanProperty(true);
 		isEditDisabled = new SimpleBooleanProperty(true);

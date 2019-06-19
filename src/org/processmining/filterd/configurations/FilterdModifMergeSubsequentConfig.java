@@ -123,8 +123,14 @@ public class FilterdModifMergeSubsequentConfig extends FilterdAbstractReferencin
 
 	@Override
 	public FilterdAbstractConfig changeReference(ParameterOneFromSetExtendedController controller) {
+		for (Parameter param : concreteReference.getParameters()) {
+			parameters.remove(param);
+		}
 		concreteReference = new FilterdModifMergeSubsequentCategoricalConfig
 				(log, filterType, controller.getValue(), Toolbox.computeAllClassifiers(log));
+		for (Parameter param : concreteReference.getParameters()) {
+			parameters.add(param);
+		}
 		return concreteReference;
 	}
 

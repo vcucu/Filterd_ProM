@@ -89,9 +89,14 @@ public class FilterdTraceEndEventConfig extends FilterdAbstractReferencingConfig
 
 	@Override
 	public FilterdAbstractConfig changeReference(ParameterOneFromSetExtendedController controller) {
+		for (Parameter param : concreteReference.getParameters()) {
+			parameters.remove(param);
+		}
 		concreteReference = new FilterdTraceEndEventCategoricalConfig(
 				log, filterType, controller.getValue(),Toolbox.computeComplexClassifiers(log));
-				
+		for (Parameter param : concreteReference.getParameters()) {
+			parameters.add(param);
+		}		
 		return concreteReference;
 	}
 	private XLog endEventsOnly() {

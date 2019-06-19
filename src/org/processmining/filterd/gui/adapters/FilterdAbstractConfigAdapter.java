@@ -40,7 +40,7 @@ public class FilterdAbstractConfigAdapter extends XmlAdapter<FilterdAbstractConf
 		Class<FilterdAbstractConfig> configClass = (Class<FilterdAbstractConfig>) Class.forName(adaptedConfig.getClassName()); // get the config class based on the class name stored in the adapted config.
 		Filter filterType =  (Filter) Class.forName(adaptedConfig.getfilterTypeName()).newInstance(); // create an instance of a Filter of a type based on the filter type name stored in the adapted config.
 		config = configClass.getDeclaredConstructor(XLog.class, Filter.class).newInstance(initialInput, filterType); // get the constructor from the config class that takes an XLog and Filter as input and use it to instantiate the config.
-		if (FilterdAbstractReferencingConfig.class.isAssignableFrom(config.getClass())) {
+		if (config instanceof FilterdAbstractReferencingConfig) {
 			// if the new config is referencing, create and set the concrete reference.
 			FilterdAbstractReferenceableConfig concreteReference = ((FilterdAbstractReferencingConfigAdapted) adaptedConfig).getConcreteReference(); // get the concrete reference from the adapted config.
 			((FilterdAbstractReferencingConfig) config).setConcreteReference(concreteReference); // set the concrete reference in the new config.
@@ -57,7 +57,7 @@ public class FilterdAbstractConfigAdapter extends XmlAdapter<FilterdAbstractConf
 		List<Parameter> parameters = new ArrayList<Parameter>(); // initialize the parameters list. This needs to be a new ArrayList since we do not want to modify the original.
 		parameters.addAll(config.getParameters()); // add all the parameters from the config to the new list.
 		
-		if (FilterdAbstractReferencingConfig.class.isAssignableFrom(config.getClass())) {
+		if (config instanceof FilterdAbstractReferencingConfig) {
 			// if the config is referencing
 			adaptedConfig = new FilterdAbstractReferencingConfigAdapted(); // create the new adapted config.
 			FilterdAbstractReferenceableConfig concreteReference = ((FilterdAbstractReferencingConfig) config).getConcreteReference(); // get the concrete reference from the referencing config.

@@ -11,6 +11,7 @@ import javax.xml.bind.Marshaller;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -236,7 +237,7 @@ public class NotebookController {
 	 */
 	public void addComputationCell(int index) {
 		ComputationCellModel cellModel = new ComputationCellModel(model.getPromContext(), index,
-				model.getPromCanceller(), model.getOutputLogsTill(index));
+				model.getPromCanceller(), FXCollections.observableArrayList(model.getOutputLogsTill(index)));
 		model.addCell(index, cellModel);
 		loadCell(cellModel);
 		//		//if we are not appending the index of where the cell is added isn't equal to the size of the list

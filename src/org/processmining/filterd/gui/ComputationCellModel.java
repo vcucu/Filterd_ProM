@@ -89,7 +89,6 @@ public class ComputationCellModel extends CellModel {
 
 	@Override
 	public void setCellName(String cellName) {
-		String oldState = this.cellName.getValue();
 		this.cellName.setValue(cellName);
 		// change name of the output log (downstream cells may be using it)
 		if (this.outputLogs != null && this.outputLogs.size() > 0) {
@@ -158,7 +157,7 @@ public class ComputationCellModel extends CellModel {
 		if (eventLogs == null) {
 			System.out.println("the input logs are null");
 		}
-		List<YLog> oldState = this.getInputLogs();
+		List<YLog> oldState = new ArrayList<YLog>(this.getInputLogs());
 		this.inputLogs = eventLogs;
 		//change the items in combobox that are displayed after list in model changes
 		property.firePropertyChange("setInputLogs", oldState, eventLogs);
@@ -168,7 +167,7 @@ public class ComputationCellModel extends CellModel {
 		return inputLogs;
 	}
 
-	public void setOutputLogs(List<YLog> outputLogs) {
+	public void setOutputLogs(ObservableList<YLog> outputLogs) {
 		this.outputLogs.setAll(outputLogs);
 	}
 
@@ -242,6 +241,7 @@ public class ComputationCellModel extends CellModel {
 		ProMViewManager vm = ProMViewManager.initialize(context.getGlobalContext()); // Get current view manager
 		ProMResourceManager rm = ProMResourceManager.initialize(context.getGlobalContext()); // Get current resource manager
 		// Get the possible visualizers for the input event log.
+		System.out.println("getVisualisers has first input log to be: " + this.inputLogs.get(0).getName());
 		List<ViewType> logViewTypes = vm.getViewTypes(rm.getResourceForInstance(this.inputLogs.get(0).get()));
 		// Add all visualizer (except this one).
 		for (ViewType type : logViewTypes) {
@@ -310,7 +310,7 @@ public class ComputationCellModel extends CellModel {
 		return new JLabel("Visualizer " + type.getTypeName() + " could not be found.");
 	}
 
-	public static void handleError(Exception e) {
+	public static void  handleError(Exception e) {
 		// This method is invoked on the JavaFX thread
 		Alert alert = new Alert(AlertType.ERROR);
 		if (e instanceof EmptyLogException) {
@@ -405,6 +405,8 @@ public class ComputationCellModel extends CellModel {
 	 *            the compute task
 	 */
 	public void computeWithTask(Task<Void> computeTask) {
+		//computation started
+		setStatusBar(CellStatus.IN_PROGRESS);
 		this.computeTask = computeTask;
 		this.isComputing.set(true);
 		XLog inputOutput = this.inputLog.get(); // variable that stores the output of the previous filter (i.e. input for the next one)
@@ -425,7 +427,7 @@ public class ComputationCellModel extends CellModel {
 			// - InvalidConfigurationExcpetion  the selected configuration is not valid w.r.t. the output of the previous filter
 			try {
 				filter.setInputLog(inputOutput);
-				filter.compute(); // no point in passing the task to the individual filter models (individual filters do not support canceling)
+				filter.compute(); // no point in passing the task to the individual filter models (individual filters do not support canceling)				
 				inputOutput = filter.getOutputLog(); // if this line is reached, the filter did not throw an error -> fetch the filter output
 				filter.isValidProperty().set(true); // computation of this filter succeeded -> filter is valid
 			} catch (Exception e) {
@@ -435,6 +437,8 @@ public class ComputationCellModel extends CellModel {
 				Platform.runLater(new Runnable() {
 					@Override
 					public void run() {
+						//an exception occured hence the computation is not valid
+						setStatusBar(CellStatus.INVALID);
 						handleError(e);
 					}
 				});
@@ -444,6 +448,7 @@ public class ComputationCellModel extends CellModel {
 		this.outputLogs.get(0).setLog(inputOutput); // set the output of this cell to be the output of the last filter
 		if(finishedSuccessfully) {
 			this.property.firePropertyChange("reloadVisualizer", null, null);
+			setStatusBar(CellStatus.IDLE);
 		}
 	}
 

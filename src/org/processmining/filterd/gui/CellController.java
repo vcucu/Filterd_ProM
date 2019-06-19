@@ -23,14 +23,16 @@ public abstract class CellController {
 	protected NotebookController controller;
 	protected CellModel cellModel;
 	protected VBox cellLayout;
-	
-	@FXML protected Region statusBar; // has 8 states, Color x isHidden
-	@FXML protected TextField cellName;
-	@FXML protected HBox cellBody;
-	
+
+	@FXML
+	protected Region statusBar; // has 8 states, Color x isHidden
+	@FXML
+	protected TextField cellName;
+	@FXML
+	protected HBox cellBody;
 
 	public CellController(NotebookController controller, CellModel cellModel) {
-		this.controller = controller; 
+		this.controller = controller;
 		this.cellModel = cellModel;
 	}
 
@@ -41,19 +43,19 @@ public abstract class CellController {
 	public NotebookController getController() {
 		return controller;
 	}
-	
+
 	/**
 	 * Handler for the cell name. Sets the cell name in the model.
 	 */
-	@FXML 
+	@FXML
 	public void handleCellName(KeyEvent e) {
-		 if (e.getCode() == KeyCode.ENTER) {
-		        //System.out.println("Enter was pressed");
-		        //System.out.println(cellName.getText());
-				cellModel.setCellName(cellName.getText());
-		    }
+		if (e.getCode() == KeyCode.ENTER) {
+			//System.out.println("Enter was pressed");
+			//System.out.println(cellName.getText());
+			cellModel.setCellName(cellName.getText());
+		}
 	}
-	
+
 	/**
 	 * Removes the current cell (model) from the notebook model.
 	 */
@@ -68,20 +70,26 @@ public abstract class CellController {
 		ButtonType buttonNo = new ButtonType("No", ButtonData.CANCEL_CLOSE);
 		alert.getButtonTypes().setAll(buttonYes, buttonNo);
 		Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
-		 stage.setAlwaysOnTop(true);// make sure window always at front when open
+		stage.setAlwaysOnTop(true);// make sure window always at front when open
 
 		Optional<ButtonType> result = alert.showAndWait();
-		if (result.get() == buttonYes){
-		    //user chose Yes so remove cell
+		if (result.get() == buttonYes) {
+			//user chose Yes so update status of all downstream cells to be out of date and remove cell
+			List<CellModel> cells = controller.getModel().getCells();
+			for (int i = getCellModel().getIndex() + 1; i < cells.size(); i++) {
+				//if the next downstream cell isnt a computation cell search
+				if ((cells.get(i) instanceof ComputationCellModel)) {
+					cells.get(i).setStatusBar(CellStatus.OUT_OF_DATE);
+				}
+			}
 			getNotebookController().removeCell(getCellModel());
-			
 		}
-		//user chose No or closed the dialog don't remove cell
-		
+		//user chose No or closed the dialog don't remove cell		
 	}
-	
+
 	/**
 	 * Returns the controller of the notebook this cell is in.
+	 * 
 	 * @return The notebook controller.
 	 */
 	public NotebookController getNotebookController() {
@@ -94,6 +102,7 @@ public abstract class CellController {
 
 	/**
 	 * Returns the layout of the current cell.
+	 * 
 	 * @return The layout of the current cell.
 	 */
 	public VBox getCellLayout() {
@@ -105,7 +114,8 @@ public abstract class CellController {
 	}
 
 	/**
-	 * Returns the model of the current cell.	
+	 * Returns the model of the current cell.
+	 * 
 	 * @return The model of the current cell.
 	 */
 	public CellModel getCellModel() {
@@ -129,32 +139,52 @@ public abstract class CellController {
 		}
 	}
 
+	public void changeStatus(String color) {
+		this.statusBar.setStyle(color);
+	}
+
 	public void changeCellName(String cellName) {
 		this.cellName.setText(cellName);
 	}
-	
+
 	@FXML
 	public void prependCellButtonHandler() {
 		int index = getCellModel().getIndex();
 		controller.toggleAddCellModal(index);
 	}
-	
+
 	@FXML
 	private void moveUp() {
 		int index = getCellModel().getIndex();
 		if (index > 0) {
+			if (this instanceof ComputationCellController) {
+				//we are moving a computation cell up 
+				//set the selected cell's status to out of date
+				this.getCellModel().setStatusBar(CellStatus.OUT_OF_DATE);
+			}
 			move(index - 1);
 		}
 	}
-	
+
 	@FXML
 	private void moveDown() {
 		int index = getCellModel().getIndex();
 		if (index < controller.getModel().getCells().size() - 1) {
+			if (this instanceof ComputationCellController) {
+				//we are moving a computation cell down
+				List<CellModel> cells = controller.getModel().getCells();
+				for (int i = index + 1; i < cells.size(); i++) {
+					//find the closest downstream cell to the selected cell and update its status 
+					if ((cells.get(i) instanceof ComputationCellModel)) {
+						cells.get(i).setStatusBar(CellStatus.OUT_OF_DATE);
+						break;
+					}
+				}
+			}
 			move(index + 1);
 		}
 	}
-	
+
 	private void move(int index) {
 		// Hide AddCell modal
 		controller.hideAddCellModal();
