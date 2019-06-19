@@ -58,7 +58,7 @@ public abstract class FilterdAbstractReferencingConfig extends FilterdAbstractCo
 				ParameterOneFromSetExtendedController casted = (ParameterOneFromSetExtendedController) controller;
 				concreteReference.populate(casted.getNestedConfigPanel());
 				for (Parameter param : concreteReference.getParameters()) {
-					parameters.remove(param); //does this work?
+					parameters.remove(param);
 					parameters.add(param);
 				}
 				ParameterOneFromSet param = (ParameterOneFromSet) getParameter(casted.getName());

@@ -56,7 +56,13 @@ public class FilterdEventAttrConfig extends FilterdAbstractReferencingConfig {
 	}
 	
 	public FilterdAbstractConfig changeReference(ParameterOneFromSetExtendedController chosen) {
+		for (Parameter param : concreteReference.getParameters()) {
+			parameters.remove(param);
+		}
 		switchReference(chosen.getValue());
+		for (Parameter param : concreteReference.getParameters()) {
+			parameters.add(param);
+		}
 		return concreteReference;
 	}
 
