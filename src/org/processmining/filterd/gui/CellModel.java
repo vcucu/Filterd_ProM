@@ -11,7 +11,7 @@ public class CellModel {
 
 	private UIPluginContext context;
 	private boolean isHidden;
-	private CellStatus statusBar;
+	protected CellStatus statusBar;
 	protected StringProperty cellName;
 	protected int index;
 	//property used to register property listeners for each bound property
@@ -24,7 +24,7 @@ public class CellModel {
 	public CellModel() {
 		this.property = new PropertyChangeSupport(this);
 		isHidden = false;
-		setStatusBar(CellStatus.IDLE); // set the initial cell status to idle
+		this.statusBar = CellStatus.IDLE;// set the initial cell status to idle
 		cellName = new SimpleStringProperty(); // initialize the cellName
 		setCellName("Cell #" + Integer.toString((int) (Math.random() * 900 + 100))); // assign an initial name to the cell
 	}
@@ -35,7 +35,7 @@ public class CellModel {
 		this.property = new PropertyChangeSupport(this);
 		this.index = index;
 		isHidden = false;
-		setStatusBar(CellStatus.IDLE); // set the initial cell status to idle
+		this.statusBar = CellStatus.IDLE;// set the initial cell status to idle
 		cellName = new SimpleStringProperty(); // initialize the cellName
 		setCellName("Cell #" + Integer.toString((int) (Math.random() * 900 + 100))); // assign an initial name to the cell
 	}
@@ -69,8 +69,13 @@ public class CellModel {
 		return statusBar;
 	}
 
-	public void setStatusBar(CellStatus statusBar) {
+	public void setStatusBar(CellStatus statusBar) {	
+		//create a new enum that contains the state of the previous state of the statusBar
+		System.out.println("Cell has old status " + this.statusBar.name());
+		CellStatus oldState = CellStatus.valueOf(this.statusBar.name());
 		this.statusBar = statusBar;
+		System.out.println("cell " + this.getCellName()  + " has the old status " + oldState.toString() + " and new status " +  this.statusBar.toString());
+		property.firePropertyChange("setCellStatus", oldState, statusBar);
 	}
 
 	/**

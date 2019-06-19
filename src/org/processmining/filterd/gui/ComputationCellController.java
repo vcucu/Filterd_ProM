@@ -77,23 +77,39 @@ public class ComputationCellController extends CellController {
 	private SwingBubble visualizerSwgBubble;
 	private ConfigurationModalController configurationModal;
 
-	@FXML private VBox panelLayout;
-	@FXML private AnchorPane visualizerPane;
-	@FXML private ComboBox<YLog> cmbEventLog;
-	@FXML private ComboBox<ViewType> cmbVisualizers;
-	@FXML private Label expandButton;
-	@FXML private ScrollPane filterPanelScroll;
-	@FXML private VBox cell;
-	@FXML private HBox cellBody;
-	@FXML private Label fullScreenButton;
-	@FXML private Label playButton;
-	@FXML private Label computeButton;
-	@FXML private MenuButton menuBtnCellSettings;
-	@FXML private Label prependCellButton;
-	@FXML private HBox fullToolbar;
-	@FXML private HBox cellToolbar;
-	@FXML private Label lblNumEventLogs;
-
+	@FXML
+	private VBox panelLayout;
+	@FXML
+	private AnchorPane visualizerPane;
+	@FXML
+	private ComboBox<YLog> cmbEventLog;
+	@FXML
+	private ComboBox<ViewType> cmbVisualizers;
+	@FXML
+	private Label expandButton;
+	@FXML
+	private ScrollPane filterPanelScroll;
+	@FXML
+	private VBox cell;
+	@FXML
+	private HBox cellBody;
+	@FXML
+	private Label fullScreenButton;
+	@FXML
+	private Label playButton;
+	@FXML
+	private Label computeButton;
+	@FXML
+	private MenuButton menuBtnCellSettings;
+	@FXML
+	private Label prependCellButton;
+	@FXML
+	private HBox fullToolbar;
+	@FXML
+	private HBox cellToolbar;
+	@FXML
+	private Label lblNumEventLogs;
+	//listener for the input logs
 	public ComputationCellController(ComputationCellModel model) {
 		super(null, model);
 	}
@@ -119,6 +135,7 @@ public class ComputationCellController extends CellController {
 		// Load event logs in cmbEventLog and select "Initial input"
 		cmbEventLog.getItems().addAll(model.getInputLogs());
 		cmbEventLog.getSelectionModel().selectFirst();
+		System.out.println("Setting XLOG in initialize");
 		setXLog();
 		// Add listeners to the basic model components
 		cellModel.getProperty().addPropertyChangeListener(new ComputationCellModelListeners(this));
@@ -140,10 +157,10 @@ public class ComputationCellController extends CellController {
 		addFilterButtonListeners();
 		// bind the cell name to the cell name variable.
 		getCellModel().bindCellName(cellName.textProperty());
-		
+
 		// Add listeners for input logs
 		addInputLogsListeners(model.getInputLogs());
-		
+
 		// Change compute button icon (play / pause) when the computation stops / starts
 		this.getCellModel().isComputingProperty().addListener((observable, oldValue, newValue) -> {
 			if (newValue) {
@@ -152,10 +169,10 @@ public class ComputationCellController extends CellController {
 				Utilities.changeIcon(computeButton, "pause-solid", "play-solid");
 			}
 		});
-		
+
 		// Update label showing number of output logs when there's a change
 		updateNoOfOutputs(getCellModel().getOutputLogs().size());
-		
+
 		this.getCellModel().getOutputLogs().addListener((ListChangeListener<? super YLog>) change -> {
 			updateNoOfOutputs(getCellModel().getOutputLogs().size());
 		});
@@ -176,9 +193,8 @@ public class ComputationCellController extends CellController {
 			int index = getCellModel().getFilters().size(); // Index of the new cell, so that we can compute which XLogs are available
 			FilterButtonModel filterModel = new FilterButtonModel(index);
 			// if cell was already computed and is not out-of-date, we can set the input log of the new filter to be the output of the previous one
-			if(index > 0 &&
-				getCellModel().getFilters().get(index - 1).getOutputLog() != null &&
-				getCellModel().getStatusBar() == CellStatus.IDLE) {
+			if (index > 0 && getCellModel().getFilters().get(index - 1).getOutputLog() != null
+					&& getCellModel().getStatusBar() == CellStatus.IDLE) {
 				filterModel.setInputLog(getCellModel().getFilters().get(index - 1).getOutputLog());
 			}
 			getCellModel().addFilterModel(index, filterModel);
@@ -209,7 +225,8 @@ public class ComputationCellController extends CellController {
 	}
 
 	/**
-	 * This is to generate a controller for every filter model. Used when importing a notebook from the workspace.
+	 * This is to generate a controller for every filter model. Used when
+	 * importing a notebook from the workspace.
 	 */
 	public void generateFilterButtonControllers() {
 		for (FilterButtonModel filter : getCellModel().getFilters()) {
@@ -229,7 +246,8 @@ public class ComputationCellController extends CellController {
 			newController.enableEditFilterHandler();
 		}
 	}
-	
+
+
 	public void addInputLogsListeners(List<YLog> logs) {
 		ComputationCellModel model = this.getCellModel();
 		for (YLog log : model.getInputLogs()) {
@@ -294,19 +312,19 @@ public class ComputationCellController extends CellController {
 		this.panelLayout = panelLayout;
 	}
 
-
-	public void changeInputLogsCombo(List <YLog> logs) {
-		List<YLog> newLogs = new ArrayList<>();
-		ObservableList<YLog> oldLogs = cmbEventLog.getItems();
+	public void changeInputLogsCombo(List<YLog> logs) {
+//		List<YLog> newLogs = new ArrayList<>();
+//		ObservableList<YLog> oldLogs = cmbEventLog.getItems();
 		cmbEventLog.setItems((ObservableList<YLog>) logs);
-		// Find the logs that were not previously in the drop-down menu
-		for (YLog log : logs) {
-			if (!oldLogs.contains(log)) {
-				newLogs.add(log);
-			}
-		}
+//		// Find the logs that were not previously in the drop-down menu
+//		for (YLog log : logs) {
+//			if (!oldLogs.contains(log)) {
+//				newLogs.add(log);
+//			}
+//		}
 		// Add listeners for the new logs
-		addInputLogsListeners(newLogs);
+		//addInputLogsListeners(newLogs);
+		addInputLogsListeners(logs);
 	}
 
 	/**
@@ -381,8 +399,7 @@ public class ComputationCellController extends CellController {
 	 */
 	@FXML
 	public void handleFullScreen() {
-		if (!isFullScreen && !isConfigurationModalShown
-				&& cmbVisualizers.getValue() != Utilities.dummyViewType) {
+		if (!isFullScreen && !isConfigurationModalShown && cmbVisualizers.getValue() != Utilities.dummyViewType) {
 			// Style toolbar for fullscreen mode
 			fullToolbar.getStyleClass().remove("bg-gray");
 			fullToolbar.getStyleClass().add("bg-black");
@@ -399,10 +416,10 @@ public class ComputationCellController extends CellController {
 			Scene scene = new Scene(fullToolbar);
 			scene.getStylesheets().add("org/processmining/filterd/gui/css/Notebook.css");
 			scene.setFill(Paint.valueOf("black"));
-            toolbarPanel.setScene(scene);
+			toolbarPanel.setScene(scene);
 
 			// Initialize panel
-            fullScreenPanel = new JPanel(new BorderLayout());
+			fullScreenPanel = new JPanel(new BorderLayout());
 			fullScreenPanel.add(toolbarPanel, BorderLayout.PAGE_START);
 			fullScreenPanel.add(visualizerSwgBubble.getContent(), BorderLayout.CENTER);
 
@@ -428,7 +445,7 @@ public class ComputationCellController extends CellController {
 			FilterdVisualizer.revertView();
 			// Update icon
 			Utilities.changeIcon(fullScreenButton, "compress-solid", "expand-solid");
-			
+
 			isFullScreen = false;
 		}
 	}
@@ -445,10 +462,11 @@ public class ComputationCellController extends CellController {
 	// Set XLog
 	@FXML
 	public void setXLog() {
+		//setXLog(false);
 		ComputationCellModel model = this.getCellModel();
 		YLog eventLog = cmbEventLog.getValue();
 		try {
-			model.setInputLog(eventLog);	
+			model.setInputLog(eventLog);
 		} catch (Throwable exception) {
 			// DO NOTHING
 		}
@@ -461,11 +479,11 @@ public class ComputationCellController extends CellController {
 	}
 
 	/**
-	 *  Load visualizer.
-	 *  
-	 *  Use this method to load the visualizer.
-	 *  This method is called when the visualizer combobox is used 
-	 *  and when the filter configuration dialog is hidden.
+	 * Load visualizer.
+	 * 
+	 * Use this method to load the visualizer. This method is called when the
+	 * visualizer combobox is used and when the filter configuration dialog is
+	 * hidden.
 	 */
 	@FXML
 	public void loadVisualizer() {
@@ -482,19 +500,17 @@ public class ComputationCellController extends CellController {
 			});
 			return;
 		}
-		
-		JComponent visualizer = getCellModel().getVisualization(cmbVisualizers.getValue());	// Visualizer to be shown
-		
+
+		JComponent visualizer = getCellModel().getVisualization(cmbVisualizers.getValue()); // Visualizer to be shown
+
 		// Add visualizer if not present
 		if (!visualizerPane.getChildren().contains(visualizerSwgBubble)) {
 			visualizerPane.getChildren().add(visualizerSwgBubble);
-			Utilities.setAnchors(visualizerSwgBubble, 0.0);	// Make the visualizer resize with the pane
-		}
-		
+			Utilities.setAnchors(visualizerSwgBubble, 0.0); // Make the visualizer resize with the pane
+		}		
 		visualizerSwgBubble.setContent(visualizer);	// Load Visualizer
 		expandButton.setVisible(true);	// Show expand button
 		fullScreenButton.setDisable(false);	// Enable fullscreen button
-
 		// Update Fullscreen visualizer if necessary 
 		if (isFullScreen) {
 			try {
@@ -515,12 +531,12 @@ public class ComputationCellController extends CellController {
 			}
 		}
 	}
-	
+
 	@FXML
 	private void reloadVisualizer() {
 		this.loadVisualizer();
 	}
-	
+
 	private void updateNoOfOutputs(int noOfLogs) {
 		if (noOfLogs == 1) {
 			lblNumEventLogs.setText("1 output event log");
@@ -561,7 +577,7 @@ public class ComputationCellController extends CellController {
 				removeFilter(buttonToRemove);
 			}
 		}
-		
+
 		this.isConfigurationModalShown = false;
 	}
 
@@ -646,6 +662,8 @@ public class ComputationCellController extends CellController {
 						// do not accept empty logs
 						if (inputLog.size() == 0) {
 							ComputationCellModel.handleError(new EmptyLogException(""));
+							//no filter is added to the filter preset implynig no change occured and hence 
+							//getCellModel().setStatusBar(CellStatus.IDLE);
 							getCellModel().getFilters().get(getCellModel().getFilters().size() - 1).isValidProperty()
 									.set(false);
 							return null;
@@ -720,8 +738,8 @@ public class ComputationCellController extends CellController {
 	}
 
 	public void enableAllFilterButtonsBut(int index) {
-		for(int i = 0; i < getCellModel().getFilters().size(); i++) {
-			if(i != index) {
+		for (int i = 0; i < getCellModel().getFilters().size(); i++) {
+			if (i != index) {
 				getCellModel().getFilters().get(i).setIsEditDisabled(false);
 			}
 		}

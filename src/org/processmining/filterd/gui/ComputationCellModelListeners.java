@@ -8,7 +8,6 @@ public class ComputationCellModelListeners extends CellModelListeners {
 
 	public ComputationCellModelListeners(CellController controller) {
 		super(controller);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
