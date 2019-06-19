@@ -23,24 +23,38 @@ import org.processmining.filterd.widgets.ParameterYesNoController;
 
 public abstract class FilterdAbstractReferenceableConfig extends FilterdAbstractConfig {
 
-	String attribute;
+	String attribute; 
+	//attribute to filter one which determines the concrete referenceable config
 	String key;
 	
 	public FilterdAbstractReferenceableConfig(XLog log, Filter filterType) {
 		super(log, filterType);
 	}
 
+	/**
+	 * @return true if the candidate log matches the given parametres
+	 */
 	@Override
 	public abstract boolean checkValidity(XLog candidateLog);
 
+	/**
+	 * @return true if the parametres from the component match the current log
+	 */
 	@Override
 	public abstract boolean canPopulate(FilterConfigPanelController component);
 	
+	/**
+	 * generates the panel to be displayed based on the parameters of the config
+	 */
 	@Override
 	public NestedFilterConfigPanelController getConfigPanel() {
 		return new NestedFilterConfigPanelController(parameters);
 	}
 	
+	/*
+	 * retrieves the parameters from the ui components and updates in the values
+	 * of the parameters in the parameters array based on what the user has chosen
+	 */
 	@Override
 	public FilterdAbstractConfig populate(AbstractFilterConfigPanelController abstractComponent) {
 		
@@ -48,6 +62,7 @@ public abstract class FilterdAbstractReferenceableConfig extends FilterdAbstract
 		List<ParameterController> controllers = component.getControllers();
 		for(ParameterController controller : controllers) {
 			//all cases assume that the controller has a name corresponding to the parameter name
+			//retrieve 
 			if(controller instanceof ParameterYesNoController) {
 				ParameterYesNoController casted = (ParameterYesNoController) controller;
 				ParameterYesNo param = (ParameterYesNo) getParameter(controller.getName());
