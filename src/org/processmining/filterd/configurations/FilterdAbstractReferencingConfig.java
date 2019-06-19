@@ -44,7 +44,6 @@ public abstract class FilterdAbstractReferencingConfig extends FilterdAbstractCo
 	}
 	
 	public void setConcreteReference(FilterdAbstractReferenceableConfig concreteReference) {
-		//TODO: throw illegal state exception if the concreteReference is already set.
 		this.concreteReference = concreteReference;
 	}
 	
