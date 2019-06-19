@@ -43,7 +43,17 @@ public class FilterConfigPanelController extends AbstractFilterConfigPanelContro
         }
         // populate UI
         this.title.setText(title);
-        populateFromParameters(parameters);
+        if (owner instanceof FilterdAbstractReferencingConfig) {
+        	// if the config is referencing, remove its duplicate parameters from the concrete reference before populating the config panel.
+        	List<Parameter> referenceableParameters = ((FilterdAbstractReferencingConfig) owner).getConcreteReference().getParameters(); // get the parameters from the concrete reference
+        	parameters.removeAll(referenceableParameters); // remove the parameters from the concrete reference from the referencing config.
+        	populateFromParameters(parameters); // populate the config panel.
+        	parameters.addAll(referenceableParameters); // restore the previously removed parameters.
+        } else {
+        	// if the config is not referencing, populate using all parameters.
+        	populateFromParameters(parameters); // populate the config panel.
+        }
+        
 	}
 	
 	@Override
