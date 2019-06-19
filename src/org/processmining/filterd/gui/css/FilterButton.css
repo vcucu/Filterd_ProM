@@ -21,3 +21,8 @@
 .selected .filter-name, .invalid .filter-name {
 	-fx-text-fill: #FFFFFF;
 }
+
+.filter-name {
+	-fx-font-weight: bold;
+	-fx-font-size: 14;
+}

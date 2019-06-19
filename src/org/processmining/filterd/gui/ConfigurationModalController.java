@@ -173,7 +173,10 @@ public class ConfigurationModalController {
 				throw new IllegalStateException("apply() was called before showFilterList()");
 			}
 			String userSelection = this.filterListController.getSelection();
-//			this.filterListController.setStatusLabelText("Initializing filter configuration");
+			
+			// Update FilterButton name
+			filterButtonController.getModel().setName(userSelection);
+			
 			Platform.runLater(() -> showParsingScreen());
 			new Thread(new Task<Void>() {
 

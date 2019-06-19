@@ -14,20 +14,13 @@ public class FilterButtonController {
 	private FilterButtonModel model;
 	private Pane layout;
 
-	@FXML
-	private Group buttons;
-	@FXML
-	private Label filterName;
-	@FXML
-	private HBox filterLayout;
-	@FXML
-	private Label editButton;
-	@FXML
-	private Label removeButton;
-	@FXML
-	private Label moveUpButton;
-	@FXML
-	private Label moveDownButton;
+	@FXML private Group buttons;
+	@FXML private Label filterName;
+	@FXML private HBox filterLayout;
+	@FXML private Label editButton;
+	@FXML private Label removeButton;
+	@FXML private Label moveUpButton;
+	@FXML private Label moveDownButton;
 
 	public FilterButtonController(ComputationCellController controller, FilterButtonModel model) {
 		this.controller = controller;
@@ -59,9 +52,11 @@ public class FilterButtonController {
 					if (model.getSelected()) {
 						filterLayout.getStyleClass().add("selected");
 						buttons.setVisible(true);
+						buttons.setManaged(true);
 					} else {
 						filterLayout.getStyleClass().remove("selected");
 						buttons.setVisible(false);
+						buttons.setManaged(false);
 					}
 				} else {
 					// filter became invalid (empty log or invalid configuration)
@@ -79,9 +74,11 @@ public class FilterButtonController {
 		if (selected) {
 			filterLayout.getStyleClass().add("selected");
 			buttons.setVisible(true);
+			buttons.setManaged(true);
 		} else {
 			filterLayout.getStyleClass().remove("selected");
 			buttons.setVisible(false);
+			buttons.setManaged(false);
 		}
 	}
 
@@ -99,10 +96,6 @@ public class FilterButtonController {
 
 	public void setModel(FilterButtonModel model) {
 		this.model = model;
-	}
-
-	public void setFilterName(String value) {
-		filterName.setText(value);
 	}
 
 	public void setFilterLayout(HBox temp) {
