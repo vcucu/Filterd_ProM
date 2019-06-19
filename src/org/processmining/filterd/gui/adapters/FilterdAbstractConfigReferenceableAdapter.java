@@ -15,62 +15,65 @@ public class FilterdAbstractConfigReferenceableAdapter extends FilterdAbstractCo
 	Class<?>[] typesKey = { XLog.class, Filter.class, String.class }; // constructor types for the key parameter
 	Class<?>[] typesAttribute = { XLog.class, Filter.class, String.class, List.class }; // constructor types for the attribute parameter
 	Class<?>[] typesRegular = { XLog.class, Filter.class }; // constructor types for normal referenceables
-	
+
 	@Override
 	public FilterdAbstractConfig unmarshal(FilterdAbstractConfigAdapted adaptedConfig)
 			throws InstantiationException, IllegalAccessException, ClassNotFoundException, IllegalArgumentException,
 			InvocationTargetException, NoSuchMethodException, SecurityException {
-		FilterdAbstractConfig config;
-		// get the input log and filter.
-		XLog initialInput = FilterdAbstractConfigAdapter.getInitialInput();
-		Filter filterType = (Filter) Class.forName(adaptedConfig.getfilterTypeName()).newInstance();
+		try {
+			FilterdAbstractConfig config;
+			// get the input log and filter.
+			XLog initialInput = FilterdAbstractConfigAdapter.getInitialInput();
+			Filter filterType = (Filter) Class.forName(adaptedConfig.getfilterTypeName()).newInstance();
 
-		Class<FilterdAbstractReferenceableConfig> configClass = (Class<FilterdAbstractReferenceableConfig>) Class
-				.forName(adaptedConfig.getClassName());
+			Class<FilterdAbstractReferenceableConfig> configClass = (Class<FilterdAbstractReferenceableConfig>) Class
+					.forName(adaptedConfig.getClassName());
 
-		// construct the config
-		if (constructorPresent(configClass.getConstructors(), typesAttribute)) {
-			config = configClass.getDeclaredConstructor(XLog.class, Filter.class, String.class, List.class).newInstance(
-					initialInput, filterType, ((FilterdAbstractConfigAttributeAdapted) adaptedConfig).getAttribute(),
-					Toolbox.computeComplexClassifiers(initialInput));
-		} else if (constructorPresent(configClass.getConstructors(), typesKey)) {
-			config = configClass.getDeclaredConstructor(XLog.class, Filter.class, String.class).newInstance(
-					initialInput, filterType, ((FilterdAbstractConfigKeyAdapted) adaptedConfig).getKey());
-		} else if (constructorPresent(configClass.getClass().getConstructors(), typesRegular)) {
-			config = configClass.getDeclaredConstructor(XLog.class, Filter.class).newInstance(
-					initialInput, filterType);
-		} else {
-			// adapter has not been configured for this class.
-			throw new IllegalStateException(
-					"org.processmining.filterd.gui.adapters.FilterdAbstractConfigReferenceableAdapter.unmarshal(): Constructor parameters not supported for: "
-							+ adaptedConfig.getClass().getCanonicalName());
+			// construct the config
+			if (constructorPresent(configClass.getConstructors(), typesAttribute)) {
+				config = configClass.getDeclaredConstructor(XLog.class, Filter.class, String.class, List.class).newInstance(
+						initialInput,
+						filterType,
+						((FilterdAbstractConfigAttributeAdapted) adaptedConfig).getAttribute(),
+						Toolbox.computeComplexClassifiers(initialInput));
+			} else if (constructorPresent(configClass.getConstructors(), typesKey)) {
+				config = configClass.getDeclaredConstructor(XLog.class, Filter.class, String.class).newInstance(
+						initialInput,
+						filterType,
+						((FilterdAbstractConfigKeyAdapted) adaptedConfig).getKey());
+				config = configClass.getDeclaredConstructor(XLog.class, Filter.class).newInstance(
+						initialInput,
+						filterType);
+			} else {
+				// adapter has not been configured for this class.
+				throw new IllegalStateException(
+						"org.processmining.filterd.gui.adapters.FilterdAbstractConfigReferenceableAdapter.unmarshal(): Constructor parameters not supported for: "
+								+ configClass.getCanonicalName());
+			}
+
+			// set the parameters.
+			config.setParameters(adaptedConfig.getParameters());
+			return config;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
 		}
-
-		// set the parameters.
-		config.setParameters(adaptedConfig.getParameters());
-		return config;
 	}
 
 	@Override
 	public FilterdAbstractConfigAdapted marshal(FilterdAbstractConfig uncastConfig) {
 		FilterdAbstractReferenceableConfig config = (FilterdAbstractReferenceableConfig) uncastConfig;
 		FilterdAbstractConfigAdapted adaptedConfig;
-		
-		System.out.println(uncastConfig.getClass().getCanonicalName());
-		
+
 		if (constructorPresent(config.getClass().getConstructors(), typesAttribute)) {
 			// configs that take an attribute as a constructor input.
 			adaptedConfig = new FilterdAbstractConfigAttributeAdapted();
-			((FilterdAbstractConfigAttributeAdapted) adaptedConfig)
-					.setAttribute(config.getAttribute());
+			((FilterdAbstractConfigAttributeAdapted) adaptedConfig).setAttribute(config.getAttribute());
 		} else if (constructorPresent(config.getClass().getConstructors(), typesKey)) {
 			// configs that take a key as a constructor input.
 			adaptedConfig = new FilterdAbstractConfigKeyAdapted();
-			((FilterdAbstractConfigKeyAdapted) adaptedConfig)
-					.setKey(config.getKey());
+			((FilterdAbstractConfigKeyAdapted) adaptedConfig).setKey(config.getKey());
 		} else if (constructorPresent(config.getClass().getConstructors(), typesRegular)) {
-			System.out.println("###################### Triggered");
-			System.out.println(config.getClass().getCanonicalName());
 			adaptedConfig = super.marshal(uncastConfig);
 		} else {
 			// adapter has not been configured for this class.
