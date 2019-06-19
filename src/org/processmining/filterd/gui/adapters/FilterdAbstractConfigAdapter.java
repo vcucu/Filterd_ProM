@@ -45,8 +45,7 @@ public class FilterdAbstractConfigAdapter extends XmlAdapter<FilterdAbstractConf
 			
 			config.setParameters(adaptedConfig.getParameters());
 			return config;
-		//} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | InvocationTargetException | NoSuchMethodException e) {
-		} catch (Exception e) {
+		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | InvocationTargetException | NoSuchMethodException e) {
 			e.printStackTrace();
 			return null;
 		}
