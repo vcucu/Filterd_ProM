@@ -41,6 +41,7 @@ public class FilterdAbstractConfigReferenceableAdapter extends FilterdAbstractCo
 						initialInput,
 						filterType,
 						((FilterdAbstractConfigKeyAdapted) adaptedConfig).getKey());
+			} else if (constructorPresent(configClass.getConstructors(), typesRegular)) {
 				config = configClass.getDeclaredConstructor(XLog.class, Filter.class).newInstance(
 						initialInput,
 						filterType);
