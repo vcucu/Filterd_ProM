@@ -56,8 +56,6 @@ public class FilterdAbstractConfigReferenceableAdapter extends FilterdAbstractCo
 		FilterdAbstractReferenceableConfig config = (FilterdAbstractReferenceableConfig) uncastConfig;
 		FilterdAbstractConfigAdapted adaptedConfig;
 		
-		System.out.println(uncastConfig.getClass().getCanonicalName());
-		
 		if (constructorPresent(config.getClass().getConstructors(), typesAttribute)) {
 			// configs that take an attribute as a constructor input.
 			adaptedConfig = new FilterdAbstractConfigAttributeAdapted();
@@ -69,8 +67,6 @@ public class FilterdAbstractConfigReferenceableAdapter extends FilterdAbstractCo
 			((FilterdAbstractConfigKeyAdapted) adaptedConfig)
 					.setKey(config.getKey());
 		} else if (constructorPresent(config.getClass().getConstructors(), typesRegular)) {
-			System.out.println("###################### Triggered");
-			System.out.println(config.getClass().getCanonicalName());
 			adaptedConfig = super.marshal(uncastConfig);
 		} else {
 			// adapter has not been configured for this class.
