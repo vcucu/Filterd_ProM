@@ -25,29 +25,48 @@ import javafx.beans.value.ObservableValue;
 import javafx.scene.control.ComboBox;
 
 public class FilterdEventAttrNumericalConfig extends FilterdAbstractReferenceableConfig {
+	
+	// The key.
 	String key;
+	// Parameter for selecting the range.
 	ParameterRangeFromRange<Double> range;
+	// Desired attribute values.
 	ParameterMultipleFromSet desiredValues;
+	// Type ofparameter.
 	ParameterOneFromSet parameterType;
 
 	public FilterdEventAttrNumericalConfig(XLog log, Filter filterType, String key) {
 		super(log, filterType);
-		this.key = key; 
+		// Set the key.
+		this.key = key;
+		// Create list to hold the parameters.
 		parameters = new ArrayList<Parameter>();
+		// Create list to hold the default pair.
 		ArrayList<Double> defaultPair = new ArrayList<>();
+		// Create list to hold the options pair.
 		ArrayList<Double> optionsPair = new ArrayList<>();
 
+		// String for parameter.
 		String defaultSelect = "Choose different values.";
+		// Create list for selecting.
 		ArrayList<String> selectList = new ArrayList<>();
+
+		// Add values.
 		selectList.add(defaultSelect);
 		selectList.add("Choose from interval.");// filter in or filter out
+		// Create parameter to selectt the type of parameter.
 		parameterType = new ParameterOneFromSet("parameterType",
 				"", defaultSelect, selectList);
 
+		// String for parameter.
 		String defaultOption = "Filter in";
+		// Create list for options.
 		ArrayList<String> optionList = new ArrayList<>();
+		// Add values.
 		optionList.add(defaultOption);
 		optionList.add("Filter out");// filter in or filter out
+		
+		// Create parameter for selecting the filtering option.
 		ParameterOneFromSet selectionType = new ParameterOneFromSet("selectionType",
 				"Select option for filtering.", defaultOption, optionList);
 
@@ -61,19 +80,25 @@ public class FilterdEventAttrNumericalConfig extends FilterdAbstractReferenceabl
 
 		ArrayList<Double> values = new ArrayList<>();
 		/*populate the array times with the numerical values of all events */
+		// Loop over all traces in the log.
 		for (XTrace trace: log) {
+			// Loop over all events in the trace.
 			for (XEvent event : trace) {
 				if (!event.getAttributes().containsKey(key)) continue;
 				Double value = Double.parseDouble(event.getAttributes().get(key).toString());
+				// Add all values to the list.
 				if (!values.contains(value)) values.add(value);
 			}
 		}
 
+		// Sort the values.
 		Collections.sort(values);
 		
+		// Get the values in string format for the parameter.
 		List<String> stringValues = values.stream().map(x -> x.toString())
 		        .collect(Collectors.toList());
 		
+		// Create the parameter for selecting the desired numerical values.
 		desiredValues = new ParameterMultipleFromSet(
 				"desiredValues", "Choose values:", stringValues, stringValues);
 		desiredValues.setDisappearable(true);
@@ -98,37 +123,50 @@ public class FilterdEventAttrNumericalConfig extends FilterdAbstractReferenceabl
 	}
 
 	@Override
+	/**
+	 * Getter for the configuration panel.
+	 */
 	public NestedFilterConfigPanelController getConfigPanel() {
+		// Create new nested panel.
 		NestedFilterConfigPanelController nestedPanel =  new NestedFilterConfigPanelController(parameters);
 
+		// Get the parameter "parameterType".
 		ParameterOneFromSetController parameterControl = (ParameterOneFromSetController)
 				nestedPanel.getControllers().stream()
 				.filter(c -> c.getName().equals("parameterType"))
 				.findFirst()
 				.get();
+		// Get this parameter's corresponding combo box.
 		ComboBox<String> comboBox = parameterControl.getComboBox();
 		
+		// If this combo box's value does not contain "interval"
+		// We make certain parameters invisible.
 		if (!comboBox.getValue().contains("interval")) {
-		ParameterRangeFromRangeController<Double> rangeControl;
-		 rangeControl = 
-				(ParameterRangeFromRangeController<Double>)
-				nestedPanel.getControllers().stream()
-				.filter(c -> c.getName().equals("range"))
-				.findFirst()
-				.get();
-		 rangeControl.getContents().setVisible(false);
-		 rangeControl.getContents().setManaged(false);
+			// RangeControl parameter can be set to invsible.
+			ParameterRangeFromRangeController<Double> rangeControl;
+			 rangeControl = 
+					(ParameterRangeFromRangeController<Double>)
+					nestedPanel.getControllers().stream()
+					.filter(c -> c.getName().equals("range"))
+					.findFirst()
+					.get();
+			 // Set to invisible.
+			 rangeControl.getContents().setVisible(false);
+			 // Set to unmanaged.
+			 rangeControl.getContents().setManaged(false);
 		}
 
+		// Add listener to the combo box.
 		comboBox.valueProperty().addListener(new ChangeListener<String>() {
 			@Override 
 			public void changed(ObservableValue ov, String oldValue, String newValue) {
+				// Get the parameter that holds the desired values.
 				ParameterMultipleFromSetController desiredControl = (ParameterMultipleFromSetController)
 						nestedPanel.getControllers().stream()
 						.filter(c -> c.getName().equals("desiredValues"))
 						.findFirst()
 						.get();
-				
+				// Get the parameter that holds the ranges.
 				ParameterRangeFromRangeController<Double> rangeControl;
 				 rangeControl = 
 						(ParameterRangeFromRangeController<Double>)
@@ -137,14 +175,25 @@ public class FilterdEventAttrNumericalConfig extends FilterdAbstractReferenceabl
 						.findFirst()
 						.get();
 
+				// If we don't want an interval and there is a range. 
+			    // We need to change visibility.
 				if (!newValue.contains("interval") && parameters.contains(range)) {
+					// Set the desired values parameter to visible and managed.
 					desiredControl.getContents().setVisible(true);
 					desiredControl.getContents().setManaged(true);
+					// Set the range parameter to invisible and unmanaged.
 					rangeControl.getContents().setVisible(false);
 					rangeControl.getContents().setManaged(false);
-				} else if (newValue.contains("interval") && parameters.contains(desiredValues)) {
+				}
+				// Else if it we want an interval and the parameters contain
+				// desired values.
+				// We need to change visibility.
+				else if (newValue.contains("interval") && parameters.contains(desiredValues)) {
+					// Set the desired values parameter to invisible and 
+					// unmanaged.
 					desiredControl.getContents().setVisible(false);
 					desiredControl.getContents().setManaged(false);
+					// Set the range parameter to visisble and managed.
 					rangeControl.getContents().setVisible(true);
 					rangeControl.getContents().setManaged(true);
 				}
@@ -153,16 +202,28 @@ public class FilterdEventAttrNumericalConfig extends FilterdAbstractReferenceabl
 		return nestedPanel;
 	}
 
+	/**
+	 * Checks if the configuration can populate the parameters.
+	 * 
+	 * @param component The component that populates the parameters.
+	 */
 	public boolean canPopulate(FilterConfigPanelController component) {
 		//check whether no params are empty if you populate with the component
 		return true;
 	};
 	
+	/**
+	 * Getter for the key.
+	 */
 	public String getKey() {
 		return key;
 	}
 
-
+	/**
+	 * Check if the parameters are still valid on the candidate log.
+	 * 
+	 * @param candidateLog the log to check.
+	 */
 	public boolean checkValidity(XLog log) {
 		if (key == null) return true;
 		
