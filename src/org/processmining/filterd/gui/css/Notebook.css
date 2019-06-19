@@ -1,34 +1,52 @@
+/* Class to change background color to black */
 .bg-black {
 	-fx-background-color: #000000;
 }
 
+/* Set color of round buttons */
 .round-button.append-cell-button {
 	-fx-background-color: #C4C4C4;
 }
 
+/* Change color of add cell button on hover */
 .round-button.append-cell-button:hover {
 	-fx-background-color: #646464;
 }
 
+/* Set color of round buttons */
 .notebook-toolbar .round-button {
 	-fx-background-color: #505050;
 }
 
+/* Change color of round buttons on hover */
 .notebook-toolbar .round-button:hover {
 	-fx-background-color: #288C28;
 }
 
+/* Set size of (not labeled) round buttons */
 .notebook-layout .round-button :not(.labeled-round-button) {
 	-fx-pref-width: 30;
 	-fx-pref-height: 30;
 }
 
+/* Set size of labeled round buttons (e.g. Export to workspace button) */
 .notebook-layout .labeled-round-button {
 	-fx-pref-height: 30;
 	-fx-label-padding: 0 10 0 5;
 }
 
+/* Set size of text and icon inside labeled round buttons (e.g. Export to workspace button) */
 .notebook-layout .labeled-round-button > * {
 	-fx-pref-width: 30;
 	-fx-pref-height: 30;
+}
+
+/* Set the height of toggle buttons */
+.notebook-layout .toggle-buttons > * {
+	-fx-pref-height: 30;
+}
+
+/* Increase scrollbar width */
+.notebook-layout .scroll-bar:vertical {
+    -fx-pref-width: 20;
 }

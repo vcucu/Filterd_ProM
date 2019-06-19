@@ -1,17 +1,21 @@
+/* Change cursor of the addFilter button in the filter list */
 .addFilterButton {
 	 -fx-cursor: hand;	 
 }
 
+/* Round borders for expand button */
 .expand-button {
 	-fx-background-color: #707070;
 	-fx-background-radius: 10 0 0 10;
 }
 
+/* Set size of icon in the expand button */
 .expand-button > .icon-svg {
 	-fx-scale-x: 0.40;
 	-fx-scale-y: 0.20;
 }
 
+/* Add border to children of the visualizer pane */
 .visualizer-pane > * {
 	-fx-border-width: 1;
 	-fx-border-color: #CACACA;

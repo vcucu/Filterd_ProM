@@ -1,20 +1,25 @@
+/* Remove default styling of text areas */
 .text-area {
     -fx-background-insets: 0;
     -fx-background-color: transparent, white, transparent, white;
 }
 
+/* Remove default styling of the content of text areas */
 .text-area .content {
     -fx-background-color: transparent, white, transparent, white;
 }
 
+/* Remove default styling of text areas when focused */
 .text-area:focused .content {
     -fx-background-color: transparent, white, transparent, white;
 }
 
+/* Change highlight color of a text areas */
 .text-area:focused {
     -fx-highlight-fill: #7ecfff;
 }
 
+/* Style content of text area */
 .text-area .content {
     -fx-padding: 10px;
     -fx-text-fill: gray;

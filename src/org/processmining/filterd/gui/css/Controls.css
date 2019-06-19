@@ -1,82 +1,98 @@
+/* This file contains CSS rules for all the controls that the Filterd plugin uses.
+ * The controls are styled to resemble the original ProM look and feel.
+ * Refinements (e.g. size and color) for specific views are applied in their corresponding files.  
+ */
+
+/* Halve the size of icons (they are generally contained inside labels) */
 .icon-svg {
 	-fx-scale-x: 0.5;
 	-fx-scale-y: 0.5;
 }
 
+/* Make the ComboBoxes round */
 .round-combobox {
 	-fx-background-radius: 15;
 	-fx-background-color: linear-gradient(#ABABAB, #A9A9A9, #8B8B8B, #898989);
 }
 
+/* Style labels to look like the round ProM buttons */
 .round-button {
 	-fx-background-radius: 100;
 	-fx-background-color:  #787878;
 }
 
+/* Set the color of the icons in the round buttons to white */
 .round-button > .icon-svg {
 	-fx-background-color: white;
 }
 
+/* Change background color of buttons on hover */
 .round-button:hover, .toggle-buttons > *:hover {
 	-fx-background-color: #288C28;
 }
 
+/* Remove arrow from MenuButtons */
 .dropdown-button .arrow-button  {
     -fx-opacity: 0.0;
 }
 
+/* Set color of dropdown button to white.
+ * This is done because the used MenuButtons have the shape of 3 dots.  
+ */
 .dropdown-button {
 	-fx-background-color: #FFFFFF;
 }
 
-.cell-layout .round-button {
-	-fx-pref-width: 24;
-	-fx-pref-height: 24;
-}
-
+/* Set the color of the icons inside the icon buttons (just icon, no circle around them) to white */
 .icon-button > .icon-svg {
 	-fx-background-color: white;
 }
 
+/* Style the borders of the first toggle button in a group of toggle buttons */
 .toggle-buttons > .toggle-button1 {
 	-fx-background-radius: 15 0 0 15;
 }
-
+/* Style the borders of the second toggle button in a group of toggle buttons */
 .toggle-buttons > .toggle-button2 {
 	-fx-background-radius: 0 15 15 0;
 }
 
+/* Set the background of the toggle buttons inside a group */
 .toggle-buttons > * {
 	-fx-background-color: #939393;
 }
 
+/* Style the selected toggle button in a group of toggle buttons */
 .toggle-buttons > :disabled {
 	-fx-background-color: #8C8C14;
 	-fx-opacity: 1.0;
 }
 
-.notebook-layout .toggle-buttons > * {
-	-fx-pref-height: 30;
-}
-
+/* Change the color of the text in a toggle button, when selected ` */
 .toggle-buttons > :disabled {
 	-fx-text-fill: white;
 }
 
+/* Class for dashed border.
+ * It is used for the AddFilter label in Computation cells.
+ */
 .dashed-border {
 	-fx-border-style: segments(6);
 	-fx-border-width: 1.5;
 	-fx-border-color: #787878;
 }
 
+/* Set background color of slider tracks */
 .range-slider .track, .slider .track {
 	-fx-background-color: #d6d6d6;
 }
 
+/* Set color of the slider thumbs */
 .range-slider .low-thumb, .range-slider .high-thumb, .slider .thumb {
 	-fx-background-color: #858585;
 }
 
+/* Set background color of the slider range-bars */
 .range-slider .range-bar {
 	-fx-background-color: #646464;
 }
