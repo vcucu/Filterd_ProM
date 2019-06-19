@@ -17,6 +17,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
+/**
+ * Default configuration panel for filters. Uses all the methods from its abstract parent class, 
+ * but has the addition of special parameter one from set extended. 
+ * 
+ * @author Filip Davidovic
+ */
 public class FilterConfigPanelController extends AbstractFilterConfigPanelController {
 	
 	@FXML private VBox leftPanel;
