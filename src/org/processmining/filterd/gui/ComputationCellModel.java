@@ -28,7 +28,6 @@ import org.processmining.framework.util.Pair;
 
 import javafx.application.Platform;
 import javafx.beans.Observable;
-import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -46,13 +45,13 @@ import javafx.util.Callback;
 
 public class ComputationCellModel extends CellModel {
 
-	private ProMCanceller canceller;
-	private YLog inputLog;
-	private List<YLog> inputLogs;
+	public ProMCanceller canceller;
+	public YLog inputLog;
+	public List<YLog> inputLogs;
 	private ObservableList<YLog> outputLogs;
-	private int indexOfInputOwner;
+	public int indexOfInputOwner;
 	private ObservableList<FilterButtonModel> filters;
-	private SimpleBooleanProperty isComputing;
+	public SimpleBooleanProperty isComputing;
 	private Task<Void> computeTask;
 
 	/**
@@ -138,27 +137,11 @@ public class ComputationCellModel extends CellModel {
 		}
 	}
 
-	public YLog getInputLog() {
-		return this.inputLog;
-	}
-
-	public void setIndexOfInputOwner(int indexOfInputOwner) {
-		this.indexOfInputOwner = indexOfInputOwner;
-	}
-
-	public int getIndexOfInputOwner() {
-		return this.indexOfInputOwner;
-	}
-
 	public void setInputLogs(List<YLog> eventLogs) {
-		List<YLog> oldState = new ArrayList<YLog>(this.getInputLogs());
+		List<YLog> oldState = new ArrayList<YLog>(this.inputLogs);
 		this.inputLogs = eventLogs;
 		//change the items in combobox that are displayed after list in model changes
 		property.firePropertyChange("setInputLogs", oldState, eventLogs);
-	}
-
-	public List<YLog> getInputLogs() {
-		return inputLogs;
 	}
 
 	public void setOutputLogs(ObservableList<YLog> outputLogs) {
@@ -169,14 +152,6 @@ public class ComputationCellModel extends CellModel {
 		return outputLogs;
 	}
 
-	public boolean isComputing() {
-		return this.isComputing.get();
-	}
-
-	public BooleanProperty isComputingProperty() {
-		return this.isComputing;
-	}
-
 	public void selectFilter(FilterButtonModel model) {
 		for (FilterButtonModel filter : filters) {
 			filter.setSelected(false);
@@ -184,15 +159,6 @@ public class ComputationCellModel extends CellModel {
 		}
 		model.setSelected(true);
 		model.isValidProperty().set(true);
-	}
-
-	/**
-	 * Sets the canceller of this Model. Used when loading a notebook from File.
-	 *
-	 * @param canceller
-	 */
-	public void setCanceller(ProMCanceller canceller) {
-		this.canceller = canceller;
 	}
 
 	/**

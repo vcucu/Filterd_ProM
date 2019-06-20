@@ -47,9 +47,9 @@ public class FilterButtonController {
 	 */
 	private void bindProperties() {
 		// bind the name property with the label's text 
-		filterName.textProperty().bind(model.getNameProperty());
+		filterName.textProperty().bind(model.name);
 		// bind the selected property with the look of the filter button
-		model.getSelectedProperty().addListener((observable, oldvalue, newvalue) -> setSelected(newvalue));
+		model.selected.addListener((observable, oldvalue, newvalue) -> setSelected(newvalue));
 		// bind the valid property with the look of the filter button
 		model.isValidProperty().addListener(new ChangeListener<Boolean>() {
 
@@ -76,7 +76,7 @@ public class FilterButtonController {
 			}
 		});
 		// bind the edit disabled property with the disabled property of the edit button
-		editButton.disableProperty().bind(model.isEditDisabledProperty());
+		editButton.disableProperty().bind(model.isEditDisabled);
 	}
 
 	/**

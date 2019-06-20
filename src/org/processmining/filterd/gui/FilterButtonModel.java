@@ -17,14 +17,14 @@ import javafx.beans.property.StringProperty;
  */
 public class FilterButtonModel {
 
-	private StringProperty name; // name of the filter button (JavaFX property so that it can be binded)
+	public StringProperty name; // name of the filter button (JavaFX property so that it can be binded)
 	private int index; // index of the filter button in the filter button list
-	private BooleanProperty selected; // is the filter button selected (JavaFX property so that it can be binded)
+	public BooleanProperty selected; // is the filter button selected (JavaFX property so that it can be binded)
 	private FilterdAbstractConfig filterConfig; // filter configuration that this button is associated with
 	private XLog inputLog; // input log for the filter
 	private XLog outputLog; // output log of the filter
 	private BooleanProperty isValid; // is the filter configuration valid (JavaFX property so that it can be binded)
-	private BooleanProperty isEditDisabled; // is the edit button disabled (JavaFX property so that it can be binded)
+	public BooleanProperty isEditDisabled; // is the edit button disabled (JavaFX property so that it can be binded)
 
 	/**
 	 * Constructor for importing/exporting. This constructor needs to exist
@@ -57,15 +57,6 @@ public class FilterButtonModel {
 	}
 
 	/**
-	 * Getter for the name JavaFX property
-	 * 
-	 * @return name JavaFX property
-	 */
-	public StringProperty getNameProperty() {
-		return name;
-	}
-
-	/**
 	 * Setter for the name of the filter button.
 	 * 
 	 * @param value
@@ -76,15 +67,6 @@ public class FilterButtonModel {
 	}
 
 	/**
-	 * Getter for the isEditDisabled boolean variable
-	 * 
-	 * @return boolean stating whether edit button is disabled
-	 */
-	public boolean isEditDisabled() {
-		return this.isEditDisabled.get();
-	}
-
-	/**
 	 * Setter for the isEditDisabled boolean variable
 	 * 
 	 * @param isEditDisabled
@@ -92,10 +74,6 @@ public class FilterButtonModel {
 	 */
 	public void setIsEditDisabled(boolean isEditDisabled) {
 		this.isEditDisabled.set(isEditDisabled);
-	}
-
-	public BooleanProperty isEditDisabledProperty() {
-		return this.isEditDisabled;
 	}
 
 	public XLog getInputLog() {
@@ -135,10 +113,6 @@ public class FilterButtonModel {
 	@XmlElement
 	public boolean getSelected() {
 		return selected.get();
-	}
-
-	public BooleanProperty getSelectedProperty() {
-		return selected;
 	}
 
 	public void setSelected(boolean value) {

@@ -267,19 +267,6 @@ public class NotebookModel {
 	}
 
 	/**
-	 * Recomputes all cells in the notebook that are a descendant of the input
-	 * cell.
-	 * 
-	 * @param cell
-	 *            The cell whose descendants to recompute.
-	 */
-	public void recomputeFrom(CellModel cell) {
-		//shouldn't this method belong to the NotebookController?
-		//or is this invoked by an action listener on the cells?
-		//TODO: implement
-	}
-
-	/**
 	 * Saves the current notebook to the workspace.
 	 */
 	public void saveNotebook() {
@@ -292,16 +279,6 @@ public class NotebookModel {
 		} catch (JAXBException e) {
 			e.printStackTrace();
 		}
-	}
-
-	/**
-	 * Loads a notebook from the workspace into the current notebook.
-	 * 
-	 * @param name
-	 *            The name of the notebook to load from the workspace.
-	 */
-	public void loadNotebook(String name) {
-		//TODO: implement
 	}
 
 	/**
@@ -318,7 +295,7 @@ public class NotebookModel {
 		for (int i = 0; i < this.getCells().size(); i++) {
 			CellModel cell = this.getCells().get(i);
 			if (cell instanceof ComputationCellModel) {
-				List<YLog> result = new ArrayList<YLog>(((ComputationCellModel) cell).getInputLogs());
+				List<YLog> result = new ArrayList<YLog>(((ComputationCellModel) cell).inputLogs);
 				result.remove(removedLog);
 				((ComputationCellModel) cell).setInputLogs(FXCollections.observableArrayList(result));
 			}
@@ -416,10 +393,6 @@ public class NotebookModel {
 
 	public boolean isComputing() {
 		return this.isComputing.get();
-	}
-
-	public void setComputing(boolean value) {
-		this.isComputing.setValue(value);
 	}
 
 	public BooleanProperty isComputingProperty() {

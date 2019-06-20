@@ -38,7 +38,7 @@ public class ComputationCellModelTest extends FilterdPackageTest {
 		// Check that the computation cell model was properly created
 		assertTrue(cell instanceof ComputationCellModel);
 		// Get the list of input logs
-		List<YLog> inputLogs = cell.getInputLogs();
+		List<YLog> inputLogs = cell.inputLogs;
 		// Check the list of input logs was properly initialized
 		assertTrue(logs.equals(inputLogs));
 		// Check the output list is empty
@@ -77,7 +77,7 @@ public class ComputationCellModelTest extends FilterdPackageTest {
 		// Set a new new log for the cell
 		cell.setInputLog(initialLog);
 		// Check that the new log was properly set
-		assertTrue(equalLog(originalLog, cell.getInputLog().get()));
+		assertTrue(equalLog(originalLog, cell.inputLog.get()));
 	}
 	
 	@Test
@@ -106,7 +106,7 @@ public class ComputationCellModelTest extends FilterdPackageTest {
 		// Set a new input log list
 		cell.setInputLogs(logs);
 		// Get the newly set input log list
-		List<YLog> inputLogs = cell.getInputLogs();
+		List<YLog> inputLogs = cell.inputLogs;
 		// Check that the list is equal to what was initially set
 		assertTrue(logs.equals(inputLogs));
 	}
@@ -123,7 +123,7 @@ public class ComputationCellModelTest extends FilterdPackageTest {
 		// Set a new input log list
 		cell.setOutputLogs(logs);
 		// Get the newly set input log list
-		List<YLog> outputLogs = cell.getInputLogs();
+		List<YLog> outputLogs = cell.inputLogs;
 		// Check that the list is equal to what was initially set
 		assertTrue(logs.equals(outputLogs));
 	}
@@ -258,11 +258,11 @@ public class ComputationCellModelTest extends FilterdPackageTest {
 		// Create new computation cell model instance
 		ComputationCellModel cell = new ComputationCellModel(null, 0, null, new ArrayList<>());
 		// Get the state of the cell model
-		boolean computing = cell.isComputing();
+		boolean computing = cell.isComputing.get();
 		// Check the state of the cell model
 		assertFalse(computing);
 		// Get the computing property of the cell model
-		BooleanProperty compProp = cell.isComputingProperty();
+		BooleanProperty compProp = cell.isComputing;
 		// Check that the property was properly returned
 		assertFalse(compProp.get());
 	}

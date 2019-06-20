@@ -118,7 +118,7 @@ public class ComputationCellController extends CellController {
 	public void initialize() {
 		ComputationCellModel model = this.getCellModel();
 		// Load event logs in cmbEventLog and select "Initial input"
-		cmbEventLog.getItems().addAll(model.getInputLogs());
+		cmbEventLog.getItems().addAll(model.inputLogs);
 		cmbEventLog.getSelectionModel().selectFirst();
 		setXLog();
 		// Add listeners to the basic model components
@@ -143,10 +143,10 @@ public class ComputationCellController extends CellController {
 		getCellModel().bindCellName(cellName.textProperty());
 
 		// Add listeners for input logs
-		addInputLogsListeners(model.getInputLogs());
+		addInputLogsListeners(model.inputLogs);
 
 		// Change compute button icon (play / pause) when the computation stops / starts
-		this.getCellModel().isComputingProperty().addListener((observable, oldValue, newValue) -> {
+		this.getCellModel().isComputing.addListener((observable, oldValue, newValue) -> {
 			if (newValue) {
 				Utilities.changeIcon(computeButton, "play-solid", "pause-solid");
 			} else {
@@ -238,7 +238,7 @@ public class ComputationCellController extends CellController {
 
 	public void addInputLogsListeners(List<YLog> logs) {
 		ComputationCellModel model = this.getCellModel();
-		for (YLog log : model.getInputLogs()) {
+		for (YLog log : model.inputLogs) {
 			log.getNameProperty().addListener(new ChangeListener<String>() {
 				@Override
 				public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
@@ -432,7 +432,7 @@ public class ComputationCellController extends CellController {
 
 	@FXML
 	public void computeHandler() {
-		if (getCellModel().isComputing()) {
+		if (getCellModel().isComputing.get()) {
 			getCellModel().cancelCompute();
 		} else {
 			getCellModel().compute();
@@ -625,7 +625,7 @@ public class ComputationCellController extends CellController {
 						XLog inputLog;
 						ComputationCellModel model = (ComputationCellModel) cellModel;
 						// if the input log was selected, there was definitely no computation
-						if (model.getInputLog().get() == null) {
+						if (model.inputLog.get() == null) {
 							throw new IllegalStateException("No input log selected");
 						}
 						FilterButtonModel lastFilterButton = model.getFilters().get(model.getFilters().size() - 1); // this is the filter button that we are currently configuring
@@ -633,7 +633,7 @@ public class ComputationCellController extends CellController {
 						if (lastFilterButton.getInputLog() != null) {
 							inputLog = lastFilterButton.getInputLog(); // input log is set in the addFilter() method in this class
 						} else {
-							inputLog = model.getInputLog().get(); // if filter input log is null, use the cell input log
+							inputLog = model.inputLog.get(); // if filter input log is null, use the cell input log
 						}
 						FilterdAbstractConfig filterConfig = null;
 						// do not accept empty logs

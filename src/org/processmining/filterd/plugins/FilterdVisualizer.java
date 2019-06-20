@@ -118,13 +118,13 @@ public class FilterdVisualizer {
 				for (CellModel cellModel : model.getCells()) {
 					if (cellModel instanceof ComputationCellModel) {
 						ComputationCellModel computationCellModel = (ComputationCellModel) cellModel;
-						if (computationCellModel.getIndexOfInputOwner() == -1) {
+						if (computationCellModel.indexOfInputOwner == -1) {
 							System.out.println(
 									"[*] Setting " + cellModel.getCellName() + " to initial input. Index of owner is "
-											+ Integer.toString(computationCellModel.getIndexOfInputOwner()));
+											+ Integer.toString(computationCellModel.indexOfInputOwner));
 							computationCellModel.setInputLog(model.getInitialInput());
 						} else {
-							CellModel inputOwner = model.getCells().get(computationCellModel.getIndexOfInputOwner());
+							CellModel inputOwner = model.getCells().get(computationCellModel.indexOfInputOwner);
 							System.out.println("Setting " + cellModel.getCellName() + " to " + inputOwner.getCellName()
 									+ "'s output");
 							computationCellModel

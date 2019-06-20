@@ -40,17 +40,28 @@ public class NotebookController {
 	 * variables containing the (important) UI elements so they can be
 	 * interacted with in the code.
 	 */
-	@FXML private Button autoButton;
-	@FXML private Button manualButton;
-	@FXML private Label computeButton;
-	@FXML private Label exportButton;
-	@FXML private VBox cellsLayout;
-	@FXML private Label appendCellButton;
-	@FXML private HBox addCellHBox;
-	@FXML private Button addComputationCellButton;
-	@FXML private Button addTextCellButton;
-	@FXML private VBox notebookLayout;
-	@FXML private HBox toolbarLayout;
+	@FXML
+	private Button autoButton;
+	@FXML
+	private Button manualButton;
+	@FXML
+	private Label computeButton;
+	@FXML
+	private Label exportButton;
+	@FXML
+	private VBox cellsLayout;
+	@FXML
+	private Label appendCellButton;
+	@FXML
+	private HBox addCellHBox;
+	@FXML
+	private Button addComputationCellButton;
+	@FXML
+	private Button addTextCellButton;
+	@FXML
+	private VBox notebookLayout;
+	@FXML
+	private HBox toolbarLayout;
 
 	/**
 	 * The constructor which sets the model. Note that the constructor does not
@@ -292,7 +303,7 @@ public class NotebookController {
 				// TODO: make sure we iterate through the cells in order of their index.
 				cell.setContext(model.getPromContext()); // set the context for the cell.
 				if (cell.getClass() == ComputationCellModel.class) {
-					((ComputationCellModel) cell).setCanceller(model.getPromCanceller()); // set the canceller for this cell.
+					((ComputationCellModel) cell).canceller = model.getPromCanceller(); // set the canceller for this cell.
 					((ComputationCellModel) cell).setInputLogs(model.getOutputLogsTill(cell.getIndex())); // set the available input logs for this cell.
 					// TODO: set the correct input log for the cell. In order to do this cell need to start keeping track of the index of the cell whoses output event log they are using.
 				}
@@ -349,8 +360,7 @@ public class NotebookController {
 	// Do NOT make this public! - Omar
 	private void showAddCellModal(int index) {
 		addCellHBox.setVisible(true); // makes the content of the modal (HBox) visible.
-		addCellHBox.setManaged(true); // makes the modal (HBox) take up space. This option is note available in the
-										// Scene Builder.
+		addCellHBox.setManaged(true); // makes the modal (HBox) take up space. This option is note available in the Scene Builder.
 		cellsLayout.getChildren().add(index, addCellHBox);
 	}
 
