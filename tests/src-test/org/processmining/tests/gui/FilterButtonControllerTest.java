@@ -75,20 +75,6 @@ public class FilterButtonControllerTest extends TestCase {
 	}
 	
 	@Test
-	public void testSetFilterName() {
-		// Setup new filter button
-		setupNewFilterButton();
-		try {
-			// Set a new name for the filter button
-			controller.setFilterName("Filterd");
-			// Should throw a null pointer because view is not initialized
-			fail("NullPointerException was NOT thrown!");
-		} catch (Throwable exception) {
-			assertFalse(exception.equals(null));
-		}
-	}
-	
-	@Test
 	public void testFilterLayoutMethods() {
 		// Setup new filter button
 		setupNewFilterButton();

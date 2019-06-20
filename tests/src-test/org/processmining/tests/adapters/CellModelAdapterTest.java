@@ -1,7 +1,5 @@
 package org.processmining.tests.adapters;
 
-import java.util.ArrayList;
-
 import org.junit.Test;
 import org.processmining.filterd.gui.ComputationCellModel;
 import org.processmining.filterd.gui.TextCellModel;
@@ -11,10 +9,13 @@ import org.processmining.filterd.gui.adapters.TextCellModelAdapted;
 import org.processmining.filterd.models.YLog;
 import org.processmining.tests.filters.FilterdPackageTest;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 public class CellModelAdapterTest extends  FilterdPackageTest {
 	
 	CellModelAdapter adapter = new CellModelAdapter();
-	ArrayList<YLog> logs = new ArrayList<>();
+	ObservableList<YLog> logs;
 	
 	public CellModelAdapterTest() throws Exception {
 		super();
@@ -27,6 +28,7 @@ public class CellModelAdapterTest extends  FilterdPackageTest {
 		// --------------- TESTING MARSHAL ---------------
 		// Create new YLog
 		YLog log = new YLog(0, "Original Log", originalLog, 0);
+		logs = FXCollections.observableArrayList();
 		// Add the new log to the array list
 		logs.add(log);
 		// Create new computation cell model

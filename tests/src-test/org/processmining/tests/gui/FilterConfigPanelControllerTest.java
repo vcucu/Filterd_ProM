@@ -59,49 +59,6 @@ public class FilterConfigPanelControllerTest extends TestCase {
 	}
 	
 	@Test
-	public void testFilterConfigPanelPlacement() {
-		// Setup new filter config panel controller
-		setupFilterConfigPanel();
-		// Get the value of the placement boolean
-		Boolean placement = controller.isPlaceInLeftPane();
-		// Check that the variable was properly initialized
-		assertFalse(placement);
-		// Set new value for the placement boolean
-		controller.setPlaceInLeftPane(true);
-		// Check that the variable was properly set
-		assertTrue(controller.isPlaceInLeftPane());
-	}
-	
-	@Test
-	public void testGetFilterConfigPanels() {
-		// Setup new filter config panel controller
-		setupFilterConfigPanel();
-		// Get the left panel
-		VBox leftPanel = controller.getLeftPanel();
-		// Get the right panel
-		VBox rightPanel = controller.getRightPanel();
-		// Check that the panels were properly initialized
-		assertEquals(leftPanel, null);
-		assertEquals(rightPanel, null);
-	}
-	
-	@Test
-	public void testFilterConfigPanelsPlacement() {
-		// Setup new filter config panel controller
-		setupFilterConfigPanel();
-		// Get the next placement container
-		VBox container = controller.getNextContainer();
-		// Check the container is properly returned
-		assertEquals(container, null);
-		// Set new value for the placement variable
-		controller.setPlaceInLeftPane(true);
-		// Get the next placement container
-		container = controller.getNextContainer();
-		// Check the container is properly returned
-		assertEquals(container, null);
-	}
-	
-	@Test
 	public void testFilterConfigPanelAddParameter() {
 		// Setup new filter config panel controller
 		setupFilterConfigPanel();
