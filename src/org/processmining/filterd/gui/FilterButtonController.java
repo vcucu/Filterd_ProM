@@ -124,6 +124,17 @@ public class FilterButtonController {
 		return this.filterLayout;
 	}
 
+	/**
+	 * Method used to set or unset this button as invalid graphically. This
+	 * means that the cell will be presented to the user as red, with an error
+	 * message, etc.
+	 * 
+	 * @param val
+	 *            if this value is true, the cell should become invalid. if this
+	 *            value is false, the cell should not be invalid. note that the
+	 *            latter does not mean that the cell is valid, but rather that
+	 *            it is not graphically represented as invalid.
+	 */
 	public void setInvalid(boolean val) {
 		if (val) {
 			filterLayout.getStyleClass().add("invalid");

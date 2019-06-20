@@ -12,19 +12,19 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 /**
- * Model for the filter buttons. This component contains all the data
- * associated with a filter button.
+ * Model for the filter buttons. This component contains all the data associated
+ * with a filter button.
  */
 public class FilterButtonModel {
 
-	private StringProperty name; // name of the filter button (javafx property so that it can be binded)
+	private StringProperty name; // name of the filter button (JavaFX property so that it can be binded)
 	private int index; // index of the filter button in the filter button list
-	private BooleanProperty selected; // is the filter button selected (javafx property so that it can be binded)
+	private BooleanProperty selected; // is the filter button selected (JavaFX property so that it can be binded)
 	private FilterdAbstractConfig filterConfig; // filter configuration that this button is associated with
 	private XLog inputLog; // input log for the filter
 	private XLog outputLog; // output log of the filter
-	private BooleanProperty isValid; // is the filter configuration valid (javafx property so that it can be binded)
-	private BooleanProperty isEditDisabled; // is the edit button disabled (javafx property so that it can be binded)
+	private BooleanProperty isValid; // is the filter configuration valid (JavaFX property so that it can be binded)
+	private BooleanProperty isEditDisabled; // is the edit button disabled (JavaFX property so that it can be binded)
 
 	/**
 	 * Constructor for importing/exporting. This constructor needs to exist
@@ -113,7 +113,8 @@ public class FilterButtonModel {
 	/**
 	 * Setter for the output log of the filter.
 	 * 
-	 * @param outputLog output log of the filter
+	 * @param outputLog
+	 *            output log of the filter
 	 */
 	public void setOutputLog(XLog outputLog) {
 		this.outputLog = outputLog;
@@ -144,6 +145,12 @@ public class FilterButtonModel {
 		this.selected.set(value);
 	}
 
+	/**
+	 * Getter for the selected property of this filter button. Intended to be
+	 * used by controllers to set the bindings.
+	 * 
+	 * @return selected property of this filter button
+	 */
 	public BooleanProperty selectedProperty() {
 		return selected;
 	}
@@ -178,6 +185,12 @@ public class FilterButtonModel {
 		}
 	}
 
+	/**
+	 * Getter for the valid property of this filter button. Intended to be used
+	 * by controllers to set the bindings.
+	 * 
+	 * @return valid property of this filter button
+	 */
 	public BooleanProperty isValidProperty() {
 		return this.isValid;
 	}
