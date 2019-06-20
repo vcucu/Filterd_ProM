@@ -471,6 +471,7 @@ public class FilterFrequencyOccurenceTest extends FilterdPackageTest{
 		filterInOut.setChosen(inOrOut);
 		
 
+		/* add every parameter */
 		parameters.add(classifierParameter);
 		parameters.add(frequencyOccurranceParameter);
 		parameters.add(rangeFreq);
