@@ -93,6 +93,10 @@ public class FilterdTraceStartEventConfig extends FilterdAbstractReferencingConf
 	}
 
 
+	/**
+	 * Changes the content of the configuration according to the 
+	 * selected attributes
+	 */
 	@Override
 	public FilterdAbstractConfig changeReference(
 			ParameterOneFromSetExtendedController controller) {
@@ -107,6 +111,13 @@ public class FilterdTraceStartEventConfig extends FilterdAbstractReferencingConf
 		}		
 		return concreteReference;
 	}
+	
+	/**
+	 * Method which modifies the log such that it only contains 
+	 * start events
+	 * @return the log containing all initial traces, but with
+	 * only one event.
+	 */
 	private XLog startEventsOnly() {
 		XLog filteredLog = Toolbox.initializeLog(log);
 		XFactory factory = XFactoryRegistry.instance().currentDefault();
