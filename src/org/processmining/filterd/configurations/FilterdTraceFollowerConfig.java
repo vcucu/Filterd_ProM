@@ -12,21 +12,17 @@ import org.deckfour.xes.model.XTrace;
 import org.processmining.filterd.filters.Filter;
 import org.processmining.filterd.gui.AbstractFilterConfigPanelController;
 import org.processmining.filterd.gui.FilterConfigPanelController;
-import org.processmining.filterd.parameters.Parameter;
 import org.processmining.filterd.parameters.ParameterMultipleFromSet;
 import org.processmining.filterd.parameters.ParameterOneFromSet;
 import org.processmining.filterd.parameters.ParameterValueFromRange;
 import org.processmining.filterd.parameters.ParameterYesNo;
 import org.processmining.filterd.tools.EmptyLogException;
-import org.processmining.filterd.widgets.ParameterController;
-import org.processmining.filterd.widgets.ParameterMultipleFromSetController;
 import org.processmining.filterd.widgets.ParameterOneFromSetController;
 import org.processmining.filterd.widgets.ParameterValueFromRangeController;
 import org.processmining.filterd.widgets.ParameterYesNoController;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.scene.control.ComboBox;
 
 public class FilterdTraceFollowerConfig extends FilterdAbstractConfig {
 
@@ -220,14 +216,13 @@ public class FilterdTraceFollowerConfig extends FilterdAbstractConfig {
 					"Filter Traces follower filter", 
 					parameters, 
 					this);
-			parameterListeners();
+			setupConfigPanel();
 		}
 
 		return configPanel;
 	}
 
-	public void parameterListeners() {
-
+	public void setupConfigPanel() {
 		/* if the time restriction box in unchecked, then hide the parameters */
 		ParameterYesNoController timeControl = (ParameterYesNoController)
 				configPanel.getControllers().stream()
@@ -269,78 +264,9 @@ public class FilterdTraceFollowerConfig extends FilterdAbstractConfig {
 				setValueVisible(newValue);
 			}
 		});
-
-
-		for(ParameterController parameter : configPanel.getControllers()) {
-			if (parameter.getName().equals("attrType")) {
-				ParameterOneFromSetController casted = (ParameterOneFromSetController) parameter;
-				ComboBox<String> comboBox = casted.getComboBox();
-				comboBox.valueProperty().addListener(new ChangeListener<String>() {
-					@Override 
-					public void changed(ObservableValue ov, String oldValue, String newValue) {
-						final XLog Llog = log;
-						List<Parameter> params = parameters;
-						if (Llog != null) {
-							for (ParameterController changingParameter : configPanel.getControllers()) {
-
-								if (changingParameter.getName().equals("firstattrValues")) {
-
-									ParameterMultipleFromSetController castedChanging = 
-											(ParameterMultipleFromSetController) changingParameter;
-									Set<String> attributeValues = new HashSet<>();
-
-									for (XTrace trace : Llog) {
-
-										for (XEvent event : trace) {
-
-											XAttributeMap eventAttrs = event.getAttributes();
-											if (eventAttrs.containsKey(newValue))
-												attributeValues.add(eventAttrs.get(newValue).toString());
-										}
-									}
-									List<String> attributeValuesList = new ArrayList<String>(attributeValues);
-									((ParameterMultipleFromSet) params.get(2))
-									.setOptions(attributeValuesList);
-									((ParameterMultipleFromSet) params.get(2))
-									.setChosen(attributeValuesList);
-									((ParameterMultipleFromSet) params.get(2))
-									.setDefaultChoice(attributeValuesList);
-									castedChanging.changeOptions(attributeValuesList);
-
-								}
-								if (changingParameter.getName().equals("endattrValues")) {
-
-									ParameterMultipleFromSetController castedChanging = 
-											(ParameterMultipleFromSetController) changingParameter;
-									Set<String> attributeValues = new HashSet<>();
-
-									for (XTrace trace : Llog) {
-
-										for (XEvent event : trace) {
-
-											XAttributeMap eventAttrs = event.getAttributes();
-											if (eventAttrs.containsKey(newValue))
-												attributeValues.add(eventAttrs.get(newValue).toString());
-										}
-									}
-									List<String> attributeValuesList = new ArrayList<String>(attributeValues);
-									((ParameterMultipleFromSet) params.get(3))
-									.setOptions(attributeValuesList);
-									((ParameterMultipleFromSet) params.get(3))
-									.setChosen(attributeValuesList);
-									((ParameterMultipleFromSet) params.get(3))
-									.setDefaultChoice(attributeValuesList);
-									castedChanging.changeOptions(attributeValuesList);
-
-								}
-							}
-
-						}
-					}
-				});
-
-			}
-		}
+		
+		// Add parameter listeners
+		parameterListeners();
 	}
 
 	/* method for setting the time parameters controller visible or invisible
