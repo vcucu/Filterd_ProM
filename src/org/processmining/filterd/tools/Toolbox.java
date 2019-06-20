@@ -299,31 +299,18 @@ public class Toolbox {
 	}
 
 	public static Map<XTrace, List<Integer>> getVariantsToTraceIndices(
-			XLog log
+			XLog log, XEventClassifier classifier
 			) {
 
 
 		// Need to get the defining attributes to do the variants.
 		Set<String> classifyingAttributes = new HashSet<>();
 
-		// Get the classifiers from the log.
-		List<XEventClassifier> classifiers = log.getClassifiers();
-
-		// Loop over every classifier. 
-		for (XEventClassifier classifier : classifiers) {
-
-			// Extract every key and add it to the set.
-			for (String key : classifier.getDefiningAttributeKeys()) {
-				classifyingAttributes.add(key);
-			}
-
-		}
-
 		// Check variants and see if they occur within both thresholds.
 
 		// Collect all variants:
-		// Variants of traces are traces with the same order of events and
-		// values for every key except for the time stamp.
+		// Variants of traces are traces with the same sequence of events 
+		// where to events are equal if they belong to the same classifier class.
 		// Create mapping from variants to trace indices
 		Map<XTrace, List<Integer>> variantsToTraceIndices = new HashMap<>();
 
@@ -342,21 +329,21 @@ public class Toolbox {
 
 			} else {
 
-				boolean isDifferentVariant = true;
+				boolean newVariant = true;
 
 				for (XTrace variant : variantsToTraceIndices.keySet()) {
 
 					if (isSameVariant(
 							log.get(i), 
 							variant, 
-							classifyingAttributes
+							classifier
 							)) {
 
 						// Add the index of this trace to the mapping of 
 						// the variant we found.
 						variantsToTraceIndices.get(variant).add(i);
 
-						isDifferentVariant = false;
+						newVariant = false;
 
 						// stop looping over variants since we found one.
 						break;
@@ -366,7 +353,7 @@ public class Toolbox {
 
 				// Add this trace because there are no variants pertaining
 				// to this trace.
-				if (isDifferentVariant) {
+				if (newVariant) {
 
 					// Add it to the mapping as a new entry.
 					List<Integer> indicesList = new ArrayList<>();
@@ -388,8 +375,7 @@ public class Toolbox {
 	public static boolean isSameVariant(
 			XTrace firstTrace, 
 			XTrace secondTrace,
-			Set<String> attributes
-			) {
+			XEventClassifier classifier) {
 
 		if (firstTrace.size() != secondTrace.size()) {
 			return false;
@@ -398,11 +384,7 @@ public class Toolbox {
 
 		for (int i = 0; i < firstTrace.size(); i++) {
 
-			if (!(isSameEvent(
-					firstTrace.get(i), 
-					secondTrace.get(i), 
-					attributes)
-					)) {
+			if (!(classifier.sameEventClass(firstTrace.get(i), secondTrace.get(i)))) {
 				return false;
 			}
 
