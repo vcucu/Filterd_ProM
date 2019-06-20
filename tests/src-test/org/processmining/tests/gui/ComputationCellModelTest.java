@@ -15,6 +15,8 @@ import org.processmining.filterd.parameters.ParameterValueFromRange;
 import org.processmining.tests.filters.FilterdPackageTest;
 
 import javafx.beans.property.BooleanProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 
 public class ComputationCellModelTest extends FilterdPackageTest {
@@ -112,7 +114,7 @@ public class ComputationCellModelTest extends FilterdPackageTest {
 	@Test
 	public void testOutputLogs() {
 		// Create new list of input logs for the computation cell
-		List<YLog> logs = new ArrayList<>();
+		ObservableList<YLog> logs = FXCollections.observableArrayList();
 		// Create new YLog
 		YLog initialLog = new YLog(0, "Original Log", originalLog, 0);
 		logs.add(initialLog);

@@ -313,18 +313,17 @@ public class ComputationCellController extends CellController {
 	}
 
 	public void changeInputLogsCombo(List<YLog> logs) {
-//		List<YLog> newLogs = new ArrayList<>();
-//		ObservableList<YLog> oldLogs = cmbEventLog.getItems();
+		List<YLog> newLogs = new ArrayList<>();
+		ObservableList<YLog> oldLogs = cmbEventLog.getItems();
 		cmbEventLog.setItems((ObservableList<YLog>) logs);
-//		// Find the logs that were not previously in the drop-down menu
-//		for (YLog log : logs) {
-//			if (!oldLogs.contains(log)) {
-//				newLogs.add(log);
-//			}
-//		}
+		// Find the logs that were not previously in the drop-down menu
+		for (YLog log : logs) {
+			if (!oldLogs.contains(log)) {
+				newLogs.add(log);
+			}
+		}
 		// Add listeners for the new logs
-		//addInputLogsListeners(newLogs);
-		addInputLogsListeners(logs);
+		addInputLogsListeners(newLogs);
 	}
 
 	/**
