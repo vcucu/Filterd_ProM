@@ -173,21 +173,23 @@ public class ParameterRangeFromRangeController<N extends Number> extends Paramet
 			double majorTickUnit = ((Double) minMaxPair.get(1) - (Double) minMaxPair.get(0)) / 4.0;
 			majorTickUnit = Math.max(1, Math.floor(majorTickUnit)); //unit must be > 0
 			// set the minimum and maximum values of the slider
-			slider.setMin((Double) minMaxPair.get(0));
+			// Note: due to a bug in javaFX the max needs to be set before a min can be set.
 			slider.setMax((Double) minMaxPair.get(1));
+			slider.setMin((Double) minMaxPair.get(0));
 			// set the default values of the slider
-			slider.setLowValue((Double) defaultValue.get(0));
+			// Note: due to a bug in javaFX the HighValue needs to be set before a LowValue can be set.
 			slider.setHighValue((Double) defaultValue.get(1));
+			slider.setLowValue((Double) defaultValue.get(0));
 			// make the slider "continuous"
 			slider.setBlockIncrement(0.1);
 			// format the labels appropriately 
 			if (isActingLikeInteger) {
-				lowValueLabel.setText(Integer.toString(defaultValue.get(0).intValue()));
 				highValueLabel.setText(Integer.toString(defaultValue.get(1).intValue()));
+				lowValueLabel.setText(Integer.toString(defaultValue.get(0).intValue()));
 			} else {
 				DecimalFormat df = new DecimalFormat("0.00");
-				lowValueLabel.setText(df.format((Double) defaultValue.get(0)));
 				highValueLabel.setText(df.format((Double) defaultValue.get(1)));
+				lowValueLabel.setText(df.format((Double) defaultValue.get(0)));
 			}
 			slider.setMajorTickUnit(majorTickUnit);
 		} else if (genericTypeClass.equals(Integer.TYPE)) {
