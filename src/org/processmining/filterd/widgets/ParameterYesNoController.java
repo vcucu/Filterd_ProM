@@ -1,12 +1,8 @@
 package org.processmining.filterd.widgets;
 
-import java.io.IOException;
-
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
-import javafx.scene.layout.VBox;
 
 /**
  * Yes / no parameter UI counterpart.
@@ -35,17 +31,10 @@ public class ParameterYesNoController extends ParameterController {
 	public ParameterYesNoController(String nameDisplayed, String name, boolean defaultValue) {
 		super(name);
 		// load contents
-		FXMLLoader fxmlLoader = new FXMLLoader(
-				getClass().getResource("/org/processmining/filterd/widgets/fxml/ParameterYesNo.fxml"));
-		fxmlLoader.setController(this);
-		try {
-			contents = (VBox) fxmlLoader.load();
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-		// set specifics
-		label.setText(nameDisplayed); // set description 
-		checkbox.setSelected(defaultValue); // set the initial value of the checkbox
+        this.loadFXMLContents(this, "/org/processmining/filterd/widgets/fxml/ParameterYesNo.fxml");
+        // set specifics
+        label.setText(nameDisplayed); // set description 
+        checkbox.setSelected(defaultValue); // set the initial value of the checkbox
 	}
 
 	/**

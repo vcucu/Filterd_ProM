@@ -8,106 +8,100 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.processmining.filterd.gui.adapters.GenericTypeClassAdapter;
 
-/**
- * Class representing a value from range parameter. This parameter gives the
- * user a range in which she can choose a single value (i.e. a value from a
- * range). Its UI counter part is slider with one thumbs.
- * 
- * @param <T>
- *            type of this parameter (can be either Integer or Double)
- */
 @XmlRootElement
 public class ParameterValueFromRange<T> extends Parameter {
-	private T defaultChoice; // default value 
-	private T chosen; // currently chosen value
-	private List<T> optionsPair; // minimum and maximum values
+	private T defaultChoice;
+	private T chosen;
+	private List<T> optionsPair;
 	@XmlElement
 	@XmlJavaTypeAdapter(GenericTypeClassAdapter.class)
-	private Class<T> genericTypeClass; // type of the generic class (T) for this object cannot be determined at runtime, so it passed in the constructor
-
+	private Class<T> genericTypeClass;
+	
 	/**
 	 * This constructor exists for importing and exporting
 	 */
 	public ParameterValueFromRange() {
 	}
-
+	
 	/**
-	 * Default constructor for this class. It does not take a genericTypeClass
-	 * parameter, so its value is set to Double (default).
+	 * This constructor is to be used whe the generic class is not specified
+	 * which sets it to Double
 	 * 
 	 * @param name
-	 *            unique identifier of the parameter (used to map parameters and
-	 *            parameter controllers in populate methods of filter
-	 *            configurations)
 	 * @param nameDisplayed
-	 *            description of this parameter, used in the UI
-	 * @param defaultPair
-	 *            value selected by default
+	 * @param defaultChoice
 	 * @param optionsPair
-	 *            minimum and maximum values
 	 */
-	public ParameterValueFromRange(String name, String nameDisplayed, T defaultChoice, List<T> optionsPair) {
+	public ParameterValueFromRange(String name, String nameDisplayed, 
+			T defaultChoice, List<T> optionsPair) {
 		super(name, nameDisplayed);
 		this.defaultChoice = defaultChoice;
 		this.optionsPair = optionsPair;
-		this.genericTypeClass = (Class<T>) Double.TYPE; // default value of genericTypeClass
-		this.chosen = defaultChoice; // set the default values to be the chosen values
+		this.genericTypeClass = (Class<T>) Double.TYPE;
+		this.chosen = defaultChoice;
 	}
-
+	
 	/**
-	 * Default constructor for this class.
-	 * 
+	 * This constructor shall be used to specify the generic class
 	 * @param name
-	 *            unique identifier of the parameter (used to map parameters and
-	 *            parameter controllers in populate methods of filter
-	 *            configurations)
 	 * @param nameDisplayed
-	 *            description of this parameter, used in the UI
-	 * @param defaultPair
-	 *            value selected by default
+	 * @param defaultChoice
 	 * @param optionsPair
-	 *            minimum and maximum values
 	 * @param genericTypeClass
-	 *            type of the generic class for this object
 	 */
-	public ParameterValueFromRange(String name, String nameDisplayed, T defaultChoice, List<T> optionsPair,
-			Class<T> genericTypeClass) {
+	public ParameterValueFromRange(String name, String nameDisplayed,
+			T defaultChoice, List<T> optionsPair, Class<T> genericTypeClass) {
 		super(name, nameDisplayed);
 		this.defaultChoice = defaultChoice;
 		this.optionsPair = optionsPair;
 		this.genericTypeClass = genericTypeClass;
-		this.chosen = defaultChoice; // set the default values to be the chosen values
+		this.chosen = defaultChoice;
 	}
-
+	
+	
+	/**
+	 * 
+	 * @return default value
+	 */
 	public T getDefaultChoice() {
 		return defaultChoice;
 	}
-
+	/**
+	 * Setter for the default value
+	 * @param defaultChoice
+	 */
 	public void setDefaultChoice(T defaultChoice) {
 		this.defaultChoice = defaultChoice;
 	}
-
 	/**
-	 * Getter for the currently selected value.
 	 * 
-	 * @return currently selected value
+	 * @return chosen value
 	 */
 	public T getChosen() {
 		return chosen;
 	}
-
+	/**
+	 * Setter for the chosen value
+	 * @param chosen
+	 */
 	public void setChosen(T chosen) {
 		this.chosen = chosen;
 	}
-
+	/**
+	 * 
+	 * @return list with two values speciying the range form which one can choose
+	 */
 	public List<T> getOptionsPair() {
 		return optionsPair;
 	}
-
+	/**
+	 * Setter for the range from which the user can choose
+	 * @param optionsPair
+	 */
 	public void setOptionsPair(List<T> optionsPair) {
 		this.optionsPair = optionsPair;
 	}
-
+	
 	public Class<T> getGenericTypeClass() {
 		return genericTypeClass;
 	}

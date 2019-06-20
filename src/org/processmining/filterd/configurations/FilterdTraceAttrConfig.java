@@ -26,7 +26,7 @@ import javafx.scene.control.ComboBox;
 public class FilterdTraceAttrConfig extends FilterdAbstractConfig {
 
 	// Set to hold all the trace attributes for the configuration panel.
-	Set<String> traceAttributes;
+	Set<String> traceKeys;
 
 	public FilterdTraceAttrConfig(XLog log, Filter filterType) {
 		super(log, filterType);
@@ -34,40 +34,40 @@ public class FilterdTraceAttrConfig extends FilterdAbstractConfig {
 		// For configuration panel.
 		parameters = new ArrayList<Parameter>();
 
-		traceAttributes = new HashSet<>();
+		traceKeys = new HashSet<>();
 
 		// Add all attributes of every trace.
 		for (XTrace trace : log) {
-			traceAttributes.addAll(trace.getAttributes().keySet());
+			traceKeys.addAll(trace.getAttributes().keySet());
 		}
 
 		// Create the parameter to select which attribute to filter by.
 		ParameterOneFromSet attribute = new ParameterOneFromSet("attribute", "Filter by",
-				traceAttributes.iterator().next(), new ArrayList<String>(traceAttributes));
+				traceKeys.iterator().next(), new ArrayList<String>(traceKeys));
 
 		// Create the parameter to select filtering in or out.
 		ParameterOneFromSet filterInOut = new ParameterOneFromSet("filterInOut", "Filter mode", "in",
 				Arrays.asList("in", "out"));
 
-		Set<String> attributeValues = new HashSet<>();
+		Set<String> keyValues = new HashSet<>();
 
 		// List of values for the currently selected attribute.
-		List<String> traceAttributesList = new ArrayList<>(traceAttributes);
+		List<String> traceKeysList = new ArrayList<>(traceKeys);
 		
 		// Add all value for the currently selected key to the attribute value
 		// parameters.
 		for (XTrace trace : log) {
 			XAttributeMap traceAttrs = trace.getAttributes();
-			attributeValues.add(traceAttrs.get(traceAttributesList.get(0)).toString());
+			keyValues.add(traceAttrs.get(traceKeysList.get(0)).toString());
 		}
 		
 		// Create list of the set of all values the selected key can take on.
-		List<String> attributeValuesList = new ArrayList<String>(attributeValues);
+		List<String> keyValuesList = new ArrayList<String>(keyValues);
 		
 		// Create the parameter to display all the values of the currently
 		// selected key.
 		ParameterMultipleFromSet attrValues = new ParameterMultipleFromSet("attrValues", "Desired values:",
-				Arrays.asList(attributeValuesList.get(0)), attributeValuesList);
+				Arrays.asList(keyValuesList.get(0)), keyValuesList);
 		
 		// Add parameters to the configuration.
 		parameters.add(attribute);

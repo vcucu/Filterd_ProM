@@ -23,7 +23,6 @@ import org.processmining.filterd.widgets.ParameterYesNoController;
 
 public abstract class FilterdAbstractReferenceableConfig extends FilterdAbstractConfig {
 
-	String attribute; 
 	//attribute to filter one which determines the concrete referenceable config
 	String key; 
 	//
@@ -130,11 +129,7 @@ public abstract class FilterdAbstractReferenceableConfig extends FilterdAbstract
 		}
 		return this;
 	}
-	
-	//getter for the attribute
-	public String getAttribute() {
-		return attribute;
-	}
+
 	
 	//getter for the key
 	public String getKey() {

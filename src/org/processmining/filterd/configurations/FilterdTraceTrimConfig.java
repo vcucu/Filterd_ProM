@@ -25,7 +25,7 @@ import javafx.scene.control.ComboBox;
 
 public class FilterdTraceTrimConfig extends FilterdAbstractConfig {
 	// Set to hold all the event attributes.
-	Set<String> eventAttributes;
+	Set<String> eventKeys;
 
 	public FilterdTraceTrimConfig(XLog log, Filter filterType) {
 		super(log, filterType);
@@ -34,7 +34,7 @@ public class FilterdTraceTrimConfig extends FilterdAbstractConfig {
 
 		// Do this by looping over every trace and collecting its attributes
 		// and adding this to the set, except for time:timestamp
-		eventAttributes = new HashSet<>();
+		eventKeys = new HashSet<>();
 		// Loop over every trace in the log.
 		for (XTrace trace : log) {
 
@@ -45,7 +45,7 @@ public class FilterdTraceTrimConfig extends FilterdAbstractConfig {
 				for (String key : event.getAttributes().keySet()) {
 					// Add all of them except timestamp.
 					if (!key.equals("time:timestamp")) {
-						eventAttributes.add(key);
+						eventKeys.add(key);
 					}
 				}
 
@@ -55,7 +55,7 @@ public class FilterdTraceTrimConfig extends FilterdAbstractConfig {
 		// Convert the set into an array list because ParameterOneFromSet takes
 		// a list as an argument.
 		List<String> eventAttributesList = 
-				new ArrayList<String>(eventAttributes);
+				new ArrayList<String>(eventKeys);
 
 		// Create the parameter for selecting the attribute.
 		ParameterOneFromSet attributeSelector = 
