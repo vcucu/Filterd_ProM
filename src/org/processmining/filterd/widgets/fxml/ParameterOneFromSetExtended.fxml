@@ -10,7 +10,7 @@
    <children>
       <HBox VBox.vgrow="ALWAYS">
          <children>
-            <Label fx:id="label" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="ParameterOneFromSet">
+            <Label fx:id="label" maxWidth="1.7976931348623157E308" text="ParameterOneFromSet">
                <HBox.margin>
                   <Insets right="5.0" />
                </HBox.margin></Label>
@@ -22,7 +22,7 @@
       </HBox>
       <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
          <children>
-            <VBox fx:id="nestedPanel" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="221.0" style="-fx-border-color: #CACACA; -fx-border-width: 1;" HBox.hgrow="ALWAYS" />
+            <VBox fx:id="nestedPanel" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-border-color: #CACACA; -fx-border-width: 1;" HBox.hgrow="ALWAYS" />
          </children>
          <VBox.margin>
             <Insets />
