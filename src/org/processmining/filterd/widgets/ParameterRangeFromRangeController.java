@@ -192,15 +192,18 @@ public class ParameterRangeFromRangeController<N extends Number> extends Paramet
 			slider.setMajorTickUnit(majorTickUnit);
 		} else if (genericTypeClass.equals(Integer.TYPE)) {
 			// slider should behave like an integer slider
+			
 			double majorTickUnit = (minMaxPair.get(1).doubleValue() - minMaxPair.get(0).doubleValue()) / 4.0;
 			majorTickUnit = Math.max(1, Math.floor(majorTickUnit)); //unit must be > 0
 			slider.setMajorTickUnit(majorTickUnit);
 			// set the minimum and maximum values of the slider
-			slider.setMin(minMaxPair.get(0).doubleValue());
+			// Note: due to a bug in javaFX the max needs to be set before a min can be set.
 			slider.setMax(minMaxPair.get(1).doubleValue());
+			slider.setMin(minMaxPair.get(0).doubleValue());
 			// set the default values of the slider
-			slider.setLowValue(defaultValue.get(0).doubleValue());
+			// Note: due to a bug in javaFX the HighValue needs to be set before a LowValue can be set.
 			slider.setHighValue(defaultValue.get(1).doubleValue());
+			slider.setLowValue(defaultValue.get(0).doubleValue()); 
 			// make the slider "discrete"
 			slider.setBlockIncrement(1);
 			// format the labels appropriately 
