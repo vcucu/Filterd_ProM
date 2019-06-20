@@ -14,6 +14,15 @@ public class FilterdAbstractConfigAdapted {
 	String className;
 	String filterTypeName;
 	List<Parameter> parameters;
+	String key;
+	
+	public String getKey() {
+		return key;
+	}
+	
+	public void setKey(String key) {
+		this.key = key;
+	}
 	
 	public String getClassName() {
 		return className;

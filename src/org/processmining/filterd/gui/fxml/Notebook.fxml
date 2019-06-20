@@ -91,7 +91,7 @@
             <String fx:value="bg-black" />
          </styleClass>
 		</HBox>
-		<ScrollPane fx:id="scrollPane" fitToWidth="true" hbarPolicy="NEVER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
+		<ScrollPane fx:id="scrollPane" fitToWidth="true" hbarPolicy="NEVER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="notebook-scrollpane" VBox.vgrow="ALWAYS">
 			<content>
 				<VBox alignment="CENTER">
 					<children>

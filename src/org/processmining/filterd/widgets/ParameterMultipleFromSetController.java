@@ -1,16 +1,13 @@
 package org.processmining.filterd.widgets;
 
-import java.io.IOException;
 import java.util.List;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
-import javafx.scene.layout.VBox;
 
 /**
  * Multiple from set parameter UI counterpart.
@@ -41,14 +38,7 @@ public class ParameterMultipleFromSetController extends ParameterController {
 			List<String> options) {
 		super(name);
 		// load contents
-		FXMLLoader fxmlLoader = new FXMLLoader(
-				getClass().getResource("/org/processmining/filterd/widgets/fxml/ParameterMultipleFromSet.fxml"));
-		fxmlLoader.setController(this);
-		try {
-			contents = (VBox) fxmlLoader.load();
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
+		this.loadFXMLContents(this, "/org/processmining/filterd/widgets/fxml/ParameterMultipleFromSet.fxml");
 		// set specifics
 		label.setText(nameDisplayed);
 		list.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);

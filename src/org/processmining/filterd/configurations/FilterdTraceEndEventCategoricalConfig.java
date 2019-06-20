@@ -32,9 +32,9 @@ public class FilterdTraceEndEventCategoricalConfig extends FilterdAbstractRefere
 	XEventClasses xEventClasses;
 	List<String> allValues = new ArrayList<>();
 	
-	String attribute;
+	String key;
 	
-	public FilterdTraceEndEventCategoricalConfig(XLog log, Filter filterType, String attribute, 
+	public FilterdTraceEndEventCategoricalConfig(XLog log, Filter filterType, String key, 
 			List<XEventClassifier> classifiers) {
 		super(log, filterType);
 		parameters = new ArrayList<Parameter>();
@@ -46,7 +46,7 @@ public class FilterdTraceEndEventCategoricalConfig extends FilterdAbstractRefere
 		
 		// check whether the selected string is an attribute or a classifier
 		for (XEventClassifier c: classifiers) {
-			if (c.name().equals(attribute)) {
+			if (c.name().equals(key)) {
 				//if it is a classifier than create eventclasses object accordingly
 				isAttribute = false; // the selected string is a complex classifier				
 				xEventClasses = new XEventClasses(c);
@@ -62,7 +62,7 @@ public class FilterdTraceEndEventCategoricalConfig extends FilterdAbstractRefere
 		if (isAttribute) {
 			//if it is an attribute than create eventclasses object accordingly
 			XEventAttributeClassifier attrClassifier = new XEventAttributeClassifier(
-					"attrClassifier", attribute);
+					"attrClassifier", key);
 			
 			xEventClasses = new XEventClasses(attrClassifier);
 			xEventClasses = XEventClasses.deriveEventClasses(attrClassifier, endEventsLog);
@@ -103,8 +103,8 @@ public class FilterdTraceEndEventCategoricalConfig extends FilterdAbstractRefere
 			for (XTrace trace : endEventsLog) {
 				for (XEvent event : trace) {
 					String value;
-					if (event.getAttributes().containsKey(attribute)) {
-						value = event.getAttributes().get(attribute).toString();
+					if (event.getAttributes().containsKey(key)) {
+						value = event.getAttributes().get(key).toString();
 					} else {
 						continue;
 					}
@@ -137,8 +137,8 @@ public class FilterdTraceEndEventCategoricalConfig extends FilterdAbstractRefere
 		return filteredLog;
 	}
 	
-	public String getAttribute() {
-		return attribute;
+	public String getKey() {
+		return key;
 	}
 	
 	

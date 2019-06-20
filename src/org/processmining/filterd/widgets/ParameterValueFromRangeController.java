@@ -1,6 +1,5 @@
 package org.processmining.filterd.widgets;
 
-import java.io.IOException;
 import java.util.List;
 
 import org.python.icu.text.DecimalFormat;
@@ -8,10 +7,8 @@ import org.python.icu.text.DecimalFormat;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
-import javafx.scene.layout.VBox;
 
 /**
  * Value from range parameter UI counterpart.
@@ -56,14 +53,7 @@ public class ParameterValueFromRangeController<N extends Number> extends Paramet
 		}
 		this.genericTypeClass = genericTypeClass;
 		// load UI contents
-		FXMLLoader fxmlLoader = new FXMLLoader(
-				getClass().getResource("/org/processmining/filterd/widgets/fxml/ParameterValueFromRange.fxml"));
-		fxmlLoader.setController(this);
-		try {
-			contents = (VBox) fxmlLoader.load();
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
+		this.loadFXMLContents(this, "/org/processmining/filterd/widgets/fxml/ParameterValueFromRange.fxml");
 		// set specifics
 		label.setText(nameDisplayed); // set the description of the parameter
 		// set slider

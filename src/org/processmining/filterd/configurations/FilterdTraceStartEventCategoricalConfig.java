@@ -31,12 +31,12 @@ public class FilterdTraceStartEventCategoricalConfig extends FilterdAbstractRefe
 	
 	XEventClasses xEventClasses;
 	List<String> allValues = new ArrayList<>();
-	String attribute;
+	String key;
 	
-	public FilterdTraceStartEventCategoricalConfig(XLog log, Filter filterType, String attribute, 
+	public FilterdTraceStartEventCategoricalConfig(XLog log, Filter filterType, String key, 
 			List<XEventClassifier> classifiers) {
 		super(log, filterType);
-		this.attribute = attribute;
+		this.key = key;
 		parameters = new ArrayList<Parameter>();
 		isAttribute = true;
 		XLog startEventsLog = startEventsOnly();
@@ -46,7 +46,7 @@ public class FilterdTraceStartEventCategoricalConfig extends FilterdAbstractRefe
 		
 		// check whether the selected string is an attribute or a classifier
 		for (XEventClassifier c: classifiers) {
-			if (c.name().equals(attribute)) {
+			if (c.name().equals(key)) {
 				//if it is a classifier than create eventclasses object accordingly
 				isAttribute = false; // the selected string is a complex classifier
 				xEventClasses = new XEventClasses(c);
@@ -62,7 +62,7 @@ public class FilterdTraceStartEventCategoricalConfig extends FilterdAbstractRefe
 		if (isAttribute) {
 			//if it is an attribute than create eventclasses object accordingly
 			XEventAttributeClassifier attrClassifier = new XEventAttributeClassifier(
-					"attrClassifier", attribute);
+					"attrClassifier", key);
 			
 			xEventClasses = new XEventClasses(attrClassifier);
 			xEventClasses = XEventClasses.deriveEventClasses(attrClassifier, startEventsLog);
@@ -103,8 +103,8 @@ public class FilterdTraceStartEventCategoricalConfig extends FilterdAbstractRefe
 			for (XTrace trace : startEventsLog) {
 				for (XEvent event : trace) {
 					String value;
-					if (event.getAttributes().containsKey(attribute)) {
-						value = event.getAttributes().get(attribute).toString();
+					if (event.getAttributes().containsKey(key)) {
+						value = event.getAttributes().get(key).toString();
 					} else {
 						continue;
 					}
@@ -137,8 +137,8 @@ public class FilterdTraceStartEventCategoricalConfig extends FilterdAbstractRefe
 		return true;
 	}
 	
-	public String getAttribute() {
-		return attribute;
+	public String getKey() {
+		return key;
 	}
 	
 	

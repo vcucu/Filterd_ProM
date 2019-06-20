@@ -46,7 +46,7 @@
 	-fx-pref-height: 30;
 }
 
-/* Increase scrollbar width */
-.notebook-layout .scroll-bar:vertical {
+/* Set notebook scrollbar width */
+.notebook-scrollpane > .scroll-bar:vertical {
     -fx-pref-width: 20;
 }

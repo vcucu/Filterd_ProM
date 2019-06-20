@@ -28,14 +28,14 @@ import javafx.scene.control.ComboBox;
 public class FilterdTracesHavingEventConfig extends FilterdAbstractConfig {
 	
 	// Set to hold attributes for the event.
-	Set<String> eventAttributes;
+	Set<String> eventKeys;
 	
 	public FilterdTracesHavingEventConfig(XLog log, Filter filterType) throws EmptyLogException {
 		super(log, filterType);
 		// Set the log.
 		this.log = log;
 		// Create new set for event attributes.
-		eventAttributes = new HashSet<>();
+		eventKeys = new HashSet<>();
 		
 		// Loop over every trace in the log.
 		for (XTrace trace : log) {
@@ -44,13 +44,13 @@ public class FilterdTracesHavingEventConfig extends FilterdAbstractConfig {
 			for (XEvent event : trace) {
 
 				// Add all the keys of the event attributes.
-				eventAttributes.addAll(event.getAttributes().keySet());
+				eventKeys.addAll(event.getAttributes().keySet());
 
 			}
 
 		}
 		// Create list out of set.
-		List<String> attributesList = new ArrayList<String>(eventAttributes);
+		List<String> attributesList = new ArrayList<String>(eventKeys);
 		// Create parameter for the user to select which attribute he wants to
 		// filter with.
 		ParameterOneFromSet attrType = new ParameterOneFromSet("attrType",

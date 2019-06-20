@@ -12,8 +12,6 @@ import org.processmining.filterd.gui.adapters.ComputationCellModelAdapted;
 import org.processmining.filterd.gui.adapters.FilterButtonAdapted;
 import org.processmining.filterd.gui.adapters.FilterdAbstractConfigAdapted;
 import org.processmining.filterd.gui.adapters.FilterdAbstractConfigAdapter;
-import org.processmining.filterd.gui.adapters.FilterdAbstractConfigAttributeAdapted;
-import org.processmining.filterd.gui.adapters.FilterdAbstractConfigKeyAdapted;
 import org.processmining.filterd.gui.adapters.FilterdAbstractReferencingConfigAdapted;
 import org.processmining.filterd.gui.adapters.NotebookModelAdapted;
 import org.processmining.filterd.gui.adapters.TextCellModelAdapted;
@@ -55,10 +53,9 @@ public class NotebookLoader {
 			JAXBContext jaxbContext = JAXBContext.newInstance(NotebookModelAdapted.class, TextCellModelAdapted.class,
 					ComputationCellModelAdapted.class, FilterButtonAdapted.class, FilterdAbstractConfigAdapted.class,
 					Parameter.class, ParameterMultipleFromSet.class, ParameterOneFromSet.class,
-					ParameterRangeFromRange.class, ParameterText.class, ParameterValueFromRange.class,
-					ParameterYesNo.class, FilterdAbstractReferencingConfigAdapted.class,
-					FilterdAbstractConfigAdapted.class, FilterdAbstractConfigAttributeAdapted.class,
-					FilterdAbstractConfigKeyAdapted.class); // Create JAXB Context.
+					ParameterRangeFromRange.class, ParameterText.class, ParameterValueFromRange.class, ParameterYesNo.class,
+					FilterdAbstractReferencingConfigAdapted.class, FilterdAbstractConfigAdapted.class); // Create JAXB Context.
+
 			// create the JAXB unmarshaller
 			Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
 			// create a string reader for the unmarshaller 
