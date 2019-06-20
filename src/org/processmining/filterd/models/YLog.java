@@ -75,7 +75,6 @@ public class YLog {
 	 *            wrapped XLog object
 	 */
 	public void setLog(XLog log) {
-		XLog oldValue = this.log;
 		this.log = log;		
 	}
 
