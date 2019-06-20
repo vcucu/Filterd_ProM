@@ -30,18 +30,12 @@ import javafx.scene.layout.VBox;
  */
 public class FilterConfigPanelController extends AbstractFilterConfigPanelController {
 
-	@FXML
-	private HBox mainPanel; // main panel to place components
-	@FXML
-	private VBox rightPanel; // right panel to place components
-	@FXML
-	private VBox othersPanel; // panel to place other components
-	@FXML
-	private VBox slidersPanel; // panel to place slider components (parameter value from range and range from range)
-	@FXML
-	private VBox maybesPanel; // panel to add disappearable components
-	@FXML
-	private Label title; // title of the filter configuration panel
+	@FXML private HBox mainPanel; // main panel to place components
+	@FXML private VBox rightPanel; // right panel to place components
+	@FXML private VBox othersPanel; // panel to place other components
+	@FXML private VBox slidersPanel; // panel to place slider components (parameter value from range and range from range)
+	@FXML private VBox maybesPanel; // panel to add disappearable components
+	@FXML private Label title; // title of the filter configuration panel
 
 	private FilterdAbstractConfig owner;
 

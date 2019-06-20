@@ -148,7 +148,6 @@ public class SwingBubble extends AnchorPane {
 
 	/**
 	 * Forces the view to refresh.
-	 * TODO: DELETE THIS METHOD
 	 */
 	public synchronized void refresh() {
 		// TODO Find a better way to force the view to refresh
