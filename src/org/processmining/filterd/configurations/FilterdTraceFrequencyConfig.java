@@ -32,10 +32,8 @@ public class FilterdTraceFrequencyConfig extends FilterdAbstractConfig {
 		parameters = new ArrayList<>();
 		minMax = new HashMap<>();
 
-		System.out.println("start " + System.currentTimeMillis());
 		// build the list of classifiers
 		List<XEventClassifier> classifiers = Toolbox.computeAllClassifiers(log);
-		System.out.println("end " + System.currentTimeMillis());
 
 		// initialize the classifier dropdown
 		ParameterOneFromSet classifierParameter = 
@@ -98,6 +96,7 @@ public class FilterdTraceFrequencyConfig extends FilterdAbstractConfig {
 				fModeOptions
 				);
 
+		// add every parameter
 		parameters.add(classifierParameter);
 		parameters.add(frequencyOccurranceParameter);
 		parameters.add(rangeFreq);
@@ -105,16 +104,20 @@ public class FilterdTraceFrequencyConfig extends FilterdAbstractConfig {
 		parameters.add(filterInOut);
 	}
 
+	/* method that computes the minimum number of occurences and the maximum
+	 * number based on a classifier
+	 */
 	private List<Integer> minMaxOccurence(XEventClassifier classifier){
 		List<Integer> results = new ArrayList<Integer>();
+		// get the variants of each trace
 		Map<XTrace, List<Integer>> variantsToTraceIndices = 
 				Toolbox.getVariantsToTraceIndices(log, classifier);
 
 		int minOccurrence = Integer.MAX_VALUE;
 		int maxOccurrence = Integer.MIN_VALUE;
 
+		/* compute the min and max */
 		for (List<Integer> list : variantsToTraceIndices.values()) {
-
 			if (list.size() < minOccurrence) {
 				minOccurrence = list.size();
 			}
@@ -122,9 +125,9 @@ public class FilterdTraceFrequencyConfig extends FilterdAbstractConfig {
 			if (list.size() > maxOccurrence) {
 				maxOccurrence = list.size();
 			}
-
 		}
 
+		/* return the results */
 		results.add(minOccurrence);
 		results.add(maxOccurrence);
 
@@ -179,14 +182,17 @@ public class FilterdTraceFrequencyConfig extends FilterdAbstractConfig {
 		classifierControl.getComboBox().valueProperty().addListener(new ChangeListener<String>() {
 			@Override 
 			public void changed(ObservableValue ov, String oldValue, String newValue) {
+				// get the classifier corresponding to the new selected value
 				XEventClassifier classifier = Toolbox.computeAllClassifiers(log).stream()
 						.filter(c -> c.toString().equals(newValue))
 						.findFirst()
 						.get();
 				List<Integer> logMinAndMaxSize;
+				// if the min max occurence has not been computed before, compute it
 				if (!minMax.containsKey(classifier)) minMax.put(classifier, minMaxOccurence(classifier));
 				logMinAndMaxSize = minMax.get(classifier);
 
+				// adjust the slides accordingly 
 				rangeOccControl.setSliderConfig(logMinAndMaxSize, logMinAndMaxSize);
 
 				ParameterRangeFromRange<Integer> occParameter = (ParameterRangeFromRange<Integer>) getParameter("rangeOcc");
