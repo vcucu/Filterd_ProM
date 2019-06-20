@@ -98,7 +98,7 @@ public class FilterdTracePerformanceFilter extends Filter {
 			long totalMillis = traceDuration.toMillis();
 			
 			// configurations for the time
-			Calendar c = Calendar.getInstance(); 
+			/*Calendar c = Calendar.getInstance(); 
 			//Set time in milliseconds
 			c.setTimeInMillis(totalMillis);
 			int mYear = c.get(Calendar.YEAR) - 1970;
@@ -107,7 +107,16 @@ public class FilterdTracePerformanceFilter extends Filter {
 			int hr = c.get(Calendar.HOUR);
 			int min = c.get(Calendar.MINUTE);
 			int sec = c.get(Calendar.SECOND);
-			int millis = c.get(Calendar.MILLISECOND);
+			int millis = c.get(Calendar.MILLISECOND);*/
+			int seconds = (int) (totalMillis/1000);
+			
+			int mYear = (int) Math.floor(seconds / 31536000);
+			int mMonth = (int) Math.floor((seconds % 31536000) / 2628000);
+			int mDay = (int) Math.floor(((seconds % 31536000) % 2628000)/ 86400); 
+			int hr = (int) Math.floor(((seconds % 31536000) % 86400) / 3600);
+			int min = (int) Math.floor((((seconds % 31536000) % 86400) % 3600) / 60);
+			int sec = (((seconds % 31536000) % 86400) % 3600) % 60;
+			int millis = (int) (totalMillis - seconds*1000);
 			
 			String string = "";
 			

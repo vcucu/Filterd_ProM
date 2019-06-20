@@ -488,16 +488,25 @@ public class Toolbox {
 
 		return new ArrayList<String> (durations.stream().map(l -> {
 			
-			Calendar c = Calendar.getInstance(); 
+			/*Calendar c = Calendar.getInstance(); 
 			//Set time in milliseconds
-			c.setTimeInMillis(l);
+			c.setTimeInMillis(totalMillis);
 			int mYear = c.get(Calendar.YEAR) - 1970;
 			int mMonth = c.get(Calendar.MONTH); 
 			int mDay = c.get(Calendar.DAY_OF_MONTH) - 1;
 			int hr = c.get(Calendar.HOUR);
 			int min = c.get(Calendar.MINUTE);
 			int sec = c.get(Calendar.SECOND);
-			int millis = c.get(Calendar.MILLISECOND);
+			int millis = c.get(Calendar.MILLISECOND);*/
+			int seconds = (int) (l/1000);
+			
+			int mYear = (int) Math.floor(seconds / 31536000);
+			int mMonth = (int) Math.floor((seconds % 31536000) / 2628000);
+			int mDay = (int) Math.floor(((seconds % 31536000) % 2628000)/ 86400); 
+			int hr = (int) Math.floor(((seconds % 31536000) % 86400) / 3600);
+			int min = (int) Math.floor((((seconds % 31536000) % 86400) % 3600) / 60);
+			int sec = (((seconds % 31536000) % 86400) % 3600) % 60;
+			int millis = (int) (l - seconds*1000);
 			
 			String string = "";
 			
