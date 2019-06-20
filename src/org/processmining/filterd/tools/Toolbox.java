@@ -466,7 +466,7 @@ public class Toolbox {
 			// Use first and last event to calculate the total duration of
 			// the trace.
 			LocalDateTime firstEventTime;
-			LocalDateTime lastEventTime;
+			LocalDateTime lastEventTime = null;
 			
 			int firstIndex = 0;
 			
@@ -485,22 +485,7 @@ public class Toolbox {
 				firstEventTime = LocalDateTime.MIN;
 			}
 			
-			int lastIndex = trace.size() - 1;
-			
-			while (!(trace.get(firstIndex).getAttributes().containsKey("time:timestamp")) && lastIndex > firstIndex + 1) {
-				lastIndex--;
-			}
-			
-			if (trace.get(lastIndex).getAttributes().containsKey("time:timestamp")) {
-				lastEventTime = synchronizeGMT(
-						trace
-						.get(lastIndex)
-						.getAttributes()
-						.get("time:timestamp")
-						.toString());
-			} else {
-				lastEventTime = LocalDateTime.MAX;
-			}
+			lastEventTime = computeLastEventTime(lastEventTime, firstIndex, trace, trace.size() - 1);
 			
 			if (firstEventTime != LocalDateTime.MIN && lastEventTime != LocalDateTime.MAX) {
 
@@ -613,7 +598,7 @@ public class Toolbox {
 			// Use first and last event to calculate the total duration of
 			// the trace.
 			LocalDateTime firstEventTime;
-			LocalDateTime lastEventTime;
+			LocalDateTime lastEventTime = null;
 			
 			int firstIndex = 0;
 			
@@ -632,22 +617,7 @@ public class Toolbox {
 				firstEventTime = LocalDateTime.MAX;
 			}
 			
-			int lastIndex = trace.size() - 1;
-			
-			while (!(trace.get(firstIndex).getAttributes().containsKey("time:timestamp")) && lastIndex > firstIndex + 1) {
-				lastIndex--;
-			}
-			
-			if (trace.get(lastIndex).getAttributes().containsKey("time:timestamp")) {
-				lastEventTime = synchronizeGMT(
-						trace
-						.get(firstIndex)
-						.getAttributes()
-						.get("time:timestamp")
-						.toString());
-			} else {
-				lastEventTime = LocalDateTime.MAX;
-			}
+			lastEventTime = computeLastEventTime(lastEventTime, firstIndex, trace, firstIndex);
 			
 			if (firstEventTime != LocalDateTime.MAX && lastEventTime != LocalDateTime.MAX) {
 
@@ -671,6 +641,27 @@ public class Toolbox {
 
 
 		return firstAndLast;
+	}
+	
+	public static LocalDateTime computeLastEventTime(LocalDateTime lastEventTime, int firstIndex, XTrace trace, int index) {
+		int lastIndex = trace.size() - 1;
+		
+		while (!(trace.get(firstIndex).getAttributes().containsKey("time:timestamp")) && lastIndex > firstIndex + 1) {
+			lastIndex--;
+		}
+		
+		if (trace.get(lastIndex).getAttributes().containsKey("time:timestamp")) {
+			lastEventTime = synchronizeGMT(
+					trace
+					.get(index)
+					.getAttributes()
+					.get("time:timestamp")
+					.toString());
+		} else {
+			lastEventTime = LocalDateTime.MAX;
+		}
+		
+		return lastEventTime;
 	}
 
 }
