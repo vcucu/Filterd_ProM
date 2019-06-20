@@ -30,7 +30,7 @@ import javafx.scene.control.ComboBox;
 
 public class FilterdTraceFollowerConfig extends FilterdAbstractConfig {
 
-	Set<String> eventAttributes;
+	Set<String> eventKeys;
 
 	public FilterdTraceFollowerConfig(XLog log, Filter filterType) throws EmptyLogException {
 		super(log, filterType);
@@ -41,14 +41,14 @@ public class FilterdTraceFollowerConfig extends FilterdAbstractConfig {
 
 		// Do this by looping over every trace and collecting its attributes
 		// and adding this to the set, except for time:timestamp
-		eventAttributes = new HashSet<>();
+		eventKeys = new HashSet<>();
 		for (XTrace trace : log) {
 
 			for (XEvent event : trace) {
 
 				for (String key : event.getAttributes().keySet()) {
 					if (!key.equals("time:timestamp")) {
-						eventAttributes.add(key);
+						eventKeys.add(key);
 					}
 				}
 
@@ -59,7 +59,7 @@ public class FilterdTraceFollowerConfig extends FilterdAbstractConfig {
 		// Convert the set into an array list because ParameterOneFromSet takes
 		// a list as an argument.
 		List<String> eventAttributesList = 
-				new ArrayList<String>(eventAttributes);
+				new ArrayList<String>(eventKeys);
 
 		// Create the parameter for selecting the attribute.
 		ParameterOneFromSet attributeSelector = 
@@ -82,7 +82,7 @@ public class FilterdTraceFollowerConfig extends FilterdAbstractConfig {
 				selectionTypeList.get(0), 
 				selectionTypeList);
 
-		Set<String> attributeValues = new HashSet<>();
+		Set<String> keyValues = new HashSet<>();
 
 		for (XTrace trace : log) {
 
@@ -90,7 +90,7 @@ public class FilterdTraceFollowerConfig extends FilterdAbstractConfig {
 
 				XAttributeMap eventAttrs = event.getAttributes();
 				if (eventAttrs.containsKey(eventAttributesList.get(0))) {
-					attributeValues.add(eventAttrs.get(eventAttributesList.get(0)).toString());
+					keyValues.add(eventAttrs.get(eventAttributesList.get(0)).toString());
 				}
 
 			}
@@ -100,7 +100,7 @@ public class FilterdTraceFollowerConfig extends FilterdAbstractConfig {
 		// To populate both the reference and follower event values with these
 		// attribute values to start with. If the attribute is changed, so will
 		// the values in both these parameters.
-		List<String> attributeValuesList = new ArrayList<String>(attributeValues);
+		List<String> attributeValuesList = new ArrayList<String>(keyValues);
 
 		// Create parameter for reference event values.
 		ParameterMultipleFromSet referenceParameter = 

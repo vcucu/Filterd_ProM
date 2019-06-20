@@ -19,17 +19,18 @@ public class FilterdModifMergeSubsequentCategoricalConfig extends FilterdAbstrac
 
 	XEventClasses xEventClasses;
 	List<String> allValues = new ArrayList<>();
-	XEventClassifier key;
+	XEventClassifier classifier;
 	
-	String attribute;
+	String key;
 	
-	public FilterdModifMergeSubsequentCategoricalConfig(XLog log, Filter filterType, String attribute, List<XEventClassifier> classifiers) {
+	public FilterdModifMergeSubsequentCategoricalConfig(XLog log, Filter filterType, String key, List<XEventClassifier> classifiers) {
 		super(log, filterType);
 		parameters = new ArrayList<>();
+		this.key = key;
 		
 		for (XEventClassifier c : classifiers) {
-			if (c.name().equals(attribute)) {
-				this.key = c;
+			if (c.name().equals(key)) {
+				this.classifier = c;
 				xEventClasses = new XEventClasses(c);
 				xEventClasses = XEventClasses.deriveEventClasses(c, log);
 				
@@ -69,11 +70,11 @@ public class FilterdModifMergeSubsequentCategoricalConfig extends FilterdAbstrac
 		 */
 		
 		List<XEventClassifier> candidateLogClassifiers = Toolbox.computeAllClassifiers(candidateLog);
-		if (!candidateLogClassifiers.contains(key)) {
+		if (!candidateLogClassifiers.contains(classifier)) {
 			return false;
 		} else {
 			Set<String> candLogDesiredEvents = new HashSet<>();
-			XEventClasses candLogEventClasses = XEventClasses.deriveEventClasses(key, candidateLog);
+			XEventClasses candLogEventClasses = XEventClasses.deriveEventClasses(classifier, candidateLog);
 			
 				for (XEventClass eventClass : candLogEventClasses.getClasses()) {
 						candLogDesiredEvents.add(eventClass.toString());
@@ -90,8 +91,8 @@ public class FilterdModifMergeSubsequentCategoricalConfig extends FilterdAbstrac
 		return true;
 	}
 	
-	public String getAttribute() {
-		return attribute;
+	public String getKey() {
+		return key;
 	}
 	
 	@Override

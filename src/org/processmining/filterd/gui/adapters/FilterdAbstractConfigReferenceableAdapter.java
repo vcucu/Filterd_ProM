@@ -34,13 +34,13 @@ public class FilterdAbstractConfigReferenceableAdapter extends FilterdAbstractCo
 				config = configClass.getDeclaredConstructor(XLog.class, Filter.class, String.class, List.class).newInstance(
 						initialInput,
 						filterType,
-						((FilterdAbstractConfigAttributeAdapted) adaptedConfig).getAttribute(),
+						((FilterdAbstractConfigAdapted) adaptedConfig).getKey(),
 						Toolbox.computeComplexClassifiers(initialInput));
 			} else if (constructorPresent(configClass.getConstructors(), typesKey)) {
 				config = configClass.getDeclaredConstructor(XLog.class, Filter.class, String.class).newInstance(
 						initialInput,
 						filterType,
-						((FilterdAbstractConfigKeyAdapted) adaptedConfig).getKey());
+						((FilterdAbstractConfigAdapted) adaptedConfig).getKey());
 			} else if (constructorPresent(configClass.getConstructors(), typesRegular)) {
 				config = configClass.getDeclaredConstructor(XLog.class, Filter.class).newInstance(
 						initialInput,
@@ -68,12 +68,12 @@ public class FilterdAbstractConfigReferenceableAdapter extends FilterdAbstractCo
 
 		if (constructorPresent(config.getClass().getConstructors(), typesAttribute)) {
 			// configs that take an attribute as a constructor input.
-			adaptedConfig = new FilterdAbstractConfigAttributeAdapted();
-			((FilterdAbstractConfigAttributeAdapted) adaptedConfig).setAttribute(config.getAttribute());
+			adaptedConfig = new FilterdAbstractConfigAdapted();
+			((FilterdAbstractConfigAdapted) adaptedConfig).setKey(config.getKey());
 		} else if (constructorPresent(config.getClass().getConstructors(), typesKey)) {
 			// configs that take a key as a constructor input.
-			adaptedConfig = new FilterdAbstractConfigKeyAdapted();
-			((FilterdAbstractConfigKeyAdapted) adaptedConfig).setKey(config.getKey());
+			adaptedConfig = new FilterdAbstractConfigAdapted();
+			((FilterdAbstractConfigAdapted) adaptedConfig).setKey(config.getKey());
 		} else if (constructorPresent(config.getClass().getConstructors(), typesRegular)) {
 			adaptedConfig = super.marshal(uncastConfig);
 		} else {
