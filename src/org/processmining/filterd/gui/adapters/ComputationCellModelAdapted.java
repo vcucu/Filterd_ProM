@@ -9,11 +9,17 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.processmining.filterd.gui.FilterButtonModel;
 
+/**
+ * Class representing a deserialized computation cell model. It is used by JAXB
+ * to save the computation cell model in XML format. All attributes of this
+ * class have to be either primitives or enumerations. Exception to this are the
+ * filter button models which have their own adapted/adapted classes.
+ */
 @XmlRootElement(name = "Computation Cell")
 public class ComputationCellModelAdapted extends CellModelAdapted {
 
-	private List<FilterButtonModel> filters;
-	private int indexOfInputOwner;
+	private List<FilterButtonModel> filters; // list of filters in this computation cell (can be empty)
+	private int indexOfInputOwner; // index of the cell whose output this cell is using as input (if it is using initial input, this value will be -1)
 
 	public int getIndexOfInputOwner() {
 		return indexOfInputOwner;
@@ -30,6 +36,12 @@ public class ComputationCellModelAdapted extends CellModelAdapted {
 		return filters;
 	}
 
+	/**
+	 * Setter for the filters of a computation cell.
+	 * 
+	 * @param filters
+	 *            filters of a computation cell
+	 */
 	public void setFilters(List<FilterButtonModel> filters) {
 		this.filters = filters;
 	}

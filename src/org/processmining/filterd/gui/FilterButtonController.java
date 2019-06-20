@@ -8,19 +8,29 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 
+/**
+ * Controller for the filter button UI component.
+ */
 public class FilterButtonController {
 
-	private ComputationCellController controller;
-	private FilterButtonModel model;
-	private Pane layout;
+	private ComputationCellController controller; // controller of the parent cell
+	private FilterButtonModel model; // model associated with this filter button
+	private Pane layout; // root component of this UI element
 
-	@FXML private Group buttons;
-	@FXML private Label filterName;
-	@FXML private HBox filterLayout;
-	@FXML private Label editButton;
-	@FXML private Label removeButton;
-	@FXML private Label moveUpButton;
-	@FXML private Label moveDownButton;
+	@FXML
+	private Group buttons; // move up and down, edit, remove, etc. buttons group
+	@FXML
+	private Label filterName; // label for the name of the filter
+	@FXML
+	private HBox filterLayout;
+	@FXML
+	private Label editButton; // edit button
+	@FXML
+	private Label removeButton; // remove button
+	@FXML
+	private Label moveUpButton; // button to move up
+	@FXML
+	private Label moveDownButton; // button to move down
 
 	public FilterButtonController(ComputationCellController controller, FilterButtonModel model) {
 		this.controller = controller;
@@ -32,28 +42,29 @@ public class FilterButtonController {
 		bindProperties();
 	}
 
+	/**
+	 * Method to bind the model properties with change events for UI
+	 */
 	private void bindProperties() {
-		// Name
+		// bind the name property with the label's text 
 		filterName.textProperty().bind(model.getNameProperty());
-
-		// Selected property 
+		// bind the selected property with the look of the filter button
 		model.getSelectedProperty().addListener((observable, oldvalue, newvalue) -> setSelected(newvalue));
-
-		// valid property
+		// bind the valid property with the look of the filter button
 		model.isValidProperty().addListener(new ChangeListener<Boolean>() {
 
 			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-				System.out.print("Setting valid to ");
-				System.out.println(newValue);
 				if (newValue) {
 					// filter became valid
 					setInvalid(false);
 					controller.hideConfigurationModal(false);
 					if (model.getSelected()) {
+						// filter was previously selected so make it look appropriately
 						filterLayout.getStyleClass().add("selected");
 						buttons.setVisible(true);
 						buttons.setManaged(true);
 					} else {
+						// filter was previously not selected so make it look appropriately
 						filterLayout.getStyleClass().remove("selected");
 						buttons.setVisible(false);
 						buttons.setManaged(false);
@@ -64,13 +75,20 @@ public class FilterButtonController {
 				}
 			}
 		});
-
-		// edit disabled property
+		// bind the edit disabled property with the disabled property of the edit button
 		editButton.disableProperty().bind(model.isEditDisabledProperty());
 	}
 
+	/**
+	 * Method to make the filter button look selected / not selected.
+	 * 
+	 * @param selected
+	 *            should the filter look selected or not selected
+	 */
 	public void setSelected(boolean selected) {
+		// if we are selecting a filter, we are making it valid
 		this.model.isValidProperty().set(true);
+		// change the look of the filter button based on the passed parameter
 		if (selected) {
 			filterLayout.getStyleClass().add("selected");
 			buttons.setVisible(true);
@@ -114,6 +132,9 @@ public class FilterButtonController {
 		}
 	}
 
+	/**
+	 * Handler for the on-click event.
+	 */
 	@FXML
 	public void selectFilterButton() {
 		controller.enableAllFilterButtonsBut(-1);
@@ -127,6 +148,9 @@ public class FilterButtonController {
 		this.model.setIsEditDisabled(false);
 	}
 
+	/**
+	 * Handler for the on-click event for the edit button.
+	 */
 	@FXML
 	private void editFilterHandler() {
 		selectFilterButton();
@@ -137,6 +161,9 @@ public class FilterButtonController {
 		}
 	}
 
+	/**
+	 * Handler for the on-click event for the remove button.
+	 */
 	@FXML
 	public void removeFilterHandler() {
 		controller.removeFilter(model);
@@ -144,6 +171,9 @@ public class FilterButtonController {
 		controller.getCellModel().setStatusBar(CellStatus.OUT_OF_DATE);
 	}
 
+	/**
+	 * Handler for the on-click event for the move up button.
+	 */
 	@FXML
 	private void moveUpFilterHandler() {
 		int index = model.getIndex();
@@ -154,6 +184,9 @@ public class FilterButtonController {
 		}
 	}
 
+	/**
+	 * Handler for the on-click event for the move down button.
+	 */
 	@FXML
 	private void moveDownFilterHandler() {
 		int index = model.getIndex();
@@ -165,6 +198,12 @@ public class FilterButtonController {
 
 	}
 
+	/**
+	 * Move the filter to the specified position.
+	 * 
+	 * @param index
+	 *            position to which the filter should be moved
+	 */
 	private void move(int index) {
 		// Remove layout
 		controller.getPanelLayout().getChildren().remove(filterLayout);
