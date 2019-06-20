@@ -20,7 +20,7 @@ import javafx.stage.Stage;
 public abstract class CellController {
 
 	//TODO: add all the attributes from the UI Diagram
-	protected NotebookController controller;
+	protected dummy controller;
 	protected CellModel cellModel;
 	protected VBox cellLayout;
 
@@ -40,7 +40,7 @@ public abstract class CellController {
 		cellModel.getProperty().addPropertyChangeListener(listener);
 	}
 
-	public NotebookController getController() {
+	public dummy getController() {
 		return controller;
 	}
 
@@ -90,7 +90,7 @@ public abstract class CellController {
 	 *
 	 * @return The notebook controller.
 	 */
-	public NotebookController getNotebookController() {
+	public dummy getNotebookController() {
 		return controller;
 	}
 

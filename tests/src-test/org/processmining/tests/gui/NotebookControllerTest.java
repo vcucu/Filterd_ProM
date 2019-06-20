@@ -22,7 +22,7 @@ public class NotebookControllerTest extends TestCase {
 	
 	public void setupNotebookController() {
 		// Create new notebook model
-		NotebookModel model = new NotebookModel(null);
+		model = new NotebookModel(null);
 		// Create new notebook controller
 		controller = new NotebookController(model);
 	}

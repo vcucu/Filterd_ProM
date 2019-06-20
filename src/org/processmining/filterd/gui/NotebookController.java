@@ -32,7 +32,7 @@ import javafx.stage.Stage;
  *
  *
  */
-public class NotebookController {
+public class NotebookController implements dummy {
 
 	private NotebookModel model; // the model that is paired with this controller
 
