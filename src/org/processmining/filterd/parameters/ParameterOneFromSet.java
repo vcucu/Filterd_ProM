@@ -20,6 +20,13 @@ public class ParameterOneFromSet extends Parameter  {
 	public ParameterOneFromSet() {
 	}
 	
+	/**
+	 * Constructor that can be used by the default when creating parameter one from set
+	 * @param name
+	 * @param nameDisplayed
+	 * @param defaultChoice
+	 * @param options
+	 */
 	public ParameterOneFromSet(String name, String nameDisplayed, String defaultChoice, List<String> options) {
 		super(name, nameDisplayed);
 		this.defaultChoice = defaultChoice;
@@ -28,6 +35,17 @@ public class ParameterOneFromSet extends Parameter  {
 		this.createsReference = false;
 	}
 	
+	/**
+	 * Constructor that allows for setting createsReference to true, for the 
+	 * the referencing configurations. Creates reference set to true implies
+	 * there will be OneFromSetExtended controller instatiated in the UI and
+	 * that based on the selection within, another configuration will be created
+	 * @param name
+	 * @param nameDisplayed
+	 * @param defaultChoice
+	 * @param options
+	 * @param createsReference
+	 */
 	public ParameterOneFromSet(String name, String nameDisplayed, 
 			String defaultChoice, List<String> options, boolean createsReference) {
 		super(name, nameDisplayed);
