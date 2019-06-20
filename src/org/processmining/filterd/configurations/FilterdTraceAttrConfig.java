@@ -82,14 +82,11 @@ public class FilterdTraceAttrConfig extends FilterdAbstractConfig {
 
 	@Override
 	public AbstractFilterConfigPanelController getConfigPanel() {
-		// If the configuration panel was not initialized yet.
-		if (this.configPanel == null) {
-			// Create it.
-			this.configPanel = new FilterConfigPanelController("Trace Attribute Configuration",
-					parameters, this);
-			// Add the listeners.
-			parameterListeners();
-		}
+		// Create a new configuration panel.
+		this.configPanel = new FilterConfigPanelController("Trace Attribute Configuration",
+				parameters, this);
+		// Add the listeners.
+		parameterListeners();
 
 		return configPanel;
 	}

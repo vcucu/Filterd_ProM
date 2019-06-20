@@ -119,7 +119,7 @@ public class ComputationCellController extends CellController {
 		ComputationCellModel model = this.getCellModel();
 		// Load event logs in cmbEventLog and select "Initial input"
 		cmbEventLog.getItems().addAll(model.inputLogs);
-		cmbEventLog.getSelectionModel().selectFirst();
+		cmbEventLog.getSelectionModel().select(model.indexOfInputOwner + 1);
 		setXLog();
 		// Add listeners to the basic model components
 		cellModel.getProperty().addPropertyChangeListener(new ComputationCellModelListeners(this));

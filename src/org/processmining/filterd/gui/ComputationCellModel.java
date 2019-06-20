@@ -68,6 +68,7 @@ public class ComputationCellModel extends CellModel {
 		});
 		this.isComputing = new SimpleBooleanProperty(false);
 		this.outputLogs = FXCollections.observableArrayList();
+		this.indexOfInputOwner = -1;
 	}
 
 	public ComputationCellModel(UIPluginContext context, int index, ProMCanceller canceller, List<YLog> eventLogs) {
@@ -75,6 +76,7 @@ public class ComputationCellModel extends CellModel {
 		this.canceller = canceller;
 		this.inputLogs = eventLogs;
 		this.outputLogs = FXCollections.observableArrayList();
+		this.indexOfInputOwner = -1;
 		outputLogs.add(new YLog(Toolbox.getNextId(), getCellName() + " output log", index));
 
 		filters = FXCollections.observableArrayList(new Callback<FilterButtonModel, Observable[]>() {

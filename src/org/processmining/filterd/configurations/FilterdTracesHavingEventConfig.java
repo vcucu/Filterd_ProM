@@ -105,16 +105,13 @@ public class FilterdTracesHavingEventConfig extends FilterdAbstractConfig {
 	 * Getter for the configuration panel.
 	 */
 	public AbstractFilterConfigPanelController getConfigPanel() {
-		// If the configuration panel has not been initialized yet.
-		if (this.configPanel == null) {
-			// Create it.
+			// Create a new config panel.
 			this.configPanel = new FilterConfigPanelController(
 					"Filter Traces Having Event Configuration", 
 					parameters, 
 					this);
 			// Add the listeners to the configuration panel.
 			parameterListeners();
-		}
 		
 		return configPanel;
 	}
