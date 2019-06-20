@@ -77,38 +77,23 @@ public class ComputationCellController extends CellController {
 	private SwingBubble visualizerSwgBubble;
 	private ConfigurationModalController configurationModal;
 
-	@FXML
-	private VBox panelLayout;
-	@FXML
-	private AnchorPane visualizerPane;
-	@FXML
-	private ComboBox<YLog> cmbEventLog;
-	@FXML
-	private ComboBox<ViewType> cmbVisualizers;
-	@FXML
-	private Label expandButton;
-	@FXML
-	private ScrollPane filterPanelScroll;
-	@FXML
-	private VBox cell;
-	@FXML
-	private HBox cellBody;
-	@FXML
-	private Label fullScreenButton;
-	@FXML
-	private Label playButton;
-	@FXML
-	private Label computeButton;
-	@FXML
-	private MenuButton menuBtnCellSettings;
-	@FXML
-	private Label prependCellButton;
-	@FXML
-	private HBox fullToolbar;
-	@FXML
-	private HBox cellToolbar;
-	@FXML
-	private Label lblNumEventLogs;
+	@FXML private VBox panelLayout;
+	@FXML private AnchorPane visualizerPane;
+	@FXML private ComboBox<YLog> cmbEventLog;
+	@FXML private ComboBox<ViewType> cmbVisualizers;
+	@FXML private Label expandButton;
+	@FXML private ScrollPane filterPanelScroll;
+	@FXML private VBox cell;
+	@FXML private HBox cellBody;
+	@FXML private Label fullScreenButton;
+	@FXML private Label playButton;
+	@FXML private Label computeButton;
+	@FXML private MenuButton menuBtnCellSettings;
+	@FXML private Label prependCellButton;
+	@FXML private HBox fullToolbar;
+	@FXML private HBox cellToolbar;
+	@FXML private Label lblNumEventLogs;
+	
 	//listener for the input logs
 	public ComputationCellController(ComputationCellModel model) {
 		super(null, model);
@@ -176,6 +161,10 @@ public class ComputationCellController extends CellController {
 		this.getCellModel().getOutputLogs().addListener((ListChangeListener<? super YLog>) change -> {
 			updateNoOfOutputs(getCellModel().getOutputLogs().size());
 		});
+		
+		// Load visualizers
+		cmbVisualizers.getItems().addAll(model.getVisualizers());
+		cmbVisualizers.getSelectionModel().selectFirst();
 
 		// Initialize the visualizer
 		visualizerSwgBubble = new SwingBubble();
@@ -473,8 +462,6 @@ public class ComputationCellController extends CellController {
 		for(FilterButtonModel filter : model.getFilters()) {
 			filter.isValidProperty().set(true);
 		}
-		cmbVisualizers.getItems().addAll(model.getVisualizers());
-		cmbVisualizers.getSelectionModel().selectFirst();
 	}
 
 	/**
