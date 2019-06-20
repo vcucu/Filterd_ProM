@@ -54,23 +54,6 @@ public class ComputationCellModel extends CellModel {
 	public SimpleBooleanProperty isComputing;
 	private Task<Void> computeTask;
 
-	/**
-	 * Constructor for importing/exporting. This constructor needs to exist
-	 * because JAXB needs a no-argument constructor for unmarshalling.
-	 * Properties set here could be overwritten during loading.
-	 */
-	public ComputationCellModel() {
-		filters = FXCollections.observableArrayList(new Callback<FilterButtonModel, Observable[]>() {
-			@Override
-			public Observable[] call(FilterButtonModel temp) {
-				return new Observable[] { temp.nameProperty(), temp.selectedProperty() };
-			}
-		});
-		this.isComputing = new SimpleBooleanProperty(false);
-		this.outputLogs = FXCollections.observableArrayList();
-		this.indexOfInputOwner = -1;
-	}
-
 	public ComputationCellModel(UIPluginContext context, int index, ProMCanceller canceller, List<YLog> eventLogs) {
 		super(context, index);
 		this.canceller = canceller;
@@ -106,15 +89,12 @@ public class ComputationCellModel extends CellModel {
 	}
 
 	/**
-	 * <<<<<<< Updated upstream Adds all FilterButtonModels in a collection to
+	 *Adds all FilterButtonModels in a collection to
 	 * this model. Ignores models if it is null or empty.
 	 *
 	 * @param models
-	 *            collection of FilterButtonModels. ======= Adds all
+	 *            collection of FilterButtonModels. Adds all
 	 *            FilterButtonModels in a collection to this model.
-	 *
-	 * @param models
-	 *            collection of FilterButtonModels. >>>>>>> Stashed changes
 	 */
 	public void addFilterModels(List<FilterButtonModel> models) {
 		if (models != null && !models.isEmpty()) {
@@ -193,7 +173,6 @@ public class ComputationCellModel extends CellModel {
 	}
 
 	// Get visualizer names
-	// LET OP! Log must be set first.
 	public List<ViewType> getVisualizers() {
 		List<ViewType> visualizers = new ArrayList<ViewType>();
 		visualizers.add(Utilities.dummyViewType);

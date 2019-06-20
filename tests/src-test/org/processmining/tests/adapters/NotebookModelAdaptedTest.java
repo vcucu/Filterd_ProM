@@ -10,6 +10,7 @@ import org.processmining.filterd.gui.ComputationCellModel;
 import org.processmining.filterd.gui.ComputationMode;
 import org.processmining.filterd.gui.TextCellModel;
 import org.processmining.filterd.gui.adapters.NotebookModelAdapted;
+import org.processmining.filterd.models.YLog;
 import org.processmining.tests.filters.FilterdPackageTest;
 
 public class NotebookModelAdaptedTest extends FilterdPackageTest {
@@ -28,9 +29,9 @@ public class NotebookModelAdaptedTest extends FilterdPackageTest {
 		// Create new list for the notebook cells
 		List<CellModel> cells = new ArrayList<>();
 		// Create new computation cell
-		ComputationCellModel cell1 = new ComputationCellModel();
+		ComputationCellModel cell1 = new ComputationCellModel(null, 0, null, new ArrayList<YLog>());
 		// Create new text cell
-		TextCellModel cell2 = new TextCellModel();
+		TextCellModel cell2 = new TextCellModel(null, 0);
 		// Add new cells to the cell list
 		cells.add(cell1);
 		cells.add(cell2);

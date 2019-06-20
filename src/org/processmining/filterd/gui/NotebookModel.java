@@ -50,10 +50,6 @@ import javafx.concurrent.Task;
 @XmlJavaTypeAdapter(NotebookModelAdapter.class)
 public class NotebookModel {
 
-	/**
-	 * TODO: IF YOU ADD A NEW VARIABLE, MAKE SURE TO UPDATE THE clone()
-	 * METHOD!!!
-	 */
 	// objects from ProM
 	private UIPluginContext promContext; // The ProM context to communicate with the ProM framework.
 	private ProMViewManager viewManager; // Current view manager.
@@ -68,17 +64,18 @@ public class NotebookModel {
 	private SimpleBooleanProperty isComputing; // boolean property stating whether the notebook is currently being computed
 
 	/**
-	 * Constructor for importing/exporting. This constructor needs to exist
-	 * because JAXB needs a no-argument constructor for unmarshalling.
-	 * Properties set here could be overwritten during loading.
+	 * This constructor exists so a notebookModel can be constructed without a UIPluginContext.
+	 * This is needed for unit testing
+	 * @param log The event log to initialize the notebook with.
 	 */
-	public NotebookModel() {
-		this.cells = FXCollections.observableArrayList();
-		setComputationMode(ComputationMode.MANUAL);
-		this.isComputing = new SimpleBooleanProperty();
-		this.isComputing.set(false);
+	public NotebookModel (XLog log) {
+		this.initialInput = new YLog(Toolbox.getNextId(), "Initial input", log, -1); // wrap the intial log into an YLog and set is as the initial input.
+		this.cells = FXCollections.observableArrayList(); // create an empty list for the cells
+		setComputationMode(ComputationMode.MANUAL); // set the computation mode to manual
+		this.isComputing = new SimpleBooleanProperty(); // initialize the boolean property
+		this.isComputing.set(false); // set the computing status to false.
 	}
-
+	
 	/**
 	 * The constructor which sets the initial input event log. Note that the
 	 * constructor does not have access to the @FXML annotated fields as @FXML
@@ -90,19 +87,18 @@ public class NotebookModel {
 	 *            The event log to initialize the notebook with.
 	 */
 	public NotebookModel(UIPluginContext context, XLog log, ProMCanceller canceller) {
+		this.initialInput = new YLog(Toolbox.getNextId(), "Initial input", log, -1); // wrap the intial log into an YLog and set is as the initial input.
+		this.cells = FXCollections.observableArrayList(); // create an empty list for the cells
+		setComputationMode(ComputationMode.MANUAL); // set the computation mode to manual
+		this.isComputing = new SimpleBooleanProperty(); // initialize the boolean property
+		this.isComputing.set(false); // set the computing status to false.
+		// set the context and canceller.
 		this.promContext = context;
-		this.initialInput = new YLog(Toolbox.getNextId(), "Initial input", log, -1);
 		this.promCanceller = canceller;
-		this.cells = FXCollections.observableArrayList();
-		// set the computation mode to manual
-		setComputationMode(ComputationMode.MANUAL);
-
-		// Get current view manager and resource manager.
+		// Get current global context view manager and resource manager.
 		UIContext globalContext = context.getGlobalContext();
 		viewManager = ProMViewManager.initialize(globalContext);
-		resourceManager = ProMResourceManager.initialize(globalContext);
-		this.isComputing = new SimpleBooleanProperty();
-		this.isComputing.set(false);
+		resourceManager = ProMResourceManager.initialize(globalContext);		
 	}
 
 	/**
@@ -397,15 +393,6 @@ public class NotebookModel {
 
 	public BooleanProperty isComputingProperty() {
 		return this.isComputing;
-	}
-
-	@Override
-	public NotebookModel clone() {
-		NotebookModel newNotebook = new NotebookModel(promContext, initialInput.get(), promCanceller);
-		newNotebook.addCells(cells);
-		newNotebook.setComputationMode(computationMode);
-
-		return newNotebook;
 	}
 
 	/**

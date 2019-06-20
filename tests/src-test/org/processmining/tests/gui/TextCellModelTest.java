@@ -21,7 +21,7 @@ public class TextCellModelTest extends TestCase {
 	@Test
 	public void testNewEmptyTextCellModel() {
 		// Create new text cell model (empty constructor)
-		TextCellModel cell = new TextCellModel();
+		TextCellModel cell = new TextCellModel(null, 0);
 		// Check that the new text cell model was created
 		assertTrue(cell != null);
 		assertTrue(cell instanceof TextCellModel);

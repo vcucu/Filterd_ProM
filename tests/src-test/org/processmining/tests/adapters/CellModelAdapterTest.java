@@ -1,5 +1,7 @@
 package org.processmining.tests.adapters;
 
+import java.util.ArrayList;
+
 import org.junit.Test;
 import org.processmining.filterd.gui.ComputationCellModel;
 import org.processmining.filterd.gui.TextCellModel;
@@ -32,7 +34,7 @@ public class CellModelAdapterTest extends  FilterdPackageTest {
 		// Add the new log to the array list
 		logs.add(log);
 		// Create new computation cell model
-		ComputationCellModel cell = new ComputationCellModel();
+		ComputationCellModel cell = new ComputationCellModel(null, 0, null, new ArrayList<YLog>());
 		// Set the output logs of the computation cell
 		cell.setOutputLogs(logs);
 		// Set the index for the computation cell
@@ -62,7 +64,7 @@ public class CellModelAdapterTest extends  FilterdPackageTest {
 		
 		// --------------- TESTING MARSHAL ---------------
 		// Create new text cell model
-		TextCellModel cell = new TextCellModel();
+		TextCellModel cell = new TextCellModel(null, 0);
 		// Set the name for the text cell
 		cell.setCellName("Filterd");
 		try {

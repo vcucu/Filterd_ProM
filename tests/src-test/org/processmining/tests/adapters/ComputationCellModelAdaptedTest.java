@@ -28,7 +28,7 @@ public class ComputationCellModelAdaptedTest extends TestCase {
 		// Create new filter list to add to the cell model
 		List<FilterButtonModel> filters = new ArrayList<>();
 		// Create new filter button model
-		FilterButtonModel filter = new FilterButtonModel();
+		FilterButtonModel filter = new FilterButtonModel(0);
 		// Add newly created filter to the filters list
 		filters.add(filter);
 		// Set the filter list of the cell model

@@ -26,7 +26,7 @@ public class FilterButtonAdapterTest extends FilterdPackageTest {
 		// Create new YLog
 		YLog log = new YLog(0, "Original Log", originalLog, 0);
 		// Create new filter model
-		FilterButtonModel filter = new FilterButtonModel();
+		FilterButtonModel filter = new FilterButtonModel(0);
 		// Create new config for the filter model
 		FilterdAbstractConfig config = new FilterdTraceSampleConfig(log.get(), 
 				new FilterdTraceSampleFilter());
