@@ -31,12 +31,15 @@ public abstract class FilterdAbstractConfig {
 	protected boolean isValid;
 	protected XEventClassifier classifier;
 	protected List<XExtension> standardExtensions;
+	protected boolean populated;
 	protected boolean isAttribute; // checks whether selected string is attribute or complex classifier
 	protected FilterConfigPanelController configPanel = null;
 
+	
 	public FilterdAbstractConfig(XLog log, Filter filterType ) throws EmptyLogException {
 		
 		this.filterType = filterType;
+		populated = false;
 		this.checkEmptyLog(log);
 		this.setLog(log);
 		
@@ -133,6 +136,8 @@ public abstract class FilterdAbstractConfig {
 	 */
 
 	public FilterdAbstractConfig populate(AbstractFilterConfigPanelController abstractComponent) {
+		
+		populated = true;
 	
 		FilterConfigPanelController component = (FilterConfigPanelController) abstractComponent;
 		List<ParameterController> controllers = component.getControllers();
@@ -197,5 +202,11 @@ public abstract class FilterdAbstractConfig {
 	 */
 	public XLog filter() {
 		return filterType.filter(log, parameters);
+	}
+	public boolean isPopulated() {
+		return populated;
+	}
+	public void setPopulated(boolean populated) {
+		this.populated = populated;
 	}
 }

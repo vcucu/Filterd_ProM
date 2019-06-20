@@ -29,7 +29,7 @@ public class FilterdTracePerformanceConfig extends FilterdAbstractConfig {
 
 		parameters = new ArrayList<>();
 		durations = Toolbox.getDurations(log);
-		
+
 		// Initialize members based on the log.
 		minAndMaxEvents = Toolbox.getminAdnMaxEventSize(log);
 
@@ -43,7 +43,7 @@ public class FilterdTracePerformanceConfig extends FilterdAbstractConfig {
 						Arrays.asList(
 								"filter on duration", 
 								"filter on number of events"));
-				
+
 		// Use duration as default because this is also set in the performance
 		// options parameter.
 		ParameterRangeFromRange<Integer> thresholdParameter = 
@@ -69,22 +69,20 @@ public class FilterdTracePerformanceConfig extends FilterdAbstractConfig {
 		// TODO Auto-generated method stub
 		return true;
 	}
-	
+
 	@Override
 	public AbstractFilterConfigPanelController getConfigPanel() {
-		if (this.configPanel == null) {
-			this.configPanel = new FilterConfigPanelController(
-					"Filter Trace Performance Configuration", 
-					parameters, 
-					this);
-			parameterListeners();
-		}
-		
+		this.configPanel = new FilterConfigPanelController(
+				"Filter Trace Performance Configuration", 
+				parameters, 
+				this);
+		parameterListeners();
+
 		return configPanel;
 	}
 
 	public void parameterListeners() {
-		
+
 		for(ParameterController parameter : configPanel.getControllers()) {
 			if (parameter.getName().equals("performanceOptions")) {
 				ParameterOneFromSetController casted = (ParameterOneFromSetController) parameter;
@@ -125,9 +123,9 @@ public class FilterdTracePerformanceConfig extends FilterdAbstractConfig {
 						castedParameter.getDefaultPair() : 
 							castedParameter.getChosenPair(), castedParameter.getOptionsPair());
 			}
-			*/
+			 */
 		}
-		
+
 	}
 
 }

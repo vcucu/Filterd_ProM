@@ -132,14 +132,11 @@ public class FilterdTraceTrimConfig extends FilterdAbstractConfig {
 	 * Getter for the configuration panel.
 	 */
 	public AbstractFilterConfigPanelController getConfigPanel() {
-		// If the configuration panel has not been initialized yet.
-		if (this.configPanel == null) {
-			// Create it.
-			this.configPanel = new FilterConfigPanelController("Trace Trim Configuration", 
-					parameters, this);
-			// And add the correct listeners.
-			parameterListeners();
-		}
+		// Create a new configuration panel.
+		this.configPanel = new FilterConfigPanelController("Trace Trim Configuration", 
+				parameters, this);
+		// And add the correct listeners.
+		parameterListeners();
 
 		return configPanel;
 	}

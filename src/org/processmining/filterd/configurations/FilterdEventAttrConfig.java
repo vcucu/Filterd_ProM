@@ -56,15 +56,11 @@ public class FilterdEventAttrConfig extends FilterdAbstractReferencingConfig {
 
 	@Override
 	public AbstractFilterConfigPanelController getConfigPanel() {
-		// If the configuration panel is not initialized yet.
-		if (this.configPanel == null) {
-			// Create it.
-			this.configPanel = new FilterConfigPanelController("Event Attribute Configuration", parameters, this);
-		}
 		
+		this.configPanel = new FilterConfigPanelController("Event Attribute Configuration", parameters, this);
 		return configPanel;
 	}
-	
+
 	/**
 	 * Changes the reference this configuration is holding.
 	 * 

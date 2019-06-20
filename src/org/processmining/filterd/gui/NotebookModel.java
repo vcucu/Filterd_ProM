@@ -18,6 +18,7 @@ import org.processmining.contexts.uitopia.hub.ProMViewManager;
 import org.processmining.filterd.gui.adapters.ComputationCellModelAdapted;
 import org.processmining.filterd.gui.adapters.FilterButtonAdapted;
 import org.processmining.filterd.gui.adapters.FilterdAbstractConfigAdapted;
+import org.processmining.filterd.gui.adapters.FilterdAbstractConfigKeyAdapted;
 import org.processmining.filterd.gui.adapters.FilterdAbstractReferencingConfigAdapted;
 import org.processmining.filterd.gui.adapters.NotebookModelAdapted;
 import org.processmining.filterd.gui.adapters.NotebookModelAdapter;
