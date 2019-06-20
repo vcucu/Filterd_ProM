@@ -1,6 +1,5 @@
 package org.processmining.filterd.widgets;
 
-import java.io.IOException;
 import java.util.List;
 
 import org.processmining.filterd.configurations.FilterdAbstractConfig;
@@ -10,7 +9,6 @@ import org.processmining.filterd.gui.AbstractFilterConfigPanelController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Priority;
@@ -56,14 +54,7 @@ public class ParameterOneFromSetExtendedController extends ParameterController {
 		super(name);
 		this.owner = owner;
 		// load UI contents
-		FXMLLoader fxmlLoader = new FXMLLoader(
-				getClass().getResource("/org/processmining/filterd/widgets/fxml/ParameterOneFromSetExtended.fxml"));
-		fxmlLoader.setController(this);
-		try {
-			contents = (VBox) fxmlLoader.load();
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
+		this.loadFXMLContents(this, "/org/processmining/filterd/widgets/fxml/ParameterOneFromSetExtended.fxml");
 		// set specifics
 		label.setText(nameDisplayed); // set description
 		ObservableList<String> observableList = FXCollections.observableList(list); // transform list to an observable list (this is what the combo box expects)

@@ -1,6 +1,5 @@
 package org.processmining.filterd.widgets;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,9 +9,7 @@ import org.python.icu.text.DecimalFormat;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
-import javafx.scene.layout.VBox;
 
 /**
  * Range from range parameter UI counterpart.
@@ -67,14 +64,7 @@ public class ParameterRangeFromRangeController<N extends Number> extends Paramet
 			isTimeframe = false;
 		}
 		// load contents
-		FXMLLoader fxmlLoader = new FXMLLoader(
-				getClass().getResource("/org/processmining/filterd/widgets/fxml/ParameterRangeFromRange.fxml"));
-		fxmlLoader.setController(this);
-		try {
-			contents = (VBox) fxmlLoader.load();
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
+		this.loadFXMLContents(this, "/org/processmining/filterd/widgets/fxml/ParameterRangeFromRange.fxml");
 		// set specifics
 		label.setText(nameDisplayed); // set the description of the parameter
 		// set the slider
@@ -173,34 +163,39 @@ public class ParameterRangeFromRangeController<N extends Number> extends Paramet
 			double majorTickUnit = ((Double) minMaxPair.get(1) - (Double) minMaxPair.get(0)) / 4.0;
 			majorTickUnit = Math.max(1, Math.floor(majorTickUnit)); //unit must be > 0
 			// set the minimum and maximum values of the slider
-			slider.setMin((Double) minMaxPair.get(0));
+			// Note: due to a bug in javaFX the max needs to be set before a min can be set.
 			slider.setMax((Double) minMaxPair.get(1));
+			slider.setMin((Double) minMaxPair.get(0));
 			// set the default values of the slider
-			slider.setLowValue((Double) defaultValue.get(0));
+			// Note: due to a bug in javaFX the HighValue needs to be set before a LowValue can be set.
 			slider.setHighValue((Double) defaultValue.get(1));
+			slider.setLowValue((Double) defaultValue.get(0));
 			// make the slider "continuous"
 			slider.setBlockIncrement(0.1);
 			// format the labels appropriately 
 			if (isActingLikeInteger) {
-				lowValueLabel.setText(Integer.toString(defaultValue.get(0).intValue()));
 				highValueLabel.setText(Integer.toString(defaultValue.get(1).intValue()));
+				lowValueLabel.setText(Integer.toString(defaultValue.get(0).intValue()));
 			} else {
 				DecimalFormat df = new DecimalFormat("0.00");
-				lowValueLabel.setText(df.format((Double) defaultValue.get(0)));
 				highValueLabel.setText(df.format((Double) defaultValue.get(1)));
+				lowValueLabel.setText(df.format((Double) defaultValue.get(0)));
 			}
 			slider.setMajorTickUnit(majorTickUnit);
 		} else if (genericTypeClass.equals(Integer.TYPE)) {
 			// slider should behave like an integer slider
+			
 			double majorTickUnit = (minMaxPair.get(1).doubleValue() - minMaxPair.get(0).doubleValue()) / 4.0;
 			majorTickUnit = Math.max(1, Math.floor(majorTickUnit)); //unit must be > 0
 			slider.setMajorTickUnit(majorTickUnit);
 			// set the minimum and maximum values of the slider
-			slider.setMin(minMaxPair.get(0).doubleValue());
+			// Note: due to a bug in javaFX the max needs to be set before a min can be set.
 			slider.setMax(minMaxPair.get(1).doubleValue());
+			slider.setMin(minMaxPair.get(0).doubleValue());
 			// set the default values of the slider
-			slider.setLowValue(defaultValue.get(0).doubleValue());
+			// Note: due to a bug in javaFX the HighValue needs to be set before a LowValue can be set.
 			slider.setHighValue(defaultValue.get(1).doubleValue());
+			slider.setLowValue(defaultValue.get(0).doubleValue()); 
 			// make the slider "discrete"
 			slider.setBlockIncrement(1);
 			// format the labels appropriately 

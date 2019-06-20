@@ -21,13 +21,6 @@ public class FilterdAbstractConfigAdapter extends XmlAdapter<FilterdAbstractConf
 	 * Unmarshals an FilterdAbstractConfigAdapted into a corresponding FilterdAbstractConfig.
 	 * @param adaptedConfig The FilterdAbstractConfigAdapted transform into a FilterdAbstractConfig.
 	 * @throws IllegalStateException if static initialInput was not set before calling unmarshal.
-	 * @throws ClassNotFoundException 
-	 * @throws IllegalAccessException 
-	 * @throws InstantiationException 
-	 * @throws SecurityException 
-	 * @throws NoSuchMethodException 
-	 * @throws InvocationTargetException 
-	 * @throws IllegalArgumentException 
 	 */
 	public FilterdAbstractConfig unmarshal(FilterdAbstractConfigAdapted adaptedConfig) throws IllegalStateException, InstantiationException, IllegalAccessException, ClassNotFoundException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
 		if (initialInput == null) {

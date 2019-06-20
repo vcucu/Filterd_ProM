@@ -11,18 +11,32 @@ import org.processmining.framework.plugin.annotations.Plugin;
 import org.processmining.framework.plugin.annotations.PluginLevel;
 import org.processmining.framework.plugin.annotations.PluginVariant;
 
-/* This class exports a notebook to the disk. */
+/**
+ * Class representing the plug-in for exporting the Filterd notebook to the
+ * workspace.
+ */
 
-@Plugin(name = "Export Notebook", returnLabels = {}, returnTypes = {},
-level = PluginLevel.Regular, parameterLabels = { "String", "File"}, userAccessible = true)
+@Plugin(name = "Export Notebook", returnLabels = {}, returnTypes = {}, level = PluginLevel.Regular, parameterLabels = {
+		"String", "File" }, userAccessible = true)
 @UIExportPlugin(description = "Export Notebook", extension = "xml")
 public class NotebookExport {
-	
+
+	/**
+	 * Export plug-in method.
+	 * 
+	 * @param context
+	 *            variable not used
+	 * @param notebook
+	 *            XML representing the notebook configuration
+	 * @param file
+	 *            file to which we will write
+	 * @throws IOException
+	 */
 	@UITopiaVariant(affiliation = UITopiaVariant.EHV, author = "", email = "")
 	@PluginVariant(requiredParameterLabels = { 0, 1 }, variantLabel = "Export Number File")
 	public void export(PluginContext context, String notebook, File file) throws IOException {
-		FileWriter fw = new FileWriter(file);
-		fw.write(notebook);
-        fw.close();
+		FileWriter fw = new FileWriter(file); // create a file writer with the given file
+		fw.write(notebook); // write the notebook (represented as a XML i.e. string)
+		fw.close(); // close the file writer
 	}
 }
