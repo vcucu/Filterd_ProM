@@ -143,13 +143,11 @@ public class FilterdTraceFrequencyConfig extends FilterdAbstractConfig {
 
 	@Override
 	public AbstractFilterConfigPanelController getConfigPanel() {
-		if (this.configPanel == null) {
-			this.configPanel = new FilterConfigPanelController(
-					"Filter Trace Frequency Configuration", 
-					parameters, 
-					this);
-			parameterListeners();
-		}
+		this.configPanel = new FilterConfigPanelController(
+				"Filter Trace Frequency Configuration", 
+				parameters, 
+				this); 
+		parameterListeners();
 
 		return configPanel;
 	}

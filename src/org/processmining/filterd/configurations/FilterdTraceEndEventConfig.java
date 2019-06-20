@@ -72,24 +72,7 @@ public class FilterdTraceEndEventConfig extends FilterdAbstractReferencingConfig
 	 */
 	@Override
 	public boolean checkValidity(XLog candidateLog) {
-		if (parameters == null) {
-			return true;
-		}
-		List<String> attrCandidateLog = new ArrayList<>();
-		List<XEventClassifier> complexClassifiers = new ArrayList<>();
-
-		attrCandidateLog.addAll(Toolbox.computeAttributes(candidateLog));
-		complexClassifiers.addAll(Toolbox.computeComplexClassifiers(candidateLog));
-		for (XEventClassifier c : complexClassifiers) {
-			attrCandidateLog.add(c.toString());
-		}
-		ParameterOneFromSet attribute = (ParameterOneFromSet) getParameter("attribute");
-		String chosenAttr = attribute.getChosen();
-
-		if (!attrCandidateLog.contains(chosenAttr)) {
-			return false;
-		}			
-		return true;
+		return ConfigurationToolbox.traceStartAndEndEventValidity(parameters, this, candidateLog);
 	}
 
 	/**
