@@ -53,22 +53,22 @@ public class FilterdTraceAttrConfig extends FilterdAbstractConfig {
 
 		// List of values for the currently selected attribute.
 		List<String> traceKeysList = new ArrayList<>(traceKeys);
-		
+
 		// Add all value for the currently selected key to the attribute value
 		// parameters.
 		for (XTrace trace : log) {
 			XAttributeMap traceAttrs = trace.getAttributes();
 			keyValues.add(traceAttrs.get(traceKeysList.get(0)).toString());
 		}
-		
+
 		// Create list of the set of all values the selected key can take on.
 		List<String> keyValuesList = new ArrayList<String>(keyValues);
-		
+
 		// Create the parameter to display all the values of the currently
 		// selected key.
 		ParameterMultipleFromSet attrValues = new ParameterMultipleFromSet("attrValues", "Desired values:",
 				Arrays.asList(keyValuesList.get(0)), keyValuesList);
-		
+
 		// Add parameters to the configuration.
 		parameters.add(attribute);
 		parameters.add(filterInOut);
@@ -79,7 +79,7 @@ public class FilterdTraceAttrConfig extends FilterdAbstractConfig {
 		// Can always populate.
 		return true;
 	}
-	
+
 	@Override
 	public AbstractFilterConfigPanelController getConfigPanel() {
 		// If the configuration panel was not initialized yet.
@@ -90,7 +90,7 @@ public class FilterdTraceAttrConfig extends FilterdAbstractConfig {
 			// Add the listeners.
 			parameterListeners();
 		}
-		
+
 		return configPanel;
 	}
 
@@ -107,19 +107,16 @@ public class FilterdTraceAttrConfig extends FilterdAbstractConfig {
 					@Override
 					public void changed(ObservableValue ov, String oldValue, String newValue) {
 						final XLog Llog = log;
-						if (Llog == null)
-							System.out.println("log is null");
 						List<Parameter> params = parameters;
 						if (Llog != null) {
-							System.out.println("log not null");
 							for (ParameterController changingParameter : configPanel.getControllers()) {
 								// Get the parameter that displays the
 								// attributes.
 								if (changingParameter.getName().equals("attrValues")) {
-									
+
 									// Cast it to the correct value.
 									ParameterMultipleFromSetController castedChanging = (ParameterMultipleFromSetController) changingParameter;
-									
+
 									// Get the new values for the chosen key.
 									Set<String> attributeValues = new HashSet<>();
 
@@ -132,7 +129,7 @@ public class FilterdTraceAttrConfig extends FilterdAbstractConfig {
 										}
 
 									}
-									
+
 									// Change the parameter according to the
 									// newly calculated values.
 									List<String> attributeValuesList = new ArrayList<String>(attributeValues);

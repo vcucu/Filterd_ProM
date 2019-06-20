@@ -50,8 +50,6 @@ public abstract class CellController {
 	@FXML
 	public void handleCellName(KeyEvent e) {
 		if (e.getCode() == KeyCode.ENTER) {
-			//System.out.println("Enter was pressed");
-			//System.out.println(cellName.getText());
 			cellModel.setCellName(cellName.getText());
 		}
 	}
@@ -84,12 +82,12 @@ public abstract class CellController {
 			}
 			getNotebookController().removeCell(getCellModel());
 		}
-		//user chose No or closed the dialog don't remove cell		
+		//user chose No or closed the dialog don't remove cell
 	}
 
 	/**
 	 * Returns the controller of the notebook this cell is in.
-	 * 
+	 *
 	 * @return The notebook controller.
 	 */
 	public NotebookController getNotebookController() {
@@ -102,7 +100,7 @@ public abstract class CellController {
 
 	/**
 	 * Returns the layout of the current cell.
-	 * 
+	 *
 	 * @return The layout of the current cell.
 	 */
 	public VBox getCellLayout() {
@@ -115,7 +113,7 @@ public abstract class CellController {
 
 	/**
 	 * Returns the model of the current cell.
-	 * 
+	 *
 	 * @return The model of the current cell.
 	 */
 	public CellModel getCellModel() {
@@ -128,11 +126,10 @@ public abstract class CellController {
 
 	@FXML
 	public void handleStatusBar() {
-		//this causes for the isHidden attribute to fire a Change event to the CellControllerListeners 
-		//that in turn updates the view 
+		//this causes for the isHidden attribute to fire a Change event to the CellControllerListeners
+		//that in turn updates the view
 		if (cellModel.isHidden()) {
 			cellModel.setHidden(false);
-			//System.out.println("setHidden in cell controller");
 		} else {
 			cellModel.setHidden(true);
 
@@ -158,7 +155,7 @@ public abstract class CellController {
 		int index = getCellModel().getIndex();
 		if (index > 0) {
 			if (this instanceof ComputationCellController) {
-				//we are moving a computation cell up 
+				//we are moving a computation cell up
 				//set the selected cell's status to out of date
 				this.getCellModel().setStatusBar(CellStatus.OUT_OF_DATE);
 			}
@@ -174,7 +171,7 @@ public abstract class CellController {
 				//we are moving a computation cell down
 				List<CellModel> cells = controller.getModel().getCells();
 				for (int i = index + 1; i < cells.size(); i++) {
-					//find the closest downstream cell to the selected cell and update its status 
+					//find the closest downstream cell to the selected cell and update its status
 					if ((cells.get(i) instanceof ComputationCellModel)) {
 						cells.get(i).setStatusBar(CellStatus.OUT_OF_DATE);
 						break;
@@ -198,9 +195,8 @@ public abstract class CellController {
 		controller.getModel().getCells().add(index, getCellModel());
 		// Add layout at new position
 		controller.getCellsLayout().getChildren().add(index, cellLayout);
-		
+
 		if(this instanceof ComputationCellController) {
-			System.out.println("I am a computation cell controrller and I'm moviiiiiiing");
 			List<FilterButtonModel> filters = ((ComputationCellController) this).getCellModel().getFilters();
 			for(FilterButtonModel filter : filters) {
 //				filter.getSelectedProperty().set(false);
@@ -211,7 +207,7 @@ public abstract class CellController {
 
 	public void show() {
 		cellBody.setVisible(true); // makes the content of the HBox invisible.
-		cellBody.setManaged(true); // makes the HBox take up no space. This option is note available in the Scene Builder.		
+		cellBody.setManaged(true); // makes the HBox take up no space. This option is note available in the Scene Builder.
 	}
 
 	public void hide() {

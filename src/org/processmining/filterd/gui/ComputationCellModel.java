@@ -77,7 +77,7 @@ public class ComputationCellModel extends CellModel {
 		this.inputLogs = eventLogs;
 		this.outputLogs = FXCollections.observableArrayList();
 		outputLogs.add(new YLog(Toolbox.getNextId(), getCellName() + " output log", index));
-		
+
 		filters = FXCollections.observableArrayList(new Callback<FilterButtonModel, Observable[]>() {
 			@Override
 			public Observable[] call(FilterButtonModel temp) {
@@ -131,7 +131,6 @@ public class ComputationCellModel extends CellModel {
 		}
 		this.indexOfInputOwner = log.getIndexOfOwner();
 		this.inputLog = log;
-		System.out.println("[!] I am " + this.getCellName() + " and my input log has name " + log.getName());
 		// set the output to be the input (when the cell is computed, this will change)
 		// this is needed so that downstream cells don't have null logs as their input
 		if (log.get() != null) {
@@ -142,21 +141,16 @@ public class ComputationCellModel extends CellModel {
 	public YLog getInputLog() {
 		return this.inputLog;
 	}
-	
+
 	public void setIndexOfInputOwner(int indexOfInputOwner) {
-		System.out.println("[+] I am " + this.getCellName() + " and my new owner index is " + Integer.toString(indexOfInputOwner));
 		this.indexOfInputOwner = indexOfInputOwner;
 	}
-	
+
 	public int getIndexOfInputOwner() {
 		return this.indexOfInputOwner;
 	}
 
 	public void setInputLogs(List<YLog> eventLogs) {
-		//System.out.println("Setting log for computation cell "+ this.getIndex());
-		if (eventLogs == null) {
-			System.out.println("the input logs are null");
-		}
 		List<YLog> oldState = new ArrayList<YLog>(this.getInputLogs());
 		this.inputLogs = eventLogs;
 		//change the items in combobox that are displayed after list in model changes
@@ -200,7 +194,7 @@ public class ComputationCellModel extends CellModel {
 	public void setCanceller(ProMCanceller canceller) {
 		this.canceller = canceller;
 	}
-	
+
 	/**
 	 * exports the output event log of this cell to the workspace.
 	 */
@@ -224,7 +218,6 @@ public class ComputationCellModel extends CellModel {
 				return;
 			}
 		}
-		System.out.println(output);
 		// actually output to the workspace.
 		getContext().getProvidedObjectManager().createProvidedObject(getCellName(), output, XLog.class,
 				getContext());
@@ -241,7 +234,6 @@ public class ComputationCellModel extends CellModel {
 		ProMViewManager vm = ProMViewManager.initialize(context.getGlobalContext()); // Get current view manager
 		ProMResourceManager rm = ProMResourceManager.initialize(context.getGlobalContext()); // Get current resource manager
 		// Get the possible visualizers for the input event log.
-		System.out.println("getVisualisers has first input log to be: " + this.inputLogs.get(0).getName());
 		List<ViewType> logViewTypes = vm.getViewTypes(rm.getResourceForInstance(this.inputLogs.get(0).get()));
 		// Add all visualizer (except this one).
 		for (ViewType type : logViewTypes) {
@@ -427,7 +419,7 @@ public class ComputationCellModel extends CellModel {
 			// - InvalidConfigurationExcpetion  the selected configuration is not valid w.r.t. the output of the previous filter
 			try {
 				filter.setInputLog(inputOutput);
-				filter.compute(); // no point in passing the task to the individual filter models (individual filters do not support canceling)				
+				filter.compute(); // no point in passing the task to the individual filter models (individual filters do not support canceling)
 				inputOutput = filter.getOutputLog(); // if this line is reached, the filter did not throw an error -> fetch the filter output
 				filter.isValidProperty().set(true); // computation of this filter succeeded -> filter is valid
 			} catch (Exception e) {
@@ -458,13 +450,10 @@ public class ComputationCellModel extends CellModel {
 		}
 		this.isComputing.set(false);
 	}
-	
+
 	@Override
 	public void setIndex(int index) {
 		this.index = index;
-//		System.out.print("My name is " + this.cellName);
-//		System.out.print(" and my output log index is ");
-//		System.out.println(index);
 		this.outputLogs.get(0).setIndexOfOwner(index);
 	}
 }

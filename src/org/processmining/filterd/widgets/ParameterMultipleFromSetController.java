@@ -11,7 +11,7 @@ import javafx.scene.control.SelectionMode;
 
 /**
  * Multiple from set parameter UI counterpart.
- * 
+ *
  * @author Filip Davidovic
  */
 public class ParameterMultipleFromSetController extends ParameterController {
@@ -22,7 +22,7 @@ public class ParameterMultipleFromSetController extends ParameterController {
 
 	/**
 	 * Default constructor which should be used in all actual code.
-	 * 
+	 *
 	 * @param nameDisplayed
 	 *            description of the parameter
 	 * @param name
@@ -44,7 +44,6 @@ public class ParameterMultipleFromSetController extends ParameterController {
 		list.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 		ObservableList<String> observableList = FXCollections.observableList(options);
 		list.setItems(observableList);
-		System.out.println(defaultValues.size());
 		for (String option : defaultValues) {
 			list.getSelectionModel().select(option);
 		}
@@ -55,7 +54,7 @@ public class ParameterMultipleFromSetController extends ParameterController {
 
 	/**
 	 * Getter for the value of the list view.
-	 * 
+	 *
 	 * @return current value of the list view
 	 */
 	public List<String> getValue() {
@@ -64,7 +63,7 @@ public class ParameterMultipleFromSetController extends ParameterController {
 
 	/**
 	 * Method which sets the options which are selected in the list view.
-	 * 
+	 *
 	 * @param selection
 	 *            list of options that should be selected
 	 */
@@ -78,7 +77,7 @@ public class ParameterMultipleFromSetController extends ParameterController {
 	/**
 	 * Method which sets the options of the list view and selects the first
 	 * option.
-	 * 
+	 *
 	 * @param options
 	 *            options for the list view
 	 */
