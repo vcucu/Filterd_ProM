@@ -56,8 +56,9 @@ public class FilterdEventAttrConfig extends FilterdAbstractReferencingConfig {
 
 	@Override
 	public AbstractFilterConfigPanelController getConfigPanel() {
-		
-		this.configPanel = new FilterConfigPanelController("Event Attribute Configuration", parameters, this);
+		if(this.configPanel == null) {
+			this.configPanel = new FilterConfigPanelController("Event Attribute Configuration", parameters, this);
+		}
 		return configPanel;
 	}
 

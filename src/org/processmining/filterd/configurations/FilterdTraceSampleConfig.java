@@ -38,8 +38,10 @@ public class FilterdTraceSampleConfig extends FilterdAbstractConfig {
 
 	@Override
 	public AbstractFilterConfigPanelController getConfigPanel() {
-		this.configPanel = new FilterConfigPanelController(
-				"Filter Trace Sample Configuration", parameters, this);
+		if(this.configPanel == null) {
+			this.configPanel = new FilterConfigPanelController(
+					"Filter Trace Sample Configuration", parameters, this);
+		}
 
 		return configPanel;
 	}

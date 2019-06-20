@@ -212,9 +212,10 @@ public class FilterdTraceFollowerConfig extends FilterdAbstractConfig {
 	@Override
 	public AbstractFilterConfigPanelController getConfigPanel() {
 
-		this.configPanel = new FilterConfigPanelController(	"Filter Traces follower filter", parameters, this);
-		parameterListeners();
-
+		if(this.configPanel == null) {
+			this.configPanel = new FilterConfigPanelController(	"Filter Traces follower filter", parameters, this);
+			setupConfigPanel();
+		}
 
 		return configPanel;
 	}

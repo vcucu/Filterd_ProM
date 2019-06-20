@@ -43,7 +43,7 @@ public class FilterdTraceFrequencyConfig extends FilterdAbstractConfig {
 
 		// update the map with the first classifier
 		minMax.put(classifiers.get(0), minMaxOccurence(classifiers.get(0)));
-		
+
 		// Initialize the threshold type parameter and add it to the parameters 
 		// list
 		List<String> foOptions = new ArrayList<String>();
@@ -143,12 +143,13 @@ public class FilterdTraceFrequencyConfig extends FilterdAbstractConfig {
 
 	@Override
 	public AbstractFilterConfigPanelController getConfigPanel() {
-		this.configPanel = new FilterConfigPanelController(
-				"Filter Trace Frequency Configuration", 
-				parameters, 
-				this); 
-		parameterListeners();
-
+		if(this.configPanel == null) {
+			this.configPanel = new FilterConfigPanelController(
+					"Filter Trace Frequency Configuration", 
+					parameters, 
+					this); 
+			parameterListeners();
+		}
 		return configPanel;
 	}
 
@@ -160,7 +161,7 @@ public class FilterdTraceFrequencyConfig extends FilterdAbstractConfig {
 				.filter(c -> c.getName().equals("rangeFreq"))
 				.findFirst()
 				.get();
-		
+
 		/* get the occurence slider controller */
 		ParameterRangeFromRangeController<Integer> rangeOccControl = 
 				(ParameterRangeFromRangeController<Integer>)
@@ -168,7 +169,7 @@ public class FilterdTraceFrequencyConfig extends FilterdAbstractConfig {
 				.filter(c -> c.getName().equals("rangeOcc"))
 				.findFirst()
 				.get();
-		
+
 
 		// classifierParameter controller
 		ParameterOneFromSetController classifierControl = (ParameterOneFromSetController)
@@ -209,7 +210,7 @@ public class FilterdTraceFrequencyConfig extends FilterdAbstractConfig {
 				.filter(c -> c.getName().equals("FreqOcc"))
 				.findFirst()
 				.get();
-		
+
 		/* by default the dropdown is set to frequency and thus the occurence
 		 * slider must be hidden
 		 */

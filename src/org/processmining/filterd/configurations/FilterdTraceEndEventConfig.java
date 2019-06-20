@@ -58,12 +58,13 @@ public class FilterdTraceEndEventConfig extends FilterdAbstractReferencingConfig
 
 	@Override
 	public AbstractFilterConfigPanelController getConfigPanel() {
-		this.configPanel = new FilterConfigPanelController("Trace End Event Configuration", parameters, this);
-
+		if(this.configPanel == null) {
+			this.configPanel = new FilterConfigPanelController("Trace End Event Configuration", parameters, this);
+		}
 		return configPanel;
 	}
 
-	
+
 	/*
 	 * The candidateLog is invalid if the event attributes list does not 
 	 * contain the selected attribute 
@@ -91,7 +92,7 @@ public class FilterdTraceEndEventConfig extends FilterdAbstractReferencingConfig
 		}		
 		return concreteReference;
 	}
-	
+
 	/**
 	 * Method which modifies the log such that it only contains 
 	 * end events

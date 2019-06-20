@@ -81,21 +81,20 @@ public class FilterdEventRateConfig extends FilterdAbstractConfig {
 	public boolean canPopulate(FilterConfigPanelController component) {
 		return true;
 	}
-	
+
 	@Override
 	public AbstractFilterConfigPanelController getConfigPanel() {
-		if (this.configPanel == null) {
+		if(this.configPanel == null) {
 			this.configPanel = new FilterConfigPanelController("Filter Event Rate Configuration",
 					parameters, this);
 			parameterListeners();
 		}
-		
 		return configPanel;
 	}
 
 	public void parameterListeners() {
-		
-		
+
+
 		/*
 		 * retrieve and cast all needed parameter controllers
 		 */
@@ -103,29 +102,29 @@ public class FilterdEventRateConfig extends FilterdAbstractConfig {
 				configPanel.getControllers().stream().
 				filter(c->c.getName().equals("rate")).
 				findFirst().get();
-		
+
 		ParameterMultipleFromSetController desiredEventsController =  (ParameterMultipleFromSetController)
 				configPanel.getControllers().stream().
 				filter(c->c.getName().equals("desiredEvents")).
 				findFirst().get();
-		
+
 		ParameterValueFromRangeController thresholdController = (ParameterValueFromRangeController)
 				configPanel.getControllers().stream().
 				filter(c->c.getName().equals("threshold")).
 				findFirst().get();
-		
+
 		// retrieve and cast all needed parameters
 		ParameterOneFromSet rateParameter = (ParameterOneFromSet) getParameter("rate");
 		ParameterMultipleFromSet desiredEventsParameter = (ParameterMultipleFromSet) getParameter("desiredEvents");
 		ParameterValueFromRange<Integer> thresholdParameter =  (ParameterValueFromRange<Integer>) getParameter("threshold");
-	
-		
+
+
 		/*
 		 * listener for the selection of rate drop-down
 		 * the selected values modifies the end points of the slider,
 		 * the units in the slider, as well as the selected events 
 		 * from the desiredEvents parameter
-		*/
+		 */
 		ComboBox<String> comboBox = rateController.getComboBox();
 		comboBox.valueProperty().addListener(new ChangeListener<String>() {
 
@@ -135,41 +134,41 @@ public class FilterdEventRateConfig extends FilterdAbstractConfig {
 			@Override 
 			public void changed(ObservableValue ov, String oldValue, String newValue) {
 
-			//cast the needed parameters
+				//cast the needed parameters
 				thresholdParameter = (ParameterValueFromRange<Integer>) getParameter("threshold");
 				rateParameter = (ParameterOneFromSet) getParameter("rate");
 				desiredEventsParameter = (ParameterMultipleFromSet) getParameter("desiredEvents");
 				List<String> selection = new ArrayList<String>();
-				
+
 				//set the threshold parameter with the new value provided by the controller
 				if (newValue.equals("Occurrence")) {
 					thresholdController.setSliderConfig(minAndMaxOccurrence.get(0), minAndMaxOccurrence);	
 					thresholdParameter.setDefaultChoice(minAndMaxOccurrence.get(0));
 					thresholdParameter.setOptionsPair(minAndMaxOccurrence);
-					
-					
+
+
 				} else {
 					thresholdController.setSliderConfig(minAndMaxFrequency.get(1), minAndMaxFrequency);
 					thresholdParameter.setDefaultChoice(minAndMaxFrequency.get(1));
 					thresholdParameter.setOptionsPair(minAndMaxFrequency);
 				}
-				
+
 				//recompute the corresponding desired events from the threshold value
 				selection = Toolbox.computeDesiredEventsFromThreshold(thresholdParameter, rateParameter, eventClasses);
 				desiredEventsController.setSelected(selection);	
-			
+
 				//set the rest of the parameters
 				desiredEventsParameter.setChosen(selection);	 
 				rateParameter.setChosen(rateController.getValue());
-		
+
 			}
 		});
-		
-	    /*
-	     * listener for the slider of the threshold. 
+
+		/*
+		 * listener for the slider of the threshold. 
 		 * the selected value modifies which events are selected from the
 		 * desiredEvents parameter
-	     */	 
+		 */	 
 		Slider slider = thresholdController.getSlider();
 		slider.valueProperty().addListener(new ChangeListener<Number>() {
 
@@ -180,16 +179,16 @@ public class FilterdEventRateConfig extends FilterdAbstractConfig {
 			@Override
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue,
 					Number newValue) {
-				
+
 				//cast the needed parameters
 				rateParameter = (ParameterOneFromSet) getParameter("rate");
 				desiredEventsParameter = (ParameterMultipleFromSet) getParameter("desiredEvents");
 				thresholdParameter =  (ParameterValueFromRange) getParameter("threshold");
 				List<String> selection = new ArrayList<String>();
-				
+
 				//set the threshold parameter with the new value provided by the controller
 				thresholdParameter.setChosen(newValue.intValue());
-				
+
 				//recompute the corresponding desired events from the threshold value
 				selection = Toolbox.computeDesiredEventsFromThreshold(thresholdParameter, rateParameter, eventClasses);
 				desiredEventsController.setSelected(selection);
@@ -197,10 +196,10 @@ public class FilterdEventRateConfig extends FilterdAbstractConfig {
 				//set the rest of the parameters
 				desiredEventsParameter.setChosen(selection);	 
 				rateParameter.setChosen(rateController.getValue());
-								
+
 			}
 		});	
-		
+
 	}
 
 	// I did not find any case where a different input log would cause invalidity

@@ -126,10 +126,11 @@ public class FilterdTraceTimeframeConfig extends FilterdAbstractConfig {
 	 * Getter for the configuration panel.
 	 */
 	public AbstractFilterConfigPanelController getConfigPanel() {
-		// Create a new configuration panel.
-		this.configPanel = new FilterConfigPanelController(
-				"Filter Trace Timeframe Configuration", parameters, this);
-
+		if(this.configPanel == null) {
+			// Create a new configuration panel.
+			this.configPanel = new FilterConfigPanelController(
+					"Filter Trace Timeframe Configuration", parameters, this);
+		}
 		return configPanel;
 	}
 

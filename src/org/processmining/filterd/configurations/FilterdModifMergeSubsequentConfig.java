@@ -96,9 +96,6 @@ public class FilterdModifMergeSubsequentConfig extends FilterdAbstractReferencin
 		parameters.add(mergeType);
 		parameters.add(comparisonType);
 		parameters.add(relevantAttributes);
-
-
-		this.configPanel = new FilterConfigPanelController("Merge Subsequent Events Configuration", parameters, this);
 	}
 
 
@@ -156,6 +153,7 @@ public class FilterdModifMergeSubsequentConfig extends FilterdAbstractReferencin
 	 */
 	public AbstractFilterConfigPanelController getConfigPanel() {
 
+		this.configPanel = new FilterConfigPanelController("Merge Subsequent Events Configuration", parameters, this);
 		
 		// retrieve the controller of the comparisonType parameter
 		ParameterOneFromSetController comparisonTypeController =  (ParameterOneFromSetController)
