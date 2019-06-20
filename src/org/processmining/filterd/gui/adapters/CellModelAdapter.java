@@ -1,10 +1,13 @@
 package org.processmining.filterd.gui.adapters;
 
+import java.util.ArrayList;
+
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 import org.processmining.filterd.gui.CellModel;
 import org.processmining.filterd.gui.ComputationCellModel;
 import org.processmining.filterd.gui.TextCellModel;
+import org.processmining.filterd.models.YLog;
 
 /**
  * Class used to marshal (export) and unmarshal (import) the CellModel class.
@@ -24,8 +27,8 @@ public class CellModelAdapter extends XmlAdapter<CellModelAdapted, CellModel> {
 		CellModel model;
 		// different cell types require different cell models
 		if (adaptedModel.getClass() == ComputationCellModelAdapted.class) {
-			model = new ComputationCellModel(null, adaptedModel.getIndex(), null, null);
 			// computation cell models have associated filters and an input log
+			model = new ComputationCellModel(null, adaptedModel.getIndex(), null, new ArrayList<YLog>());
 			((ComputationCellModel) model).addFilterModels(((ComputationCellModelAdapted) adaptedModel).getFilters());
 			((ComputationCellModel) model)
 					.setIndexOfInputOwner(((ComputationCellModelAdapted) adaptedModel).getIndexOfInputOwner());
