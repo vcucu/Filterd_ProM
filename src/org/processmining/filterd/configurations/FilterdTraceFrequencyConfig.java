@@ -1,6 +1,5 @@
 package org.processmining.filterd.configurations;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +41,9 @@ public class FilterdTraceFrequencyConfig extends FilterdAbstractConfig {
 						classifiers.stream().map(x -> x.toString())
 						.collect(Collectors.toList()));		
 
+		// update the map with the first classifier
+		minMax.put(classifiers.get(0), minMaxOccurence(classifiers.get(0)));
+		
 		// Initialize the threshold type parameter and add it to the parameters 
 		// list
 		List<String> foOptions = new ArrayList<String>();
@@ -77,8 +79,8 @@ public class FilterdTraceFrequencyConfig extends FilterdAbstractConfig {
 				new ParameterRangeFromRange<Integer>(
 						"rangeOcc",
 						"Threshold",
-						new ArrayList<Integer>(Arrays.asList(1, 100)),
-						new ArrayList<Integer>(Arrays.asList(1, 100)),
+						minMax.get(classifiers.get(0)),
+						minMax.get(classifiers.get(0)),
 						Integer.TYPE
 						);
 		rangeOcc.setDisappearable(true);
@@ -168,6 +170,7 @@ public class FilterdTraceFrequencyConfig extends FilterdAbstractConfig {
 				.filter(c -> c.getName().equals("rangeOcc"))
 				.findFirst()
 				.get();
+		
 
 		// classifierParameter controller
 		ParameterOneFromSetController classifierControl = (ParameterOneFromSetController)
