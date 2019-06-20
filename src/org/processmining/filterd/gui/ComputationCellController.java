@@ -38,7 +38,7 @@ import org.processmining.filterd.filters.FilterdTraceSampleFilter;
 import org.processmining.filterd.filters.FilterdTraceStartEventFilter;
 import org.processmining.filterd.filters.FilterdTraceTimeframeFilter;
 import org.processmining.filterd.filters.FilterdTraceTrimFilter;
-import org.processmining.filterd.filters.FilterdTracesHavingEvent;
+import org.processmining.filterd.filters.FilterdTracesHavingEventFilter;
 import org.processmining.filterd.gui.ConfigurationModalController.ConfigurationStep;
 import org.processmining.filterd.models.YLog;
 import org.processmining.filterd.plugins.FilterdVisualizer;
@@ -683,7 +683,7 @@ public class ComputationCellController extends CellController {
 								break;
 							case "Trace Having Event" :
 								filterConfig = new FilterdTracesHavingEventConfig(inputLog,
-										new FilterdTracesHavingEvent());
+										new FilterdTracesHavingEventFilter());
 								break;
 							case "Trace Attribute" :
 								filterConfig = new FilterdTraceAttrConfig(inputLog, new FilterdTraceAttrFilter());

@@ -13,7 +13,7 @@ import org.processmining.filterd.configurations.FilterdTraceFrequencyConfig;
 import org.processmining.filterd.configurations.FilterdTracesHavingEventConfig;
 import org.processmining.filterd.filters.FilterdEventAttrFilter;
 import org.processmining.filterd.filters.FilterdTraceFrequencyFilter;
-import org.processmining.filterd.filters.FilterdTracesHavingEvent;
+import org.processmining.filterd.filters.FilterdTracesHavingEventFilter;
 import org.processmining.filterd.gui.FilterConfigPanelController;
 import org.processmining.filterd.parameters.ParameterRangeFromRange;
 import org.processmining.tests.filters.FilterdPackageTest;
@@ -26,14 +26,14 @@ public class ConfigTracesHavingEventTest extends FilterdPackageTest {
 	public void testCanPopulate() throws Exception {
 		XLog typed = originalLog;	
 		FilterdTracesHavingEventConfig config = new FilterdTracesHavingEventConfig(typed,
-				new FilterdTracesHavingEvent());
+				new FilterdTracesHavingEventFilter());
 		assertTrue(config.canPopulate(new FilterConfigPanelController()));
 	}
 	
 	public void testCheckValidity() throws Exception {
 		XLog typed = originalLog;	
 		FilterdTracesHavingEventConfig config = new FilterdTracesHavingEventConfig(typed,
-				new FilterdTracesHavingEvent());
+				new FilterdTracesHavingEventFilter());
 		assertTrue(config.checkValidity(typed));
 		XLog empty = parseLog("", "test_empty_event_log.xes");
 		assertFalse(config.checkValidity(empty));

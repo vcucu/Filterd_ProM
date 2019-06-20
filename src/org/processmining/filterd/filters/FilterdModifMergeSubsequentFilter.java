@@ -27,9 +27,12 @@ import org.processmining.log.utils.XUtils;
 
 public class FilterdModifMergeSubsequentFilter extends Filter {
 	
-	
 	private static final int TIME_DIFFERENCE = 1000 * 60;
-
+	/**
+	 * Enumeration defining the rules of comparing
+	 * event according to the selected
+	 * comparison type
+	 */
 	public enum MergeFilter {SAME_CLASS("Compare event class") {
 		public boolean sameEvent(XEventClassifier classifier, Set<String> relevantAttributes, XEvent eventA,
 				XEvent eventB) {
@@ -64,12 +67,16 @@ public class FilterdModifMergeSubsequentFilter extends Filter {
 		public String toString() {
 			return label;
 		}
-
+		// check whether 2 events are the same 
+		// according to the rule
 		public abstract boolean sameEvent(XEventClassifier classifier, Set<String> relevantAttributes,
 				XEvent subsequentEvent, XEvent currentEvent);
 	}
-	
-	
+	/**
+	 * Enumeration defining the rules of merging
+	 * event according to the selected
+	 * merge type
+	 */
 	public enum MergeType {
 		PLAIN_FIRST("Merge taking first event") {
 			public long merge(XEventClasses eventClasses, XFactory factory, long instance, XTrace newTrace,
@@ -109,7 +116,6 @@ public class FilterdModifMergeSubsequentFilter extends Filter {
 						break;
 					}
 				}
-
 				// Add last event
 				newTrace.add(factory.createEvent((XAttributeMap) lastEvent.getAttributes().clone()));
 				return ++instance;
@@ -165,28 +171,32 @@ public class FilterdModifMergeSubsequentFilter extends Filter {
 		public String toString() {
 			return label;
 		}
-
+		// merge two events according to the rule
 		public abstract long merge(XEventClasses eventClasses, XFactory factory, long instance, XTrace newTrace,
 				ListIterator<XEvent> iterator, XEvent currentEvent, MergeFilter mergeFilter,
 				Set<String> relevantAttributes);
-
 	}
 	
-	
+	/**
+	 * Method responsible for modifying the cloned log
+	 */
 	public XLog filter(XLog log, List<Parameter> parameters) {
 		
+		// retrieve the classifier parameter from the list of parameters
 		ParameterOneFromSet classifierParam = (ParameterOneFromSet)this
 				.getParameter(parameters, "classifier");
+		// retrieve the desired events parameter from the list of parameters
 		ParameterMultipleFromSet desiredEventsParam = (ParameterMultipleFromSet)this
 				.getParameter(parameters, "desiredEvents");
+		// retrieve the comparison type parameter from the list of parameters
 		ParameterOneFromSet comparisonTypeParam = (ParameterOneFromSet)this
 				.getParameter(parameters, "comparisonType");
+		// retrieve the merge type parameter from the list of parameters
 		ParameterOneFromSet mergeTypeParam = (ParameterOneFromSet)this
 				.getParameter(parameters, "mergeType");
+		// retrieve the relevant attributes parameter from the list of parameters
 		ParameterMultipleFromSet relevantAttributesParam = (ParameterMultipleFromSet)this
-				.getParameter(parameters, "relevantAttributes");
-		
-		
+				.getParameter(parameters, "relevantAttributes");		
 		
 		// get classifier and the corresponding event classes as XEventClasses - eventClasses
 		XEventClassifier classifier = Toolbox.computeClassifier(log, classifierParam.getChosen());
@@ -203,8 +213,7 @@ public class FilterdModifMergeSubsequentFilter extends Filter {
 			 if (desiredEventsNames.contains(e.toString())) {
 				 desiredEvents.add(e);
 			 }
-		 }
-		
+		 }		
 		// get the comparisonType as MergeFilter - mergeFilter
 		 MergeFilter mergeFilter;
 		 switch(comparisonTypeParam.getChosen()) {
@@ -241,13 +250,27 @@ public class FilterdModifMergeSubsequentFilter extends Filter {
 		return doMergeSubsequentEvents(log, eventClasses, f, desiredEvents, relevantAttributes, mergeFilter,
 				mergeType);
 	}
-	
+	/**
+	 * Method which merges events according to the parameter values
+	 * @param log the cloned log on which the filtering will be performed 
+	 * @param eventClasses all the event classes classified with the chosen classifier
+	 * @param factory, used for cloning the original log
+	 * @param consideredClasses, the event classes to be considered  
+	 * @param relevantAttributes the attributes to be considered within the event
+	 * @param mergeFilter the comparison type parameter
+	 * @param mergeType the merge type parameter
+	 * @return
+	 */
 	public XLog doMergeSubsequentEvents(XLog log, XEventClasses eventClasses, XFactory factory,
 			Set<XEventClass> consideredClasses, Set<String> relevantAttributes, MergeFilter mergeFilter,
 			MergeType mergeType) {
+		
+		// clone input log, since ProM documentation says filters should not 
+		// change input logs
 		XLog newLog = XUtils.createLogFrom(log, factory);
 		long instance = 0;
 
+		//loop through all events in the event log
 		for (XTrace t : log) {
 			XTrace newTrace = factory.createTrace((XAttributeMap) t.getAttributes().clone());
 
@@ -259,17 +282,13 @@ public class FilterdModifMergeSubsequentFilter extends Filter {
 				if (consideredClasses.contains(eventClass)) {
 					instance = mergeType.merge(eventClasses, factory, instance, newTrace, iterator, currentEvent,
 							mergeFilter, relevantAttributes);
-
 				} else {
 					// Just copy existing
 					newTrace.add(factory.createEvent((XAttributeMap) currentEvent.getAttributes().clone()));
 				}
-
 			}
 			newLog.add(newTrace);
 		}
-
 		return newLog;
-	}
- 
+	} 
 }
