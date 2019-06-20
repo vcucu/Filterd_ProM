@@ -26,18 +26,6 @@ public class CellModelTest extends TestCase {
 	}
 	
 	@Test
-	public void testNewEmptyCellModel() {
-		// Create new cell model instance (empty constructor)
-		CellModel cell = new CellModel();
-		// Get the property change support of the newly created cell
-		PropertyChangeSupport property = cell.getProperty();
-		// Check if the property support variable was initialized properly
-		assertTrue(property != null);
-		// Check the isHidden variable is properly initialized
-		assertFalse(cell.isHidden());
-	}
-	
-	@Test
 	public void testHiddenProperty() {
 		// Create new cell model instance
 		CellModel cell = new CellModel(null, 0);

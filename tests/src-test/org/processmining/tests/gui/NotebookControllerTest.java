@@ -1,5 +1,7 @@
 package org.processmining.tests.gui;
 
+import java.util.ArrayList;
+
 import org.junit.Test;
 import org.processmining.filterd.gui.ComputationCellModel;
 import org.processmining.filterd.gui.ComputationMode;
@@ -7,6 +9,7 @@ import org.processmining.filterd.gui.FilterButtonModel;
 import org.processmining.filterd.gui.NotebookController;
 import org.processmining.filterd.gui.NotebookModel;
 import org.processmining.filterd.gui.TextCellModel;
+import org.processmining.filterd.models.YLog;
 
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -19,7 +22,7 @@ public class NotebookControllerTest extends TestCase {
 	
 	public void setupNotebookController() {
 		// Create new notebook model
-		model = new NotebookModel();
+		model = new NotebookModel(null);
 		// Create new notebook controller
 		controller = new NotebookController(model);
 	}
@@ -170,8 +173,8 @@ public class NotebookControllerTest extends TestCase {
 		setupNotebookController();
 		
 		// Create new cell models
-		ComputationCellModel cell1 = new ComputationCellModel();
-		TextCellModel cell2 = new TextCellModel();
+		ComputationCellModel cell1 = new ComputationCellModel(null, 0, null, new ArrayList<YLog>());
+		TextCellModel cell2 = new TextCellModel(null, 2);
 		
 		// Add filter to the notebook model
 		controller.cellListeners();
@@ -183,7 +186,7 @@ public class NotebookControllerTest extends TestCase {
 		assertEquals(model.getCells().size(), 2);
 		
 		// Update the cells
-		cell1.addFilterModel(0, new FilterButtonModel());
+		cell1.addFilterModel(0, new FilterButtonModel(0));
 		cell1.setHidden(true);
 		cell2.setHidden(true);
 		

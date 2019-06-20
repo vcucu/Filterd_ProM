@@ -18,7 +18,7 @@ public class TextCellControllerTest extends TestCase {
 	
 	public void setupTextCellController() {
 		// Create new notebook model instance
-		model = new NotebookModel();
+		NotebookModel model = new NotebookModel(null);
 		// Create new notebook controller instance
 		controller = new NotebookController(model);
 		// Create new cell controller instance (without a text cell model since it requires the view)

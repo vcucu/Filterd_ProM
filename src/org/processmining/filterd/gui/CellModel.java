@@ -17,18 +17,6 @@ public class CellModel {
 	//property used to register property listeners for each bound property
 	protected PropertyChangeSupport property;
 
-	/**
-	 * Constructor for importing/exporting. This constructor needs to exist because JAXB needs a no-argument constructor for unmarshalling.
-	 * Properties set here could be overwritten during loading.
-	 */
-	public CellModel() {
-		this.property = new PropertyChangeSupport(this);
-		isHidden = false;
-		this.statusBar = CellStatus.IDLE;// set the initial cell status to idle
-		cellName = new SimpleStringProperty(); // initialize the cellName
-		setCellName("Cell #" + Integer.toString((int) (Math.random() * 900 + 100))); // assign an initial name to the cell
-	}
-
 	public CellModel(UIPluginContext context, int index) {
 		this.context = context;
 		//adding property to register all change listeners to all bounded properties of the model

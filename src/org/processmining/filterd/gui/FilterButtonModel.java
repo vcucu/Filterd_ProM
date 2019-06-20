@@ -26,18 +26,6 @@ public class FilterButtonModel {
 	private BooleanProperty isValid; // is the filter configuration valid (JavaFX property so that it can be binded)
 	public BooleanProperty isEditDisabled; // is the edit button disabled (JavaFX property so that it can be binded)
 
-	/**
-	 * Constructor for importing/exporting. This constructor needs to exist
-	 * because JAXB needs a no-argument constructor for unmarshalling.
-	 * Properties set here could be overwritten during loading.
-	 */
-	public FilterButtonModel() {
-		name = new SimpleStringProperty("New filter");
-		selected = new SimpleBooleanProperty(false);
-		isValid = new SimpleBooleanProperty(true);
-		isEditDisabled = new SimpleBooleanProperty(true);
-	}
-
 	public FilterButtonModel(int index) {
 		name = new SimpleStringProperty("New filter");
 		selected = new SimpleBooleanProperty(false);

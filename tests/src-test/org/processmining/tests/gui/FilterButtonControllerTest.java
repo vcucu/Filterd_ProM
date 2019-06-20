@@ -13,7 +13,7 @@ public class FilterButtonControllerTest extends TestCase {
 	
 	public void setupNewFilterButton() {
 		// Create new filter button model
-		model = new FilterButtonModel();
+		model = new FilterButtonModel(0);
 		// Create new filter button controller
 		controller = new FilterButtonController(null, model);		
 	}
@@ -65,7 +65,7 @@ public class FilterButtonControllerTest extends TestCase {
 		// Setup new filter button
 		setupNewFilterButton();
 		// Create new model for the filter button
-		FilterButtonModel tmpModel = new FilterButtonModel();
+		FilterButtonModel tmpModel = new FilterButtonModel(0);
 		// Set new model for the filter button
 		controller.setModel(tmpModel);
 		// Get the newly created model

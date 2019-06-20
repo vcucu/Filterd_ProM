@@ -11,6 +11,7 @@ import org.processmining.filterd.gui.FilterButtonModel;
 import org.processmining.filterd.gui.NotebookController;
 import org.processmining.filterd.gui.NotebookModel;
 import org.processmining.filterd.gui.TextCellModel;
+import org.processmining.filterd.models.YLog;
 import org.processmining.tests.filters.FilterdPackageTest;
 
 import javafx.scene.layout.VBox;
@@ -27,7 +28,7 @@ public class ComputationCellControllerTest extends FilterdPackageTest {
 	
 	public void setupComputationCell() {
 		// Create new computation cell model
-		model = new ComputationCellModel();
+		model = new ComputationCellModel(null, 0, null, new ArrayList<YLog>());
 		// Create new computation cell controller
 		controller = new ComputationCellController(model);
 	}
@@ -35,9 +36,9 @@ public class ComputationCellControllerTest extends FilterdPackageTest {
 	@Test
 	public void testNewComputationCellController() {
 		// Create new computation cell model instance
-		ComputationCellModel cell = new ComputationCellModel(null, 0, null, new ArrayList<>());
+		ComputationCellModel cell = new ComputationCellModel(null, 0, null, new ArrayList<YLog>());
 		// Create new notebook model
-		NotebookModel model = new NotebookModel();
+		NotebookModel model = new NotebookModel(null);
 		// Create new notebook controller
 		NotebookController controller = new NotebookController(model);
 		
@@ -56,9 +57,9 @@ public class ComputationCellControllerTest extends FilterdPackageTest {
 		setupComputationCell();
 		
 		// Create new filter button model
-		FilterButtonModel filter0 = new FilterButtonModel();
-		FilterButtonModel filter1 = new FilterButtonModel();
-		FilterButtonModel filter2 = new FilterButtonModel();
+		FilterButtonModel filter0 = new FilterButtonModel(0);
+		FilterButtonModel filter1 = new FilterButtonModel(1);
+		FilterButtonModel filter2 = new FilterButtonModel(2);
 		
 		// Add listeners to the filter button models list
 		controller.addFilterButtonListeners();
@@ -98,8 +99,8 @@ public class ComputationCellControllerTest extends FilterdPackageTest {
 		// Add output log for the first filter button
 		controller.getCellModel().getFilters().get(0).setOutputLog(originalLog);
 		// Create new filter button model
-		FilterButtonModel filter0 = new FilterButtonModel();
-		FilterButtonModel filter1 = new FilterButtonModel();
+		FilterButtonModel filter0 = new FilterButtonModel(0);
+		FilterButtonModel filter1 = new FilterButtonModel(1);
 		filter0.setOutputLog(originalLog);
 		filter1.setOutputLog(originalLog);
 		model.addFilterModel(0, filter0);
@@ -120,7 +121,7 @@ public class ComputationCellControllerTest extends FilterdPackageTest {
 		// Setup new computation cell controller
 		setupComputationCell();
 		// Create new filter button model
-		FilterButtonModel filter0 = new FilterButtonModel();
+		FilterButtonModel filter0 = new FilterButtonModel(0);
 		// Set the output log for the filter button model
 		filter0.setOutputLog(originalLog);
 		// Add the filter button to the computation cell
@@ -158,7 +159,7 @@ public class ComputationCellControllerTest extends FilterdPackageTest {
 		// Check that the new cell model was properly set
 		assertTrue(true);
 		// Create new text cell model (to assert error being thrown)
-		TextCellModel newModel = new TextCellModel();
+		TextCellModel newModel = new TextCellModel(null, 0);
 		try {
 			// Set a wrong cell model for the computation cell
 			controller.setCellModel(newModel);
@@ -213,8 +214,8 @@ public class ComputationCellControllerTest extends FilterdPackageTest {
 		// Setup new computation cell controller
 		setupComputationCell();
 		// Create new filter button model
-		FilterButtonModel filter0 = new FilterButtonModel();
-		FilterButtonModel filter1 = new FilterButtonModel();
+		FilterButtonModel filter0 = new FilterButtonModel(0);
+		FilterButtonModel filter1 = new FilterButtonModel(1);
 		// Add filters to the computation cell model
 		model.addFilterModel(0, filter0);
 		model.addFilterModel(1, filter1);
