@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import org.deckfour.xes.classification.XEventClassifier;
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
 import org.junit.Test;
@@ -124,9 +125,17 @@ public class FilterFrequencyOccurenceTest extends FilterdPackageTest{
 		
 		FilterdTraceFrequencyFilter filter = new FilterdTraceFrequencyFilter();
 		
+		List<XEventClassifier> classifiers = Toolbox.computeAllClassifiers(originalLog);
+		// get the classifier object
+		XEventClassifier classifier = classifiers.stream()
+				.filter(c -> c.toString().equals("Resource"))
+				.findFirst()
+				.get();
+		
 		List<Parameter> parameters = getOccurenceParameters(
-				51d, 
-				100d, 
+				51, 
+				100, 
+				classifier,
 				"frequency", 
 				"in"
 				);
@@ -149,9 +158,17 @@ public class FilterFrequencyOccurenceTest extends FilterdPackageTest{
 		
 		FilterdTraceFrequencyFilter filter = new FilterdTraceFrequencyFilter();
 		
+		List<XEventClassifier> classifiers = Toolbox.computeAllClassifiers(originalLog);
+		// get the classifier object
+		XEventClassifier classifier = classifiers.stream()
+				.filter(c -> c.toString().equals("Resource"))
+				.findFirst()
+				.get();
+		
 		List<Parameter> parameters = getOccurenceParameters(
-				76d, 
-				100d, 
+				76, 
+				100, 
+				classifier,
 				"frequency", 
 				"in"
 				);
@@ -174,9 +191,17 @@ public class FilterFrequencyOccurenceTest extends FilterdPackageTest{
 		
 		FilterdTraceFrequencyFilter filter = new FilterdTraceFrequencyFilter();
 		
+		List<XEventClassifier> classifiers = Toolbox.computeAllClassifiers(originalLog);
+		// get the classifier object
+		XEventClassifier classifier = classifiers.stream()
+				.filter(c -> c.toString().equals("Resource"))
+				.findFirst()
+				.get();
+		
 		List<Parameter> parameters = getOccurenceParameters(
 				0, 
-				5d, 
+				5, 
+				classifier,
 				"frequency", 
 				"out"
 				);
@@ -199,9 +224,17 @@ public class FilterFrequencyOccurenceTest extends FilterdPackageTest{
 		
 		FilterdTraceFrequencyFilter filter = new FilterdTraceFrequencyFilter();
 		
+		List<XEventClassifier> classifiers = Toolbox.computeAllClassifiers(originalLog);
+		// get the classifier object
+		XEventClassifier classifier = classifiers.stream()
+				.filter(c -> c.toString().equals("Resource"))
+				.findFirst()
+				.get();
+		
 		List<Parameter> parameters = getOccurenceParameters(
 				0, 
-				25d, 
+				25, 
+				classifier,
 				"frequency", 
 				"out"
 				);
@@ -225,10 +258,18 @@ public class FilterFrequencyOccurenceTest extends FilterdPackageTest{
 		
 		FilterdTraceFrequencyFilter filter = new FilterdTraceFrequencyFilter();
 		
+		List<XEventClassifier> classifiers = Toolbox.computeAllClassifiers(originalLog);
+		// get the classifier object
+		XEventClassifier classifier = classifiers.stream()
+				.filter(c -> c.toString().equals("Resource"))
+				.findFirst()
+				.get();
+		
 		List<Parameter> parameters = getOccurenceParameters(
-				2d, 
-				4d, 
-				"occurrence", 
+				2, 
+				4, 
+				classifier,
+				"occurrence",
 				"in"
 				);
 		
@@ -250,10 +291,18 @@ public class FilterFrequencyOccurenceTest extends FilterdPackageTest{
 		
 		FilterdTraceFrequencyFilter filter = new FilterdTraceFrequencyFilter();
 		
+		List<XEventClassifier> classifiers = Toolbox.computeAllClassifiers(originalLog);
+		// get the classifier object
+		XEventClassifier classifier = classifiers.stream()
+				.filter(c -> c.toString().equals("Resource"))
+				.findFirst()
+				.get();
+		
 		List<Parameter> parameters = getOccurenceParameters(
-				3d, 
-				4d,
-				"occurrence", 
+				3, 
+				4,
+				classifier, 
+				"occurrence",
 				"in"
 				);
 		
@@ -275,9 +324,17 @@ public class FilterFrequencyOccurenceTest extends FilterdPackageTest{
 		
 		FilterdTraceFrequencyFilter filter = new FilterdTraceFrequencyFilter();
 		
+		List<XEventClassifier> classifiers = Toolbox.computeAllClassifiers(originalLog);
+		// get the classifier object
+		XEventClassifier classifier = classifiers.stream()
+				.filter(c -> c.toString().equals("Resource"))
+				.findFirst()
+				.get();
+		
 		List<Parameter> parameters = getOccurenceParameters(
-				2d, 
-				2d, 
+				2, 
+				2, 
+				classifier,
 				"occurrence", 
 				"in"
 				);
@@ -300,9 +357,17 @@ public class FilterFrequencyOccurenceTest extends FilterdPackageTest{
 		
 		FilterdTraceFrequencyFilter filter = new FilterdTraceFrequencyFilter();
 		
+		List<XEventClassifier> classifiers = Toolbox.computeAllClassifiers(originalLog);
+		// get the classifier object
+		XEventClassifier classifier = classifiers.stream()
+				.filter(c -> c.toString().equals("Resource"))
+				.findFirst()
+				.get();
+		
 		List<Parameter> parameters = getOccurenceParameters(
-				3d, 
-				4d, 
+				3, 
+				4, 
+				classifier,
 				"occurrence", 
 				"out"
 				);
@@ -313,8 +378,9 @@ public class FilterFrequencyOccurenceTest extends FilterdPackageTest{
 	}
 	
 	private List<Parameter> getOccurenceParameters(
-			double lowThreshold, 
-			double highThreshold,
+			int lowThreshold, 
+			int highThreshold,
+			XEventClassifier classifier,
 			String occurrenceOrFrequency,
 			String inOrOut) {
 		
@@ -327,12 +393,11 @@ public class FilterFrequencyOccurenceTest extends FilterdPackageTest{
 						"Resource", 
 						Arrays.asList("Resource"));	
 		
-		
 		//initialize the threshold type parameter and add it to the parameters list
 		List<String> foOptions = new ArrayList<String>();
 		
 		foOptions.add("frequency");
-		foOptions.add("occurrance");
+		foOptions.add("occurrence");
 		
 		ParameterOneFromSet frequencyOccurranceParameter = 
 				new ParameterOneFromSet(
@@ -349,7 +414,7 @@ public class FilterFrequencyOccurenceTest extends FilterdPackageTest{
 		List<Double> thrOptions = new ArrayList<Double>();
 		
 		Map<XTrace, List<Integer>> variantsToTraceIndices = 
-				Toolbox.getVariantsToTraceIndices(originalLog);
+				Toolbox.getVariantsToTraceIndices(originalLog, classifier);
 		
 		double smallestNumber = Double.MAX_VALUE;
 		double largestNumber = -Double.MAX_VALUE;
@@ -369,18 +434,26 @@ public class FilterFrequencyOccurenceTest extends FilterdPackageTest{
 		thrOptions.add(smallestNumber);
 		thrOptions.add(largestNumber);
 		
-		ParameterRangeFromRange<Double> threshold = new ParameterRangeFromRange<Double>(
-				"threshold",
+		ParameterRangeFromRange<Double> rangeFreq = new ParameterRangeFromRange<Double>(
+				"rangeFreq",
 				"Threshold",
 				thrOptions,
 				thrOptions
 				);
 		
 		List<Double> chosenOptions = new ArrayList<>();
-		chosenOptions.add(lowThreshold);
-		chosenOptions.add(highThreshold);
+		chosenOptions.add(new Double(lowThreshold));
+		chosenOptions.add(new Double(highThreshold));
 		
-		threshold.setChosenPair(chosenOptions);
+		rangeFreq.setChosenPair(chosenOptions);
+		
+		ParameterRangeFromRange<Integer> rangeOcc = new ParameterRangeFromRange<Integer>(
+				"rangeOcc",
+				"Threshold",
+				new ArrayList<Integer>(Arrays.asList(lowThreshold, highThreshold)),
+				new ArrayList<Integer>(Arrays.asList(lowThreshold, highThreshold))
+				);
+		rangeOcc.setChosenPair(Arrays.asList(lowThreshold, highThreshold));
 		
 		//initialize the filter mode options parameter and add it to the parameters list
 		List<String> fModeOptions = new ArrayList<String>();
@@ -400,7 +473,8 @@ public class FilterFrequencyOccurenceTest extends FilterdPackageTest{
 
 		parameters.add(classifierParameter);
 		parameters.add(frequencyOccurranceParameter);
-		parameters.add(threshold);
+		parameters.add(rangeFreq);
+		parameters.add(rangeOcc);
 		parameters.add(filterInOut);
 		
 		return parameters;
