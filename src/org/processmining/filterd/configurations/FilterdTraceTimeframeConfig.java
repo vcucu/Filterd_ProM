@@ -98,9 +98,6 @@ public class FilterdTraceTimeframeConfig extends FilterdAbstractConfig {
 		// Add all created parameters to the created list.
 		parameters.add(range);
 		parameters.add(keepTracesParameter);
-		// Initialize the configuration panel.
-		configPanel = new FilterConfigPanelController(
-				"Filter Trace Timeframe Configuration", parameters, this);
 	}
 
 	/**
@@ -129,6 +126,12 @@ public class FilterdTraceTimeframeConfig extends FilterdAbstractConfig {
 	 * Getter for the configuration panel.
 	 */
 	public AbstractFilterConfigPanelController getConfigPanel() {
+		// If the configuration panel was not initialized yet.
+		if (this.configPanel == null) {
+			// Create it.
+			this.configPanel = new FilterConfigPanelController(
+					"Filter Trace Timeframe Configuration", parameters, this);
+		}
 		return configPanel;
 	}
 	

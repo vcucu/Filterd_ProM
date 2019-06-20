@@ -1,17 +1,20 @@
 package org.processmining.filterd.gui.adapters;
 
+import java.util.ArrayList;
+
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 import org.processmining.filterd.gui.CellModel;
 import org.processmining.filterd.gui.ComputationCellModel;
 import org.processmining.filterd.gui.TextCellModel;
+import org.processmining.filterd.models.YLog;
 
 public class CellModelAdapter extends XmlAdapter<CellModelAdapted, CellModel> {
 
 	public CellModel unmarshal(CellModelAdapted adaptedModel) {
 		CellModel model;
 		if (adaptedModel.getClass() == ComputationCellModelAdapted.class) {
-			model = new ComputationCellModel(null, adaptedModel.getIndex(), null, null);
+			model = new ComputationCellModel(null, adaptedModel.getIndex(), null, new ArrayList<YLog>());
 			((ComputationCellModel) model).addFilterModels(((ComputationCellModelAdapted) adaptedModel).getFilters());
 			((ComputationCellModel) model).setIndexOfInputOwner(((ComputationCellModelAdapted) adaptedModel).getIndexOfInputOwner());
 		} else {
