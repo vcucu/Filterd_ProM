@@ -35,14 +35,12 @@ public class FilterdTraceSampleConfig extends FilterdAbstractConfig {
 
 		parameters.add(valueFromRangeParam);
 	}
-	
+
 	@Override
 	public AbstractFilterConfigPanelController getConfigPanel() {
-		if (this.configPanel == null) {
-			this.configPanel = new FilterConfigPanelController(
-					"Filter Trace Sample Configuration", parameters, this);
-		}
-		
+		this.configPanel = new FilterConfigPanelController(
+				"Filter Trace Sample Configuration", parameters, this);
+
 		return configPanel;
 	}
 

@@ -17,6 +17,8 @@ import org.processmining.filterd.tools.Toolbox;
  * 
  */
 public class FilterdTracesHavingEventFilter extends Filter {
+	
+	public FilterdTracesHavingEventFilter() {}
 
 	@Override
 	public XLog filter(XLog log, List<Parameter> parameters) {
