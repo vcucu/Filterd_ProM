@@ -17,20 +17,29 @@ import org.processmining.filterd.tools.Toolbox;
 
 public class FilterdTracePerformanceFilter extends Filter {
 	
+	/**
+	 * This constructor is used for import/export 
+	 */
 	public FilterdTracePerformanceFilter() {
 		
 	}
-
+	/**
+	 * Method responsible for filtering the log according to the
+	 * rules defined in the filter configuration
+	 */
 	public XLog filter(XLog log, List<Parameter> parameters) {
 		
 		// clone input log, since ProM documentation says filters should not 
 		// change input logs
 		XLog clonedLog = (XLog) log.clone();
 		
-		
+		// retrieve the chosen option parameter from the list of parameters
 		ParameterOneFromSet chosenOption = 
 				(ParameterOneFromSet) parameters.get(0);
 	
+		// switch the filtering method according to the selected value
+		// the double slider will have different endpoints and values
+		// to display according to this selection
 		switch (chosenOption.getChosen()) {
 			case "filter on duration": {
 				return filterDuration(
@@ -46,7 +55,13 @@ public class FilterdTracePerformanceFilter extends Filter {
 		
 		return clonedLog;
 	}
-	
+	/**
+	 * 
+	 * @param clonedLog the log on which the filtering is performed
+	 * @param threshold the threshold according to which
+	 * traces are kept or discarded
+	 * @return
+	 */
 	public XLog filterDuration(XLog clonedLog,
 			ParameterRangeFromRange<Integer> threshold
 			) {
@@ -73,13 +88,16 @@ public class FilterdTracePerformanceFilter extends Filter {
 					.get("time:timestamp")
 					.toString();
 			
+			// retrieve the end points according to the information
+			// from the event log 
 			LocalDateTime startTime = Toolbox.synchronizeGMT(firstEventTime);
 			LocalDateTime endTime = Toolbox.synchronizeGMT(lastEventTime);
 			
+			// compute duration between 2 timestamps
 			Duration traceDuration = Duration.between(startTime, endTime);
 			long totalMillis = traceDuration.toMillis();
 			
-			
+			// configurations for the time
 			Calendar c = Calendar.getInstance(); 
 			//Set time in milliseconds
 			c.setTimeInMillis(totalMillis);
@@ -93,6 +111,10 @@ public class FilterdTracePerformanceFilter extends Filter {
 			
 			String string = "";
 			
+			// this is done for a nicer display of the time
+			// for the user
+			// the UI should convert selected time to an
+			// understandable representation
 			string += Toolbox.addToDuration(mYear, "year");
 			string += Toolbox.addToDuration(mMonth, "month");
 			string += Toolbox.addToDuration(mDay, "day");
@@ -103,17 +125,28 @@ public class FilterdTracePerformanceFilter extends Filter {
 			
 			int tracePosition = times.indexOf(string);
 			
+			// check whether trace should be kept or discared
+			// from the cloned log
 			if (tracePosition < lowPos || tracePosition > highPos) {
 				removeFromLog.add(trace);
 			}
 			
 		}
 		
+		// remove the corresponding traces 
+		// from the cloned log
 		clonedLog.removeAll(removeFromLog);
 		
 		return clonedLog;
 	}
 	
+	/**
+	 * 
+	 * @param clonedLog the log on which the filtering is performed
+	 * @param threshold the threshold according to which
+	 *  traces are kept or discarded
+	 * @return the filtered log
+	 */
 	public XLog filterNumberOfEvents(XLog clonedLog,
 			ParameterRangeFromRange<Integer> threshold) {
 		

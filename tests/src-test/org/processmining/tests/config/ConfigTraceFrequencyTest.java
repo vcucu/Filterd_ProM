@@ -28,13 +28,14 @@ public class ConfigTraceFrequencyTest extends FilterdPackageTest {
 	public void testGreaterOccurrence() throws Throwable {
 		XLog typed = originalLog;	
 		XLog typed2 = parseLog("start-events", "test_check_validity_invalid.xes");
-		List<Double> pair = new ArrayList<>(Arrays.asList(0.0, 10.0));
+		List<Integer> pair = new ArrayList<>(Arrays.asList(0, 10));
 		FilterdTraceFrequencyConfig config = new FilterdTraceFrequencyConfig(typed,
 				new FilterdTraceFrequencyFilter());
 		ParameterOneFromSet thresholdType = (ParameterOneFromSet) config.getParameter("FreqOcc");
 		thresholdType.setChosen("occurrence");
-		ParameterRangeFromRange<Double> threshold = (ParameterRangeFromRange<Double>) config.getParameter("threshold");
-		threshold.setChosenPair(pair);
+		ParameterRangeFromRange<Double> threshold = (ParameterRangeFromRange<Double>) config.getParameter("rangeFreq");
+		ParameterRangeFromRange<Integer> thresholdOcc = (ParameterRangeFromRange<Integer>) config.getParameter("rangeOcc");
+		thresholdOcc.setChosenPair(pair);
 		assert(config.checkValidity(typed2));
 	}
 	

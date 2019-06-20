@@ -63,6 +63,13 @@ public class FilterdTraceEndEventConfig extends FilterdAbstractReferencingConfig
 		return configPanel;
 	}
 
+	
+	/*
+	 * The candidateLog is invalid if the event attributes list does not 
+	 * contain the selected attribute 
+	 * The candidateLog is invalid if the complex classifiers list does not
+	 * contain the selected complex classifier
+	 */
 	@Override
 	public boolean checkValidity(XLog candidateLog) {
 		if (parameters == null) {
@@ -85,6 +92,10 @@ public class FilterdTraceEndEventConfig extends FilterdAbstractReferencingConfig
 		return true;
 	}
 
+	/**
+	 * Changes the content of the configuration according to the 
+	 * selected attributes
+	 */
 	@Override
 	public FilterdAbstractConfig changeReference(ParameterOneFromSetExtendedController controller) {
 		for (Parameter param : concreteReference.getParameters()) {
@@ -97,6 +108,13 @@ public class FilterdTraceEndEventConfig extends FilterdAbstractReferencingConfig
 		}		
 		return concreteReference;
 	}
+	
+	/**
+	 * Method which modifies the log such that it only contains 
+	 * end events
+	 * @return the log containing all initial traces, but with
+	 * only one event.
+	 */
 	private XLog endEventsOnly() {
 		XLog filteredLog = Toolbox.initializeLog(log);
 		XFactory factory = XFactoryRegistry.instance().currentDefault();
