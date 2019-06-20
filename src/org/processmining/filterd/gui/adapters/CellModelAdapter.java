@@ -30,8 +30,7 @@ public class CellModelAdapter extends XmlAdapter<CellModelAdapted, CellModel> {
 			// computation cell models have associated filters and an input log
 			model = new ComputationCellModel(null, adaptedModel.getIndex(), null, new ArrayList<YLog>());
 			((ComputationCellModel) model).addFilterModels(((ComputationCellModelAdapted) adaptedModel).getFilters());
-			((ComputationCellModel) model)
-					.setIndexOfInputOwner(((ComputationCellModelAdapted) adaptedModel).getIndexOfInputOwner());
+			((ComputationCellModel) model).setIndexOfInputOwner(((ComputationCellModelAdapted) adaptedModel).getIndexOfInputOwner());
 		} else {
 			model = new TextCellModel(null, adaptedModel.getIndex());
 			// text cell models have associated text comments

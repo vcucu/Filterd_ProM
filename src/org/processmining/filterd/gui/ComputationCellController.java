@@ -119,7 +119,7 @@ public class ComputationCellController extends CellController {
 		ComputationCellModel model = this.getCellModel();
 		// Load event logs in cmbEventLog and select "Initial input"
 		cmbEventLog.getItems().addAll(model.getInputLogs());
-		cmbEventLog.getSelectionModel().selectFirst();
+		cmbEventLog.getSelectionModel().select(model.getIndexOfInputOwner()+1);;
 		System.out.println("Setting XLOG in initialize");
 		setXLog();
 		// Add listeners to the basic model components

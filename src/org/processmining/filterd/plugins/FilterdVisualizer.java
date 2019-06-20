@@ -125,7 +125,7 @@ public class FilterdVisualizer {
 							computationCellModel.setInputLog(model.getInitialInput());
 						} else {
 							CellModel inputOwner = model.getCells().get(computationCellModel.getIndexOfInputOwner());
-							System.out.println("Setting " + cellModel.getCellName() + " to " + inputOwner.getCellName()
+							System.out.println("[*] Setting " + cellModel.getCellName() + " to " + inputOwner.getCellName()
 									+ "'s output");
 							computationCellModel
 									.setInputLog(((ComputationCellModel) inputOwner).getOutputLogs().get(0));
