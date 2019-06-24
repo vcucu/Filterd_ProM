@@ -416,6 +416,7 @@ public class ComputationCellController extends CellController {
 
 			// Update icon
 			Utilities.changeIcon(fullScreenButton, "expand-solid", "compress-solid");
+			
 			isFullScreen = true;
 		} else if (isFullScreen) {
 			// Style toolbar for leaving fullscreen mode

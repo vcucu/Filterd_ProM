@@ -1,19 +1,31 @@
 package org.processmining.filterd.gui;
 
 import java.awt.Dimension;
+import java.awt.MouseInfo;
 
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 
 import javafx.application.Platform;
 import javafx.embed.swing.SwingNode;
+import javafx.geometry.Bounds;
 import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+
+/**
+ * This class is meant as a wrapper for SwingNodes.
+ * 
+ * It is used to work around compatibility problems 
+ * between JavaFX and Swing. 
+ * @author Omar Alabbasi
+ *
+ */
 
 public class SwingBubble extends AnchorPane {
 
@@ -30,9 +42,6 @@ public class SwingBubble extends AnchorPane {
 
 	/**
 	 * Allocates a new SwingWrap object.
-	 *
-	 * @param parent,
-	 *            the Pane containing the SwingWrap
 	 */
 	public SwingBubble() {
 		super();
@@ -61,13 +70,14 @@ public class SwingBubble extends AnchorPane {
 	/**
 	 * Hides the SwingNode and replaces it with an image.
 	 *
-	 * @pre The SwingWrap must be in the parent object.
+	 * @pre The SwingWrap must be in the parent object 
+	 * and the mouse must not be in the area of the SwingBubble.
 	 */
 	private void fake() {
 		Platform.runLater(new Runnable() {
 			@Override
 			public synchronized void run() {
-				if (getChildren().contains(swgNode)) {
+				if (!isFake() && !isMouseIn()) {
 					// Snapshot the SwingNode
 					WritableImage snapshot = swgNode.snapshot(new SnapshotParameters(), null);
 					imgView.setImage(snapshot);
@@ -94,7 +104,7 @@ public class SwingBubble extends AnchorPane {
 			Platform.runLater(new Runnable() {
 				@Override
 				public synchronized void run() {
-					if (getChildren().contains(imgView)) {
+					if (isFake()) {
 						/*
 						 * HV: Remove the visualizer form the backstage.
 						 */
@@ -117,10 +127,8 @@ public class SwingBubble extends AnchorPane {
 				 * HV: Apparently, putting the visualizer backstage has side-effects
 				 * when changing the visualization type.
 				 */
-				if (getChildren().contains(imgView)) {
+				if (isFake()) {
 					unfake();
-				} else {
-					fake();
 				}
 				if (content != null) {
 					Dimension dimension = new Dimension();
@@ -133,11 +141,10 @@ public class SwingBubble extends AnchorPane {
 					content.setPreferredSize(dimension);
 					swgNode.setContent(content);
 				}
-				if (getChildren().contains(imgView)) {
-					fake();
-				} else {
-					unfake();
-				}
+				// Wait 1 second and fake the SwingNode. This is done to prevent the dropdown menus from
+				// not working in the future (e.g. if the user doesn't enter the SwingBubble area at all)
+				// but still giving some time for SwingNode to update its view.
+				fakeAfter(1000);
 			}
 		});
 	}
@@ -151,7 +158,7 @@ public class SwingBubble extends AnchorPane {
 	 */
 	public synchronized void refresh() {
 		// TODO Find a better way to force the view to refresh
-		if (getChildren().contains(imgView)) {
+		if (isFake()) {
 			unfake();
 			fake();
 		} else {
@@ -161,7 +168,8 @@ public class SwingBubble extends AnchorPane {
 	}
 
 	/**
-	 * Adds mouse event handlers for the JavaFX - Swing workaround.
+	 * Adds mouse event handlers to fake and unfake the SwingNode.
+	 * (for the JavaFX - Swing workaround)
 	 */
 	private void addHandlers() {
 		// Restore SwingNode when mouse enters pane
@@ -172,7 +180,47 @@ public class SwingBubble extends AnchorPane {
 
 		// Hide SwingNode when mouse exits pane
 		this.setOnMouseExited(event -> fake());
-
 	}
-
+	
+	/**
+	 * Fakes the SwingNode after a given amount of milliseconds.
+	 */
+	private void fakeAfter(long millis) {
+		new Thread(new Runnable() {
+			public void run() {
+				try {
+					Thread.sleep(millis);
+				} catch (InterruptedException e) {
+					System.out.println(e.toString());
+				}
+				fake();
+			}
+		}).start();
+	}
+	
+	/**
+	 * Returns whether the SwingNode is faked (i.e. replaced by a picture) or not.
+	 */
+	public boolean isFake() {
+		return getChildren().contains(imgView);
+	}
+	
+	/**
+	 * Returns whether the mouse is in the area of the SwingBubble.
+	 */
+	public boolean isMouseIn() {
+		// Mouse coordinates
+		double mouseX = MouseInfo.getPointerInfo().getLocation().getX();
+		double mouseY = MouseInfo.getPointerInfo().getLocation().getY();
+		// SwingBubble coordinates
+		Bounds bounds = this.getBoundsInLocal();	// Bounds of SwingBubble
+		bounds = this.localToScreen(bounds);	// Get screen bounds
+		
+        Rectangle area = new Rectangle(
+        		bounds.getMinX(), bounds.getMinY(),
+        		bounds.getWidth(), bounds.getHeight());
+		
+		return area.contains(mouseX, mouseY); 
+	}
+	
 }

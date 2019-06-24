@@ -83,7 +83,7 @@
                            </tooltip>
                         </Label>
                         <Region HBox.hgrow="ALWAYS" />
-                        <TextField fx:id="cellName" alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" onKeyPressed="#handleCellName" prefHeight="25.0" styleClass="cell-name" text="Cell name">
+                        <TextField fx:id="cellName" alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" onKeyPressed="#handleCellName" prefHeight="25.0" styleClass="cell-name" text="Cell name" translateX="-16.0">
                            <font>
                               <Font size="14.0" />
                            </font></TextField>
@@ -105,7 +105,7 @@
                                     <URL value="@../css/Controls.css" />
                                  </stylesheets>
                                  <tooltip>
-                                    <Tooltip text="Go fullscreen" />
+                                    <Tooltip text="Toggle fullscreen mode" />
                                  </tooltip>
                               </Label>
                            </children>
@@ -205,7 +205,7 @@
                               <URL value="@../css/Controls.css" />
                            </stylesheets>
                            <tooltip>
-                              <Tooltip text="Expand visualizer" />
+                              <Tooltip text="Toggle expanded mode" />
                            </tooltip>
                         </Label>
                         <AnchorPane fx:id="visualizerPane" maxHeight="1.7976931348623157E308" minHeight="390.0" minWidth="600.0" styleClass="visualizer-pane" HBox.hgrow="ALWAYS" />
