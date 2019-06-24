@@ -15,28 +15,20 @@ import org.processmining.filterd.gui.FilterConfigPanelController;
 import org.processmining.filterd.gui.NestedFilterConfigPanelController;
 import org.processmining.filterd.parameters.Parameter;
 import org.processmining.filterd.parameters.ParameterMultipleFromSet;
-import org.processmining.filterd.parameters.ParameterOneFromSet;
 import org.processmining.filterd.parameters.ParameterValueFromRange;
 import org.processmining.filterd.parameters.ParameterYesNo;
 import org.processmining.filterd.tools.Toolbox;
-import org.processmining.filterd.widgets.ParameterController;
-import org.processmining.filterd.widgets.ParameterMultipleFromSetController;
-import org.processmining.filterd.widgets.ParameterValueFromRangeController;
-
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.scene.control.Slider;
 
 public class FilterdTraceStartEventCategoricalConfig extends FilterdAbstractReferenceableConfig {	
 	
 	XEventClasses xEventClasses;
 	List<String> allValues = new ArrayList<>();
-	String attribute;
+	String key;
 	
-	public FilterdTraceStartEventCategoricalConfig(XLog log, Filter filterType, String attribute, 
+	public FilterdTraceStartEventCategoricalConfig(XLog log, Filter filterType, String key, 
 			List<XEventClassifier> classifiers) {
 		super(log, filterType);
-		this.attribute = attribute;
+		this.key = key;
 		parameters = new ArrayList<Parameter>();
 		isAttribute = true;
 		XLog startEventsLog = startEventsOnly();
@@ -46,7 +38,7 @@ public class FilterdTraceStartEventCategoricalConfig extends FilterdAbstractRefe
 		
 		// check whether the selected string is an attribute or a classifier
 		for (XEventClassifier c: classifiers) {
-			if (c.name().equals(attribute)) {
+			if (c.name().equals(key)) {
 				//if it is a classifier than create eventclasses object accordingly
 				isAttribute = false; // the selected string is a complex classifier
 				xEventClasses = new XEventClasses(c);
@@ -62,7 +54,7 @@ public class FilterdTraceStartEventCategoricalConfig extends FilterdAbstractRefe
 		if (isAttribute) {
 			//if it is an attribute than create eventclasses object accordingly
 			XEventAttributeClassifier attrClassifier = new XEventAttributeClassifier(
-					"attrClassifier", attribute);
+					"attrClassifier", key);
 			
 			xEventClasses = new XEventClasses(attrClassifier);
 			xEventClasses = XEventClasses.deriveEventClasses(attrClassifier, startEventsLog);
@@ -103,8 +95,8 @@ public class FilterdTraceStartEventCategoricalConfig extends FilterdAbstractRefe
 			for (XTrace trace : startEventsLog) {
 				for (XEvent event : trace) {
 					String value;
-					if (event.getAttributes().containsKey(attribute)) {
-						value = event.getAttributes().get(attribute).toString();
+					if (event.getAttributes().containsKey(key)) {
+						value = event.getAttributes().get(key).toString();
 					} else {
 						continue;
 					}
@@ -137,66 +129,17 @@ public class FilterdTraceStartEventCategoricalConfig extends FilterdAbstractRefe
 		return true;
 	}
 	
-	public String getAttribute() {
-		return attribute;
+	public String getKey() {
+		return key;
 	}
 	
 	
 	@Override
 	public NestedFilterConfigPanelController getConfigPanel() {
-
-		NestedFilterConfigPanelController nestedPanel = new NestedFilterConfigPanelController(parameters);
-		for( ParameterController controller : nestedPanel.getControllers()) {
-			//find threshold parameter controller and add listener to it
-			if (controller.getName().equals("threshold")) {
-				ParameterValueFromRangeController casted = (ParameterValueFromRangeController) controller;
-				Slider slider = casted.getSlider();
-				slider.valueProperty().addListener(new ChangeListener<Number>() {
-
-					private ParameterValueFromRange<Integer> threshold;
-
-					@Override
-					public void changed(ObservableValue<? extends Number> observable, Number oldValue,
-							Number newValue) {
-						//find the controller for desired events so that it can change
-						for (ParameterController changingController : nestedPanel.getControllers()) {
-							if (changingController.getName().equals("desiredEvents")) {
-								 ParameterMultipleFromSetController castedChangingController = 
-											(ParameterMultipleFromSetController) changingController;
-								 //select events corresponding to the slider selection 
-								 //using the toolbox function
-								 
-								 //the parameter is only used because thats the interface in toolbox
-								 //but nice solution would also be making it string & number, cos this is kinda workaround
-								 ParameterOneFromSet rate = new ParameterOneFromSet(
-										 "frequency","frequency","frequency",null );
-								 rate.setChosen("Frequency");
-								 threshold = new ParameterValueFromRange<Integer>(
-											"Frequency threshold", "threshold", 100, null, Integer.TYPE);
-								 threshold.setChosen(newValue.intValue());
-								 List<String> selection = new ArrayList<String>();
-
-								 
-								 selection = Toolbox.computeDesiredEventsFromThreshold(threshold, rate, xEventClasses);
-								 castedChangingController.setSelected(selection);
-								 
-								 ParameterMultipleFromSet castedChangingParameter = (ParameterMultipleFromSet) getParameter("desiredEvents");
-								 castedChangingParameter.setChosen(selection);
-								 
-								
-								 
-							}	
-							
-						}
-						
-					}
-
-				});
-			
-			}
-		}
-
-		return nestedPanel;
+		return ConfigurationToolbox.traceStartAndEndEventCategoricalConfigs(
+				parameters, 
+				this, 
+				xEventClasses);
 	}
 
 }

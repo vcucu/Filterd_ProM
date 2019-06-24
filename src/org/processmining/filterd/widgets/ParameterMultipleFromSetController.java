@@ -1,20 +1,17 @@
 package org.processmining.filterd.widgets;
 
-import java.io.IOException;
 import java.util.List;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
-import javafx.scene.layout.VBox;
 
 /**
  * Multiple from set parameter UI counterpart.
- * 
+ *
  * @author Filip Davidovic
  */
 public class ParameterMultipleFromSetController extends ParameterController {
@@ -25,7 +22,7 @@ public class ParameterMultipleFromSetController extends ParameterController {
 
 	/**
 	 * Default constructor which should be used in all actual code.
-	 * 
+	 *
 	 * @param nameDisplayed
 	 *            description of the parameter
 	 * @param name
@@ -41,20 +38,12 @@ public class ParameterMultipleFromSetController extends ParameterController {
 			List<String> options) {
 		super(name);
 		// load contents
-		FXMLLoader fxmlLoader = new FXMLLoader(
-				getClass().getResource("/org/processmining/filterd/widgets/fxml/ParameterMultipleFromSet.fxml"));
-		fxmlLoader.setController(this);
-		try {
-			contents = (VBox) fxmlLoader.load();
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
+		this.loadFXMLContents(this, "/org/processmining/filterd/widgets/fxml/ParameterMultipleFromSet.fxml");
 		// set specifics
 		label.setText(nameDisplayed);
 		list.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 		ObservableList<String> observableList = FXCollections.observableList(options);
 		list.setItems(observableList);
-		System.out.println(defaultValues.size());
 		for (String option : defaultValues) {
 			list.getSelectionModel().select(option);
 		}
@@ -65,7 +54,7 @@ public class ParameterMultipleFromSetController extends ParameterController {
 
 	/**
 	 * Getter for the value of the list view.
-	 * 
+	 *
 	 * @return current value of the list view
 	 */
 	public List<String> getValue() {
@@ -74,7 +63,7 @@ public class ParameterMultipleFromSetController extends ParameterController {
 
 	/**
 	 * Method which sets the options which are selected in the list view.
-	 * 
+	 *
 	 * @param selection
 	 *            list of options that should be selected
 	 */
@@ -88,7 +77,7 @@ public class ParameterMultipleFromSetController extends ParameterController {
 	/**
 	 * Method which sets the options of the list view and selects the first
 	 * option.
-	 * 
+	 *
 	 * @param options
 	 *            options for the list view
 	 */

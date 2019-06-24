@@ -12,25 +12,21 @@ import org.deckfour.xes.model.XTrace;
 import org.processmining.filterd.filters.Filter;
 import org.processmining.filterd.gui.AbstractFilterConfigPanelController;
 import org.processmining.filterd.gui.FilterConfigPanelController;
-import org.processmining.filterd.parameters.Parameter;
 import org.processmining.filterd.parameters.ParameterMultipleFromSet;
 import org.processmining.filterd.parameters.ParameterOneFromSet;
 import org.processmining.filterd.parameters.ParameterValueFromRange;
 import org.processmining.filterd.parameters.ParameterYesNo;
 import org.processmining.filterd.tools.EmptyLogException;
-import org.processmining.filterd.widgets.ParameterController;
-import org.processmining.filterd.widgets.ParameterMultipleFromSetController;
 import org.processmining.filterd.widgets.ParameterOneFromSetController;
 import org.processmining.filterd.widgets.ParameterValueFromRangeController;
 import org.processmining.filterd.widgets.ParameterYesNoController;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.scene.control.ComboBox;
 
 public class FilterdTraceFollowerConfig extends FilterdAbstractConfig {
 
-	Set<String> eventAttributes;
+	Set<String> eventKeys;
 
 	public FilterdTraceFollowerConfig(XLog log, Filter filterType) throws EmptyLogException {
 		super(log, filterType);
@@ -41,14 +37,14 @@ public class FilterdTraceFollowerConfig extends FilterdAbstractConfig {
 
 		// Do this by looping over every trace and collecting its attributes
 		// and adding this to the set, except for time:timestamp
-		eventAttributes = new HashSet<>();
+		eventKeys = new HashSet<>();
 		for (XTrace trace : log) {
 
 			for (XEvent event : trace) {
 
 				for (String key : event.getAttributes().keySet()) {
 					if (!key.equals("time:timestamp")) {
-						eventAttributes.add(key);
+						eventKeys.add(key);
 					}
 				}
 
@@ -59,7 +55,7 @@ public class FilterdTraceFollowerConfig extends FilterdAbstractConfig {
 		// Convert the set into an array list because ParameterOneFromSet takes
 		// a list as an argument.
 		List<String> eventAttributesList = 
-				new ArrayList<String>(eventAttributes);
+				new ArrayList<String>(eventKeys);
 
 		// Create the parameter for selecting the attribute.
 		ParameterOneFromSet attributeSelector = 
@@ -82,7 +78,7 @@ public class FilterdTraceFollowerConfig extends FilterdAbstractConfig {
 				selectionTypeList.get(0), 
 				selectionTypeList);
 
-		Set<String> attributeValues = new HashSet<>();
+		Set<String> keyValues = new HashSet<>();
 
 		for (XTrace trace : log) {
 
@@ -90,7 +86,7 @@ public class FilterdTraceFollowerConfig extends FilterdAbstractConfig {
 
 				XAttributeMap eventAttrs = event.getAttributes();
 				if (eventAttrs.containsKey(eventAttributesList.get(0))) {
-					attributeValues.add(eventAttrs.get(eventAttributesList.get(0)).toString());
+					keyValues.add(eventAttrs.get(eventAttributesList.get(0)).toString());
 				}
 
 			}
@@ -100,7 +96,7 @@ public class FilterdTraceFollowerConfig extends FilterdAbstractConfig {
 		// To populate both the reference and follower event values with these
 		// attribute values to start with. If the attribute is changed, so will
 		// the values in both these parameters.
-		List<String> attributeValuesList = new ArrayList<String>(attributeValues);
+		List<String> attributeValuesList = new ArrayList<String>(keyValues);
 
 		// Create parameter for reference event values.
 		ParameterMultipleFromSet referenceParameter = 
@@ -215,19 +211,16 @@ public class FilterdTraceFollowerConfig extends FilterdAbstractConfig {
 
 	@Override
 	public AbstractFilterConfigPanelController getConfigPanel() {
-		if (this.configPanel == null) {
-			this.configPanel = new FilterConfigPanelController(
-					"Filter Traces follower filter", 
-					parameters, 
-					this);
-			parameterListeners();
+
+		if(this.configPanel == null) {
+			this.configPanel = new FilterConfigPanelController(	"Filter Traces follower filter", parameters, this);
+			setupConfigPanel();
 		}
 
 		return configPanel;
 	}
 
-	public void parameterListeners() {
-
+	public void setupConfigPanel() {
 		/* if the time restriction box in unchecked, then hide the parameters */
 		ParameterYesNoController timeControl = (ParameterYesNoController)
 				configPanel.getControllers().stream()
@@ -259,7 +252,7 @@ public class FilterdTraceFollowerConfig extends FilterdAbstractConfig {
 				setTimeVisible(newValue);
 			}
 		});
-		
+
 		/* add listener to the value control such that if the checkbox is checked,
 		 * the parameter appear.
 		 */
@@ -270,77 +263,8 @@ public class FilterdTraceFollowerConfig extends FilterdAbstractConfig {
 			}
 		});
 
-
-		for(ParameterController parameter : configPanel.getControllers()) {
-			if (parameter.getName().equals("attrType")) {
-				ParameterOneFromSetController casted = (ParameterOneFromSetController) parameter;
-				ComboBox<String> comboBox = casted.getComboBox();
-				comboBox.valueProperty().addListener(new ChangeListener<String>() {
-					@Override 
-					public void changed(ObservableValue ov, String oldValue, String newValue) {
-						final XLog Llog = log;
-						List<Parameter> params = parameters;
-						if (Llog != null) {
-							for (ParameterController changingParameter : configPanel.getControllers()) {
-
-								if (changingParameter.getName().equals("firstattrValues")) {
-
-									ParameterMultipleFromSetController castedChanging = 
-											(ParameterMultipleFromSetController) changingParameter;
-									Set<String> attributeValues = new HashSet<>();
-
-									for (XTrace trace : Llog) {
-
-										for (XEvent event : trace) {
-
-											XAttributeMap eventAttrs = event.getAttributes();
-											if (eventAttrs.containsKey(newValue))
-												attributeValues.add(eventAttrs.get(newValue).toString());
-										}
-									}
-									List<String> attributeValuesList = new ArrayList<String>(attributeValues);
-									((ParameterMultipleFromSet) params.get(2))
-									.setOptions(attributeValuesList);
-									((ParameterMultipleFromSet) params.get(2))
-									.setChosen(attributeValuesList);
-									((ParameterMultipleFromSet) params.get(2))
-									.setDefaultChoice(attributeValuesList);
-									castedChanging.changeOptions(attributeValuesList);
-
-								}
-								if (changingParameter.getName().equals("endattrValues")) {
-
-									ParameterMultipleFromSetController castedChanging = 
-											(ParameterMultipleFromSetController) changingParameter;
-									Set<String> attributeValues = new HashSet<>();
-
-									for (XTrace trace : Llog) {
-
-										for (XEvent event : trace) {
-
-											XAttributeMap eventAttrs = event.getAttributes();
-											if (eventAttrs.containsKey(newValue))
-												attributeValues.add(eventAttrs.get(newValue).toString());
-										}
-									}
-									List<String> attributeValuesList = new ArrayList<String>(attributeValues);
-									((ParameterMultipleFromSet) params.get(3))
-									.setOptions(attributeValuesList);
-									((ParameterMultipleFromSet) params.get(3))
-									.setChosen(attributeValuesList);
-									((ParameterMultipleFromSet) params.get(3))
-									.setDefaultChoice(attributeValuesList);
-									castedChanging.changeOptions(attributeValuesList);
-
-								}
-							}
-
-						}
-					}
-				});
-
-			}
-		}
+		// Add parameter listeners
+		parameterListeners();
 	}
 
 	/* method for setting the time parameters controller visible or invisible
@@ -367,7 +291,7 @@ public class FilterdTraceFollowerConfig extends FilterdAbstractConfig {
 				.get();
 		timeDurationParameter.getContents().setVisible(visible);
 		timeDurationParameter.getContents().setManaged(visible);
-		
+
 
 		// make parameter for selecting the time type (in)visible
 		ParameterOneFromSetController timeTypeParameter = 
@@ -379,7 +303,7 @@ public class FilterdTraceFollowerConfig extends FilterdAbstractConfig {
 		timeTypeParameter.getContents().setVisible(visible);
 		timeTypeParameter.getContents().setManaged(visible);
 	}
-	
+
 	/* method for setting the value parameters controller visible or invisible
 	 * based on whether the value matching checkbox is checked or not
 	 */

@@ -23,13 +23,13 @@ public class FilterdTraceStartEventConfig extends FilterdAbstractReferencingConf
 		parameters = new ArrayList<Parameter>();
 		List<XEventClassifier> complexClassifiers = Toolbox.computeComplexClassifiers(log);
 		XLog startEventsLog = startEventsOnly();
-		 // Get all the events attributes that are passed to the parameter 
+		// Get all the events attributes that are passed to the parameter 
 		List<String> attrAndClassifiers = Toolbox.computeAttributes(startEventsLog);
 		//add the complex classifiers to the list of global attributes 
 		attrAndClassifiers.addAll(Toolbox.getClassifiersName(complexClassifiers));
-		
+
 		// Create attribute parameter, creates reference is true
-		
+
 		ParameterOneFromSet attribute = new ParameterOneFromSet("attribute", 
 				"Filter by", attrAndClassifiers.get(0), attrAndClassifiers, true);
 
@@ -37,24 +37,24 @@ public class FilterdTraceStartEventConfig extends FilterdAbstractReferencingConf
 		List<String> selectionTypeOptions = new ArrayList<>(Arrays.asList("Filter in", "Filter out"));
 		ParameterOneFromSet selectionType = new ParameterOneFromSet("selectionType",
 				"Selection type", selectionTypeOptions.get(0), selectionTypeOptions);	
-		
+
 		//initialize the concreteReference with a default value
 		concreteReference = new FilterdTraceStartEventCategoricalConfig
 				(log, filterType, attrAndClassifiers.get(0), complexClassifiers);	
-		
+
 		// Add all parameters to the list of parameters	
 		parameters.add(attribute);
 		parameters.add(selectionType);
 		//parameters.addAll(concreteReference.getParameters());
 	}
-	
+
 	@Override
 	public AbstractFilterConfigPanelController getConfigPanel() {
-		if (this.configPanel == null) {
+		if(this.configPanel == null) {
 			this.configPanel = new FilterConfigPanelController("Trace Start Event Configuration",
 					parameters, this);
 		}
-		
+
 		return configPanel;
 	}
 
@@ -71,28 +71,14 @@ public class FilterdTraceStartEventConfig extends FilterdAbstractReferencingConf
 	 */
 	@Override
 	public boolean checkValidity(XLog candidateLog) {
-		if (parameters == null) {
-			return true;
-		}
-		List<String> attrCandidateLog = new ArrayList<>();
-		List<XEventClassifier> complexClassifiers = new ArrayList<>();
-		
-		attrCandidateLog.addAll(Toolbox.computeAttributes(candidateLog));
-		complexClassifiers.addAll(Toolbox.computeComplexClassifiers(candidateLog));
-		for (XEventClassifier c : complexClassifiers) {
-			attrCandidateLog.add(c.toString());
-		}
-		ParameterOneFromSet attribute = (ParameterOneFromSet) getParameter("attribute");
-		String chosenAttr = attribute.getChosen();
-		
-		if (!attrCandidateLog.contains(chosenAttr)) {
-			return false;
-		}
-		
-		return true;
+		return ConfigurationToolbox.traceStartAndEndEventValidity(parameters, this, candidateLog);
 	}
 
 
+	/**
+	 * Changes the content of the configuration according to the 
+	 * selected attributes
+	 */
 	@Override
 	public FilterdAbstractConfig changeReference(
 			ParameterOneFromSetExtendedController controller) {
@@ -107,6 +93,13 @@ public class FilterdTraceStartEventConfig extends FilterdAbstractReferencingConf
 		}		
 		return concreteReference;
 	}
+
+	/**
+	 * Method which modifies the log such that it only contains 
+	 * start events
+	 * @return the log containing all initial traces, but with
+	 * only one event.
+	 */
 	private XLog startEventsOnly() {
 		XLog filteredLog = Toolbox.initializeLog(log);
 		XFactory factory = XFactoryRegistry.instance().currentDefault();

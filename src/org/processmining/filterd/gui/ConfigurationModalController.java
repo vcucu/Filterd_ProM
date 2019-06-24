@@ -25,18 +25,21 @@ import javafx.util.Callback;
  * dialogs: - list of available filters which can be initialized by the user, -
  * configuration panel for individual filters. Note: between each configuration
  * step, the modal is reset i.e. all its relevant variables are cleared.
- * 
+ *
  * @author Filip Davidovic
  *
  */
 public class ConfigurationModalController {
 
-	@FXML private Button cancel; // cancel button
-	@FXML private Button apply; // next / apply button
-	@FXML private HBox contentPane; // pane that stores the configuration dialog / panel
-	
+	@FXML
+	private Button cancel; // cancel button
+	@FXML
+	private Button apply; // next / apply button
+	@FXML
+	private HBox contentPane; // pane that stores the configuration dialog / panel
+
 	private VBox root; // root component of this controller's view
-	private FilterdAbstractConfig filterConfig; // filter configuration whose configuration panel is currently being displayed 
+	private FilterdAbstractConfig filterConfig; // filter configuration whose configuration panel is currently being displayed
 	private FilterButtonController filterButtonController; // controller of the filter button (used to disable / enable the edit button)s
 	private AbstractFilterConfigPanelController currentContentsController; // filter configuration panel that is currently being displayed
 	private FilterListController filterListController; // filter list panel that is currently being displayed
@@ -61,7 +64,7 @@ public class ConfigurationModalController {
 	/**
 	 * Method called by the computation cell to show the list of available
 	 * filters.
-	 * 
+	 *
 	 * @param options
 	 *            List of filter names to be displayed as options
 	 * @param filterButtonController
@@ -76,7 +79,7 @@ public class ConfigurationModalController {
 		if (callback == null) {
 			throw new IllegalArgumentException("Callback cannot be null");
 		}
-		resetModal(); // reset the modal before populating it 
+		resetModal(); // reset the modal before populating it
 		// set internal variables
 		this.filterButtonController = filterButtonController;
 		this.filterSelectionCallback = callback; // set the callback which will be invoked when the user clicks Next/Apply
@@ -86,11 +89,11 @@ public class ConfigurationModalController {
 		HBox.setHgrow(this.filterListController.getRoot(), Priority.ALWAYS);
 		contentPane.getChildren().clear();
 		contentPane.getChildren().add(this.filterListController.getRoot());
-		apply.setText("Next"); // act like a wizard 
+		apply.setText("Next"); // act like a wizard
 		apply.disableProperty().bind(this.filterListController.isApplyDisabledProperty()); // disable the button if nothing is selected
 		this.configurationStep = ConfigurationStep.ADD_FILTER;
 	}
-	
+
 	private void showParsingScreen() {
 		resetModal();
 		Label label = new Label("Configuration you selected is being parsed...");
@@ -111,7 +114,7 @@ public class ConfigurationModalController {
 	/**
 	 * Method called by the computation cell to show the filter configuration
 	 * panel.
-	 * 
+	 *
 	 * @param filterConfig
 	 *            Filter configuration whose configuration panel will be
 	 *            displayed
@@ -130,7 +133,7 @@ public class ConfigurationModalController {
 		// set internal variables
 		this.filterConfig = filterConfig;
 		this.filterButtonController = filterButtonController;
-		if(this.filterListController != null) {
+		if (this.filterListController != null) {
 			this.filterListController.setStatusLabelText("Creating the configuration panel");
 		}
 		currentContentsController = filterConfig.getConfigPanel(); // get the configuration panel from the filter configuration
@@ -160,24 +163,26 @@ public class ConfigurationModalController {
 
 	/**
 	 * Handler for the apply / next button. Has two modes of operation, based on
-	 * the configuration step in which the configuration modal is in: -
-	 * ADD_FILTER - get the selected filter configuration by invoking the
-	 * callback, then show the filter configuration dialog - CONFIGURE_STEP -
-	 * populate the filter configuration with the selected parameters
+	 * the configuration step in which the configuration modal is in:
+	 * <ul>
+	 * <li>ADD_FILTER - get the selected filter configuration by invoking the
+	 * callback, then show the filter configuration dialog</li>
+	 * <li>CONFIGURE_STEP - populate the filter configuration with the selected
+	 * parameters</li>
+	 * </ul>
 	 */
 	@FXML
 	private void apply() {
-		System.out.println("Applying filter");
 		if (this.configurationStep == ConfigurationStep.ADD_FILTER) {
 			// user is picking a filter to use -> move on to the configuration screen
 			if (filterSelectionCallback == null || this.filterListController == null) {
 				throw new IllegalStateException("apply() was called before showFilterList()");
 			}
 			String userSelection = this.filterListController.getSelection();
-			
+
 			// Update FilterButton name
 			filterButtonController.getModel().setName(userSelection);
-			
+
 			Platform.runLater(() -> showParsingScreen());
 			new Thread(new Task<Void>() {
 
@@ -186,7 +191,7 @@ public class ConfigurationModalController {
 					Platform.runLater(() -> showFilterConfiguration(conf, filterButtonController));
 					return null;
 				}
-				
+
 			}).start();
 		} else if (this.configurationStep == ConfigurationStep.CONFIGURE_FILTER) {
 			if (currentContentsController instanceof NestedFilterConfigPanelController) {
@@ -201,7 +206,6 @@ public class ConfigurationModalController {
 			}
 			resetModal();
 		}
-		System.out.println("Setting the status bar to out of date in apply");
 		//We have applied a filter but have not yet computed the cell with this updated preset so cell is out of date
 		parent.getCellModel().setStatusBar(CellStatus.OUT_OF_DATE);
 	}

@@ -17,7 +17,7 @@ public class NotebookModelAdapterTest extends TestCase {
 		
 		// --------------- TESTING MARSHAL ---------------
 		// Create new notebook model
-		NotebookModel model = new NotebookModel();
+		NotebookModel model = new NotebookModel(null);
 		// Set the computation mode of the notebook
 		model.setComputationMode(ComputationMode.MANUAL);
 		// Compute adapted notebook model

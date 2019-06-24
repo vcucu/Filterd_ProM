@@ -17,7 +17,7 @@ import org.processmining.filterd.parameters.ParameterRangeFromRange;
 import org.processmining.filterd.tools.Toolbox;
 
 public class FilterdTraceTimeframeConfig extends FilterdAbstractConfig {
-	
+
 	// List to set the bounds in the slider.
 	List<LocalDateTime> firstAndlastTimestamp;
 	// times for the special range slider.
@@ -36,21 +36,21 @@ public class FilterdTraceTimeframeConfig extends FilterdAbstractConfig {
 
 	public FilterdTraceTimeframeConfig(XLog log, Filter filterType) {
 		super(log, filterType);
-		
+
 		// Get first and last time stamp using the toolbox.
 		firstAndlastTimestamp = new ArrayList<>();
 		firstAndlastTimestamp.add(Toolbox.getFirstAndLastTimes(log)[0]);
 		firstAndlastTimestamp.add(Toolbox.getFirstAndLastTimes(log)[1]);
-		
+
 		// Initialize all the member variables.
 		times = new ArrayList<>();
 		defaultPair = new ArrayList<>();
 		optionsPair = new ArrayList<>();
 		parameters = new ArrayList<>();
-		
+
 		// Edge case.
 		boolean added = false;
-		
+
 		/*populate the array times with the ordered date&time of all events */
 		for (XTrace trace: log) {
 			for (XEvent event : trace) {
@@ -64,12 +64,12 @@ public class FilterdTraceTimeframeConfig extends FilterdAbstractConfig {
 				added = true;
 			}
 		}
-		
+
 		// If log does not have any time stamps.
 		if (!added) {
 			times.add("0");
 		}
-		
+
 		// Sort the times.
 		Collections.sort(times);
 		// Set the default pair to the outer bounds.
@@ -126,15 +126,14 @@ public class FilterdTraceTimeframeConfig extends FilterdAbstractConfig {
 	 * Getter for the configuration panel.
 	 */
 	public AbstractFilterConfigPanelController getConfigPanel() {
-		// If the configuration panel was not initialized yet.
-		if (this.configPanel == null) {
-			// Create it.
+		if(this.configPanel == null) {
+			// Create a new configuration panel.
 			this.configPanel = new FilterConfigPanelController(
 					"Filter Trace Timeframe Configuration", parameters, this);
 		}
 		return configPanel;
 	}
-	
-	
+
+
 
 }

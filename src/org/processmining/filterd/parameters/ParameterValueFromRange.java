@@ -23,7 +23,17 @@ public class ParameterValueFromRange<T> extends Parameter {
 	public ParameterValueFromRange() {
 	}
 	
-	public ParameterValueFromRange(String name, String nameDisplayed, T defaultChoice, List<T> optionsPair) {
+	/**
+	 * This constructor is to be used whe the generic class is not specified
+	 * which sets it to Double
+	 * 
+	 * @param name
+	 * @param nameDisplayed
+	 * @param defaultChoice
+	 * @param optionsPair
+	 */
+	public ParameterValueFromRange(String name, String nameDisplayed, 
+			T defaultChoice, List<T> optionsPair) {
 		super(name, nameDisplayed);
 		this.defaultChoice = defaultChoice;
 		this.optionsPair = optionsPair;
@@ -31,7 +41,16 @@ public class ParameterValueFromRange<T> extends Parameter {
 		this.chosen = defaultChoice;
 	}
 	
-	public ParameterValueFromRange(String name, String nameDisplayed, T defaultChoice, List<T> optionsPair, Class<T> genericTypeClass) {
+	/**
+	 * This constructor shall be used to specify the generic class
+	 * @param name
+	 * @param nameDisplayed
+	 * @param defaultChoice
+	 * @param optionsPair
+	 * @param genericTypeClass
+	 */
+	public ParameterValueFromRange(String name, String nameDisplayed,
+			T defaultChoice, List<T> optionsPair, Class<T> genericTypeClass) {
 		super(name, nameDisplayed);
 		this.defaultChoice = defaultChoice;
 		this.optionsPair = optionsPair;
@@ -39,21 +58,46 @@ public class ParameterValueFromRange<T> extends Parameter {
 		this.chosen = defaultChoice;
 	}
 	
+	
+	/**
+	 * 
+	 * @return default value
+	 */
 	public T getDefaultChoice() {
 		return defaultChoice;
 	}
+	/**
+	 * Setter for the default value
+	 * @param defaultChoice
+	 */
 	public void setDefaultChoice(T defaultChoice) {
 		this.defaultChoice = defaultChoice;
 	}
+	/**
+	 * 
+	 * @return chosen value
+	 */
 	public T getChosen() {
 		return chosen;
 	}
+	/**
+	 * Setter for the chosen value
+	 * @param chosen
+	 */
 	public void setChosen(T chosen) {
 		this.chosen = chosen;
 	}
+	/**
+	 * 
+	 * @return list with two values speciying the range form which one can choose
+	 */
 	public List<T> getOptionsPair() {
 		return optionsPair;
 	}
+	/**
+	 * Setter for the range from which the user can choose
+	 * @param optionsPair
+	 */
 	public void setOptionsPair(List<T> optionsPair) {
 		this.optionsPair = optionsPair;
 	}

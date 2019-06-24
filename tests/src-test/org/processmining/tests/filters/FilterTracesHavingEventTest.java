@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.deckfour.xes.model.XLog;
 import org.junit.Test;
-import org.processmining.filterd.filters.FilterdTracesHavingEvent;
+import org.processmining.filterd.filters.FilterdTracesHavingEventFilter;
 import org.processmining.filterd.parameters.Parameter;
 import org.processmining.filterd.parameters.ParameterMultipleFromSet;
 import org.processmining.filterd.parameters.ParameterOneFromSet;
@@ -28,7 +28,7 @@ public class FilterTracesHavingEventTest extends FilterdPackageTest {
 		XLog expected = parseLog("trace-attribute", "test_log_attribute_delivery.xes");
 		XLog computed = null; // insert filter operation
 
-		FilterdTracesHavingEvent filter = new FilterdTracesHavingEvent();
+		FilterdTracesHavingEventFilter filter = new FilterdTracesHavingEventFilter();
 		List<Parameter> parameters = getParameters("delivery", Arrays.asList("623", "514"), "Mandatory");
 		computed = filter.filter(originalLog, parameters);
 		assert equalLog(expected, computed);
@@ -45,7 +45,7 @@ public class FilterTracesHavingEventTest extends FilterdPackageTest {
 		XLog expected = parseLog("trace-attribute", "test_log_attribute_abort.xes");
 		XLog computed = null; // insert filter operation
 
-		FilterdTracesHavingEvent filter = new FilterdTracesHavingEvent();
+		FilterdTracesHavingEventFilter filter = new FilterdTracesHavingEventFilter();
 		
 		List<Parameter> parameters = getParameters("lifecycle:transition", Arrays.asList("abort"), "Mandatory");
 		computed = filter.filter(originalLog, parameters);

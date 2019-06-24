@@ -299,31 +299,18 @@ public class Toolbox {
 	}
 
 	public static Map<XTrace, List<Integer>> getVariantsToTraceIndices(
-			XLog log
+			XLog log, XEventClassifier classifier
 			) {
 
 
 		// Need to get the defining attributes to do the variants.
 		Set<String> classifyingAttributes = new HashSet<>();
 
-		// Get the classifiers from the log.
-		List<XEventClassifier> classifiers = log.getClassifiers();
-
-		// Loop over every classifier. 
-		for (XEventClassifier classifier : classifiers) {
-
-			// Extract every key and add it to the set.
-			for (String key : classifier.getDefiningAttributeKeys()) {
-				classifyingAttributes.add(key);
-			}
-
-		}
-
 		// Check variants and see if they occur within both thresholds.
 
 		// Collect all variants:
-		// Variants of traces are traces with the same order of events and
-		// values for every key except for the time stamp.
+		// Variants of traces are traces with the same sequence of events 
+		// where to events are equal if they belong to the same classifier class.
 		// Create mapping from variants to trace indices
 		Map<XTrace, List<Integer>> variantsToTraceIndices = new HashMap<>();
 
@@ -342,21 +329,21 @@ public class Toolbox {
 
 			} else {
 
-				boolean isDifferentVariant = true;
+				boolean newVariant = true;
 
 				for (XTrace variant : variantsToTraceIndices.keySet()) {
 
 					if (isSameVariant(
 							log.get(i), 
 							variant, 
-							classifyingAttributes
+							classifier
 							)) {
 
 						// Add the index of this trace to the mapping of 
 						// the variant we found.
 						variantsToTraceIndices.get(variant).add(i);
 
-						isDifferentVariant = false;
+						newVariant = false;
 
 						// stop looping over variants since we found one.
 						break;
@@ -366,7 +353,7 @@ public class Toolbox {
 
 				// Add this trace because there are no variants pertaining
 				// to this trace.
-				if (isDifferentVariant) {
+				if (newVariant) {
 
 					// Add it to the mapping as a new entry.
 					List<Integer> indicesList = new ArrayList<>();
@@ -388,8 +375,7 @@ public class Toolbox {
 	public static boolean isSameVariant(
 			XTrace firstTrace, 
 			XTrace secondTrace,
-			Set<String> attributes
-			) {
+			XEventClassifier classifier) {
 
 		if (firstTrace.size() != secondTrace.size()) {
 			return false;
@@ -398,11 +384,7 @@ public class Toolbox {
 
 		for (int i = 0; i < firstTrace.size(); i++) {
 
-			if (!(isSameEvent(
-					firstTrace.get(i), 
-					secondTrace.get(i), 
-					attributes)
-					)) {
+			if (!(classifier.sameEventClass(firstTrace.get(i), secondTrace.get(i)))) {
 				return false;
 			}
 
@@ -466,7 +448,7 @@ public class Toolbox {
 			// Use first and last event to calculate the total duration of
 			// the trace.
 			LocalDateTime firstEventTime;
-			LocalDateTime lastEventTime;
+			LocalDateTime lastEventTime = null;
 			
 			int firstIndex = 0;
 			
@@ -485,22 +467,7 @@ public class Toolbox {
 				firstEventTime = LocalDateTime.MIN;
 			}
 			
-			int lastIndex = trace.size() - 1;
-			
-			while (!(trace.get(firstIndex).getAttributes().containsKey("time:timestamp")) && lastIndex > firstIndex + 1) {
-				lastIndex--;
-			}
-			
-			if (trace.get(lastIndex).getAttributes().containsKey("time:timestamp")) {
-				lastEventTime = synchronizeGMT(
-						trace
-						.get(lastIndex)
-						.getAttributes()
-						.get("time:timestamp")
-						.toString());
-			} else {
-				lastEventTime = LocalDateTime.MAX;
-			}
+			lastEventTime = computeLastEventTime(lastEventTime, firstIndex, trace, trace.size() - 1);
 			
 			if (firstEventTime != LocalDateTime.MIN && lastEventTime != LocalDateTime.MAX) {
 
@@ -521,16 +488,25 @@ public class Toolbox {
 
 		return new ArrayList<String> (durations.stream().map(l -> {
 			
-			Calendar c = Calendar.getInstance(); 
+			/*Calendar c = Calendar.getInstance(); 
 			//Set time in milliseconds
-			c.setTimeInMillis(l);
+			c.setTimeInMillis(totalMillis);
 			int mYear = c.get(Calendar.YEAR) - 1970;
 			int mMonth = c.get(Calendar.MONTH); 
 			int mDay = c.get(Calendar.DAY_OF_MONTH) - 1;
 			int hr = c.get(Calendar.HOUR);
 			int min = c.get(Calendar.MINUTE);
 			int sec = c.get(Calendar.SECOND);
-			int millis = c.get(Calendar.MILLISECOND);
+			int millis = c.get(Calendar.MILLISECOND);*/
+			int seconds = (int) (l/1000);
+			
+			int mYear = (int) Math.floor(seconds / 31536000);
+			int mMonth = (int) Math.floor((seconds % 31536000) / 2628000);
+			int mDay = (int) Math.floor(((seconds % 31536000) % 2628000)/ 86400); 
+			int hr = (int) Math.floor(((seconds % 31536000) % 86400) / 3600);
+			int min = (int) Math.floor((((seconds % 31536000) % 86400) % 3600) / 60);
+			int sec = (((seconds % 31536000) % 86400) % 3600) % 60;
+			int millis = (int) (l - seconds*1000);
 			
 			String string = "";
 			
@@ -613,7 +589,7 @@ public class Toolbox {
 			// Use first and last event to calculate the total duration of
 			// the trace.
 			LocalDateTime firstEventTime;
-			LocalDateTime lastEventTime;
+			LocalDateTime lastEventTime = null;
 			
 			int firstIndex = 0;
 			
@@ -632,22 +608,7 @@ public class Toolbox {
 				firstEventTime = LocalDateTime.MAX;
 			}
 			
-			int lastIndex = trace.size() - 1;
-			
-			while (!(trace.get(firstIndex).getAttributes().containsKey("time:timestamp")) && lastIndex > firstIndex + 1) {
-				lastIndex--;
-			}
-			
-			if (trace.get(lastIndex).getAttributes().containsKey("time:timestamp")) {
-				lastEventTime = synchronizeGMT(
-						trace
-						.get(firstIndex)
-						.getAttributes()
-						.get("time:timestamp")
-						.toString());
-			} else {
-				lastEventTime = LocalDateTime.MAX;
-			}
+			lastEventTime = computeLastEventTime(lastEventTime, firstIndex, trace, firstIndex);
 			
 			if (firstEventTime != LocalDateTime.MAX && lastEventTime != LocalDateTime.MAX) {
 
@@ -671,6 +632,27 @@ public class Toolbox {
 
 
 		return firstAndLast;
+	}
+	
+	public static LocalDateTime computeLastEventTime(LocalDateTime lastEventTime, int firstIndex, XTrace trace, int index) {
+		int lastIndex = trace.size() - 1;
+		
+		while (!(trace.get(firstIndex).getAttributes().containsKey("time:timestamp")) && lastIndex > firstIndex + 1) {
+			lastIndex--;
+		}
+		
+		if (trace.get(lastIndex).getAttributes().containsKey("time:timestamp")) {
+			lastEventTime = synchronizeGMT(
+					trace
+					.get(index)
+					.getAttributes()
+					.get("time:timestamp")
+					.toString());
+		} else {
+			lastEventTime = LocalDateTime.MAX;
+		}
+		
+		return lastEventTime;
 	}
 
 }

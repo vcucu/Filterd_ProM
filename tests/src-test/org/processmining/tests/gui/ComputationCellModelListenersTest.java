@@ -1,11 +1,13 @@
 package org.processmining.tests.gui;
 
 import java.beans.PropertyChangeEvent;
+import java.util.ArrayList;
 
 import org.junit.Test;
 import org.processmining.filterd.gui.ComputationCellController;
 import org.processmining.filterd.gui.ComputationCellModel;
 import org.processmining.filterd.gui.ComputationCellModelListeners;
+import org.processmining.filterd.models.YLog;
 
 import junit.framework.TestCase;
 
@@ -15,7 +17,7 @@ public class ComputationCellModelListenersTest extends TestCase {
 	
 	public void setupComputationCellModelListeners() {
 		// Create new computation cell model
-		ComputationCellModel model = new ComputationCellModel();
+		ComputationCellModel model = new ComputationCellModel(null, 0, null, new ArrayList<YLog>());
 		// Create new computation cell controller
 		ComputationCellController controller = new ComputationCellController(model);
 		// Setup new computation cell model listeners

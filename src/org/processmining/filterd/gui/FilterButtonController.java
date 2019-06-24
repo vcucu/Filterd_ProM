@@ -47,9 +47,9 @@ public class FilterButtonController {
 	 */
 	private void bindProperties() {
 		// bind the name property with the label's text 
-		filterName.textProperty().bind(model.getNameProperty());
+		filterName.textProperty().bind(model.name);
 		// bind the selected property with the look of the filter button
-		model.getSelectedProperty().addListener((observable, oldvalue, newvalue) -> setSelected(newvalue));
+		model.selected.addListener((observable, oldvalue, newvalue) -> setSelected(newvalue));
 		// bind the valid property with the look of the filter button
 		model.isValidProperty().addListener(new ChangeListener<Boolean>() {
 
@@ -76,7 +76,7 @@ public class FilterButtonController {
 			}
 		});
 		// bind the edit disabled property with the disabled property of the edit button
-		editButton.disableProperty().bind(model.isEditDisabledProperty());
+		editButton.disableProperty().bind(model.isEditDisabled);
 	}
 
 	/**
@@ -124,6 +124,17 @@ public class FilterButtonController {
 		return this.filterLayout;
 	}
 
+	/**
+	 * Method used to set or unset this button as invalid graphically. This
+	 * means that the cell will be presented to the user as red, with an error
+	 * message, etc.
+	 * 
+	 * @param val
+	 *            if this value is true, the cell should become invalid. if this
+	 *            value is false, the cell should not be invalid. note that the
+	 *            latter does not mean that the cell is valid, but rather that
+	 *            it is not graphically represented as invalid.
+	 */
 	public void setInvalid(boolean val) {
 		if (val) {
 			filterLayout.getStyleClass().add("invalid");

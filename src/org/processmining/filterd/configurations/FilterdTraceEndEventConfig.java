@@ -17,76 +17,69 @@ import org.processmining.filterd.tools.Toolbox;
 import org.processmining.filterd.widgets.ParameterOneFromSetExtendedController;
 
 public class FilterdTraceEndEventConfig extends FilterdAbstractReferencingConfig {
-	
+
 	public FilterdTraceEndEventConfig(XLog log, Filter filterType) {
 		super(log, filterType);
 		parameters = new ArrayList<Parameter>();
 		List<XEventClassifier>complexClassifiers = Toolbox.computeComplexClassifiers(log);
 		XLog endEventsLog = endEventsOnly();
-		 // Get all the events attributes that are passed to the parameter 
+		// Get all the events attributes that are passed to the parameter 
 		List<String> attrAndClassifiers = Toolbox.computeAttributes(endEventsLog);
 		//add the complex classifiers to the list of global attributes 
 		attrAndClassifiers.addAll(Toolbox.getClassifiersName(complexClassifiers));
-		
+
 		// Create attribute parameter 
 		ParameterOneFromSet attribute = new ParameterOneFromSet("attribute", 
 				"Filter by", attrAndClassifiers.get(0), attrAndClassifiers, true);
 
-		
+
 		//Create selectionType parameter
 		List<String> selectionTypeOptions = new ArrayList<>(Arrays.asList("Filter in", "Filter out"));
 		ParameterOneFromSet selectionType = new ParameterOneFromSet("selectionType",
 				"Selection type", "Filter in", selectionTypeOptions);	
-		
+
 		// Create the default concrete reference
 		concreteReference = new FilterdTraceEndEventCategoricalConfig(log, filterType, 
 				attrAndClassifiers.get(0), complexClassifiers);
-		
+
 		// Add all parameters to the list of parameters
-		
+
 		parameters.add(attribute);
 		parameters.add(selectionType);
 		//parameters.addAll(concreteReference.getParameters());
-		
-		
+
+
 	}
 
 	public boolean canPopulate(FilterConfigPanelController component) {
 		//check whether no params are empty if you populate with the component
 		return true;
 	};
-	
+
 	@Override
 	public AbstractFilterConfigPanelController getConfigPanel() {
-		if (this.configPanel == null) {
+		if(this.configPanel == null) {
 			this.configPanel = new FilterConfigPanelController("Trace End Event Configuration", parameters, this);
 		}
-		
 		return configPanel;
 	}
-	
+
+
+	/*
+	 * The candidateLog is invalid if the event attributes list does not 
+	 * contain the selected attribute 
+	 * The candidateLog is invalid if the complex classifiers list does not
+	 * contain the selected complex classifier
+	 */
 	@Override
 	public boolean checkValidity(XLog candidateLog) {
-		if (parameters == null) {
-			return true;
-		}
-		List<String> attrCandidateLog = new ArrayList<>();
-		List<XEventClassifier> complexClassifiers = new ArrayList<>();
-		
-		attrCandidateLog.addAll(Toolbox.computeAttributes(candidateLog));
-		complexClassifiers.addAll(Toolbox.computeComplexClassifiers(candidateLog));
-		for (XEventClassifier c : complexClassifiers) {
-			attrCandidateLog.add(c.toString());
-		}
-		ParameterOneFromSet attribute = (ParameterOneFromSet) getParameter("attribute");
-		String chosenAttr = attribute.getChosen();
-
-		if (!attrCandidateLog.contains(chosenAttr)) {
-			return false;
-		}			
-		return true;
+		return ConfigurationToolbox.traceStartAndEndEventValidity(parameters, this, candidateLog);
 	}
 
+	/**
+	 * Changes the content of the configuration according to the 
+	 * selected attributes
+	 */
 	@Override
 	public FilterdAbstractConfig changeReference(ParameterOneFromSetExtendedController controller) {
 		for (Parameter param : concreteReference.getParameters()) {
@@ -99,6 +92,13 @@ public class FilterdTraceEndEventConfig extends FilterdAbstractReferencingConfig
 		}		
 		return concreteReference;
 	}
+
+	/**
+	 * Method which modifies the log such that it only contains 
+	 * end events
+	 * @return the log containing all initial traces, but with
+	 * only one event.
+	 */
 	private XLog endEventsOnly() {
 		XLog filteredLog = Toolbox.initializeLog(log);
 		XFactory factory = XFactoryRegistry.instance().currentDefault();

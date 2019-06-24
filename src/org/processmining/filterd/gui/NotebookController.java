@@ -29,7 +29,7 @@ import javafx.stage.Stage;
 
 /**
  * This class contains the controller for the notebook.
- * 
+ *
  *
  */
 public class NotebookController {
@@ -40,23 +40,34 @@ public class NotebookController {
 	 * variables containing the (important) UI elements so they can be
 	 * interacted with in the code.
 	 */
-	@FXML private Button autoButton;
-	@FXML private Button manualButton;
-	@FXML private Label computeButton;
-	@FXML private Label exportButton;
-	@FXML private VBox cellsLayout;
-	@FXML private Label appendCellButton;
-	@FXML private HBox addCellHBox;
-	@FXML private Button addComputationCellButton;
-	@FXML private Button addTextCellButton;
-	@FXML private VBox notebookLayout;
-	@FXML private HBox toolbarLayout;
+	@FXML
+	private Button autoButton;
+	@FXML
+	private Button manualButton;
+	@FXML
+	private Label computeButton;
+	@FXML
+	private Label exportButton;
+	@FXML
+	private VBox cellsLayout;
+	@FXML
+	private Label appendCellButton;
+	@FXML
+	private HBox addCellHBox;
+	@FXML
+	private Button addComputationCellButton;
+	@FXML
+	private Button addTextCellButton;
+	@FXML
+	private VBox notebookLayout;
+	@FXML
+	private HBox toolbarLayout;
 
 	/**
 	 * The constructor which sets the model. Note that the constructor does not
 	 * have access to the @FXML annotated fields as @FXML annotated fields are
 	 * populated after the execution of the constructor.
-	 * 
+	 *
 	 * @param model
 	 *            the model that is to be paired with this controller
 	 */
@@ -81,7 +92,7 @@ public class NotebookController {
 	 * fields, thus UI elements can be manipulated here.
 	 */
 	public void initialize() {
-		// Add cell listener 
+		// Add cell listener
 		cellListeners();
 
 		// Initialize AddCellModal
@@ -116,22 +127,16 @@ public class NotebookController {
 				while (change.next()) {
 					if (change.wasUpdated()) {
 						for (int i = change.getFrom(); i < change.getTo(); i++) {
-							System.out.printf("ID: %d ----------\n", model.getCells().get(i).getIndex());
-							System.out.println("Updated: " + i + " " + model.getCells().get(i));
 							// Do something
 						}
 					} else {
 						for (CellModel removedCell : change.getRemoved()) {
-							System.out.printf("ID: %d ----------\n", removedCell.getIndex());
-							System.out.println("Removed: " + removedCell);
-							// update downstream cells from removed cell 
+							// update downstream cells from removed cell
 							if (removedCell instanceof ComputationCellModel) {
 								model.removeCellsInputLogs(((ComputationCellModel) removedCell));
 							}
 						}
 						for (CellModel addedCell : change.getAddedSubList()) {
-							System.out.printf("ID: %d ----------\n", addedCell.getIndex());
-							System.out.println("Added: " + addedCell);
 							// update downstream cells from added cell
 							if (addedCell instanceof ComputationCellModel) {
 								model.addCellsInputLogs(((ComputationCellModel) addedCell));
@@ -216,7 +221,7 @@ public class NotebookController {
 
 	/**
 	 * Sets the computation mode of the notebook to {@code mode}.
-	 * 
+	 *
 	 * @param ComputationMode
 	 *            mode the computation mode to set the notebook to.
 	 */
@@ -259,7 +264,7 @@ public class NotebookController {
 	/**
 	 * Given a cell model, this method creates a corresponding controller and
 	 * adds it the notebook UI.
-	 * 
+	 *
 	 * @param cell
 	 *            The cell to load into the notebook.
 	 */
@@ -288,7 +293,7 @@ public class NotebookController {
 
 	/**
 	 * Loads a list of cells into the notebook. Ignores null or an empty list.
-	 * 
+	 *
 	 * @param cells
 	 *            The list of cells to load into the notebook.
 	 */
@@ -298,7 +303,7 @@ public class NotebookController {
 				// TODO: make sure we iterate through the cells in order of their index.
 				cell.setContext(model.getPromContext()); // set the context for the cell.
 				if (cell.getClass() == ComputationCellModel.class) {
-					((ComputationCellModel) cell).setCanceller(model.getPromCanceller()); // set the canceller for this cell.
+					((ComputationCellModel) cell).canceller = model.getPromCanceller(); // set the canceller for this cell.
 					((ComputationCellModel) cell).setInputLogs(model.getOutputLogsTill(cell.getIndex())); // set the available input logs for this cell.
 					// TODO: set the correct input log for the cell. In order to do this cell need to start keeping track of the index of the cell whoses output event log they are using.
 				}
@@ -311,7 +316,7 @@ public class NotebookController {
 	/**
 	 * Removes the input {@code cell} from the notebook model. Removal from the
 	 * UI should happen through an actionListener.
-	 * 
+	 *
 	 * @param cell
 	 *            the cell to remove from the notebook.
 	 */
@@ -323,7 +328,7 @@ public class NotebookController {
 
 	/**
 	 * Returns the model of the current notebook.
-	 * 
+	 *
 	 * @return the {@code NotebookModel} for the current notebook.
 	 */
 	public NotebookModel getModel() {
@@ -332,7 +337,7 @@ public class NotebookController {
 
 	/**
 	 * Returns the scene of the notebook visualizer.
-	 * 
+	 *
 	 * @return The scene of the notebook visualizer.
 	 */
 	public Scene getScene() {
@@ -355,8 +360,7 @@ public class NotebookController {
 	// Do NOT make this public! - Omar
 	private void showAddCellModal(int index) {
 		addCellHBox.setVisible(true); // makes the content of the modal (HBox) visible.
-		addCellHBox.setManaged(true); // makes the modal (HBox) take up space. This option is note available in the
-										// Scene Builder.
+		addCellHBox.setManaged(true); // makes the modal (HBox) take up space. This option is note available in the Scene Builder.
 		cellsLayout.getChildren().add(index, addCellHBox);
 	}
 

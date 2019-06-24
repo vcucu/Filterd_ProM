@@ -24,21 +24,19 @@ public class CellModelListeners implements PropertyChangeListener {
 
 	/**
 	 * Collapses cell in UI
-	 * 
+	 *
 	 * @param event
 	 *            change event fired by the isHidden property update
 	 */
 	private void collapseCell(PropertyChangeEvent event) {
 		if (((Boolean) event.getOldValue()) == false) {
-			//System.out.println("This cell should collapse!");
 			controller.hide();
 		} else {
-			//System.out.println("This cell should expand!");
 			controller.show();
 		}
 	}
 
-	
+
 	/**
 	 * Update the statusBar of the cell by color corresponding to the newValue of event
 	 * @param event
@@ -53,20 +51,18 @@ public class CellModelListeners implements PropertyChangeListener {
 			case INVALID: controller.changeStatus("-fx-background-color: #C25D5D;");
 			break;
 			case OUT_OF_DATE: 
-				System.out.println("Changing status to OUT_OF_DATE");
 				controller.changeStatus("-fx-background-color: #799EA4;");
-			break;				
+			break;
 		}
 	}
 
 	/**
 	 * Changes name of cell in UI
-	 * 
+	 *
 	 * @param eventchange
 	 *            event fired by the CellName property
 	 */
 	private void updateCellName(PropertyChangeEvent event) {
-		//System.out.println("cell name is:" + (String) event.getNewValue());
 		controller.changeCellName((String) event.getNewValue());
 	}
 }

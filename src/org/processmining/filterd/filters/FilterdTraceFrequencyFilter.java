@@ -29,8 +29,14 @@ public class FilterdTraceFrequencyFilter extends Filter {
 		// change input logs
 		XLog clonedLog = (XLog) log.clone();
 
-		ParameterOneFromSet classifierParameter = (ParameterOneFromSet) parameters.get(0);
+		// retrieve the classifier parameter
+		ParameterOneFromSet classifierParameter = (ParameterOneFromSet) this.getParameter(parameters, "classifier");
 		List<XEventClassifier> classifiers = Toolbox.computeAllClassifiers(log);
+		// get the classifier object
+		XEventClassifier classifier = classifiers.stream()
+				.filter(c -> c.toString().equals(classifierParameter.getChosen()))
+				.findFirst()
+				.get();
 
 		/*
 		 * Map from XTrace -> List<String>.
@@ -52,13 +58,7 @@ public class FilterdTraceFrequencyFilter extends Filter {
 
 			// Loop over every event in this trace.
 			for (XEvent event : trace) {
-				activities.add(	
-						classifiers.stream()
-						.filter(c -> c.toString().equals(classifierParameter.getChosen()))
-						.findFirst()
-						.get()
-						.getClassIdentity(event)
-						);
+				activities.add(classifier.getClassIdentity(event));
 			}
 
 			// Add it to the trace -> class identity mapping.
@@ -81,14 +81,16 @@ public class FilterdTraceFrequencyFilter extends Filter {
 		Collections.sort(occurrences);
 
 		// Get parameters set by the user in the configuration panel.
-		ParameterOneFromSet FreqOcc = (ParameterOneFromSet) parameters.get(1);
-		ParameterRangeFromRange<Double> thresholdParameters = 
-				(ParameterRangeFromRange<Double>) parameters.get(2);		
+		ParameterOneFromSet FreqOcc = (ParameterOneFromSet) this.getParameter(parameters, "FreqOcc");
+		ParameterRangeFromRange<Double> rangeFreq = 
+				(ParameterRangeFromRange<Double>)  this.getParameter(parameters, "rangeFreq");
+		ParameterRangeFromRange<Integer> rangeOcc = 
+				(ParameterRangeFromRange<Integer>)  this.getParameter(parameters, "rangeOcc");	
 		ParameterOneFromSet filterInOut = 
-				(ParameterOneFromSet) parameters.get(3);
+				(ParameterOneFromSet) this.getParameter(parameters, "filterInOut");
 
-		int lowThreshold;
-		int highThreshold;
+		int lowThreshold; // lower bound
+		int highThreshold; // upper bound
 
 		// Create collection for traces inside and outside the thresholds set by 
 		// the user.
@@ -102,7 +104,7 @@ public class FilterdTraceFrequencyFilter extends Filter {
 		// values for every key except for the time stamp.
 		// Create mapping from variants to trace indices
 		Map<XTrace, List<Integer>> variantsToTraceIndices = 
-				Toolbox.getVariantsToTraceIndices(clonedLog);
+				Toolbox.getVariantsToTraceIndices(clonedLog, classifier);
 
 
 		/// Check the threshold type 
@@ -110,11 +112,11 @@ public class FilterdTraceFrequencyFilter extends Filter {
 		if (FreqOcc.getChosen().contains("occ")) {
 			// The parameters are given as absolute values, 
 			// thus we can simply retrieve them.
-			lowThreshold = thresholdParameters
+			lowThreshold = rangeOcc
 					.getChosenPair()
 					.get(0)
 					.intValue();
-			highThreshold = thresholdParameters
+			highThreshold = rangeOcc
 					.getChosenPair()
 					.get(1)
 					.intValue();
@@ -125,11 +127,11 @@ public class FilterdTraceFrequencyFilter extends Filter {
 			// Get the percentages the user wants
 			// E.g. [40, 60] means the user wants the traces from 40% until 60% of the log
 			// ordered by frequency.
-			lowThreshold = (thresholdParameters
+			lowThreshold = (rangeFreq
 					.getChosenPair()
 					.get(0)
 					.intValue() * clonedLog.size()) / 100;
-			highThreshold = (thresholdParameters
+			highThreshold = (rangeFreq
 					.getChosenPair()
 					.get(1)
 					.intValue() * clonedLog.size()) / 100;
@@ -197,7 +199,6 @@ public class FilterdTraceFrequencyFilter extends Filter {
 		// Loop over the trace variants to get the indices of the traces
 		// with this variant.
 		for (XTrace variant : variantsToTraceIndices.keySet()) {
-
 			// Get list of trace indices.
 			List<Integer> traceIndices = variantsToTraceIndices
 					.get(variant);
@@ -205,29 +206,18 @@ public class FilterdTraceFrequencyFilter extends Filter {
 			// Put it in the hash set of traces within the threshold.
 			if (traceIndices.size() >= lowThreshold 
 					&& traceIndices.size() <= highThreshold) {
-
 				// Do this for every trace of this variant.
 				for (Integer traceIndex : traceIndices) {
-
 					tracesInsideThreshold.add(clonedLog.get(traceIndex));
-
 				}
-
 			}
 			// Put it in the hash set of traces outside the threshold.
 			else {
-
 				// Do this for every trace of this variant.
 				for (Integer traceIndex : traceIndices) {
-
 					tracesOutsideThreshold.add(clonedLog.get(traceIndex));
-
 				}
-
-
 			}
-
-
 		}
 
 		/// Check the Filter mode (filter in/out)

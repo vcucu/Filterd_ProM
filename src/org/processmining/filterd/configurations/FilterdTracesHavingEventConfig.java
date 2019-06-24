@@ -26,17 +26,17 @@ import javafx.beans.value.ObservableValue;
 import javafx.scene.control.ComboBox;
 
 public class FilterdTracesHavingEventConfig extends FilterdAbstractConfig {
-	
+
 	// Set to hold attributes for the event.
-	Set<String> eventAttributes;
-	
+	Set<String> eventKeys;
+
 	public FilterdTracesHavingEventConfig(XLog log, Filter filterType) throws EmptyLogException {
 		super(log, filterType);
 		// Set the log.
 		this.log = log;
 		// Create new set for event attributes.
-		eventAttributes = new HashSet<>();
-		
+		eventKeys = new HashSet<>();
+
 		// Loop over every trace in the log.
 		for (XTrace trace : log) {
 
@@ -44,13 +44,13 @@ public class FilterdTracesHavingEventConfig extends FilterdAbstractConfig {
 			for (XEvent event : trace) {
 
 				// Add all the keys of the event attributes.
-				eventAttributes.addAll(event.getAttributes().keySet());
+				eventKeys.addAll(event.getAttributes().keySet());
 
 			}
 
 		}
 		// Create list out of set.
-		List<String> attributesList = new ArrayList<String>(eventAttributes);
+		List<String> attributesList = new ArrayList<String>(eventKeys);
 		// Create parameter for the user to select which attribute he wants to
 		// filter with.
 		ParameterOneFromSet attrType = new ParameterOneFromSet("attrType",
@@ -76,7 +76,7 @@ public class FilterdTracesHavingEventConfig extends FilterdAbstractConfig {
 					attributeValues.add(eventAttrs.get(attributesList.get(0)).toString());
 			}
 		}
-		
+
 		// Create a list out of the set.
 		List<String> attributeValuesList = new ArrayList<String>(attributeValues);
 		// Create a parameter for the user to select which values of the 
@@ -105,9 +105,9 @@ public class FilterdTracesHavingEventConfig extends FilterdAbstractConfig {
 	 * Getter for the configuration panel.
 	 */
 	public AbstractFilterConfigPanelController getConfigPanel() {
-		// If the configuration panel has not been initialized yet.
-		if (this.configPanel == null) {
-			// Create it.
+
+		if(this.configPanel == null) {
+			// Create a new config panel.
 			this.configPanel = new FilterConfigPanelController(
 					"Filter Traces Having Event Configuration", 
 					parameters, 
@@ -115,10 +115,9 @@ public class FilterdTracesHavingEventConfig extends FilterdAbstractConfig {
 			// Add the listeners to the configuration panel.
 			parameterListeners();
 		}
-		
 		return configPanel;
 	}
-	
+
 	@Override
 	/**
 	 * Check if the parameters are still valid on the candidate log.
@@ -127,7 +126,7 @@ public class FilterdTracesHavingEventConfig extends FilterdAbstractConfig {
 	 */
 	public boolean checkValidity(XLog candidateLog) {
 		// If the parameters are null or the log is equal to the log that was
-				// already selected.
+		// already selected.
 		if (parameters == null || candidateLog.equals(log))
 			return true;
 		// Check if the new log contains the same event attribute as the one

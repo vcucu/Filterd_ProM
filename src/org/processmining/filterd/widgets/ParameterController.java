@@ -1,5 +1,8 @@
 package org.processmining.filterd.widgets;
 
+import java.io.IOException;
+
+import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.VBox;
 
 /**
@@ -36,5 +39,21 @@ public abstract class ParameterController {
 	 */
 	public String getName() {
 		return name;
+	}
+	
+	/**
+	 * Loads the FXML file contents for a parameter.
+	 * 
+	 * @param controller parameter controller
+	 * @param path 		 path for loading the parameter component
+	 */
+	public void loadFXMLContents(ParameterController controller, String path) {
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(path));
+        fxmlLoader.setController(controller);
+        try {
+            contents = (VBox) fxmlLoader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 	}
 }

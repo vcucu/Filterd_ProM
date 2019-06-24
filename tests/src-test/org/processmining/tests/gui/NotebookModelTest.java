@@ -47,7 +47,7 @@ public class NotebookModelTest extends FilterdPackageTest {
 	@Test
 	public void testNewNotebookModelHeadless() {
 		// Create new notebook model instance
-		NotebookModel model = new NotebookModel();
+		NotebookModel model = new NotebookModel(null);
 		// Check the cells list was properly initialized
 		assertTrue(model.getCells() != null);
 	}
@@ -55,7 +55,7 @@ public class NotebookModelTest extends FilterdPackageTest {
 	@Test
 	public void testNotebookModelContext() {
 		// Create new notebook model instance
-		NotebookModel model = new NotebookModel();
+		NotebookModel model = new NotebookModel(null);
 		UIPluginContext context = model.getPromContext();
 		assertEquals(context, null);
 	}
@@ -63,7 +63,7 @@ public class NotebookModelTest extends FilterdPackageTest {
 	@Test
 	public void testNotebookModelCanceller() {
 		// Create new notebook model instance
-		NotebookModel model = new NotebookModel();
+		NotebookModel model = new NotebookModel(null);
 		ProMCanceller canceller = model.getPromCanceller();
 		assertEquals(canceller, null);
 	}
@@ -71,7 +71,7 @@ public class NotebookModelTest extends FilterdPackageTest {
 	@Test
 	public void testNotebookModelViewManager() {
 		// Create new notebook model instance
-		NotebookModel model = new NotebookModel();
+		NotebookModel model = new NotebookModel(null);
 		ProMViewManager view = model.getPromViewManager();
 		assertEquals(view, null);
 	}
@@ -79,7 +79,7 @@ public class NotebookModelTest extends FilterdPackageTest {
 	@Test
 	public void testNotebookModelResourceManager() {
 		// Create new notebook model instance
-		NotebookModel model = new NotebookModel();
+		NotebookModel model = new NotebookModel(null);
 		ProMResourceManager manager = model.getPromResourceManager();
 		assertEquals(manager, null);
 	}
@@ -87,7 +87,7 @@ public class NotebookModelTest extends FilterdPackageTest {
 	@Test
 	public void testNotebookCellMethods() {
 		// Create new notebook model instance
-		NotebookModel model = new NotebookModel();
+		NotebookModel model = new NotebookModel(null);
 		// Create new computation cell model
 		ComputationCellModel computationCell = new ComputationCellModel(null, 0, null, new ArrayList<>());
 		// Create new text cell model
@@ -122,7 +122,7 @@ public class NotebookModelTest extends FilterdPackageTest {
 	@Test
 	public void testNotebookCellRemoveMethods() {
 		// Create new notebook model instance
-		NotebookModel model = new NotebookModel();
+		NotebookModel model = new NotebookModel(null);
 		// Create new computation cell model
 		ComputationCellModel computationCell = new ComputationCellModel(null, 0, null, new ArrayList<>());
 		// Create new text cell model
@@ -165,7 +165,7 @@ public class NotebookModelTest extends FilterdPackageTest {
 	@Test
 	public void testNotebookComputationMethods() {
 		// Create new notebook model instance
-		NotebookModel model = new NotebookModel();
+		NotebookModel model = new NotebookModel(null);
 		// Get computation mode of the model
 		ComputationMode mode = model.getComputationMode();
 		// Check computation mode of the model
@@ -185,7 +185,7 @@ public class NotebookModelTest extends FilterdPackageTest {
 	@Test
 	public void testNotebookGetOutputLogsTill() {
 		// Create new notebook model instance
-		NotebookModel model = new NotebookModel();
+		NotebookModel model = new NotebookModel(null);
 		// Get the output logs until the first cell
 		List<YLog> logs = model.getOutputLogsTill(0);
 		// Check the logs list that is returned (should only be the initial log)
@@ -203,7 +203,7 @@ public class NotebookModelTest extends FilterdPackageTest {
 		YLog logY = new YLog(0, "Original Log", originalLog, 0);
 		
 		// Create new notebook model instance
-		NotebookModel model = new NotebookModel();
+		NotebookModel model = new NotebookModel(null);
 		model.setInitialInput(logY);
 		
 		// Create new computation cell model instance
@@ -225,7 +225,7 @@ public class NotebookModelTest extends FilterdPackageTest {
 	@Test
 	public void testNotebookGetInitialInput() {
 		// Create new notebook model instance
-		NotebookModel model = new NotebookModel();
+		NotebookModel model = new NotebookModel(null);
 		// Create new YLog
 		YLog initialLog = new YLog(0, "Original Log", originalLog, 0);
 		// Set the initial input log for the notebook
@@ -241,7 +241,7 @@ public class NotebookModelTest extends FilterdPackageTest {
 	@Test
 	public void testNotebookModelComputingProperty() {
 		// Create new notebook model instance
-		NotebookModel model = new NotebookModel();
+		NotebookModel model = new NotebookModel(null);
 		// Get the computing variable from the notebook
 		Boolean computing = model.isComputing();
 		// Check that the computing variable is properly returned
@@ -258,7 +258,7 @@ public class NotebookModelTest extends FilterdPackageTest {
 		YLog logY = new YLog(0, "Original Log", originalLog, 0);
 		
 		// Create new notebook model instance
-		NotebookModel model = new NotebookModel();
+		NotebookModel model = new NotebookModel(null);
 		
 		// Create new computation cell model instance
 		ComputationCellModel compCell = new ComputationCellModel(null, 0, null, new ArrayList<>());
@@ -305,7 +305,7 @@ public class NotebookModelTest extends FilterdPackageTest {
 	@Test
 	public void testGetXML() {
 		// Create new notebook model instance
-		NotebookModel model = new NotebookModel();
+		NotebookModel model = new NotebookModel(null);
 		// Get the XML of the notebook model
 		try {
 			String notebookModel = model.getXML();
@@ -313,18 +313,6 @@ public class NotebookModelTest extends FilterdPackageTest {
 		} catch (JAXBException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-	}
-	
-	@Test
-	public void testNotebookModelClone() {
-		// Create new notebook model instance
-		NotebookModel model = new NotebookModel();
-		try {
-			// Get a clone of the notebook model
-			NotebookModel clone = model.clone();	
-		} catch (Throwable exception) {
-			assertFalse(exception.equals(null));
 		}
 	}
 }

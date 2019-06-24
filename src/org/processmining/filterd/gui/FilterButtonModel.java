@@ -12,31 +12,19 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 /**
- * Model for the filter buttons. This component contains all the data
- * associated with a filter button.
+ * Model for the filter buttons. This component contains all the data associated
+ * with a filter button.
  */
 public class FilterButtonModel {
 
-	private StringProperty name; // name of the filter button (javafx property so that it can be binded)
+	public StringProperty name; // name of the filter button (JavaFX property so that it can be binded)
 	private int index; // index of the filter button in the filter button list
-	private BooleanProperty selected; // is the filter button selected (javafx property so that it can be binded)
+	public BooleanProperty selected; // is the filter button selected (JavaFX property so that it can be binded)
 	private FilterdAbstractConfig filterConfig; // filter configuration that this button is associated with
 	private XLog inputLog; // input log for the filter
 	private XLog outputLog; // output log of the filter
-	private BooleanProperty isValid; // is the filter configuration valid (javafx property so that it can be binded)
-	private BooleanProperty isEditDisabled; // is the edit button disabled (javafx property so that it can be binded)
-
-	/**
-	 * Constructor for importing/exporting. This constructor needs to exist
-	 * because JAXB needs a no-argument constructor for unmarshalling.
-	 * Properties set here could be overwritten during loading.
-	 */
-	public FilterButtonModel() {
-		name = new SimpleStringProperty("New filter");
-		selected = new SimpleBooleanProperty(false);
-		isValid = new SimpleBooleanProperty(true);
-		isEditDisabled = new SimpleBooleanProperty(true);
-	}
+	private BooleanProperty isValid; // is the filter configuration valid (JavaFX property so that it can be binded)
+	public BooleanProperty isEditDisabled; // is the edit button disabled (JavaFX property so that it can be binded)
 
 	public FilterButtonModel(int index) {
 		name = new SimpleStringProperty("New filter");
@@ -57,15 +45,6 @@ public class FilterButtonModel {
 	}
 
 	/**
-	 * Getter for the name JavaFX property
-	 * 
-	 * @return name JavaFX property
-	 */
-	public StringProperty getNameProperty() {
-		return name;
-	}
-
-	/**
 	 * Setter for the name of the filter button.
 	 * 
 	 * @param value
@@ -76,15 +55,6 @@ public class FilterButtonModel {
 	}
 
 	/**
-	 * Getter for the isEditDisabled boolean variable
-	 * 
-	 * @return boolean stating whether edit button is disabled
-	 */
-	public boolean isEditDisabled() {
-		return this.isEditDisabled.get();
-	}
-
-	/**
 	 * Setter for the isEditDisabled boolean variable
 	 * 
 	 * @param isEditDisabled
@@ -92,10 +62,6 @@ public class FilterButtonModel {
 	 */
 	public void setIsEditDisabled(boolean isEditDisabled) {
 		this.isEditDisabled.set(isEditDisabled);
-	}
-
-	public BooleanProperty isEditDisabledProperty() {
-		return this.isEditDisabled;
 	}
 
 	public XLog getInputLog() {
@@ -113,7 +79,8 @@ public class FilterButtonModel {
 	/**
 	 * Setter for the output log of the filter.
 	 * 
-	 * @param outputLog output log of the filter
+	 * @param outputLog
+	 *            output log of the filter
 	 */
 	public void setOutputLog(XLog outputLog) {
 		this.outputLog = outputLog;
@@ -136,14 +103,16 @@ public class FilterButtonModel {
 		return selected.get();
 	}
 
-	public BooleanProperty getSelectedProperty() {
-		return selected;
-	}
-
 	public void setSelected(boolean value) {
 		this.selected.set(value);
 	}
 
+	/**
+	 * Getter for the selected property of this filter button. Intended to be
+	 * used by controllers to set the bindings.
+	 * 
+	 * @return selected property of this filter button
+	 */
 	public BooleanProperty selectedProperty() {
 		return selected;
 	}
@@ -178,6 +147,12 @@ public class FilterButtonModel {
 		}
 	}
 
+	/**
+	 * Getter for the valid property of this filter button. Intended to be used
+	 * by controllers to set the bindings.
+	 * 
+	 * @return valid property of this filter button
+	 */
 	public BooleanProperty isValidProperty() {
 		return this.isValid;
 	}

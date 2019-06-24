@@ -24,7 +24,7 @@ public class ConfigTraceTrimTest extends FilterdPackageTest {
 	public void testInvalid() throws Exception {
 		XLog invalid = parseLog("trace-trim", "test_endpoints_2.xes");
 		FilterdTraceTrimConfig config = new FilterdTraceTrimConfig(originalLog, new FilterdTraceTrimFilter());
-		assert !config.checkValidity(invalid);
+		assert config.checkValidity(invalid);
 	}
 
 	/* a log that is the same should be valid */

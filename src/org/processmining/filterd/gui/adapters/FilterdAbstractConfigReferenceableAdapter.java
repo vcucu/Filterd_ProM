@@ -41,7 +41,7 @@ public class FilterdAbstractConfigReferenceableAdapter extends FilterdAbstractCo
 				config = constructor.newInstance( // instantiate the config using the constructor.
 						initialInput,
 						filterType,
-						((FilterdAbstractConfigAttributeAdapted) adaptedConfig).getAttribute(),
+						((FilterdAbstractConfigAdapted) adaptedConfig).getKey(),
 						Toolbox.computeComplexClassifiers(initialInput));
 			} else if (constructorPresent(configClass.getConstructors(), typesKey)) {
 				// if the constructor takes an XLog, Filter, string (key).
@@ -49,7 +49,7 @@ public class FilterdAbstractConfigReferenceableAdapter extends FilterdAbstractCo
 				config = constructor.newInstance( // instantiate the config using the constructor.
 						initialInput,
 						filterType,
-						((FilterdAbstractConfigKeyAdapted) adaptedConfig).getKey());
+						((FilterdAbstractConfigAdapted) adaptedConfig).getKey());
 			} else if (constructorPresent(configClass.getConstructors(), typesRegular)) {
 				// if the constructor takes an XLog and Filter.
 				constructor = configClass.getDeclaredConstructor(XLog.class, Filter.class); // get the constructor with the right parameters from the config class.
@@ -80,12 +80,12 @@ public class FilterdAbstractConfigReferenceableAdapter extends FilterdAbstractCo
 
 		if (constructorPresent(config.getClass().getConstructors(), typesAttribute)) {
 			// configs that take an attribute as a constructor input.
-			adaptedConfig = new FilterdAbstractConfigAttributeAdapted();
-			((FilterdAbstractConfigAttributeAdapted) adaptedConfig).setAttribute(config.getAttribute());
+			adaptedConfig = new FilterdAbstractConfigAdapted();
+			((FilterdAbstractConfigAdapted) adaptedConfig).setKey(config.getKey());
 		} else if (constructorPresent(config.getClass().getConstructors(), typesKey)) {
 			// configs that take a key as a constructor input.
-			adaptedConfig = new FilterdAbstractConfigKeyAdapted();
-			((FilterdAbstractConfigKeyAdapted) adaptedConfig).setKey(config.getKey());
+			adaptedConfig = new FilterdAbstractConfigAdapted();
+			((FilterdAbstractConfigAdapted) adaptedConfig).setKey(config.getKey());
 		} else if (constructorPresent(config.getClass().getConstructors(), typesRegular)) {
 			adaptedConfig = super.marshal(uncastConfig);
 		} else {

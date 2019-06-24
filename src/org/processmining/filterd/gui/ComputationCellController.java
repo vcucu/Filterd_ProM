@@ -38,7 +38,7 @@ import org.processmining.filterd.filters.FilterdTraceSampleFilter;
 import org.processmining.filterd.filters.FilterdTraceStartEventFilter;
 import org.processmining.filterd.filters.FilterdTraceTimeframeFilter;
 import org.processmining.filterd.filters.FilterdTraceTrimFilter;
-import org.processmining.filterd.filters.FilterdTracesHavingEvent;
+import org.processmining.filterd.filters.FilterdTracesHavingEventFilter;
 import org.processmining.filterd.gui.ConfigurationModalController.ConfigurationStep;
 import org.processmining.filterd.models.YLog;
 import org.processmining.filterd.plugins.FilterdVisualizer;
@@ -93,7 +93,7 @@ public class ComputationCellController extends CellController {
 	@FXML private HBox fullToolbar;
 	@FXML private HBox cellToolbar;
 	@FXML private Label lblNumEventLogs;
-	
+
 	//listener for the input logs
 	public ComputationCellController(ComputationCellModel model) {
 		super(null, model);
@@ -118,9 +118,8 @@ public class ComputationCellController extends CellController {
 	public void initialize() {
 		ComputationCellModel model = this.getCellModel();
 		// Load event logs in cmbEventLog and select "Initial input"
-		cmbEventLog.getItems().addAll(model.getInputLogs());
-		cmbEventLog.getSelectionModel().selectFirst();
-		System.out.println("Setting XLOG in initialize");
+		cmbEventLog.getItems().addAll(model.inputLogs);
+		cmbEventLog.getSelectionModel().select(model.indexOfInputOwner + 1);
 		setXLog();
 		// Add listeners to the basic model components
 		cellModel.getProperty().addPropertyChangeListener(new ComputationCellModelListeners(this));
@@ -144,10 +143,10 @@ public class ComputationCellController extends CellController {
 		getCellModel().bindCellName(cellName.textProperty());
 
 		// Add listeners for input logs
-		addInputLogsListeners(model.getInputLogs());
+		addInputLogsListeners(model.inputLogs);
 
 		// Change compute button icon (play / pause) when the computation stops / starts
-		this.getCellModel().isComputingProperty().addListener((observable, oldValue, newValue) -> {
+		this.getCellModel().isComputing.addListener((observable, oldValue, newValue) -> {
 			if (newValue) {
 				Utilities.changeIcon(computeButton, "play-solid", "pause-solid");
 			} else {
@@ -161,7 +160,7 @@ public class ComputationCellController extends CellController {
 		this.getCellModel().getOutputLogs().addListener((ListChangeListener<? super YLog>) change -> {
 			updateNoOfOutputs(getCellModel().getOutputLogs().size());
 		});
-		
+
 		// Load visualizers
 		cmbVisualizers.getItems().addAll(model.getVisualizers());
 		cmbVisualizers.getSelectionModel().selectFirst();
@@ -239,7 +238,7 @@ public class ComputationCellController extends CellController {
 
 	public void addInputLogsListeners(List<YLog> logs) {
 		ComputationCellModel model = this.getCellModel();
-		for (YLog log : model.getInputLogs()) {
+		for (YLog log : model.inputLogs) {
 			log.getNameProperty().addListener(new ChangeListener<String>() {
 				@Override
 				public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
@@ -260,20 +259,13 @@ public class ComputationCellController extends CellController {
 				while (change.next()) {
 					if (change.wasUpdated()) {
 						for (int i = change.getFrom(); i < change.getTo(); i++) {
-							System.out.printf("ID: %d ----------\n", getCellModel().getFilters().get(i).getIndex());
-							System.out.println("Updated: " + i + " " + getCellModel().getFilters().get(i));
-							System.out.println("SELECTED: " + getCellModel().getFilters().get(i).getSelected());
 							// Do something
 						}
 					} else {
 						for (FilterButtonModel removedFilter : change.getRemoved()) {
-							System.out.printf("ID: %d ----------\n", removedFilter.getIndex());
-							System.out.println("Removed: " + removedFilter);
 							// Do something
 						}
 						for (FilterButtonModel addedFilter : change.getAddedSubList()) {
-							System.out.printf("ID: %d ----------\n", addedFilter.getIndex());
-							System.out.println("Added: " + addedFilter);
 							// Do something
 						}
 						// Update indices
@@ -363,7 +355,7 @@ public class ComputationCellController extends CellController {
 			/*
 			 * HV: Refresh the visualizer. At least this ensures that the visualizer
 			 * accepts the new, smaller, bounding box. The contents will still show
-			 * the left-upper part of the expanded image, though. Only when the user 
+			 * the left-upper part of the expanded image, though. Only when the user
 			 * moves the mouse over the visualization, will this be repaired.
 			 */
 	        visualizerSwgBubble.refresh();
@@ -395,7 +387,7 @@ public class ComputationCellController extends CellController {
 
 			// Remove toolbar
 			cellToolbar.getChildren().remove(fullToolbar);
-			
+
 			// Remove empty visualizer
 			cmbVisualizers.getItems().remove(Utilities.dummyViewType);
 
@@ -426,7 +418,7 @@ public class ComputationCellController extends CellController {
 
 			// Re-add toolbar
 			cellToolbar.getChildren().add(cellToolbar.getChildren().size() - 1, fullToolbar);
-			
+
 			// Re-add empty visualizer
 			cmbVisualizers.getItems().add(0, Utilities.dummyViewType);
 
@@ -441,7 +433,7 @@ public class ComputationCellController extends CellController {
 
 	@FXML
 	public void computeHandler() {
-		if (getCellModel().isComputing()) {
+		if (getCellModel().isComputing.get()) {
 			getCellModel().cancelCompute();
 		} else {
 			getCellModel().compute();
@@ -467,7 +459,7 @@ public class ComputationCellController extends CellController {
 
 	/**
 	 * Load visualizer.
-	 * 
+	 *
 	 * Use this method to load the visualizer. This method is called when the
 	 * visualizer ComboBox is used.
 	 */
@@ -492,11 +484,11 @@ public class ComputationCellController extends CellController {
 		if (!visualizerPane.getChildren().contains(visualizerSwgBubble)) {
 			visualizerPane.getChildren().add(visualizerSwgBubble);
 			Utilities.setAnchors(visualizerSwgBubble, 0.0); // Make the visualizer resize with the pane
-		}		
+		}
 		visualizerSwgBubble.setContent(visualizer);	// Load Visualizer
 		expandButton.setVisible(true);	// Show expand button
 		fullScreenButton.setDisable(false);	// Enable fullscreen button
-		// Update Fullscreen visualizer if necessary 
+		// Update Fullscreen visualizer if necessary
 		if (isFullScreen) {
 			try {
 				SwingUtilities.invokeAndWait(new Runnable() {
@@ -505,7 +497,7 @@ public class ComputationCellController extends CellController {
 						// Indices: 0 = JFX toolbar; 1 = JPanel visualizer
 						fullScreenPanel.remove(1);
 						fullScreenPanel.add(visualizer);
-						
+
 						// Fix for changing the visualizer type in fullscreen mode
 						fullScreenPanel.revalidate();
 						fullScreenPanel.repaint();
@@ -529,13 +521,12 @@ public class ComputationCellController extends CellController {
 			lblNumEventLogs.setText(noOfLogs + " output event logs");
 		}
 	}
-	
+
 	/**
 	 * exports the output event log of this cell to the workspace.
 	 */
 	@FXML
 	private void saveOutputLog() {
-		System.out.println("saveoutput button pressed");
 		getCellModel().saveOutputLog();
 	}
 
@@ -636,7 +627,7 @@ public class ComputationCellController extends CellController {
 						XLog inputLog;
 						ComputationCellModel model = (ComputationCellModel) cellModel;
 						// if the input log was selected, there was definitely no computation
-						if (model.getInputLog().get() == null) {
+						if (model.inputLog.get() == null) {
 							throw new IllegalStateException("No input log selected");
 						}
 						FilterButtonModel lastFilterButton = model.getFilters().get(model.getFilters().size() - 1); // this is the filter button that we are currently configuring
@@ -644,13 +635,13 @@ public class ComputationCellController extends CellController {
 						if (lastFilterButton.getInputLog() != null) {
 							inputLog = lastFilterButton.getInputLog(); // input log is set in the addFilter() method in this class
 						} else {
-							inputLog = model.getInputLog().get(); // if filter input log is null, use the cell input log
+							inputLog = model.inputLog.get(); // if filter input log is null, use the cell input log
 						}
 						FilterdAbstractConfig filterConfig = null;
 						// do not accept empty logs
 						if (inputLog.size() == 0) {
 							ComputationCellModel.handleError(new EmptyLogException(""));
-							//no filter is added to the filter preset implynig no change occured and hence 
+							//no filter is added to the filter preset implynig no change occured and hence
 							//getCellModel().setStatusBar(CellStatus.IDLE);
 							getCellModel().getFilters().get(getCellModel().getFilters().size() - 1).isValidProperty()
 									.set(false);
@@ -685,7 +676,7 @@ public class ComputationCellController extends CellController {
 								break;
 							case "Trace Having Event" :
 								filterConfig = new FilterdTracesHavingEventConfig(inputLog,
-										new FilterdTracesHavingEvent());
+										new FilterdTracesHavingEventFilter());
 								break;
 							case "Trace Attribute" :
 								filterConfig = new FilterdTraceAttrConfig(inputLog, new FilterdTraceAttrFilter());
@@ -714,10 +705,10 @@ public class ComputationCellController extends CellController {
 					}
 
 				});
-		
+
 		expandButton.setVisible(false);	// Hide expand button
 		fullScreenButton.setDisable(true);	// Disable fullscreen button
-		
+
 		VBox configurationModalRoot = configurationModal.getRoot();
 		visualizerPane.getChildren().add(configurationModalRoot);
 		// Make the configuration modal resize with the pane
