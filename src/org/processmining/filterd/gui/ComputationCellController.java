@@ -469,8 +469,7 @@ public class ComputationCellController extends CellController {
 	 * Load visualizer.
 	 * 
 	 * Use this method to load the visualizer. This method is called when the
-	 * visualizer combobox is used and when the filter configuration dialog is
-	 * hidden.
+	 * visualizer ComboBox is used.
 	 */
 	@FXML
 	public void loadVisualizer() {
@@ -480,7 +479,6 @@ public class ComputationCellController extends CellController {
 
 				public void run() {
 					visualizerPane.getChildren().clear();
-					visualizerSwgBubble.setContent(null);
 					expandButton.setVisible(false);	// Hide expand button
 					fullScreenButton.setDisable(true);	// Disable fullscreen button
 				}
@@ -555,7 +553,10 @@ public class ComputationCellController extends CellController {
 			ConfigurationStep configurationStep = configurationModal.getConfigurationStep();
 			visualizerPane.getChildren().clear(); // remove configuration modal from the visualizer pane
 			cmbVisualizers.setDisable(false); // enable visualizer combobox
-			loadVisualizer(); // Reload visualizer
+			// Re-add visualizer if one is selected
+			if (cmbVisualizers.getValue() != Utilities.dummyViewType) {
+				visualizerPane.getChildren().add(visualizerSwgBubble);
+			}
 			// if filter selection was cancelled, delete the added button
 			if (configurationStep == ConfigurationStep.ADD_FILTER && removeFilter) {
 				// remove FilterButton (its always the last in the list)

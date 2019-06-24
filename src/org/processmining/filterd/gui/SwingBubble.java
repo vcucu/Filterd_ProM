@@ -127,9 +127,7 @@ public class SwingBubble extends AnchorPane {
 				 * HV: Apparently, putting the visualizer backstage has side-effects
 				 * when changing the visualization type.
 				 */
-				if (isFake()) {
-					unfake();
-				}
+				unfake();
 				if (content != null) {
 					Dimension dimension = new Dimension();
 					/*
@@ -202,7 +200,7 @@ public class SwingBubble extends AnchorPane {
 	 * Returns whether the SwingNode is faked (i.e. replaced by a picture) or not.
 	 */
 	public boolean isFake() {
-		return getChildren().contains(imgView);
+		return (getChildren().contains(imgView) && !getChildren().contains(swgNode));
 	}
 	
 	/**
@@ -216,11 +214,16 @@ public class SwingBubble extends AnchorPane {
 		Bounds bounds = this.getBoundsInLocal();	// Bounds of SwingBubble
 		bounds = this.localToScreen(bounds);	// Get screen bounds
 		
-        Rectangle area = new Rectangle(
-        		bounds.getMinX(), bounds.getMinY(),
-        		bounds.getWidth(), bounds.getHeight());
-		
-		return area.contains(mouseX, mouseY); 
+		// Return false if the node is not in a window
+		if (bounds != null) {
+			Rectangle area = new Rectangle(
+					bounds.getMinX(), bounds.getMinY(),
+					bounds.getWidth(), bounds.getHeight());
+				
+			return area.contains(mouseX, mouseY);
+		} else {
+			return false;
+		}
 	}
 	
 }
