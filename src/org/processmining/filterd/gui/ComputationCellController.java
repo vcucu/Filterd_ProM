@@ -542,6 +542,8 @@ public class ComputationCellController extends CellController {
 		// if configuration modal is not shown at all, do not do anything
 		if (this.isConfigurationModalShown) {
 			ConfigurationStep configurationStep = configurationModal.getConfigurationStep();
+			// Prevent auto-scroll to the top by setting the focus on the visualizer pane
+			visualizerPane.requestFocus();
 			visualizerPane.getChildren().clear(); // remove configuration modal from the visualizer pane
 			cmbVisualizers.setDisable(false); // enable visualizer combobox
 			// Re-add visualizer if one is selected

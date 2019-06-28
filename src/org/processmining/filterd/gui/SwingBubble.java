@@ -81,6 +81,8 @@ public class SwingBubble extends AnchorPane {
 					// Snapshot the SwingNode
 					WritableImage snapshot = swgNode.snapshot(new SnapshotParameters(), null);
 					imgView.setImage(snapshot);
+					// Prevent auto-scroll to the top by setting the focus on the SwingBubble
+					requestFocus();
 					// Load ImageView
 					getChildren().add(imgView);
 					// Unload visualizer
@@ -109,6 +111,8 @@ public class SwingBubble extends AnchorPane {
 						 * HV: Remove the visualizer form the backstage.
 						 */
 						backRoot.getChildren().remove(swgNode);
+						// Prevent auto-scroll to the top by setting the focus on the SwingBubble
+						requestFocus();
 						// Reload visualizer
 						getChildren().add(swgNode);
 						// Remove snapshot
@@ -120,31 +124,34 @@ public class SwingBubble extends AnchorPane {
 	}
 
 	public void setContent(JComponent content) {
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public synchronized void run() {
-				/*
-				 * HV: Apparently, putting the visualizer backstage has side-effects
-				 * when changing the visualization type.
-				 */
-				unfake();
-				if (content != null) {
+		if (content != null) {
+			SwingUtilities.invokeLater(new Runnable() {
+				@Override
+				public synchronized void run() {
+					/*
+					 * HV: Apparently, putting the visualizer backstage has side-effects when
+					 * changing the visualization type.
+					 */
+					unfake();
 					Dimension dimension = new Dimension();
 					/*
-					 * HV: If the visualization is backstage, the max width and max height may be incorrect.
+					 * HV: If the visualization is backstage, the max width and max height may be
+					 * incorrect.
 					 */
 					dimension.setSize(Math.max(imgView.getFitWidth(), getMaxWidth()),
 							Math.max(imgView.getFitHeight(), getMaxHeight()));
 					content.setMaximumSize(dimension);
 					content.setPreferredSize(dimension);
 					swgNode.setContent(content);
+					// Wait 1 second and fake the SwingNode. This is done to prevent the dropdown
+					// menus from
+					// not working in the future (e.g. if the user doesn't enter the SwingBubble
+					// area at all)
+					// but still giving some time for SwingNode to update its view.
+					fakeAfter(1000);
 				}
-				// Wait 1 second and fake the SwingNode. This is done to prevent the dropdown menus from
-				// not working in the future (e.g. if the user doesn't enter the SwingBubble area at all)
-				// but still giving some time for SwingNode to update its view.
-				fakeAfter(1000);
-			}
-		});
+			});
+		}
 	}
 
 	public JComponent getContent() {
