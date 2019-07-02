@@ -151,7 +151,7 @@
                                        <children>
                                           <VBox fx:id="panelLayout" alignment="TOP_CENTER" spacing="5.0">
                                              <VBox.margin>
-                                                <Insets bottom="10.0" top="5.0" />
+                                                <Insets bottom="10.0" left="-15.0" top="5.0" />
                                              </VBox.margin>
                                           </VBox>
                                           <Label alignment="CENTER" contentDisplay="CENTER" onMouseClicked="#addFilter" stylesheets="@../css/Controls.css" text="Click to add a filter" textFill="#787878">
@@ -159,7 +159,7 @@
                                                 <Insets left="10.0" right="10.0" />
                                              </VBox.margin>
                                              <padding>
-                                                <Insets bottom="10.0" left="45.0" right="45.0" top="10.0" />
+                                                <Insets bottom="10.0" left="40.0" right="40.0" top="10.0" />
                                              </padding>
                                              <font>
                                                 <Font name="System Bold" size="14.0" />

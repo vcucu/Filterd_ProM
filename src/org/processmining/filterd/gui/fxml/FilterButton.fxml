@@ -8,12 +8,15 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 
-<HBox fx:id="filterLayout" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#selectFilterButton" prefHeight="45.0" prefWidth="245.0" stylesheets="@../css/FilterButton.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+<HBox fx:id="filterLayout" alignment="CENTER" maxWidth="245.0" onMouseClicked="#selectFilterButton" prefHeight="45.0" stylesheets="@../css/FilterButton.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Label fx:id="filterName" prefHeight="20.0" prefWidth="195.0" styleClass="filter-name" text="Filter">
          <HBox.margin>
             <Insets left="10.0" />
-         </HBox.margin></Label>
+         </HBox.margin>
+         <padding>
+            <Insets left="10.0" />
+         </padding></Label>
       <Region HBox.hgrow="ALWAYS" />
       <Group fx:id="buttons" visible="false">
          <children>
