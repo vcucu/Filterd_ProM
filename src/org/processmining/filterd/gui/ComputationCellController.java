@@ -554,8 +554,8 @@ public class ComputationCellController extends CellController {
 				expandButton.setVisible(true);	// Show expand button
 				fullScreenButton.setDisable(false);	// Enable fullscreen button
 			}
-			// if filter selection (or configuration) was cancelled, delete the added filter button
-			if (removeFilter) {
+			// if filter selection was cancelled, delete the added button
+			if (configurationStep == ConfigurationStep.ADD_FILTER && removeFilter) {
 				// remove FilterButton (its always the last in the list)
 				FilterButtonModel buttonToRemove = getCellModel().getFilters()
 						.get(getCellModel().getFilters().size() - 1);
