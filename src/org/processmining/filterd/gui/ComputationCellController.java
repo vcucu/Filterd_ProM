@@ -484,6 +484,8 @@ public class ComputationCellController extends CellController {
 		if (!visualizerPane.getChildren().contains(visualizerSwgBubble)) {
 			visualizerPane.getChildren().add(visualizerSwgBubble);
 			Utilities.setAnchors(visualizerSwgBubble, 0.0); // Make the visualizer resize with the pane
+			expandButton.setVisible(true);	// Show expand button
+			fullScreenButton.setDisable(false);	// Enable fullscreen button
 		}
 		visualizerSwgBubble.setContent(visualizer);	// Load Visualizer
 		expandButton.setVisible(true);	// Show expand button
@@ -549,6 +551,8 @@ public class ComputationCellController extends CellController {
 			// Re-add visualizer if one is selected
 			if (cmbVisualizers.getValue() != Utilities.dummyViewType) {
 				visualizerPane.getChildren().add(visualizerSwgBubble);
+				expandButton.setVisible(true);	// Show expand button
+				fullScreenButton.setDisable(false);	// Enable fullscreen button
 			}
 			// if filter selection was cancelled, delete the added button
 			if (configurationStep == ConfigurationStep.ADD_FILTER && removeFilter) {
