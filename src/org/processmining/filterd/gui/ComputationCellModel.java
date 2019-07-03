@@ -153,7 +153,7 @@ public class ComputationCellModel extends CellModel {
 			output = inputLog.get();
 		} else {
 			// get the final output event log.
-			if (filters.get(filters.size() -1).getOutputLog() != null) {
+			if (statusBar == CellStatus.IDLE) {
 				output = filters.get(filters.size() -1).getOutputLog();
 			} else {
 				// alert the user the cell needs to be computed first.
