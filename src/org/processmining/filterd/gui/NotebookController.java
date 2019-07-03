@@ -1,13 +1,10 @@
 package org.processmining.filterd.gui;
 
 import java.io.IOException;
-import java.io.StringWriter;
 import java.util.List;
 import java.util.Optional;
 
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -389,30 +386,7 @@ public class NotebookController {
 	@FXML
 	public void printXML() {
 		try {
-			//Create JAXB Context
-			JAXBContext jaxbContext = JAXBContext.newInstance(NotebookModel.class, TextCellModel.class,
-					ComputationCellModel.class, FilterButtonModel.class);
-
-			//Create Marshaller
-			Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
-
-			//Required formatting??
-			jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-
-			//Print XML String to Console
-			StringWriter sw = new StringWriter();
-
-			//Write XML to StringWriter
-			jaxbMarshaller.marshal(model, sw);
-
-			//Store XML to File
-			//            File file = new File("test.xml");
-			//            jaxbMarshaller.marshal(model, file);
-
-			// Print the xml to the console
-			String xmlContent = sw.toString();
-			System.out.println(xmlContent);
-
+			model.getXML();
 		} catch (JAXBException e) {
 			e.printStackTrace();
 		}
