@@ -16,21 +16,6 @@ public class FilterOtherTest extends FilterdPackageTest {
 		super();
 	}
 	
-	/* Corresponds to test case 44 from test_specification.xlsx.
-	 * See ProM - Unroll Loops.
-	 * in each trace, each event has a unique name (no two events in a trace have the same name), 
-	 * e.g., in cases 41, 73, the 3rd and the 5th event have different names 
-	 * (add item, add item_2).
-	 * 
-	 * Result: renamed events.
-	 */
-	@Test
-	public void testUnroll() throws Throwable {
-		XLog expected = parseLog("others", "test_unroll.xes");
-		XLog computed = null; // insert filter operation
-
-		assert equalLog(expected, computed);
-	}
 
 	/* Corresponds to test case 45 from test_specification.xlsx.
 	 * See ProM - Extract sample of random traces with parameter 3 and empty seed.

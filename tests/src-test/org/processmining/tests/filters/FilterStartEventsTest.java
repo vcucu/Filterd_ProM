@@ -118,20 +118,6 @@ public class FilterStartEventsTest extends FilterdPackageTest{
 		assert equalLog(expected, computed);
 	}
 
-	/* Corresponds to test case 4 from test_specification.xlsx.
-	 * See ProM - Log on simple Heuristic.
-	 * Selects traces with the most popular (frequent) start event.
-	 * 
-	 * Result: original log without case 34.
-	 */
-	@Test
-	public void testStartFrequent() throws Throwable {
-		XLog expected = parseLog("start-events", "test_start_frequent.xes");
-		XLog computed = null; // insert filter operation
-
-		assert equalLog(expected, computed);
-	}
-
 	/*========== NOT ADDED IN UTP ============ */
 
 	/*
