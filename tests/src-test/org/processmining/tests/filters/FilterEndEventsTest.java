@@ -115,20 +115,6 @@ public class FilterEndEventsTest extends FilterdPackageTest{
 		
 	}
 
-	/* Corresponds to test case 7 from test_specification.xlsx.
-	 * See ProM - Log on simple Heuristic.
-	 * Selects traces with the most popular (frequent) end event.
-	 * 
-	 * Result: original log without case 72.
-	 */
-	@Test
-	public void testEndFrequent() throws Throwable {
-		XLog expected = parseLog("end-events", "test_end_frequent.xes");
-		XLog computed = null; // insert filter operation
-
-		assert equalLog(expected, computed);
-	}
-
 	/*========== NOT ADDED IN UTP ============ */
 	
 	/*
