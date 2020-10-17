@@ -1,11 +1,13 @@
-# 2IPE0-ProM
-2IPE0 Software Engineering Project project assignment 12: ProM next generation interface.
+# Final bachelor engineering project: Filterd
+Fitering plugin for the open-source process mining software ProM
 
-Google drive:
-https://drive.google.com/drive/folders/1jy8kUs1yogSgQZL8Y6uMA9INyA58NAOn?usp=sharing
+In a team of 11 people that were subdivided in the front-end and back-end teams, we developed a plugin, that:
 
-Trello:
-https://trello.com/invite/b/nYxaxYxg/fd99b7cf6048dd08e478993730aae950/sep
+- unifies the overalapping functionality of ProM filters into clearly defined system that is simple and easily extensible
+- modernizes the interface to match the workflow of process mining researchers
+- brings the system of a computing "notebook" such as Jupyter to process mining
+- is documented extensively such that the contributors of ProM can easily use the predfined classes and methods
+- makes it easy to insert interface widgets without hassle just using the right deifnition in the backend
+- and all that while closely collaborating with our client Dirk Fahland, d.fahland@tue.nl, following the agile development principles with SCRUM.
 
-Overleaf URD:
-https://www.overleaf.com/1141964481rhmhzqwckgvk
+Our final product (which is however in a different repository) was described as "professional and exceeding expectations".
